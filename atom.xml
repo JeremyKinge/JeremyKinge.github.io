@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>King哥</title>
+  <subtitle>To know everything, no words don&#39;t talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2017-08-14T02:54:32.789Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>Jeremy Kinge</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>博客迁移</title>
+    <link href="http://yoursite.com/2017/08/14/%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB/"/>
+    <id>http://yoursite.com/2017/08/14/博客迁移/</id>
+    <published>2017-08-14T02:26:07.157Z</published>
+    <updated>2017-08-14T02:54:32.789Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>今天周一，天气炎热，调开空调。噼里啪啦的敲完今天的工作，因为今天本人决定再次迁移自己的PersonalBlog。个人一共换过很多个博客，前期使用过网易博客，后来访问量上不去(网易博客他并不是一个IT社区)，后来换到了博客园，感觉还行，但是好景不长，感觉本人有处女座的完美主义，很纠结，总感觉这个博客园UI设计不行。<br>      最后又换到了CSDN，今天又临时决定迁移到了本人的服务器上面，自由管理。<br>      我的性格知道的人应该知道，我是知无不言言无不尽，只要我会的有所感悟的都会分享出来。以后每天心情一更，工作方面一周一更。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>最后：人生需要面对,搞笑我是认真的。</p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;今天周一，天气炎热，调开空调。噼里啪啦的敲完今天的工作，因为今天本人决定再次迁移自己的PersonalBlog。个人一共换过很多个博客，前期使用过网易博客，后来访问量上不去(网易博客他并不是一个IT社区)，后来换到了博客园，感觉还行，但是好景不长，
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Hessian 多系统访问</title>
+    <link href="http://yoursite.com/2017/08/14/hello-world/"/>
+    <id>http://yoursite.com/2017/08/14/hello-world/</id>
+    <published>2017-08-14T01:31:13.972Z</published>
+    <updated>2017-08-14T02:42:16.677Z</updated>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>postName</title>
+    <link href="http://yoursite.com/2013/12/02/ceshi/"/>
+    <id>http://yoursite.com/2013/12/02/ceshi/</id>
+    <published>2013-12-02T07:30:16.000Z</published>
+    <updated>2017-08-14T06:53:09.370Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>使用github pages服务搭建博客的好处有：</p>
+<ol>
+<li>全是静态文件，访问速度快；</li>
+<li>免费方便，不用花一分钱就可以搭建一个自由的个人博客，不需要服务器不需要后台；</li>
+<li>可以随意绑定自己的域名，不仔细看的话根本看不出来你的网站是基于github的；</li>
+</ol>
+<a id="more"></a>
+<ol>
+<li>数据绝对安全，基于github的版本管理，想恢复到哪个历史版本都行；</li>
+<li>博客内容可以轻松打包、转移、发布到其它平台；</li>
+<li>等等；</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      附加一段文章摘要，字数最好在140字以内，会出现在meta的description里面
+    
+    </summary>
+    
+      <category term="默认分类" scheme="http://yoursite.com/categories/%E9%BB%98%E8%AE%A4%E5%88%86%E7%B1%BB/"/>
+    
+    
+      <category term="tag1" scheme="http://yoursite.com/tags/tag1/"/>
+    
+      <category term="tag2" scheme="http://yoursite.com/tags/tag2/"/>
+    
+      <category term="tag3" scheme="http://yoursite.com/tags/tag3/"/>
+    
+  </entry>
+  
+</feed>
