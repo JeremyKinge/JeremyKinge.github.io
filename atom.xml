@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-08-14T02:54:32.789Z</updated>
+  <updated>2017-08-16T02:35:53.838Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/08/14/%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB/"/>
     <id>http://yoursite.com/2017/08/14/博客迁移/</id>
     <published>2017-08-14T02:26:07.157Z</published>
-    <updated>2017-08-14T02:54:32.789Z</updated>
+    <updated>2017-08-16T02:35:53.838Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>今天周一，天气炎热，调开空调。噼里啪啦的敲完今天的工作，因为今天本人决定再次迁移自己的PersonalBlog。个人一共换过很多个博客，前期使用过网易博客，后来访问量上不去(网易博客他并不是一个IT社区)，后来换到了博客园，感觉还行，但是好景不长，感觉本人有处女座的完美主义，很纠结，总感觉这个博客园UI设计不行。<br>      最后又换到了CSDN，今天又临时决定迁移到了本人的服务器上面，自由管理。<br>      我的性格知道的人应该知道，我是知无不言言无不尽，只要我会的有所感悟的都会分享出来。以后每天心情一更，工作方面一周一更。</p>
@@ -38,13 +38,15 @@
     
     </summary>
     
+      <category term="心情" scheme="http://yoursite.com/categories/%E5%BF%83%E6%83%85/"/>
+    
     
   </entry>
   
   <entry>
     <title>Hessian 多系统访问</title>
-    <link href="http://yoursite.com/2017/08/14/hello-world/"/>
-    <id>http://yoursite.com/2017/08/14/hello-world/</id>
+    <link href="http://yoursite.com/2017/08/14/Hessian%20%E5%A4%9A%E7%B3%BB%E7%BB%9F%E8%AE%BF%E9%97%AE/"/>
+    <id>http://yoursite.com/2017/08/14/Hessian 多系统访问/</id>
     <published>2017-08-14T01:31:13.972Z</published>
     <updated>2017-08-14T02:42:16.677Z</updated>
     
@@ -69,11 +71,11 @@
   </entry>
   
   <entry>
-    <title>postName</title>
+    <title>文章例子</title>
     <link href="http://yoursite.com/2013/12/02/ceshi/"/>
     <id>http://yoursite.com/2013/12/02/ceshi/</id>
     <published>2013-12-02T07:30:16.000Z</published>
-    <updated>2017-08-14T06:53:09.370Z</updated>
+    <updated>2017-08-16T02:36:44.437Z</updated>
     
     <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>使用github pages服务搭建博客的好处有：</p>
 <ol>
