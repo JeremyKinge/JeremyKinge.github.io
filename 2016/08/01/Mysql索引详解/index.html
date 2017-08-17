@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Mysql,索引," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言 索引对查询的速度有着至关重要的影响，理解索引也是进行数据库性能调优的起点。考虑如下情况，假设数据库中一个表有10^6条记录，DBMS的页面大小为4K，并存储100条记录。如果没有索引，查询将对整个表进行扫描，最坏的情况下，如果所有数据页都不在内存，需要读取10^4个页面，如果这10^4个页面在磁盘上随机分布，需要进行10^4次I/O，假设磁盘每次I/O时间为10ms(忽略数据传输时间)，则总">
+<meta name="keywords" content="Mysql,索引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql索引详解">
+<meta property="og:url" content="http://kingge.top/2016/08/01/Mysql索引详解/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="前言 索引对查询的速度有着至关重要的影响，理解索引也是进行数据库性能调优的起点。考虑如下情况，假设数据库中一个表有10^6条记录，DBMS的页面大小为4K，并存储100条记录。如果没有索引，查询将对整个表进行扫描，最坏的情况下，如果所有数据页都不在内存，需要读取10^4个页面，如果这10^4个页面在磁盘上随机分布，需要进行10^4次I/O，假设磁盘每次I/O时间为10ms(忽略数据传输时间)，则总">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-17T09:35:34.792Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql索引详解">
+<meta name="twitter:description" content="前言 索引对查询的速度有着至关重要的影响，理解索引也是进行数据库性能调优的起点。考虑如下情况，假设数据库中一个表有10^6条记录，DBMS的页面大小为4K，并存储100条记录。如果没有索引，查询将对整个表进行扫描，最坏的情况下，如果所有数据页都不在内存，需要读取10^4个页面，如果这10^4个页面在磁盘上随机分布，需要进行10^4次I/O，假设磁盘每次I/O时间为10ms(忽略数据传输时间)，则总">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"hide","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2016/08/01/Mysql索引详解/"/>
+
+
+
+
+
+  <title>Mysql索引详解 | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-hide page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2016/08/01/Mysql索引详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Mysql索引详解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-01T10:37:15+08:00">
+                2016-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p>索引对查询的速度有着至关重要的影响，理解索引也是进行数据库性能调优的起点。考虑如下情况，假设数据库中一个表有10^6条记录，DBMS的页面大小为4K，并存储100条记录。如果没有索引，查询将对整个表进行扫描，最坏的情况下，如果所有数据页都不在内存，需要读取10^4个页面，如果这10^4个页面在磁盘上随机分布，需要进行10^4次I/O，假设磁盘每次I/O时间为10ms(忽略数据传输时间)，则总共需要100s(但实际上要好很多很多)。如果对之建立B-Tree索引，则只需要进行log100(10^6)=3次页面读取，最坏情况下耗时30ms。这就是索引带来的效果，很多时候，当你的应用程序进行SQL查询速度很慢时，应该想想是否可以建索引。进入正题：</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>有些硬啃的干货还是得了解的，下面先了解索引的基本知识</p>
+</blockquote>
+<h1 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h1><ul>
+<li>单列索引<ul>
+<li>主键索引</li>
+<li>唯一索引</li>
+<li>普通索引</li>
+</ul>
+</li>
+<li>组合索引<h3 id="用到的表"><a href="#用到的表" class="headerlink" title="用到的表"></a>用到的表</h3><figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`award`</span> (</div><div class="line">   <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT <span class="keyword">COMMENT</span> <span class="string">'用户id'</span>,</div><div class="line">   <span class="string">`aty_id`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'活动场景id'</span>,</div><div class="line">   <span class="string">`nickname`</span> <span class="built_in">varchar</span>(<span class="number">12</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'用户昵称'</span>,</div><div class="line">   <span class="string">`is_awarded`</span> tinyint(<span class="number">1</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> <span class="keyword">COMMENT</span> <span class="string">'用户是否领奖'</span>,</div><div class="line">   <span class="string">`award_time`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> <span class="keyword">COMMENT</span> <span class="string">'领奖时间'</span>,</div><div class="line">   <span class="string">`account`</span> <span class="built_in">varchar</span>(<span class="number">12</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'帐号'</span>,</div><div class="line">   <span class="string">`password`</span> <span class="built_in">char</span>(<span class="number">32</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'密码'</span>,</div><div class="line">   <span class="string">`message`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'获奖信息'</span>,</div><div class="line">   <span class="string">`created_time`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> <span class="keyword">COMMENT</span> <span class="string">'创建时间'</span>,</div><div class="line">   <span class="string">`updated_time`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> <span class="keyword">COMMENT</span> <span class="string">'更新时间'</span>,</div><div class="line">   PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</div><div class="line"> ) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">1</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8 <span class="keyword">COMMENT</span>=<span class="string">'获奖信息表'</span>;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="单列索引"><a href="#单列索引" class="headerlink" title="单列索引"></a>单列索引</h2><h3 id="普通索引"><a href="#普通索引" class="headerlink" title="普通索引"></a>普通索引</h3><blockquote>
+<p>这个是最基本的索引</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>创建语法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">其sql格式是：</div><div class="line">   第一种方式 :</div><div class="line">     CREATE INDEX IndexName ON `TableName`(`字段名`(length))</div><div class="line">   第二种方式 :</div><div class="line">	 ALTER TABLE TableName ADD INDEX IndexName(`字段名`(length))</div></pre></td></tr></table></figure></p>
+<p>创建例子：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">第一种方式 :</div><div class="line">  CREATE INDEX account_Index ON `award`(`account`);</div><div class="line">第二种方式:</div><div class="line">  ALTER TABLE award ADD INDEX account_Index(`account`)</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="唯一索引"><a href="#唯一索引" class="headerlink" title="唯一索引"></a>唯一索引</h3><blockquote>
+<p>与普通索引类似,但是不同的是唯一索引要求所有的类的值是唯一的,这一点和主键索引一样.但是他允许有空值</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>创建语法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">其sql格式是：</div><div class="line">   第一种方式 :</div><div class="line">    CREATE UNIQUE INDEX IndexName ON `TableName`(`字段名`(length));</div><div class="line">   第二种方式 :</div><div class="line">	ALTER TABLE TableName ADD UNIQUE (column_list)</div></pre></td></tr></table></figure></p>
+<p>创建例子：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">CREATE UNIQUE INDEX account_UNIQUE_Index ON `award`(`account`);</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="主键索引"><a href="#主键索引" class="headerlink" title="主键索引"></a>主键索引</h3><blockquote>
+<p>他与唯一索引的不同在于不允许有空值(在B+TREE中的InnoDB引擎中,主键索引起到了至关重要的地位)</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>创建语法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">其sql格式是：</div><div class="line">   第一种方式 :</div><div class="line">    CREATE UNIQUE INDEX IndexName ON `TableName`(`字段名`(length));</div><div class="line">   第二种方式 :</div><div class="line">	ALTER TABLE TableName ADD UNIQUE (column_list)</div></pre></td></tr></table></figure></p>
+<p>创建例子：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">CREATE UNIQUE INDEX account_UNIQUE_Index ON `award`(`account`);</div></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<h3 id="单列索引的总结"><a href="#单列索引的总结" class="headerlink" title="单列索引的总结"></a>单列索引的总结</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">mysql&gt;SELECT ｀uid｀ FROM people WHERE lname｀='Liu'  AND ｀fname｀='Zhiqun' AND ｀age｀=26</div><div class="line">因为我们不想扫描整表，故考虑用索引。</div><div class="line"></div><div class="line">单列索引：</div><div class="line"><span class="function">ALTER TABLE people ADD INDEX <span class="title">lname</span> <span class="params">(lname)</span></span>;</div><div class="line">将lname列建索引，这样就把范围限制在lname='Liu'的结果集1上，之后扫描结果集1，产生满足fname='Zhiqun'的结果集2，再扫描结果集2，找到 age=26的结果集3，即最终结果。</div><div class="line"></div><div class="line">由 于建立了lname列的索引，与执行表的完全扫描相比，效率提高了很多，但我们要求扫描的记录数量仍旧远远超过了实际所需 要的。虽然我们可以删除lname列上的索引，再创建fname或者age 列的索引，但是，不论在哪个列上创建索引搜索效率仍旧相似。</div><div class="line"></div><div class="line">&gt; 所以就需要组合索引</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="组合索引"><a href="#组合索引" class="headerlink" title="组合索引"></a>组合索引</h2><blockquote>
+<p>一个表中含有多个单列索引不代表是组合索引,通俗一点讲 组合索引是:包含多个字段但是只有索引名称</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>创建语法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">其sql格式是：</div><div class="line"> CREATE INDEX IndexName On `TableName`(`字段名`(length),`字段名`(length),...);</div></pre></td></tr></table></figure></p>
+<p>创建例子：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">CREATE INDEX nickname_account_createdTime_Index ON `award`(`nickname`, `account`, `created_time`);</div></pre></td></tr></table></figure></p>
+<hr>
+<blockquote>
+<p>如果你建立了 <strong><em>组合索引</em></strong>(nickname_account_createdTime_Index)<strong> 那么他实际包含的是3个索引 (nickname) (nickname,account)(nickname,account,created_time)</strong></p>
+</blockquote>
+</blockquote>
+<hr>
+<h3 id="组合索引的最左前缀"><a href="#组合索引的最左前缀" class="headerlink" title="组合索引的最左前缀"></a>组合索引的最左前缀</h3><blockquote>
+<p>上面的例子中给nickname,account,created_time 这三个字段建立索引他会去创建<strong>三个索引</strong>，但是在执行查询的时候只会用其中一个索引去查询，mysql会选择一个最严格(获得结果集记录数最少)的索引，所以where子句中使用最频繁的一列放在最左边。所谓最左前缀原则就是先要看第一列，在第一列满足的条件下再看左边第二列</p>
+</blockquote>
+<hr>
+<h2 id="全文索引"><a href="#全文索引" class="headerlink" title="全文索引"></a>全文索引</h2><hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">文本字段上(text)如果建立的是普通索引,那么只有对文本的字段内容前面的字符进行索引,其字符大小根据索引建立索引时申明的大小来规定.</div><div class="line"></div><div class="line">如果文本中出现多个一样的字符,而且需要查找的话,那么其条件只能是 where column lick &apos;%xxxx%&apos; 这样做会让索引失效</div><div class="line"></div><div class="line">.这个时候全文索引就祈祷了作用了</div><div class="line"></div><div class="line">ALTER TABLE tablename ADD FULLTEXT(column1, column2)</div><div class="line">有了全文索引，就可以用SELECT查询命令去检索那些包含着一个或多个给定单词的数据记录了。</div><div class="line"></div><div class="line">ELECT * FROM tablename</div><div class="line">WHERE MATCH(column1, column2) AGAINST(‘xxx′, ‘sss′, ‘ddd′)</div><div class="line">这条命令将把column1和column2字段里有xxx、sss和ddd的数据记录全部查询出来。</div></pre></td></tr></table></figure>
+<hr>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h2 id="使用索引的优点"><a href="#使用索引的优点" class="headerlink" title="使用索引的优点"></a>使用索引的优点</h2><ol>
+<li>可以通过建立唯一索引或者主键索引,保证数据库表中每一行数据的唯一性.</li>
+<li>建立索引可以大大提高检索的数据,以及减少表的检索行数</li>
+<li>在表连接的连接条件 可以加速表与表直接的相连 </li>
+<li>在分组和排序字句进行数据检索,可以减少查询时间中 分组 和 排序时所消耗的时间(数据库的记录会重新排序)</li>
+<li>建立索引,在查询中使用索引 可以提高性能</li>
+</ol>
+<h2 id="使用索引的缺点"><a href="#使用索引的缺点" class="headerlink" title="使用索引的缺点"></a>使用索引的缺点</h2><ol>
+<li>在创建索引和维护索引 会耗费时间,随着数据量的增加而增加</li>
+<li>索引文件会占用物理空间,除了数据表需要占用物理空间之外,每一个索引还会占用一定的物理空间</li>
+<li>当对表的数据进行 INSERT,UPDATE,DELETE 的时候,索引也要动态的维护,这样就会降低数据的维护速度,(建立索引会占用磁盘空间的索引文件。一般情况这个问题不太严重，但如果你在一个大表上创建了多种组合索引，索引文件的会膨胀很快)。</li>
+</ol>
+<h2 id="使用索引需要注意的地方"><a href="#使用索引需要注意的地方" class="headerlink" title="使用索引需要注意的地方"></a>使用索引需要注意的地方</h2><ol>
+<li><p>在经常需要搜索的列上,可以加快索引的速度</p>
+</li>
+<li><p>主键列上可以确保列的唯一性</p>
+</li>
+<li><p>在表与表的而连接条件上加上索引,可以加快连接查询的速度</p>
+</li>
+<li><p>在经常需要排序(order by),分组(group by)和的distinct 列上加索引 可以加快排序查询的时间,  (单独order by 用不了索引，索引考虑加where 或加limit)</p>
+</li>
+<li><p>在一些where 之后的 &lt; &lt;= &gt; &gt;= BETWEEN IN 以及某个情况下的like 建立字段的索引(B-TREE)</p>
+</li>
+<li><p>like语句的 如果你对nickname字段建立了一个索引.当查询的时候的语句是 nickname lick ‘%ABC%’ 那么这个索引讲不会起到作用.而nickname lick ‘ABC%’ 那么将可以用到索引</p>
+</li>
+<li><p>索引不会包含NULL列,如果列中包含NULL值都将不会被包含在索引中,复合索引中如果有一列含有NULL值那么这个组合索引都将失效,一般需要给默认值0或者 ‘ ‘字符串</p>
+</li>
+<li><p>使用短索引,如果你的一个字段是Char(32)或者int(32),在创建索引的时候指定前缀长度 比如前10个字符 (前提是多数值是唯一的..)那么短索引可以提高查询速度,并且可以减少磁盘的空间,也可以减少I/0操作.</p>
+</li>
+<li><p>不要在列上进行运算,这样会使得mysql索引失效,也会进行全表扫描</p>
+</li>
+<li><p>选择越小的数据类型越好,因为通常越小的数据类型通常在磁盘,内存,cpu,缓存中 占用的空间很少,处理起来更快</p>
+</li>
+</ol>
+<h2 id="什么情况下不建立索引"><a href="#什么情况下不建立索引" class="headerlink" title="什么情况下不建立索引"></a>什么情况下不建立索引</h2><ol>
+<li><p>查询中很少使用到的列 不应该创建索引,如果建立了索引然而还会降低mysql的性能和增大了空间需求.</p>
+</li>
+<li><p>很少数据的列也不应该建立索引,比如 一个性别字段 0或者1,在查询中,结果集的数据占了表中数据行的比例比较大,mysql需要扫描的行数很多,增加索引,并不能提高效率</p>
+</li>
+<li><p>定义为text和image和bit数据类型的列不应该增加索引</p>
+</li>
+<li><p>当表的修改(UPDATE,INSERT,DELETE)操作远远大于检索(SELECT)操作时不应该创建索引,这两个操作是互斥的关系</p>
+</li>
+</ol>
+<h1 id="好的文章"><a href="#好的文章" class="headerlink" title="好的文章"></a>好的文章</h1><p><a href="http://blog.csdn.net/zly9923218/article/details/51007554" target="_blank" rel="external">转：SQL优化</a><br><a href="http://blog.jobbole.com/86594/" target="_blank" rel="external">转：MySQL索引原理及慢查询优化</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Mysql/" rel="tag"># Mysql</a>
+          
+            <a href="/tags/索引/" rel="tag"># 索引</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/11/08/C-文件流操作的读与写/" rel="next" title="C++文件流操作的读与写">
+                <i class="fa fa-chevron-left"></i> C++文件流操作的读与写
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/01/实现多数据量的导入数据库/" rel="prev" title="实现多数据量的导入数据库">
+                实现多数据量的导入数据库 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#索引分类"><span class="nav-number">2.</span> <span class="nav-text">索引分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用到的表"><span class="nav-number">2.0.1.</span> <span class="nav-text">用到的表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单列索引"><span class="nav-number">2.1.</span> <span class="nav-text">单列索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#普通索引"><span class="nav-number">2.1.1.</span> <span class="nav-text">普通索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#唯一索引"><span class="nav-number">2.1.2.</span> <span class="nav-text">唯一索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主键索引"><span class="nav-number">2.1.3.</span> <span class="nav-text">主键索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单列索引的总结"><span class="nav-number">2.1.4.</span> <span class="nav-text">单列索引的总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合索引"><span class="nav-number">2.2.</span> <span class="nav-text">组合索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#组合索引的最左前缀"><span class="nav-number">2.2.1.</span> <span class="nav-text">组合索引的最左前缀</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全文索引"><span class="nav-number">2.3.</span> <span class="nav-text">全文索引</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用索引的优点"><span class="nav-number">3.1.</span> <span class="nav-text">使用索引的优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用索引的缺点"><span class="nav-number">3.2.</span> <span class="nav-text">使用索引的缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用索引需要注意的地方"><span class="nav-number">3.3.</span> <span class="nav-text">使用索引需要注意的地方</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么情况下不建立索引"><span class="nav-number">3.4.</span> <span class="nav-text">什么情况下不建立索引</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#好的文章"><span class="nav-number">4.</span> <span class="nav-text">好的文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+    由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+  </div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">
+    主题 &mdash;
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Mist
+    </a>
+  </div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
