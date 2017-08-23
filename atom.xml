@@ -211,12 +211,121 @@
     <link href="http://kingge.top/2017/06/21/Java%E5%B7%A5%E7%A8%8B%E5%B8%88%E4%B9%A6%E5%8D%95%EF%BC%88%E5%88%9D%E7%BA%A7%E3%80%81%E4%B8%AD%E7%BA%A7%E3%80%81%E9%AB%98%E7%BA%A7%EF%BC%89/"/>
     <id>http://kingge.top/2017/06/21/Java工程师书单（初级、中级、高级）/</id>
     <published>2017-06-21T06:13:44.000Z</published>
-    <updated>2017-08-23T01:47:48.870Z</updated>
+    <updated>2017-08-23T02:18:59.119Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>当你的能力承受不住你的欲望，你就应该静下心来读书</p>
 </blockquote>
 <h1 id="初级书籍"><a href="#初级书籍" class="headerlink" title="初级书籍"></a><strong>初级书籍</strong></h1><h2 id="《编写高质量代码——改善Java程序的151个建议》"><a href="#《编写高质量代码——改善Java程序的151个建议》" class="headerlink" title="《编写高质量代码——改善Java程序的151个建议》"></a>《编写高质量代码——改善Java程序的151个建议》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-3a0479a82ae73108.jpg" alt="编写高质量代码——改善Java程序的151个建议"></p>
+<blockquote>
+<p>这是一本值得入门java的人放在床头的书。此书内容广泛、要点翔实。大多数优秀程序设计书籍都需要看老外写的，但是这本讲述提高java编程水平的书还是不错的，适合具有基本java编程能力的人。<br>对于程序猿而言，工作久了，就感觉编程习惯对一个人很重要。习惯好，不仅工作效率告，而且bug少。这本书对提高个人的好的编程习惯很有帮助。</p>
+</blockquote>
+<h2 id="《Java程序员修炼之道》"><a href="#《Java程序员修炼之道》" class="headerlink" title="《Java程序员修炼之道》"></a>《Java程序员修炼之道》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-dc1266b4d179ca93.jpg" alt="Java程序员修炼之道"></p>
+<blockquote>
+<p>此书涵盖了Java7的新特性和Java开发的关键技术，对当前大量开源技术并存，多核处理器、并发以及海量数据给Java开发带来的挑战作出了精辟的分析，提供了实践前沿的深刻洞见，涉及依赖注入、现代并发、类与字节码、性能调优等底层概念的剖析。<em>**</em><br>书中的道理很浅显，可是对于菜鸟却是至理名言。基本为你勾勒了一个成熟软件程序员专家所需要的所有特性。。</p>
+</blockquote>
+<h2 id="《Java8实战》"><a href="#《Java8实战》" class="headerlink" title="《Java8实战》"></a>《Java8实战》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-7522c1eda632f594.jpg" alt="Java8实战"></p>
+<blockquote>
+<p>没看过。嘻嘻嘻</p>
+</blockquote>
+<h2 id="《有效的单元测试》"><a href="#《有效的单元测试》" class="headerlink" title="《有效的单元测试》"></a>《有效的单元测试》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-43a284b4c090ae7a.jpg" alt="有效的单元测试"></p>
+<blockquote>
+<p>此书由敏捷技术实践专家撰写，系统且深入地阐释单元测试用于软件设计的工具、方法、原则和佳实践；深入剖析各种测试常见问题，包含大量实践案例，可操作性强，能为用户高效编写测试提供系统实践指南。<em>**</em><br>介绍了单元测试的各个方面，TDD、test double、测试的坏味道、可测试的设计等等，每个主题需要深入的话，还需要配合其它书籍和实践，非常适合入门单元测试。书中例子非常全面，看完对使用 Junit 进行单元测试会有一个大的长进，而且用java语言编写，内容很新</p>
+</blockquote>
+<h2 id="《Java核心技术：卷1》"><a href="#《Java核心技术：卷1》" class="headerlink" title="《Java核心技术：卷1》"></a>《Java核心技术：卷1》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/juanyi.jpg" alt="《Java核心技术：卷1 》"></p>
+<blockquote>
+<p>不推荐卷2，因为这个作为初级书单来讲，太难了。</p>
+</blockquote>
+<h2 id="《代码整洁之道》"><a href="#《代码整洁之道》" class="headerlink" title="《代码整洁之道》"></a>《代码整洁之道》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-af77e6efc29482be.jpg" alt="《代码整洁之道》"></p>
+<blockquote>
+<p>没看过</p>
+</blockquote>
+<h2 id="《数据结构与算法分析-Java语言描述》"><a href="#《数据结构与算法分析-Java语言描述》" class="headerlink" title="《数据结构与算法分析-Java语言描述》"></a>《数据结构与算法分析-Java语言描述》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-1c4bce389fcc0232.jpg" alt="《数据结构与算法分析-Java语言描述》"></p>
+<blockquote>
+<p>本书是java数据结构与算法方面的三宝之一，除了这三本其他的已经没有意义了。这三宝分别是:<em>**</em><br>黑宝书《数据结构与算法分析java语言描述》mark allen weiss<br>蓝宝书《java数据结构和算法》robert lafore<br>红宝书《算法》robert sedgewick<br>黑宝书胜在公式推理和证明以及算法的简洁和精炼，此外习题较多。蓝宝书胜在对算法的深入浅出的讲解，演示和举例，让艰涩的理论变得很容易理解。红宝书胜在系出名门斯坦福，演示通俗易懂，内容丰富。有了这三宝，算法不用愁，学完以后再看《算法导论》就容易多了。<br>本书从讲解什么是数据结构开始，延伸至高级数据结构和算法分析，强调数据结构和问题求解技术。本书的目的是从抽象思维和问题求解的观点提供对数据结构的实用介绍，试图包含有关数据结构、算法分析及其Java实现的所有重要的细节</p>
+</blockquote>
+<hr>
+<h1 id="中级书单"><a href="#中级书单" class="headerlink" title="中级书单"></a><strong>中级书单</strong></h1><h2 id="《重构：改善既有代码的设计》"><a href="#《重构：改善既有代码的设计》" class="headerlink" title="《重构：改善既有代码的设计》"></a>《重构：改善既有代码的设计》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-ab38bf45a4a7b0e1.png" alt="《重构：改善既有代码的设计》"></p>
+<blockquote>
+<p>重构，绝对是写程序过程中最重要的事之一。在写程序之前我们不可能事先了解所有的需求，设计肯定会有考虑不周的地方，而且随着项目需求的修改，也有可能原来的设计已经被改得面目全非了。更何况，我们很少有机会从头到尾完成一个项目，基本上都是接手别人的代码，我们要做的是重构，从小范围的重构开始。<em>**</em><br>重构是设计,设计是art,重构也是art. 一个函数三行只是语不惊人死不休的说法,是对成百上千行代码的矫枉过正。 更一个般的看法是一个函数应该写在一页纸内。</p>
+</blockquote>
+<hr>
+<h2 id="《Effective-Java》"><a href="#《Effective-Java》" class="headerlink" title="《Effective Java》"></a>《Effective Java》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-d9337d4b531ffb2b.jpg" alt="《Effective Java》"></p>
+<blockquote>
+<p>必读</p>
+</blockquote>
+<hr>
+<h2 id="《Java并发编程实战》"><a href="#《Java并发编程实战》" class="headerlink" title="《Java并发编程实战》"></a>《Java并发编程实战》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-b008cd9c0915d0c0.png" alt="《Java并发编程实战》"></p>
+<blockquote>
+<p>没看过：</p>
+<p>本书深入浅出地介绍了Java线程和并发，是一本完美的Java并发参考手册。书中从并发性和线程安全性的基本概念出发，介绍了如何使用类库提供的基本并发构建块，用于避免并发危险、构造线程安全的类及验证线程安全的规则，如何将小的线程安全类组合成更大的线程安全类，如何利用线程来提高并发应用程序的吞吐量。<em>**</em><br>java进阶必看，多线程的最佳书籍。</p>
+</blockquote>
+<hr>
+<h2 id="实战Java高并发程序设计》"><a href="#实战Java高并发程序设计》" class="headerlink" title="实战Java高并发程序设计》"></a>实战Java高并发程序设计》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-a660ebcb96759c63.jpg" alt="实战Java高并发程序设计》"></p>
+<blockquote>
+<p>没看过</p>
+</blockquote>
+<hr>
+<h2 id="《算法》"><a href="#《算法》" class="headerlink" title="《算法》"></a>《算法》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-a617f3102707d2a8.png" alt="《算法》"></p>
+<blockquote>
+<p>没看过</p>
+</blockquote>
+<hr>
+<h2 id="《Head-First-设计模式》"><a href="#《Head-First-设计模式》" class="headerlink" title="《Head First 设计模式》"></a>《Head First 设计模式》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-ff7a658fe4ee1218.png" alt="《Head First 设计模式》"></p>
+<blockquote>
+<p>这是我看过最幽默最搞笑最亲切同时又让我收获巨大的技术书籍！ 森森的膜拜Freeman(s)！Amen！ 深入浅出，娓娓道来，有的地方能笑死你！写得很有趣，图文并茂，比起四人帮的那本，好懂了不知道多少倍。计算机世界的head first系列基本都是经典。不过只看书学明白设计模式是不可能的，这些只是前人的总结，我们唯有实践实践再实践了。<em>**</em><br>读这本书不仅仅是学习知识，而是在学习一种思考的方法，学习一种认知的技巧，学习一种成长的阶梯。 总之，用你闲暇的时间来读这本书，并不亚于你专注的工作或学习。笔者强烈推荐此书，要成长为一名高级程序员，设计模式已经是必备技能了。</p>
+</blockquote>
+<hr>
+<h2 id="《Java编程思想》"><a href="#《Java编程思想》" class="headerlink" title="《Java编程思想》"></a>《Java编程思想》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-8d6811d9766232e5.png" alt="《代码整洁之道》"></p>
+<blockquote>
+<p>没看过</p>
+</blockquote>
+<h1 id="高级书单"><a href="#高级书单" class="headerlink" title="高级书单"></a><strong>高级书单</strong></h1><hr>
+<h2 id="《深入理解Java虚拟机》"><a href="#《深入理解Java虚拟机》" class="headerlink" title="《深入理解Java虚拟机》"></a>《深入理解Java虚拟机》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-9b11d03c4bee5e71.png" alt="《深入理解Java虚拟机》"></p>
+<blockquote>
+<p>没看过</p>
+</blockquote>
+<hr>
+<h2 id="《Java性能权威指南》"><a href="#《Java性能权威指南》" class="headerlink" title="《Java性能权威指南》"></a>《Java性能权威指南》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-4626892e666e33df.png" alt="《Java性能权威指南》"></p>
+<blockquote>
+<p>没看过</p>
+</blockquote>
+<hr>
+<h2 id="《深入分析Java-Web技术内幕》"><a href="#《深入分析Java-Web技术内幕》" class="headerlink" title="《深入分析Java Web技术内幕》"></a>《深入分析Java Web技术内幕》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-8e52313d3a94ae3e.png" alt="《深入分析Java Web技术内幕》"></p>
+<blockquote>
+<p>没看过</p>
+</blockquote>
+<hr>
+<h2 id="《大型网站系统与Java中间件实践》"><a href="#《大型网站系统与Java中间件实践》" class="headerlink" title="《大型网站系统与Java中间件实践》"></a>《大型网站系统与Java中间件实践》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-ea0ddb7a2a705a6f.png" alt="《大型网站系统与Java中间件实践》"></p>
+<blockquote>
+<p>没看过</p>
+</blockquote>
+<hr>
+<h2 id="《大型网站技术架构：核心原理与案例分析》"><a href="#《大型网站技术架构：核心原理与案例分析》" class="headerlink" title="《大型网站技术架构：核心原理与案例分析》"></a>《大型网站技术架构：核心原理与案例分析》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-a3b611f69e8f6afc.png" alt="《大型网站技术架构：核心原理与案例分析》"></p>
+<blockquote>
+<p>没看过</p>
+</blockquote>
+<hr>
+<h2 id="《企业应用架构模式》"><a href="#《企业应用架构模式》" class="headerlink" title="《企业应用架构模式》"></a>《企业应用架构模式》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-999499ccc43cb6b6.png" alt="《企业应用架构模式》"></p>
+<blockquote>
+<p>没看过</p>
+</blockquote>
+<hr>
+<h2 id="Spring3-x企业应用开发实战"><a href="#Spring3-x企业应用开发实战" class="headerlink" title="Spring3.x企业应用开发实战"></a>Spring3.x企业应用开发实战</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/avatar.png" alt="Spring3.x企业应用开发实战"></p>
+<blockquote>
+<p>这本书适合初学者看或者当做一本参考书。对于提高者而言，略看就行</p>
+</blockquote>
+<hr>
+<h2 id="Spring揭秘"><a href="#Spring揭秘" class="headerlink" title="Spring揭秘"></a>Spring揭秘</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/avatar.png" alt="《Spring揭秘》"></p>
+<blockquote>
+<p>没看过</p>
+</blockquote>
+<hr>
+<h2 id="Java程序性能优化-让你的Java程序更快、更稳定"><a href="#Java程序性能优化-让你的Java程序更快、更稳定" class="headerlink" title="Java程序性能优化:让你的Java程序更快、更稳定"></a>Java程序性能优化:让你的Java程序更快、更稳定</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/avatar.png" alt="《Java程序性能优化:让你的Java程序更快、更稳定》"></p>
+<blockquote>
+<p>没看过</p>
+</blockquote>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h1><p>talk is less show me your code，希望大家有好的书籍也可以推荐</p>
 ]]></content>
     
     <summary type="html">
