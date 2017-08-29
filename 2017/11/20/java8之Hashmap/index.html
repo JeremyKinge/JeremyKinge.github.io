@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java,java8,java8新特性," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Java8-HashMap变化 数据的存储结构从：数组+链表  演变为了 数组+链表+红黑树  Map 家庭族谱  HashMap：它根据键的hashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。 HashMap最多只允许一条记录的键为null，允许多条记录的值为null。HashMap非线程安全，即任一时刻可以有多个线程同时写HashMap">
+<meta name="keywords" content="java,java8,java8新特性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java8之Hashmap">
+<meta property="og:url" content="http://kingge.top/2017/11/20/java8之Hashmap/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="Java8-HashMap变化 数据的存储结构从：数组+链表  演变为了 数组+链表+红黑树  Map 家庭族谱  HashMap：它根据键的hashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。 HashMap最多只允许一条记录的键为null，允许多条记录的值为null。HashMap非线程安全，即任一时刻可以有多个线程同时写HashMap">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2017/11/20/java8之Hashmap/java.util.map类图.png">
+<meta property="og:image" content="http://kingge.top/2017/11/20/java8之Hashmap/2012122409394770.png">
+<meta property="og:image" content="http://kingge.top/2017/11/20/java8之Hashmap/hashMap内存结构图.png">
+<meta property="og:image" content="http://kingge.top/2017/11/20/java8之Hashmap/QQ截图20170829143321.png">
+<meta property="og:image" content="http://kingge.top/2017/11/20/java8之Hashmap/hashMapput方法执行流程图.png">
+<meta property="og:updated_time" content="2017-08-29T07:33:55.951Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java8之Hashmap">
+<meta name="twitter:description" content="Java8-HashMap变化 数据的存储结构从：数组+链表  演变为了 数组+链表+红黑树  Map 家庭族谱  HashMap：它根据键的hashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。 HashMap最多只允许一条记录的键为null，允许多条记录的值为null。HashMap非线程安全，即任一时刻可以有多个线程同时写HashMap">
+<meta name="twitter:image" content="http://kingge.top/2017/11/20/java8之Hashmap/java.util.map类图.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"hide","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2017/11/20/java8之Hashmap/"/>
+
+
+
+
+
+  <title>java8之Hashmap | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-hide page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2017/11/20/java8之Hashmap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java8之Hashmap</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-20T12:27:16+08:00">
+                2017-11-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java8/" itemprop="url" rel="index">
+                    <span itemprop="name">Java8</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Java8-HashMap变化"><a href="#Java8-HashMap变化" class="headerlink" title="Java8-HashMap变化"></a>Java8-HashMap变化</h1><blockquote>
+<p>数据的存储结构从：<strong><strong>数组+链表</strong></strong>  演变为了 <strong><strong>数组+链表+红黑树</strong></strong></p>
+</blockquote>
+<h1 id="Map-家庭族谱"><a href="#Map-家庭族谱" class="headerlink" title="Map 家庭族谱"></a>Map 家庭族谱</h1><p><img src="/2017/11/20/java8之Hashmap/java.util.map类图.png" alt="Map" title="HashMap"></p>
+<ul>
+<li><p>HashMap：它根据键的hashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。 HashMap最多只允许一条记录的键为null，允许多条记录的值为null。HashMap<strong>非线程安全</strong>，即任一时刻可以有多个线程同时写HashMap，可能会导致数据的不一致。如果<strong>需要满足线程安全</strong>，可以用<strong> Collections的synchronizedMap方法使HashMap具有线程安全的能力</strong>，或者使用<strong>ConcurrentHashMap</strong>。</p>
+</li>
+<li><p>Hashtable：Hashtable是遗留类，很多映射的常用功能与HashMap类似，不同的是它承自Dictionary类，并且是线程安全的，任一时间只有一个线程能写Hashtable，并发性不如ConcurrentHashMap，因为ConcurrentHashMap引入了分段锁。Hashtable不建议在新代码中使用，不需要线程安全的场合可以用HashMap替换，需要线程安全的场合可以用ConcurrentHashMap替换。</p>
+</li>
+<li><p>LinkedHashMap：LinkedHashMap是HashMap的一个子类，保存了记录的插入顺序，在用Iterator遍历LinkedHashMap时，先得到的记录肯定是先插入的，也可以在构造时带参数，按照访问次序排序。</p>
+</li>
+<li><p>TreeMap：TreeMap实现SortedMap接口，能够把它保存的记录根据键排序，默认是按键值的升序排序，也可以指定排序的比较器，当用Iterator遍历TreeMap时，得到的记录是排过序的。如果使用排序的映射，建议使用TreeMap。在使用TreeMap时，key必须实现Comparable接口或者在构造TreeMap传入自定义的Comparator，否则会在运行时抛出java.lang.ClassCastException类型的异常。</p>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>对于上述四种Map类型的类，要求映射中的key是不可变对象。不可变对象是该对象在创建后它的哈希值不会被改变。如果对象的哈希值发生变化，Map对象很可能就定位不到映射的位置了。</p>
+<p>通过上面的比较，我们知道了HashMap是Java的Map家族中一个普通成员，鉴于它可以满足大多数场景的使用条件，所以是使用频度最高的一个。下文我们主要结合源码，从存储结构、常用方法分析、扩容以及安全性等方面深入讲解HashMap的工作原理。</p>
+<h1 id="HashMap简介"><a href="#HashMap简介" class="headerlink" title="HashMap简介"></a>HashMap简介</h1><blockquote>
+<p>Java为数据结构中的映射定义了一个接口java.util.Map，此接口主要有四个常用的实现类，分别是HashMap、Hashtable、LinkedHashMap和TreeMap，类继承关系如下图所示：</p>
+</blockquote>
+<hr>
+<hr>
+<blockquote>
+<p>我们知道HashMap的数据存储结构就是：数组加上链表。通过对于key的值做hash运算，获得对应的值找到对应的数组下标，然后再存储值。存储值的过程中可能当前数组已经存在值（这个称之为冲突） 然后再生成一个链表存储冲突的值。</p>
+<blockquote>
+<p>HashCode() 和 Hash() 方法实现得足够好，能够尽可能地减少冲突的产生，那么对 HashMap 的操作几乎等价于对数组的随机访问操作，具有很好的性能。但是，如果 HashCode() 或者 Hash() 方法实现较差，在大量冲突产生的情况下，HashMap 事实上就退化为几个链表，对 HashMap 的操作等价于遍历链表，此时性能很差。</p>
+</blockquote>
+</blockquote>
+<p>解决冲突的方法：<a href="/2017/08/29/哈希表冲突解决方式之开放地址法和链地址法"><strong><em>开放地址法和链地址法</em></strong></a></p>
+<h1 id="HashMap特点"><a href="#HashMap特点" class="headerlink" title="HashMap特点"></a>HashMap特点</h1><ul>
+<li>允许null为key</li>
+<li><p>输出无序</p>
+<blockquote>
+<p>如果想要输出有序，那以使用继承他的LinkedHashMap，<strong>元素输出顺序跟输入顺序一致</strong>,他提供了一个节点保存输入的元素的顺序。<br>想要对<strong>元素的值进行排序</strong> 推荐TreeMap（因为他继承了SortedMap)</p>
+</blockquote>
+</li>
+<li><p>非线程安全</p>
+</li>
+<li><p>数组+链表存储方式<br><img src="/2017/11/20/java8之Hashmap/2012122409394770.png" alt="hashMap内存结构图" title="HashMap"></p>
+</li>
+</ul>
+<h1 id="Java8特性"><a href="#Java8特性" class="headerlink" title="Java8特性"></a>Java8特性</h1><blockquote>
+<p>HashMap是数组+链表+红黑树</p>
+</blockquote>
+<p><img src="/2017/11/20/java8之Hashmap/hashMap内存结构图.png" alt="hashMap内存结构图" title="HashMap"></p>
+<blockquote>
+<p>存储算法：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">map.put(&quot;kingge&quot;,&quot;shuai&quot;)</div><div class="line"></div><div class="line">系统将调用kingge”这个key的hashCode()方法得到其hashCode 值（该方法适用于每个Java对象），然后再通过Hash算法的后两步运算（高位运算和取模运算，下文有介绍）来定位该键值对的存储位置，有时两个key会定位到相同的位置，表示发生了Hash碰撞。当然Hash算法计算结果越分散均匀，Hash碰撞的概率就越小，map的存取效率就会越高。</div></pre></td></tr></table></figure>
+<p><img src="/2017/11/20/java8之Hashmap/QQ截图20170829143321.png" alt="高位运算和取模运算" title="HashMap"></p>
+<blockquote>
+<p><strong><strong>好的hash算法和扩容机制是解决冲突和高效存取的命题</strong></strong></p>
+</blockquote>
+<h2 id="HashMap-重要的几个属性"><a href="#HashMap-重要的几个属性" class="headerlink" title="HashMap 重要的几个属性"></a>HashMap 重要的几个属性</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">int threshold;             // 所能容纳的key-value对极限 </div><div class="line">final float loadFactor;    // 负载因子</div><div class="line">int modCount;  </div><div class="line">int size;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Node[] table(Hash桶)始化长度length(默认值是16)，Load factor为负载因子(默认值是0.75)，threshold是HashMap所能容纳的最大数据量的Node(键值对)个数。threshold = length * Load factor。也就是说，在数组定义好长度之后，负载因子越大，所能容纳的键值对个数越多。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>结合负载因子的定义公式可知，threshold就是在此Load factor和length(数组长度)对应下允许的最大元素数目，超过这个数目就重新resize(扩容)，扩容后的HashMap容量是之前容量的两倍。默认的负载因子0.75是对空间和时间效率的一个平衡选择，建议大家不要修改，除非在时间和空间比较特殊的情况下，如果内存空间很多而又对时间效率要求很高，可以降低负载因子Load factor的值；相反，如果内存空间紧张而对时间效率要求不高，可以增加负载因子loadFactor的值，这个值可以大于1。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>size这个字段其实很好理解，就是HashMap中实际存在的键值对数量。注意和table的长度length、容纳最大键值对数量threshold的区别。而modCount字段主要用来记录HashMap内部结构发生变化的次数，主要用于迭代的快速失败。强调一点，内部结构发生变化指的是结构发生变化，例如put新键值对，但是某个key对应的value值被覆盖不属于结构变化。</p>
+</blockquote>
+<h2 id="分析HashMap的put方法"><a href="#分析HashMap的put方法" class="headerlink" title="分析HashMap的put方法"></a>分析HashMap的put方法</h2><p>put方法图解，详情可以去看源码</p>
+<p><img src="/2017/11/20/java8之Hashmap/hashMapput方法执行流程图.png" alt="hashMapput方法执行流程图" title="HashMap"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public V put(K key, V value) &#123;</div><div class="line">      // 对key的hashCode()做hash</div><div class="line">      return putVal(hash(key), key, value, false, true);</div><div class="line">  &#125;</div><div class="line"> </div><div class="line">  final V putVal(int hash, K key, V value, boolean onlyIfAbsent,</div><div class="line">                 boolean evict) &#123;</div><div class="line">      Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;</div><div class="line">      // 步骤①：tab为空则创建</div><div class="line">     if ((tab = table) == null || (n = tab.length) == 0)</div><div class="line">         n = (tab = resize()).length;</div><div class="line">     // 步骤②：计算index，并对null做处理 </div><div class="line">     if ((p = tab[i = (n - 1) &amp; hash]) == null) </div><div class="line">         tab[i] = newNode(hash, key, value, null);</div><div class="line">     else &#123;</div><div class="line">         Node&lt;K,V&gt; e; K k;</div><div class="line">         // 步骤③：节点key存在，直接覆盖value</div><div class="line">         if (p.hash == hash &amp;&amp;</div><div class="line">             ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))</div><div class="line">             e = p;</div><div class="line">         // 步骤④：判断该链为红黑树</div><div class="line">         else if (p instanceof TreeNode)</div><div class="line">             e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);</div><div class="line">         // 步骤⑤：该链为链表</div><div class="line">         else &#123;</div><div class="line">             for (int binCount = 0; ; ++binCount) &#123;</div><div class="line">                 if ((e = p.next) == null) &#123;</div><div class="line">                     p.next = newNode(hash, key,value,null);</div><div class="line">                        //链表长度大于8转换为红黑树进行处理</div><div class="line">                     if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st  </div><div class="line">                         treeifyBin(tab, hash);</div><div class="line">                     break;</div><div class="line">                 &#125;</div><div class="line">                    // key已经存在直接覆盖value</div><div class="line">                 if (e.hash == hash &amp;&amp;</div><div class="line">                     ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))                                            break;</div><div class="line">                 p = e;</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line">        </div><div class="line">         if (e != null) &#123; // existing mapping for key</div><div class="line">             V oldValue = e.value;</div><div class="line">             if (!onlyIfAbsent || oldValue == null)</div><div class="line">                 e.value = value;</div><div class="line">             afterNodeAccess(e);</div><div class="line">             return oldValue;</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> </div><div class="line">     ++modCount;</div><div class="line">     // 步骤⑥：超过最大容量 就扩容</div><div class="line">     if (++size &gt; threshold)</div><div class="line">         resize();</div><div class="line">     afterNodeInsertion(evict);</div><div class="line">     return null;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<h2 id="为什么说HashMap是线程不安全的"><a href="#为什么说HashMap是线程不安全的" class="headerlink" title="为什么说HashMap是线程不安全的"></a>为什么说HashMap是线程不安全的</h2><blockquote>
+<p>个人觉得有两个表现，如果还有其他的希望大家补充，或者以后等楼主源码研究透了再补充</p>
+</blockquote>
+<h3 id="表现一"><a href="#表现一" class="headerlink" title="表现一"></a>表现一</h3><blockquote>
+<p>我们知道当插入数据超过了threshold(threshold=length * Load factor),那么就会扩容，扩容会去调用resize和transfer方法，这个时候原先hash桶里面的所有数据都会重新计算，对应的位置–称之为rehash，这个成本很大</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>最根本的原因是出现时死循环-也就是在死锁问题出现在了transfer方法上面</p>
+</blockquote>
+<hr>
+<p>具体源码分析参见：<a href="http://www.importnew.com/22011.html" target="_blank" rel="external">http://www.importnew.com/22011.html</a></p>
+<h3 id="表现二"><a href="#表现二" class="headerlink" title="表现二"></a>表现二</h3><p>多个线程同时操作一个hashmap就可能出现不安全的情况：<br>比如A B两个线程(A线程获数据 B线程存数据) 同时操作myHashMap<br>1.B线程执行存放数据<br>modelHashMap.put(“1”,”2”);<br>2.A线程执行get获取数据<br>modelHashMap.get(“1”)<br>A线程获取的值本来应该是2，但是如果A线程在刚到达获取的动作还没执行的时候，<br>线程执行的机会又跳到线程B，此时线程B又对modelHashMap赋值 如：modelHashMap.put(“1”,”3”);<br>然后线程虚拟机又执行线程A，A取到的值为3，这样map中第一个存放的值 就会丢失。。。。。<br>—原子性</p>
+<h2 id="解决HashMap非线程安全"><a href="#解决HashMap非线程安全" class="headerlink" title="解决HashMap非线程安全"></a>解决HashMap非线程安全</h2><p>其实上面我已经有提过了：</p>
+<p> 三个方法：</p>
+<ul>
+<li><p>Hashtable替换HashMap</p>
+</li>
+<li><p>Collections.synchronizedMap将HashMap包装起来</p>
+</li>
+</ul>
+<blockquote>
+<p>private Map map = Collections.synchronizedMap(new HashMap());<br>替换<br>private HashMap map = new HashMap();</p>
+</blockquote>
+<ul>
+<li>ConcurrentHashMap替换HashMap</li>
+</ul>
+<blockquote>
+<p>private ConcurrentHashMap map = new ConcurrentHashMap();<br>替换<br>private HashMap map = new HashMap();</p>
+</blockquote>
+<h1 id="好的博文"><a href="#好的博文" class="headerlink" title="好的博文"></a>好的博文</h1><p><a href="http://blog.csdn.net/lyg468088/article/details/49464121" target="_blank" rel="external">http://blog.csdn.net/lyg468088/article/details/49464121</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/java8/" rel="tag"># java8</a>
+          
+            <a href="/tags/java8新特性/" rel="tag"># java8新特性</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/29/哈希表冲突解决方式之开放地址法和链地址法/" rel="next" title="哈希表冲突解决方式之开放地址法和链地址法">
+                <i class="fa fa-chevron-left"></i> 哈希表冲突解决方式之开放地址法和链地址法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/20/java8新特性/" rel="prev" title="java8新特性">
+                java8新特性 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java8-HashMap变化"><span class="nav-number">1.</span> <span class="nav-text">Java8-HashMap变化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Map-家庭族谱"><span class="nav-number">2.</span> <span class="nav-text">Map 家庭族谱</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">2.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HashMap简介"><span class="nav-number">3.</span> <span class="nav-text">HashMap简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HashMap特点"><span class="nav-number">4.</span> <span class="nav-text">HashMap特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java8特性"><span class="nav-number">5.</span> <span class="nav-text">Java8特性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap-重要的几个属性"><span class="nav-number">5.1.</span> <span class="nav-text">HashMap 重要的几个属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析HashMap的put方法"><span class="nav-number">5.2.</span> <span class="nav-text">分析HashMap的put方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么说HashMap是线程不安全的"><span class="nav-number">5.3.</span> <span class="nav-text">为什么说HashMap是线程不安全的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#表现一"><span class="nav-number">5.3.1.</span> <span class="nav-text">表现一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表现二"><span class="nav-number">5.3.2.</span> <span class="nav-text">表现二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决HashMap非线程安全"><span class="nav-number">5.4.</span> <span class="nav-text">解决HashMap非线程安全</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#好的博文"><span class="nav-number">6.</span> <span class="nav-text">好的博文</span></a></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+    由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+  </div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">
+    主题 &mdash;
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Mist
+    </a>
+  </div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
