@@ -100,7 +100,7 @@
     <link href="http://kingge.top/2017/08/28/java8%E4%B9%8BHashmap/"/>
     <id>http://kingge.top/2017/08/28/java8之Hashmap/</id>
     <published>2017-08-28T14:27:16.000Z</published>
-    <updated>2017-08-29T08:00:03.588Z</updated>
+    <updated>2017-08-29T08:06:19.661Z</updated>
     
     <content type="html"><![CDATA[<h1 id="Java8-HashMap变化"><a href="#Java8-HashMap变化" class="headerlink" title="Java8-HashMap变化"></a>Java8-HashMap变化</h1><blockquote>
 <p>数据的存储结构从：<strong><strong>数组+链表</strong></strong>  演变为了 <strong><strong>数组+链表+红黑树</strong></strong></p>
@@ -177,7 +177,7 @@
 </blockquote>
 <hr>
 <blockquote>
-<p>最根本的原因是出现时死循环-也就是在死锁问题出现在了transfer方法上面</p>
+<p>最根本的原因是出现时死循环-也就是在死锁问题出现在了transfer方法上面,而且是因为在扩容转换的过程中采用的是链表的头插法的形式<br>进行插入数据。例如原来在数组arr[0]的位置又链表1–&gt;2–&gt;3 那么扩容后，采用头插法就变成了arr[0]：3–&gt;2–&gt;1</p>
 </blockquote>
 <hr>
 <p>具体源码分析参见：<a href="http://www.importnew.com/22011.html" target="_blank" rel="external">http://www.importnew.com/22011.html</a></p>

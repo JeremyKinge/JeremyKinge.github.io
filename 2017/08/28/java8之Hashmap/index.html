@@ -133,7 +133,7 @@
 <meta property="og:image" content="http://kingge.top/2017/08/28/java8之Hashmap/hashMap内存结构图.png">
 <meta property="og:image" content="http://kingge.top/2017/08/28/java8之Hashmap/QQ截图20170829143321.png">
 <meta property="og:image" content="http://kingge.top/2017/08/28/java8之Hashmap/hashMapput方法执行流程图.png">
-<meta property="og:updated_time" content="2017-08-29T08:00:03.588Z">
+<meta property="og:updated_time" content="2017-08-29T08:06:19.661Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java8之Hashmap">
 <meta name="twitter:description" content="Java8-HashMap变化 数据的存储结构从：数组+链表  演变为了 数组+链表+红黑树  Map 家庭族谱  HashMap：它根据键的hashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。 HashMap最多只允许一条记录的键为null，允许多条记录的值为null。HashMap非线程安全，即任一时刻可以有多个线程同时写HashMap">
@@ -483,7 +483,7 @@
 </blockquote>
 <hr>
 <blockquote>
-<p>最根本的原因是出现时死循环-也就是在死锁问题出现在了transfer方法上面</p>
+<p>最根本的原因是出现时死循环-也就是在死锁问题出现在了transfer方法上面,而且是因为在扩容转换的过程中采用的是链表的头插法的形式<br>进行插入数据。例如原来在数组arr[0]的位置又链表1–&gt;2–&gt;3 那么扩容后，采用头插法就变成了arr[0]：3–&gt;2–&gt;1</p>
 </blockquote>
 <hr>
 <p>具体源码分析参见：<a href="http://www.importnew.com/22011.html" target="_blank" rel="external">http://www.importnew.com/22011.html</a></p>
