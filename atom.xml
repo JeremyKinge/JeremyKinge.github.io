@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingge.top/"/>
-  <updated>2017-08-30T09:51:51.061Z</updated>
+  <updated>2017-08-31T07:19:00.229Z</updated>
   <id>http://kingge.top/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://kingge.top/2017/08/29/java8%E6%96%B0%E7%89%B9%E6%80%A7/"/>
     <id>http://kingge.top/2017/08/29/java8新特性/</id>
     <published>2017-08-29T04:27:16.000Z</published>
-    <updated>2017-08-30T09:51:51.061Z</updated>
+    <updated>2017-08-31T07:19:00.229Z</updated>
     
     <content type="html"><![CDATA[<p>Java 8可谓是自Java 5以来最具革命性的版本了，她在语言、编译器、类库、开发工具以及Java虚拟机等方面都带来了不少新特性。<br>我们来一一回顾一下这些特性。</p>
 <p><img src="/2017/08/29/java8新特性/java8特性简介.png" alt="java8新特性"></p>
@@ -62,11 +62,11 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Employee [id=101, name=张三, age=18, salary=9999.99]</div><div class="line">Employee [id=103, name=王五, age=28, salary=3333.33]</div><div class="line">Employee [id=104, name=赵六, age=8, salary=7777.77]</div><div class="line">----------------------------------------------</div><div class="line">Employee [id=101, name=张三, age=18, salary=9999.99]</div><div class="line">Employee [id=102, name=李四, age=59, salary=6666.66]</div><div class="line">Employee [id=104, name=赵六, age=8, salary=7777.77]</div><div class="line">Employee [id=105, name=田七, age=38, salary=5555.55]</div><div class="line">----------------------------------------------</div><div class="line">张三</div><div class="line">李四</div><div class="line">王五</div></pre></td></tr></table></figure>
 <p>我们不难发现上面的代码存在一个问题：这个代码，是非常潇洒，舒服的，不依赖我们上面所说的接口。</p>
 <hr>
-<h2 id="FunctionalInterface"><a href="#FunctionalInterface" class="headerlink" title="@FunctionalInterface"></a>@FunctionalInterface</h2><blockquote>
+<h2 id="函数式接口"><a href="#函数式接口" class="headerlink" title="函数式接口"></a>函数式接口</h2><blockquote>
 <p>为了使现有函数更好的支持Lambda表达式，Java 8引入了函数式接口的概念。函数式接口就是<strong>只有一个方法的普通接口</strong>。java.lang.Runnable与java.util.concurrent.Callable是函数式接口最典型的例子。为此，Java 8增加了一种特殊的注解@FunctionalInterface：</p>
 </blockquote>
 <p><strong><em>–也就是说：这个接口里面只能够存在一个接口方法，多个就会报错</em></strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@FunctionalInterface</div><div class="line">public interface Functional &#123;</div><div class="line">    void method();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>例子：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@FunctionalInterface</div><div class="line">public interface Functional &#123;</div><div class="line">    void method();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="认识Lambda表达式"><a href="#认识Lambda表达式" class="headerlink" title="认识Lambda表达式"></a>认识Lambda表达式</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>  一、Lambda 表达式的基础语法：Java8中引入了一个新的操作符 “-&gt;” 该操作符称为箭头操作符或 Lambda 操作符<br>                              箭头操作符将 Lambda 表达式拆分成两部分：</p>
 <p>  左侧：Lambda 表达式的参数列表<br>  右侧：Lambda 表达式中所需执行的功能， 即 Lambda 体</p>
 <blockquote>
@@ -88,11 +88,33 @@
 <p><strong>类型推断例子2</strong></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">	public void show(Map&lt;String, Integer&gt; map)&#123;&#125;//方法</div><div class="line">		show(new HashMap&lt;&gt;());//调用方法</div><div class="line">我们发现在调用方法的时候入参我们并没有明确声明类型，但是在jdk1.8中是可以编译通过的。这里也是运用了类型推断（注意：jdk1.7中编译会失败）</div></pre></td></tr></table></figure>
 <hr>
+<h3 id="热身例子一"><a href="#热身例子一" class="headerlink" title="热身例子一"></a>热身例子一</h3><hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//函数是接口</div><div class="line">@FunctionalInterface</div><div class="line">public interface MyFun &#123;</div><div class="line">	public Integer getValue(Integer num);</div><div class="line">&#125;</div><div class="line"></div><div class="line">//测试</div><div class="line"></div><div class="line">	//需求：对一个数进行运算</div><div class="line">	@Test</div><div class="line">	public void test6()&#123;</div><div class="line">		Integer num = operation(100, (x) -&gt; x * x);</div><div class="line">		System.out.println(num);</div><div class="line">		</div><div class="line">		System.out.println(operation(200, (y) -&gt; y + 200));</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	public Integer operation(Integer num, MyFun mf)&#123;</div><div class="line">		return mf.getValue(num);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="热身例子二"><a href="#热身例子二" class="headerlink" title="热身例子二"></a>热身例子二</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//函数接口 </div><div class="line">@FunctionalInterface //约束当前接口只能有一个方法</div><div class="line">public interface CalcLong&lt;K,T&gt;</div><div class="line">&#123;</div><div class="line">      // public K getMultiply(T t, T tt);</div><div class="line">        K getMultiply(T t, T tt);</div><div class="line">&#125;</div><div class="line"></div><div class="line">//需求：求得两个数的和</div><div class="line">        String result = getMuyl(10L,10L,(e,ee)-&gt;&#123;</div><div class="line">            System.out.println(e+ &quot;  &quot; + ee);</div><div class="line">            return e+ee+&quot;&quot;;</div><div class="line">        &#125;);</div><div class="line">        System.out.println(result);</div><div class="line"> </div><div class="line">    </div><div class="line">    public String getMuyl(Long l,Long ll,CalcLong&lt;String,Long&gt; mf)&#123;</div><div class="line">        return mf.getMultiply(l, ll);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 <blockquote>
-<p>热身例子</p>
+<p>看到这里可能会有疑惑？我靠，使用lambda表达式还得声明一个函数接口，这么麻烦。实际上，java内部已经帮我们实现了很多个接口供我们使用，不需要重新自己定义，除非有特别操作。</p>
 </blockquote>
 <hr>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//函数是接口</div><div class="line">@FunctionalInterface</div><div class="line">public interface MyFun &#123;</div><div class="line">	public Integer getValue(Integer num);</div><div class="line">&#125;</div><div class="line"></div><div class="line">//测试</div><div class="line"></div><div class="line">	//需求：对一个数进行运算</div><div class="line">	@Test</div><div class="line">	public void test6()&#123;</div><div class="line">		Integer num = operation(100, (x) -&gt; x * x);</div><div class="line">		System.out.println(num);</div><div class="line">		</div><div class="line">		System.out.println(operation(200, (y) -&gt; y + 200));</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	public Integer operation(Integer num, MyFun mf)&#123;</div><div class="line">		return mf.getValue(num);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<h3 id="java8内置四大函数式接口"><a href="#java8内置四大函数式接口" class="headerlink" title="java8内置四大函数式接口"></a>java8内置四大函数式接口</h3><blockquote>
+<p> 为了解决接口需要自定义问题</p>
+</blockquote>
+<p><img src="/2017/08/29/java8新特性/内置四大函数接口.png" alt="内置四大函数接口.png"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/*</div><div class="line"> * Java8 内置的四大核心函数式接口</div><div class="line"> * </div><div class="line"> * Consumer&lt;T&gt; : 消费型接口</div><div class="line"> * 		void accept(T t);</div><div class="line"> * </div><div class="line"> * Supplier&lt;T&gt; : 供给型接口</div><div class="line"> * 		T get(); </div><div class="line"> * </div><div class="line"> * Function&lt;T, R&gt; : 函数型接口</div><div class="line"> * 		R apply(T t);</div><div class="line"> * </div><div class="line"> * Predicate&lt;T&gt; : 断言型接口</div><div class="line"> * 		boolean test(T t);</div><div class="line"> * </div><div class="line"> */</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><h5 id="消费型接口"><a href="#消费型接口" class="headerlink" title="消费型接口"></a>消费型接口</h5><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//Consumer&lt;T&gt; 消费型接口 :</div><div class="line">@Test</div><div class="line">public void test1()&#123;</div><div class="line">    String p;</div><div class="line">	happy(10000, (m) -&gt; System.out.println(&quot;桑拿，每次消费：&quot; + m + &quot;元&quot;));</div><div class="line">&#125; </div><div class="line"></div><div class="line">public void happy(double money, Consumer&lt;Double&gt; con)&#123;</div><div class="line">	con.accept(money);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h5 id="Supplier-供给型接口"><a href="#Supplier-供给型接口" class="headerlink" title="Supplier 供给型接口"></a>Supplier 供给型接口</h5><hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//Supplier&lt;T&gt; 供给型接口 :</div><div class="line">@Test</div><div class="line">public void test2()&#123;</div><div class="line">	List&lt;Integer&gt; numList = getNumList(10, () -&gt; (int)(Math.random() * 100));</div><div class="line">	</div><div class="line">	for (Integer num : numList) &#123;</div><div class="line">		System.out.println(num);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//需求：产生指定个数的整数，并放入集合中</div><div class="line">public List&lt;Integer&gt; getNumList(int num, Supplier&lt;Integer&gt; sup)&#123;</div><div class="line">	List&lt;Integer&gt; list = new ArrayList&lt;&gt;();</div><div class="line">	</div><div class="line">	for (int i = 0; i &lt; num; i++) &#123;</div><div class="line">		Integer n = sup.get();</div><div class="line">		list.add(n);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	return list;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h5 id="Function-函数型接口"><a href="#Function-函数型接口" class="headerlink" title="Function 函数型接口"></a>Function 函数型接口</h5><hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//Function&lt;T, R&gt; 函数型接口：</div><div class="line">@Test</div><div class="line">public void test3()&#123;</div><div class="line">	String newStr = strHandler(&quot;\t\t\t 去除前后空格   &quot;, (str) -&gt; str.trim());</div><div class="line">	System.out.println(newStr);</div><div class="line">	</div><div class="line">	String subStr = strHandler(&quot;截取字符串你知不知道&quot;, (str) -&gt; str.substring(2, 5));</div><div class="line">	System.out.println(subStr);</div><div class="line">&#125;</div><div class="line"></div><div class="line">//需求：用于处理字符串</div><div class="line">public String strHandler(String str, Function&lt;String, String&gt; fun)&#123;</div><div class="line">	return fun.apply(str);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h5 id="Predicate-断言型接口"><a href="#Predicate-断言型接口" class="headerlink" title="Predicate 断言型接口"></a>Predicate 断言型接口</h5><hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//Predicate&lt;T&gt; 断言型接口：</div><div class="line">@Test</div><div class="line">public void test4()&#123;</div><div class="line">	List&lt;String&gt; list = Arrays.asList(&quot;Hello&quot;, &quot;atguigu&quot;, &quot;Lambda&quot;, &quot;www&quot;, &quot;ok&quot;);</div><div class="line">	List&lt;String&gt; strList = filterStr(list, (s) -&gt; s.length() &gt; 3);</div><div class="line">	</div><div class="line">	for (String str : strList) &#123;</div><div class="line">		System.out.println(str);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//需求：将满足条件的字符串，放入集合中</div><div class="line">public List&lt;String&gt; filterStr(List&lt;String&gt; list, Predicate&lt;String&gt; pre)&#123;</div><div class="line">	List&lt;String&gt; strList = new ArrayList&lt;&gt;();</div><div class="line">	for (String str : list) &#123;</div><div class="line">		if(pre.test(str))&#123;</div><div class="line">			strList.add(str);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return strList;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="四大内置函数衍生的子函数"><a href="#四大内置函数衍生的子函数" class="headerlink" title="四大内置函数衍生的子函数"></a>四大内置函数衍生的子函数</h4><p><img src="/2017/08/29/java8新特性/四大内置函数接口的子接口.png" alt="四大内置函数接口的子接口.png"></p>
+<hr>
 <h1 id="二、接口的默认方法与静态方法"><a href="#二、接口的默认方法与静态方法" class="headerlink" title="二、接口的默认方法与静态方法"></a>二、接口的默认方法与静态方法</h1><blockquote>
 <p>我们可以在接口中定义默认方法，使用default关键字，并提供默认的实现。所有实现这个接口的类都会接受默认方法的实现，除非子类提供的自己的实现。例如：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public interface DefaultFunctionInterface &#123;</div><div class="line">    default String defaultFunction() &#123;</div><div class="line">        return &quot;default function&quot;;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 </blockquote>
@@ -620,7 +642,7 @@
     <link href="http://kingge.top/2017/08/14/Hessian%20%E5%A4%9A%E7%B3%BB%E7%BB%9F%E8%AE%BF%E9%97%AE/"/>
     <id>http://kingge.top/2017/08/14/Hessian 多系统访问/</id>
     <published>2017-08-14T01:31:13.972Z</published>
-    <updated>2017-08-17T03:20:39.201Z</updated>
+    <updated>2017-08-31T09:44:24.038Z</updated>
     
     <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
