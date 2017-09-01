@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingge.top/"/>
-  <updated>2017-08-31T07:19:00.229Z</updated>
+  <updated>2017-09-01T02:08:20.226Z</updated>
   <id>http://kingge.top/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://kingge.top/2017/08/29/java8%E6%96%B0%E7%89%B9%E6%80%A7/"/>
     <id>http://kingge.top/2017/08/29/java8新特性/</id>
     <published>2017-08-29T04:27:16.000Z</published>
-    <updated>2017-08-31T07:19:00.229Z</updated>
+    <updated>2017-09-01T02:08:20.226Z</updated>
     
     <content type="html"><![CDATA[<p>Java 8可谓是自Java 5以来最具革命性的版本了，她在语言、编译器、类库、开发工具以及Java虚拟机等方面都带来了不少新特性。<br>我们来一一回顾一下这些特性。</p>
 <p><img src="/2017/08/29/java8新特性/java8特性简介.png" alt="java8新特性"></p>
@@ -121,13 +121,59 @@
 <hr>
 <p>我们还可以在接口中定义静态方法，使用static关键字，也可以提供实现。例如：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public interface StaticFunctionInterface &#123;</div><div class="line">    static String staticFunction() &#123;</div><div class="line">        return &quot;static function&quot;;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>接口的默认方法和静态方法的引入，其实可以认为引入了C＋＋中抽象类的理念，以后我们再也不用在每个实现类中都写重复的代码了。</p>
+<hr>
 <h1 id="三、方法引用"><a href="#三、方法引用" class="headerlink" title="三、方法引用"></a>三、方法引用</h1><blockquote>
-<p>通常与Lambda表达式联合使用，可以直接引用已有Java类或对象的方法。一般有四种不同的方法引用：<br>构造器引用。语法是Class::new，或者更一般的Class&lt; T &gt;::new，要求构造器方法是没有参数；<br>静态方法引用。语法是Class::static_method，要求接受一个Class类型的参数；<br>特定类的任意对象方法引用。它的语法是Class::method。要求方法是没有参数的；<br>特定对象的方法引用，它的语法是instance::method。要求方法接受一个参数，与3不同的地方在于，3是在列表元素上分别调用方法，而4是在某个对象上调用方法，将列表元素作为参数传入；</p>
+<p>通常与Lambda表达式联合使用，可以直接引用已有Java类或对象的方法。一般有四种不同的方法引用：</p>
 </blockquote>
+<h2 id="构造器引用"><a href="#构造器引用" class="headerlink" title="构造器引用"></a>构造器引用</h2><hr>
+<ul>
+<li>构造器引用。语法是Class::new，构造器的参数列表，需要与函数式接口中参数列表保持一致！<strong><em>也就是说，决定Class::new调用那一个构造器得是：接口函数的方法的参数 </em></strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//构造器引用</div><div class="line">@Test</div><div class="line">public void test7()&#123;</div><div class="line">    //  Supplier 的接口方法  T get(); --所以调用无参构造器</div><div class="line">    Supplier&lt;Employee&gt; fun0 = Employee::new;</div><div class="line">    //Function 的接口方法  R apply(T t);-调用一个参数构造器</div><div class="line">	Function&lt;String, Employee&gt; fun = Employee::new;</div><div class="line">	//BiFunction 的接口方法 R apply(T t, U u); -调用二参构造器</div><div class="line">	BiFunction&lt;String, Integer, Employee&gt; fun2 = Employee::new;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="对象静态方法引用（类名-静态方法）"><a href="#对象静态方法引用（类名-静态方法）" class="headerlink" title="对象静态方法引用（类名::静态方法）"></a>对象静态方法引用（类名::静态方法）</h2><hr>
+<blockquote>
+<ul>
+<li>静态方法引用。语法是Class::static_method，要求接受一个Class类型的参数；</li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//类名 :: 静态方法名</div><div class="line">//max和compare 都是静态方法</div><div class="line">@Test</div><div class="line">public void test4()&#123;</div><div class="line">	Comparator&lt;Integer&gt; com = (x, y) -&gt; Integer.compare(x, y);</div><div class="line">	System.out.println(&quot;-------------------------------------&quot;);</div><div class="line">	Comparator&lt;Integer&gt; com2 = Integer::compare;</div><div class="line">	</div><div class="line"></div><div class="line"></div><div class="line">	BiFunction&lt;Double, Double, Double&gt; fun = (x, y) -&gt; Math.max(x, y);</div><div class="line">	System.out.println(fun.apply(1.5, 22.2));</div><div class="line">	</div><div class="line">	System.out.println(&quot;------------------------------------&quot;);</div><div class="line">	</div><div class="line">	BiFunction&lt;Double, Double, Double&gt; fun2 = Math::max;</div><div class="line">	System.out.println(fun2.apply(1.2, 1.5));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="对象实例方法引用（对象引用-实例方法名）"><a href="#对象实例方法引用（对象引用-实例方法名）" class="headerlink" title="对象实例方法引用（对象引用::实例方法名）"></a>对象实例方法引用（对象引用::实例方法名）</h2><hr>
+<blockquote>
+<ul>
+<li>特定类的任意对象方法引用。它的语法是Class::method。要求方法是没有参数的；</li>
+</ul>
+</blockquote>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//对象的引用 :: 实例方法名</div><div class="line">@Test</div><div class="line">public void test2()&#123;</div><div class="line">	Employee emp = new Employee(101, &quot;张三&quot;, 18, 9999.99);</div><div class="line">	</div><div class="line">	Supplier&lt;String&gt; sup = () -&gt; emp.getName();</div><div class="line">	System.out.println(sup.get());</div><div class="line">	</div><div class="line">	System.out.println(&quot;----------------------------------&quot;);</div><div class="line">	</div><div class="line">	Supplier&lt;String&gt; sup2 = emp::getName;</div><div class="line">	System.out.println(sup2.get());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="类名实例方法引用-类名-实例方法名"><a href="#类名实例方法引用-类名-实例方法名" class="headerlink" title="类名实例方法引用(类名::实例方法名)"></a>类名实例方法引用(类名::实例方法名)</h2><hr>
+<blockquote>
+<ul>
+<li>我们知道一般是有对象才能够引用实例方法，但是有种特殊情况是可以直接使用类名引用实例方法<br>若Lambda 的参数列表的第一个参数，是实例方法的调用者，第二个参数(或无参)是实例方法的参数时，格式： ClassName::MethodName</li>
+</ul>
+</blockquote>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//类名 :: 实例方法名</div><div class="line">//按照常规是String st = new String(&quot;123&quot;); st::equals,</div><div class="line">//对象调用实例方法，但是下面因为符合第四种引用的规则，</div><div class="line">//所以可以使用类名调用实例方法</div><div class="line">@Test</div><div class="line">public void test5()&#123;</div><div class="line">//第一个参数为实例方法调用者，第二个参数为为实例方法参数</div><div class="line">	BiPredicate&lt;String, String&gt; bp = (x, y) -&gt; x.equals(y);</div><div class="line">	System.out.println(bp.test(&quot;abcde&quot;, &quot;abcde&quot;));</div><div class="line">	System.out.println(&quot;-------------------------------------&quot;);</div><div class="line">	</div><div class="line">BiPredicate&lt;String, String&gt; bp2 = String::equals;</div><div class="line">System.out.println(bp2.test(&quot;abc&quot;, &quot;abc&quot;));</div><div class="line">	</div><div class="line">System.out.println(&quot;---------------------------------------&quot;);</div><div class="line">	</div><div class="line">	//第一个参数为实例方法调用者，第二个参数为空</div><div class="line">Function&lt;Employee, String&gt; fun = (e) -&gt; e.show();</div><div class="line">System.out.println(fun.apply(new Employee()));</div><div class="line">System.out.println(&quot;--------------------------------------&quot;);</div><div class="line">	</div><div class="line">	Function&lt;Employee, String&gt; fun2 = Employee::show;</div><div class="line">	System.out.println(fun2.apply(new Employee()));</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 注意：</p>
+<blockquote>
+<p> ①方法体所引用的方法的参数列表与返回值类型，需要与函数式接口中抽象方法的参数列表和返回值类型保持一致！</p>
+<p>  ②若Lambda 的参数列表的第一个参数，是实例方法的调用者，第二个参数(或无参)是实例方法的参数时，格式：ClassName::MethodName  (<strong><em>针对于第四种方法引用</em></strong>)</p>
+</blockquote>
+<hr>
+<h2 id="数组引用（类型-new）"><a href="#数组引用（类型-new）" class="headerlink" title="数组引用（类型[] :: new）"></a>数组引用（类型[] :: new）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//数组引用</div><div class="line">@Test</div><div class="line">public void test8()&#123;</div><div class="line">	Function&lt;Integer, String[]&gt; fun = (args) -&gt; new String[args];</div><div class="line">	String[] strs = fun.apply(10);</div><div class="line">	System.out.println(strs.length);</div><div class="line">	</div><div class="line">	System.out.println(&quot;--------------------------&quot;);</div><div class="line">	</div><div class="line">	Function&lt;Integer, Employee[]&gt; fun2 = Employee[] :: new;</div><div class="line">	Employee[] emps = fun2.apply(20);</div><div class="line">	System.out.println(emps.length);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h1 id="四、重复注解"><a href="#四、重复注解" class="headerlink" title="四、重复注解"></a>四、重复注解</h1><p>在Java 5中使用注解有一个限制，即相同的注解在同一位置只能声明一次。Java 8引入重复注解，这样相同的注解在同一地方也可以声明多次。重复注解机制本身需要用@Repeatable注解。Java 8在编译器层做了优化，相同注解会以集合的方式保存，因此底层的原理并没有变化。</p>
 <h1 id="五、扩展注解的支持"><a href="#五、扩展注解的支持" class="headerlink" title="五、扩展注解的支持"></a>五、扩展注解的支持</h1><p>Java 8扩展了注解的上下文，几乎可以为任何东西添加注解，包括局部变量、泛型类、父类与接口的实现，连方法的异常也能添加注解。</p>
 <h1 id="六、Optional"><a href="#六、Optional" class="headerlink" title="六、Optional"></a>六、Optional</h1><p>Java 8引入Optional类来防止空指针异常，Optional类最先是由Google的Guava项目引入的。Optional类实际上是个容器：它可以保存类型T的值，或者保存null。使用Optional类我们就不用显式进行空指针检查了。</p>
-<h1 id="七、Stream"><a href="#七、Stream" class="headerlink" title="七、Stream"></a>七、Stream</h1><p>Stream API是把真正的函数式编程风格引入到Java中。其实简单来说可以把Stream理解为MapReduce，当然Google的MapReduce的灵感也是来自函数式编程。她其实是一连串支持连续、并行聚集操作的元素。从语法上看，也很像linux的管道、或者链式编程，代码写起来简洁明了，非常酷帅！</p>
+<h1 id="七、Stream"><a href="#七、Stream" class="headerlink" title="七、Stream"></a>七、Stream</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>Stream API是把真正的函数式编程风格引入到Java中。其实简单来说可以把Stream理解为MapReduce，当然Google的MapReduce的灵感也是来自函数式编程。她其实是一连串支持连续、并行聚集操作的元素。从语法上看，也很像linux的管道、或者链式编程，代码写起来简洁明了，非常酷帅！</p>
+</blockquote>
+<hr>
+<p><img src="/2017/08/29/java8新特性/stream前言.png" alt="stream前言.png"></p>
+<hr>
+<p><img src="/2017/08/29/java8新特性/stream概念一.png" alt="stream概念一.png"></p>
+<hr>
+<p><img src="/2017/08/29/java8新特性/stream概念二.png" alt="stream概念二.png"></p>
+<hr>
 <h1 id="八、Date-Time-API-JSR-310"><a href="#八、Date-Time-API-JSR-310" class="headerlink" title="八、Date/Time API (JSR 310)"></a>八、Date/Time API (JSR 310)</h1><p>Java 8新的Date-Time API (JSR 310)受Joda-Time的影响，提供了新的java.time包，可以用来替代 java.util.Date和java.util.Calendar。一般会用到Clock、LocaleDate、LocalTime、LocaleDateTime、ZonedDateTime、Duration这些类，对于时间日期的改进还是非常不错的。</p>
 <h1 id="九、JavaScript引擎Nashorn"><a href="#九、JavaScript引擎Nashorn" class="headerlink" title="九、JavaScript引擎Nashorn"></a>九、JavaScript引擎Nashorn</h1><p>Nashorn允许在JVM上开发运行JavaScript应用，允许Java与JavaScript相互调用。</p>
 <h1 id="十、Base64"><a href="#十、Base64" class="headerlink" title="十、Base64"></a>十、Base64</h1><p>在Java 8中，Base64编码成为了Java类库的标准。Base64类同时还提供了对URL、MIME友好的编码器与解码器。</p>
