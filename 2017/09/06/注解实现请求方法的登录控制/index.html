@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java,java注解,登录控制," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言 之前一直使用的是，拦截器来统一验证当前用户是否登录，通过验证cookie或者session里面的是否存在已经登录标识来完成登录逻辑判断。但是会发现，这个很麻烦，而且有很多配置需要配置，例如免验证URL等等配置，无法实现可拔插式方法级别的控制。  public class RequestInterceptor extends HandlerInterceptorAdapter &amp;#123;">
+<meta name="keywords" content="java,java注解,登录控制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="注解实现请求方法的登录控制">
+<meta property="og:url" content="http://kingge.top/2017/09/06/注解实现请求方法的登录控制/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="前言 之前一直使用的是，拦截器来统一验证当前用户是否登录，通过验证cookie或者session里面的是否存在已经登录标识来完成登录逻辑判断。但是会发现，这个很麻烦，而且有很多配置需要配置，例如免验证URL等等配置，无法实现可拔插式方法级别的控制。  public class RequestInterceptor extends HandlerInterceptorAdapter &amp;#123;">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2017/09/06/注解实现请求方法的登录控制/DC流程.png">
+<meta property="og:image" content="http://kingge.top/2017/09/06/注解实现请求方法的登录控制/五个基本原数据.png">
+<meta property="og:updated_time" content="2017-09-06T03:56:00.492Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="注解实现请求方法的登录控制">
+<meta name="twitter:description" content="前言 之前一直使用的是，拦截器来统一验证当前用户是否登录，通过验证cookie或者session里面的是否存在已经登录标识来完成登录逻辑判断。但是会发现，这个很麻烦，而且有很多配置需要配置，例如免验证URL等等配置，无法实现可拔插式方法级别的控制。  public class RequestInterceptor extends HandlerInterceptorAdapter &amp;#123;">
+<meta name="twitter:image" content="http://kingge.top/2017/09/06/注解实现请求方法的登录控制/DC流程.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2017/09/06/注解实现请求方法的登录控制/"/>
+
+
+
+
+
+  <title>注解实现请求方法的登录控制 | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2017/09/06/注解实现请求方法的登录控制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">注解实现请求方法的登录控制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-06T10:37:08+08:00">
+                2017-09-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,850
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p>之前一直使用的是，拦截器来统一验证当前用户是否登录，通过验证cookie或者session里面的是否存在已经登录标识来完成登录逻辑判断。但是会发现，这个很麻烦，而且有很多配置需要配置，例如免验证URL等等配置，无法实现可拔插式方法级别的控制。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class RequestInterceptor extends HandlerInterceptorAdapter &#123;  </div><div class="line"></div><div class="line">      </div><div class="line">    public String[] allowUrls;//配置不拦截的资源，所以在代码里面来排除.</div><div class="line">      </div><div class="line">    public void setAllowUrls(String[] allowUrls) &#123;    </div><div class="line">        this.allowUrls = allowUrls;    </div><div class="line">    &#125;    </div><div class="line"></div><div class="line">    @Override  </div><div class="line">    public void postHandle(HttpServletRequest request,  </div><div class="line">            HttpServletResponse response, Object handler,  </div><div class="line">            ModelAndView modelAndView) throws Exception &#123;  </div><div class="line">        // TODO Auto-generated method stub  </div><div class="line">          </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    @Override  </div><div class="line">    public boolean preHandle(HttpServletRequest request,  </div><div class="line">            HttpServletResponse response, Object handler) throws Exception &#123;  </div><div class="line">          </div><div class="line">          </div><div class="line">        // TODO Auto-generated method stub  </div><div class="line">        request.setCharacterEncoding(&quot;UTF8&quot;);  </div><div class="line">        HttpSession session=request.getSession();//获取登录的SESSION   </div><div class="line">          </div><div class="line">          </div><div class="line">        String sessionid=request.getSession().getId();//获取登录的SESSIONID  </div><div class="line">        String requestPath=request.getServletPath();//获取客户请求页面  </div><div class="line">          </div><div class="line">          </div><div class="line">         //先过滤掉不需要判断SESSION的请求  </div><div class="line">        for(String url : allowUrls) &#123;     </div><div class="line">            if(requestPath.contains(url)) &#123;      </div><div class="line">                return true;      </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line"></div><div class="line">     Object attribute = request.getSession().getAttribute(&quot;sys_user&quot;);</div><div class="line">                if( attribute == null )&#123;</div><div class="line">                    response.sendRedirect(&quot;/index.jsp&quot;);</div><div class="line">                &#125;</div><div class="line">				</div><div class="line">            return true;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p>大体上是这样的，<strong>通过allowUrls来控制免登录url</strong>（上面的代码其实可以使用配置文件的方式来配置allowUrls的值，可以不通过setAllowUrls的方式来赋值，但是为了方面扩展就加入了。）</p>
+<blockquote>
+<p>这里会面临一个问题，那就是如果网站网页多的话，那么allowUrls的值会变得很庞大，可能会缺漏。所以下面讲解本人用到的解决方式—-<strong><em>注解</em></strong> 和 <strong><em>spring配置方式</em></strong>（跟数组形式没有什么区别）</p>
+</blockquote>
+</blockquote>
+<h1 id="spring-配置方式"><a href="#spring-配置方式" class="headerlink" title="spring 配置方式"></a>spring 配置方式</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">path 对所有的请求拦截使用/**，对某个模块下的请求拦截使用：/myPath/*</div><div class="line">&lt;mvc:interceptor&gt;</div><div class="line">	&lt;mvc:mapping path=&quot;/**&quot; /&gt;</div><div class="line">	&lt;bean class=&quot;com.kingge.oa.user.LoginInterceptor&quot; /&gt;</div><div class="line">&lt;/mvc:interceptor&gt;</div><div class="line"></div><div class="line"></div><div class="line">    或者</div><div class="line">       &lt;!--       拦截是否登录</div><div class="line">      &lt;mvc:interceptor&gt;</div><div class="line">		   需拦截的地址  </div><div class="line">                      二级目录  </div><div class="line">	            &lt;mvc:mapping path=&quot;/*/*&quot;/&gt; </div><div class="line"> &lt;bean class=&quot;com.jk.ssm.interceptor.RequestInterceptor&quot; &gt;</div><div class="line">		 &lt;property name=&quot;allowUrls&quot;&gt;   //回去调用拦截器的 setAllowUrls 方法</div><div class="line">	            &lt;list&gt;  </div><div class="line">	              如果请求中包含以下路径，则不进行拦截  </div><div class="line">	              &lt;value&gt;/account/login.html&lt;/value&gt;  </div><div class="line">	              &lt;value&gt;/captcha/image.html&lt;/value&gt;  </div><div class="line">	          	  &lt;value&gt;/register/register.html&lt;/value&gt; </div><div class="line">	          	  &lt;value&gt;/error/400.html&lt;/value&gt; </div><div class="line">	          	  &lt;value&gt;/error/404.html&lt;/value&gt; </div><div class="line">	          	  &lt;value&gt;/error/500.html&lt;/value&gt; </div><div class="line">	            &lt;/list&gt;  </div><div class="line">        		&lt;/property&gt;</div><div class="line">        &lt;/bean&gt;</div><div class="line">&lt;/mvc:interceptor&gt;</div></pre></td></tr></table></figure>
+<hr>
+<h1 id="使用注解"><a href="#使用注解" class="headerlink" title="使用注解"></a>使用注解</h1><h2 id="关于注解"><a href="#关于注解" class="headerlink" title="关于注解"></a>关于注解</h2><blockquote>
+<p>官方说辞：JDK5开始，java增加了对元数据(MetaData)的支持，怎么支持？答：通过Annotation(注解）来实现。Annotation提供了为程序元素设置元数据的方法。元数据：描述数据的数据。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>个人理解：首先什么是元数据，元数据就是对一类事物的统称，他不仅限于某个事物的描述。例如我们有ABC三个系统，分别使用oracle，mysql，db2，都有登录功能，他们的用户表字段名称是不一样的。那么有个需求，我想把A系统的用户数据pour到B系统中，那么进行映射操作？这个时候就需要一个描述用户数据的一个统一标识（元数据）这样我们就可以先把，A系统数据映射到元数据，然后再从元数据取数据映射到B系统中。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>粗俗的理解，元数据就是一个类的属性，但是他所具备的职能的而应用范围，跟真正意义上类的属性数不一样的。传统的类的属性他只描述这个类，元数据可以描述多个具有共性的类。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>再举个例子，我们现在常用的数据中心（DC）就是使用了元数据来作为数据传输的媒介。</p>
+</blockquote>
+<p><img src="/2017/09/06/注解实现请求方法的登录控制/DC流程.png" alt="DC流程.png" title="DC流程.png"></p>
+<hr>
+<blockquote>
+<p>元数据作用：：Annotation就像代码里的特殊标记，这些标记可以在编译、类加载、运行时被读取。读取到了程序元素的元数据，就可以执行相应的处理。通过注解，程序开发人员可以在不改变原有逻辑的情况下，在源代码文件中嵌入一些补充信息。代码分析工具、开发工具和部署工具可以通过解析这些注解获取到这些补充信息，从而进行验证或者进行部署等。</p>
+</blockquote>
+<hr>
+<h2 id="到java8为止一共提供了五个-注解"><a href="#到java8为止一共提供了五个-注解" class="headerlink" title="到java8为止一共提供了五个  注解"></a>到java8为止一共提供了五个  <strong><em>注解</em></strong></h2><hr>
+<p><img src="/2017/09/06/注解实现请求方法的登录控制/五个基本原数据.png" alt="五个基本原数据.png" title="五个基本原数据.png"></p>
+<hr>
+<blockquote>
+<ul>
+<li>unchecked异常：运行时异常。是RuntimeException的子类，不需要在代码中显式地捕获unchecked异常做处理。Java异常</li>
+</ul>
+</blockquote>
+<ul>
+<li>@SafeVarargs (java7新增）：java7的“堆污染”警告与@SafeVarargs<br>堆污染：把一个不带泛型的对象赋给一个带泛型的变量是，就会发生堆污染。<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">例如：下面代码引起堆污染，会给出警告</div><div class="line">List l2 = new ArrayList&lt;Number&gt;();</div><div class="line">List&lt;String&gt; ls = l2;</div><div class="line">3中方式去掉这个警告</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>3种方式去掉这个警告：<br>使用注解@SafeVarargs修饰引发该警告的方法或构造器。<br>使用@SuppressWarnings(“unchecked”) 修饰。<br>使用编译器参数命令：-Xlint:varargs</p>
+</blockquote>
+<ul>
+<li>@Functionlnterface （java8新增）：修饰函数式接口<br>使用该注解修饰的接口必须是函数式接口，不然编译会出错。那么什么是函数式接口？答：如果接口中只有一个抽象方法（可以包含多个默认方法或static方法），就是函数式接口。</li>
+</ul>
+<hr>
+<h2 id="五个基本元注解"><a href="#五个基本元注解" class="headerlink" title="五个基本元注解"></a>五个基本元注解</h2><blockquote>
+<p>元注解：描述注解的注解（概念跟元数据类似）。</p>
+<blockquote>
+<p>java提供了6个元注解（Meta Annotation)，在java.lang.annotation中。其中5个用于修饰其他的Annonation定义。而@Repeatable专门用于定义Java8新增的重复注解。所以要定义注解必须使用到5个元注解来定义( 五个注解用法 详情百度 )</p>
+<ul>
+<li>@Inherited</li>
+<li>@Documented</li>
+<li>@Retention（英文：保留）</li>
+<li>@Target ( 目标)</li>
+</ul>
+</blockquote>
+</blockquote>
+<hr>
+<h2 id="自定义注解"><a href="#自定义注解" class="headerlink" title="自定义注解"></a>自定义注解</h2><blockquote>
+<p>参见下面，例子或者白度，具体就不阐述了。</p>
+</blockquote>
+<h2 id="使用注解解决登录问题"><a href="#使用注解解决登录问题" class="headerlink" title="使用注解解决登录问题"></a>使用注解解决登录问题</h2><h3 id="定义一个枚举类"><a href="#定义一个枚举类" class="headerlink" title="定义一个枚举类"></a>定义一个枚举类</h3><blockquote>
+<p>作用： 是否进行验证权限（因为后期可能会增加权限判断注解，而且是否登录也可以说是权限判断的一种，所以这里的枚举类的作用就是保存是否进行权限判断信息）</p>
+</blockquote>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public enum Action</div><div class="line">&#123;</div><div class="line">    Normal(&quot;0&quot;,&quot;执行权限验证&quot;), Skip(&quot;1&quot;, &quot;跳过权限验证&quot;);</div><div class="line">    private final  String key;</div><div class="line">    private final  String desc;</div><div class="line">    private Action(String key, String desc)</div><div class="line">    &#123;</div><div class="line">        this.key = key;</div><div class="line">        this.desc = desc;</div><div class="line">    &#125;</div><div class="line"> //省略get set方法</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="定义登录和权限注解"><a href="#定义登录和权限注解" class="headerlink" title="定义登录和权限注解"></a>定义登录和权限注解</h3><blockquote>
+<p>Login属性是action ，属性类型是Action（上面的枚举类）</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Target(ElementType.METHOD)</div><div class="line">@Documented</div><div class="line">@Retention(RetentionPolicy.RUNTIME)</div><div class="line">public @interface Login</div><div class="line">&#123;</div><div class="line">      Action action() default Action.Normal;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Target(&#123;java.lang.annotation.ElementType.METHOD&#125;)</div><div class="line">@Retention(RetentionPolicy.RUNTIME)</div><div class="line">@Documented</div><div class="line">public @interface Permission</div><div class="line">&#123;</div><div class="line">  String value() default &quot;&quot;; // 这里我是保存一个权限代码，例如赋值为4000，表示当前用户的必须具备4000的权限才能够访问方法</div><div class="line">  </div><div class="line">  Action action() default Action.Normal;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class LoginInterceptor extends HandlerInterceptorAdapter</div><div class="line">&#123;</div><div class="line">    @Override</div><div class="line">    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception&#123;</div><div class="line">        if(handler instanceof HandlerMethod)&#123;  //是否为请求方法</div><div class="line">            HandlerMethod handlerMethod = (HandlerMethod) handler;  </div><div class="line">            Login login = handlerMethod.getMethodAnnotation(Login.class);//当前请求方法是否添加了Login注解</div><div class="line">            if(  login != null &amp;&amp; &quot;0&quot;.equals(login.action().getKey()) )&#123;//判断属性的值是否是0-表示需要进行登录验证</div><div class="line">    </div><div class="line">                Object attribute = request.getSession().getAttribute(&quot;sys_user&quot;);</div><div class="line">                if( attribute == null )&#123;</div><div class="line">                    response.sendRedirect(&quot;/index.jsp&quot;);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            return true;</div><div class="line">        &#125;</div><div class="line">        return true;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="在spring中配置拦截器"><a href="#在spring中配置拦截器" class="headerlink" title="在spring中配置拦截器"></a>在spring中配置拦截器</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;mvc:interceptors&gt;</div><div class="line">&lt;bean class=&quot;com.kingge.oa.user.LoginInterceptor&quot;&gt;&lt;/bean&gt;</div><div class="line">&lt;/mvc:interceptors&gt;</div></pre></td></tr></table></figure>
+<h3 id="给请求方法添加权限控制"><a href="#给请求方法添加权限控制" class="headerlink" title="给请求方法添加权限控制"></a>给请求方法添加权限控制</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"> @Login(action=Action.Skip) //不需要进行登录校验</div><div class="line"> @Permission(value=&quot;4000&quot;,action=Action.normal)//需要进行权限号为4000的权限校验</div><div class="line"> @RequestMapping(&quot;/list&quot;)</div><div class="line"> public String list(Model model,HttpServletRequest request)</div><div class="line"> &#123;</div><div class="line">     request.getSession().setAttribute(&quot;sys_user&quot;, &quot;denglule&quot;);</div><div class="line">	 List&lt;User&gt; userList = userService.findAllObjects();</div><div class="line">	 System.out.println( userList );</div><div class="line">	   model.addAttribute(&quot;userList&quot;,userList );</div><div class="line">	  return &quot;list&quot;;</div><div class="line"> &#125;</div><div class="line"> </div><div class="line">@Login(action=Action.Normal)//添加操作，需要校验是否登录</div><div class="line"> @RequestMapping(value=&quot;/add&quot;, method=RequestMethod.POST)</div><div class="line"> public  String add( User user )</div><div class="line"> &#123;</div><div class="line">	 </div><div class="line">	 System.out.println( user );</div><div class="line">	 </div><div class="line">	 userService.insert(user);</div><div class="line">	 </div><div class="line">	 return &quot;forward:/user/list&quot;;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
+          
+            <a href="/tags/java注解/" rel="tag"><i class="fa fa-tag"></i> java注解</a>
+          
+            <a href="/tags/登录控制/" rel="tag"><i class="fa fa-tag"></i> 登录控制</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/29/java8新特性/" rel="next" title="java8新特性">
+                <i class="fa fa-chevron-left"></i> java8新特性
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#spring-配置方式"><span class="nav-number">2.</span> <span class="nav-text">spring 配置方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用注解"><span class="nav-number">3.</span> <span class="nav-text">使用注解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于注解"><span class="nav-number">3.1.</span> <span class="nav-text">关于注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#到java8为止一共提供了五个-注解"><span class="nav-number">3.2.</span> <span class="nav-text">到java8为止一共提供了五个  注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五个基本元注解"><span class="nav-number">3.3.</span> <span class="nav-text">五个基本元注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义注解"><span class="nav-number">3.4.</span> <span class="nav-text">自定义注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用注解解决登录问题"><span class="nav-number">3.5.</span> <span class="nav-text">使用注解解决登录问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义一个枚举类"><span class="nav-number">3.5.1.</span> <span class="nav-text">定义一个枚举类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义登录和权限注解"><span class="nav-number">3.5.2.</span> <span class="nav-text">定义登录和权限注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拦截器"><span class="nav-number">3.5.3.</span> <span class="nav-text">拦截器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在spring中配置拦截器"><span class="nav-number">3.5.4.</span> <span class="nav-text">在spring中配置拦截器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#给请求方法添加权限控制"><span class="nav-number">3.5.5.</span> <span class="nav-text">给请求方法添加权限控制</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      20.1k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共20.1k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>
