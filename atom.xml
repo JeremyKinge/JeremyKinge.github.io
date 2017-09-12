@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingge.top/"/>
-  <updated>2017-09-06T03:56:00.492Z</updated>
+  <updated>2017-09-12T07:01:12.151Z</updated>
   <id>http://kingge.top/</id>
   
   <author>
@@ -14,6 +14,107 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>继承之上溯造型和下溯造型</title>
+    <link href="http://kingge.top/2017/09/12/%E7%BB%A7%E6%89%BF%E4%B9%8B%E4%B8%8A%E6%BA%AF%E9%80%A0%E5%9E%8B%E5%92%8C%E4%B8%8B%E6%BA%AF%E9%80%A0%E5%9E%8B/"/>
+    <id>http://kingge.top/2017/09/12/继承之上溯造型和下溯造型/</id>
+    <published>2017-09-12T03:26:59.000Z</published>
+    <updated>2017-09-12T07:01:12.151Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><hr>
+<blockquote>
+<p>我们在平时的开发编码中，都会用到上溯造型和下溯造型，只是我们并不知道他的官方叫法而已，<strong><em> </em>上溯造型<em>跟</em>继承<em>和</em>多态<em>，以及</em>动态绑定<em>的关系很密切 </em></strong>，关于这几个概念后面会有涉及到他们的概念。</p>
+</blockquote>
+<hr>
+<h2 id="继承和合成"><a href="#继承和合成" class="headerlink" title="继承和合成"></a>继承和合成</h2><blockquote>
+<p>继承：<strong>它的本质就是为了使得代码复用</strong>（可以基于已经存在的类构造一个新类。继承已经存在的类就可以复用这些类的方法和域。在此基础上，可以添加新的方法和域，从而扩充了类的功能。）</p>
+<p>合成：在新类里创建原有的对象称为合成。这种方式可以重复利用现有的代码而不更改它的形式。</p>
+</blockquote>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"></div><div class="line">-----继承</div><div class="line">关键字extends表明新类派生于一个已经存在的类。已存在的类称为父类或基类，新类称为子类或派生类。例如:</div><div class="line"></div><div class="line">class  Dog  extends  Animal  &#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line">类Dog继承了Animal，Animal类称为父类或基类，Dog类称为子类或派生类。</div><div class="line"></div><div class="line"></div><div class="line">---合成</div><div class="line">合成比较简单，就是在一个类中创建一个已经存在的类。</div><div class="line"></div><div class="line">class Dog &#123;</div><div class="line">    Animal animal;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h1 id="上溯造型"><a href="#上溯造型" class="headerlink" title="上溯造型"></a>上溯造型</h1><blockquote>
+<p>这个术语缘于继承关系图的传统画法：将基类至于顶部，而向下发展的就是派生类(子类)，发送给父类的消息亦可发给衍生类，父类包含子类。假设把子类赋值给父类，这个过程就称之为上溯造型— <strong><em>这个时候只能够调用父类父类的方法，子类特有的方法不能够调用，子类变窄</em></strong></p>
+</blockquote>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"></div><div class="line">//父类</div><div class="line">abstract   class  Animal &#123;  </div><div class="line">    public   abstract   void  speak();  </div><div class="line">    public   void  eat()&#123;  </div><div class="line">   &#125;  </div><div class="line">&#125;</div><div class="line"></div><div class="line">//子类特有方法</div><div class="line">interface  DoorGod &#123;  </div><div class="line">    void  guard();  </div><div class="line">&#125;  </div><div class="line"></div><div class="line"></div><div class="line">//Dog 子类和 Cat 子类</div><div class="line"></div><div class="line">class  Cat  extends  Animal &#123;  </div><div class="line">    </div><div class="line">    @Override  </div><div class="line">     public   void  eat() &#123;  </div><div class="line">         try  &#123;  </div><div class="line">            Thread.sleep( 1000 );  </div><div class="line">        &#125;  catch  (InterruptedException e) &#123;  </div><div class="line">            e.printStackTrace();  </div><div class="line">        &#125;  </div><div class="line">        // super .eat();  </div><div class="line">         System.out.println(&quot;cat eat&quot;);</div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    @Override  </div><div class="line">     public   void  speak() &#123;  </div><div class="line">        System.out.println( &quot; 喵喵 &quot; );  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">&#125; </div><div class="line"></div><div class="line">class  Dog  extends  Animal  implements  DoorGod&#123;  </div><div class="line">    </div><div class="line">    @Override  </div><div class="line">     public   void  speak() &#123;  </div><div class="line">        System.out.println( &quot; 汪汪 &quot; );  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">     public   void  guard() &#123;  </div><div class="line">         while ( true )&#123;  </div><div class="line">            System.out.println( &quot; 汪汪 &quot; );  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">      </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//测试方法</div><div class="line"></div><div class="line">public class TestShangSu</div><div class="line">&#123;</div><div class="line">    public static void upcasting(Animal animal)&#123;  </div><div class="line">        animal.speak();  </div><div class="line">        animal.eat();  </div><div class="line">    &#125; </div><div class="line">    </div><div class="line">        @Test</div><div class="line">       public void test1()&#123;</div><div class="line">            Animal dog1 = new Dog();  </div><div class="line">             upcasting(dog1);  </div><div class="line">             Animal cat  = new Cat();  </div><div class="line">             upcasting(cat);  </div><div class="line"></div><div class="line">       &#125;</div><div class="line">    </div><div class="line">&#125;</div><div class="line">//输出</div><div class="line"> 汪汪 </div><div class="line"> 喵喵 </div><div class="line">cat eat</div></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p>这个时候为什么输出是：子类覆盖父类的方法，而不是父类的方法，这个涉及到<strong><em>动态绑定</em></strong>。后面再讲</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>由于upcasting(Animal animal)方法的参数是 Animal类型的，因此如果传入的参数是 Animal的子类，传入的参数就会被转换成父类Animal类型，这样你创建的Dog对象能使用的方法只是Animal中的签名方法；也就是说，在上溯的过程中，Dog的接口变窄了，它本身的一些方法（例如实现了 DoorGod的guard方法）就不可见了。如果你想使用Dog中存在而Animal中不存在的方法（比如guard方法），编译时不能通过的。由此可见，上溯造型是安全的类型转换。</p>
+<blockquote>
+<p>如果Dog在上溯造型过程中想使用 DoorGod的guard方法，那么需要配合下溯造型和安全检查，来进行强制转换，讲Animal 下溯为 Dog类型。</p>
+<blockquote>
+<p>注意的是：下溯是不安全的，由父类转化为子类，所以需要加上判断。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<hr>
+<h1 id="下溯造型"><a href="#下溯造型" class="headerlink" title="下溯造型"></a>下溯造型</h1><blockquote>
+<p>将基类转化为衍生类，不安全的操作，可能会引发ClassCastException。</p>
+</blockquote>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">上面的例子只需要加上这一层判断即可</div><div class="line"></div><div class="line">    public static void upcasting(Animal animal)&#123;  </div><div class="line">       if( animal instanceof Dog )&#123;//下溯造型判断</div><div class="line">            Dog dog = (Dog) animal;</div><div class="line">            dog.guard();</div><div class="line">        &#125;</div><div class="line">        animal.speak();  </div><div class="line">        animal.eat();  </div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p> 我们在使用<a href="/2017/09/06/注解实现请求方法的登录控制"><strong><em>注解实现请求方法的登录控制</em></strong></a>  登录拦截器里面有段关键代码使用的就是下溯造型</p>
+</blockquote>
+<p><img src="/2017/09/12/继承之上溯造型和下溯造型/下溯整形.png" alt="下溯整形.png" title="下溯整形.png"></p>
+<hr>
+<h1 id="为什么使用上溯和下溯造型"><a href="#为什么使用上溯和下溯造型" class="headerlink" title="为什么使用上溯和下溯造型"></a>为什么使用上溯和下溯造型</h1><blockquote>
+<p>上面的例子我们发现，关键的代码是<strong><em>upcasting方法</em></strong>，为什么在调用upcasting方法时要有意忽略调用它的对象类型呢？如果让upcasting方法简单地获取Dog句柄似乎更加直观易懂，但是那样会使衍生自Animal类的每一个新类都要实现专属自己的upcasting方法：例如Cat会实现一个重复的upcasting(Cat cat )这样的方法。</p>
+<blockquote>
+<p>实现多态的好处和代码复利用。</p>
+</blockquote>
+</blockquote>
+<hr>
+<h1 id="动态绑定"><a href="#动态绑定" class="headerlink" title="动态绑定"></a>动态绑定</h1><blockquote>
+<p>在上面的upcasting方法，测试例子输出的是子类的方法，而非是父类的方法，但是我们使用的是父类去调用这些方法，为什么输出不是父类的呢？</p>
+<p>upcasting它接收的是Animal句柄，当执行speak和eat方法时时，它是如何知道Animal句柄指向的是一个Dog对象而不是Cat对象呢？编译器是无从得知的，这涉及到接下来要说明的绑定问题。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Java实现了一种方法调用机制，可在运行期间判断对象的类型，然后调用相应的方法，这种在运行期间进行，以对象的类型为基础的绑定称为动态绑定。除非一个方法被声明为final，Java中的所有方法都是动态绑定的。</p>
+</blockquote>
+<h2 id="静态方法的绑定"><a href="#静态方法的绑定" class="headerlink" title="静态方法的绑定"></a>静态方法的绑定</h2><blockquote>
+<p>他跟普通的方法不同，子类和父类方法都是静态的，子类如果去掉父类编译会错误</p>
+</blockquote>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package Test;</div><div class="line">class Person &#123;</div><div class="line">    static void eat() &#123;</div><div class="line">        System.out.println(&quot;Person.eat()&quot;);</div><div class="line">    &#125;</div><div class="line">    static void speak() &#123;</div><div class="line">        System.out.println(&quot;Person.speak()&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">class Boy extends Person &#123;</div><div class="line">    static void eat() &#123;</div><div class="line">        System.out.println(&quot;Boy.eat()&quot;);</div><div class="line">    &#125;</div><div class="line">    static void speak() &#123;</div><div class="line">        System.out.println(&quot;Boy.speak()&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">class Girl extends Person &#123;</div><div class="line">    static void eat() &#123;</div><div class="line">        System.out.println(&quot;Girl.eat()&quot;);</div><div class="line">    &#125;</div><div class="line">    static void speak() &#123;</div><div class="line">        System.out.println(&quot;Girl.speak()&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">public class Persons &#123;</div><div class="line">    public static Person randPerson() &#123;</div><div class="line">        switch ((int)(Math.random() * 2)) &#123;</div><div class="line">        default:</div><div class="line">        case 0:</div><div class="line">            return new Boy();</div><div class="line">        case 1:</div><div class="line">            return new Girl();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        Person[] p = new Person[4];</div><div class="line">        for (int i = 0; i &lt; p.length; i++) &#123;</div><div class="line">            p[i] = randPerson();    // 随机生成Boy或Girl</div><div class="line">        &#125;</div><div class="line">        for (int i = 0; i &lt; p.length; i++) &#123;</div><div class="line">            p[i].eat();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">//输出</div><div class="line">Person.eat()</div><div class="line">Person.eat()</div><div class="line">Person.eat()</div><div class="line">Person.eat()</div></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p>对于静态方法而言，不管父类引用指向的什么子类对象，调用的都是父类的方法。</p>
+</blockquote>
+<hr>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><blockquote>
+<p>上溯造型和动态绑定实际上就是多态的体现，下溯造型是为了解决因为上溯而导致衍生类功能变小的问题，继承则是上溯和下溯以及动态编译的基础。</p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我们在平时的开发编码中，都会用到上溯造型和下溯造型，只是我们并不知道他的官方叫法而已，&lt;strong&gt;&lt;
+    
+    </summary>
+    
+      <category term="Java" scheme="http://kingge.top/categories/Java/"/>
+    
+    
+      <category term="java" scheme="http://kingge.top/tags/java/"/>
+    
+      <category term="继承" scheme="http://kingge.top/tags/%E7%BB%A7%E6%89%BF/"/>
+    
+      <category term="多态" scheme="http://kingge.top/tags/%E5%A4%9A%E6%80%81/"/>
+    
+  </entry>
   
   <entry>
     <title>注解实现请求方法的登录控制</title>
