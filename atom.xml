@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingge.top/"/>
-  <updated>2017-09-26T07:56:21.045Z</updated>
+  <updated>2017-10-10T09:25:05.991Z</updated>
   <id>http://kingge.top/</id>
   
   <author>
@@ -14,6 +14,132 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>关于web.xml中ServletContext、ServletContextListener、Filter、Servlet的执行顺序</title>
+    <link href="http://kingge.top/2017/10/10/%E5%85%B3%E4%BA%8Eweb-xml%E4%B8%ADServletContext%E3%80%81ServletContextListener%E3%80%81Filter%E3%80%81Servlet%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/"/>
+    <id>http://kingge.top/2017/10/10/关于web-xml中ServletContext、ServletContextListener、Filter、Servlet的执行顺序/</id>
+    <published>2017-10-10T08:22:44.000Z</published>
+    <updated>2017-10-10T09:25:05.991Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><hr>
+<blockquote>
+<p>今天跑一个web项目，想做一些初始化工作，于是使用Filter来实现，但是发现ServletContextListener，Servlet也是能够实现的。但是肯定会有先后顺序执行的问题，那么接下来探讨这个问题。</p>
+</blockquote>
+<hr>
+<blockquote>
+<blockquote>
+<p>作者规则：为了节省部分人的时间，先说结论。<strong><em>结论就是标题的顺序：ServletContext - ServletContextListener-  Filter、Servlet </em></strong></p>
+</blockquote>
+</blockquote>
+<p><img src="/2017/10/10/关于web-xml中ServletContext、ServletContextListener、Filter、Servlet的执行顺序/TIM截图20171010164520.png" alt="web容器运行流程.png" title="web容器运行流程.png"></p>
+<hr>
+<h1 id="web加载"><a href="#web加载" class="headerlink" title="web加载"></a>web加载</h1><hr>
+<p>启动一个WEB项目的时候，WEB容器会去读取它的配置文件web.xml。</p>
+<h2 id="加载产生Servlet上下文实例，ServletContext"><a href="#加载产生Servlet上下文实例，ServletContext" class="headerlink" title="加载产生Servlet上下文实例，ServletContext"></a>加载产生Servlet上下文实例，ServletContext</h2><hr>
+<blockquote>
+<p> 这个web项目的所有部分都将共享这个上下文。<br>容器将<context-param>转换为键值对，并交给servletContext。<br>L例如我们在使用spring的时候，会配置applicationContext.xml</context-param></p>
+</blockquote>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;context-param&gt;</div><div class="line">    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;</div><div class="line">    &lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;</div><div class="line">  &lt;/context-param&gt;</div></pre></td></tr></table></figure>
+<h2 id="依次加载Servlet的事件监听器-ServletContextListener"><a href="#依次加载Servlet的事件监听器-ServletContextListener" class="headerlink" title="依次加载Servlet的事件监听器 - ServletContextListener"></a>依次加载Servlet的事件监听器 - ServletContextListener</h2><hr>
+<blockquote>
+<p>并依次调用public void contextInitialized(ServletContextEvent sce)方法。<br>加载和调用多个Listener的顺序由在web.xml中配置的依次顺序决定的。</p>
+</blockquote>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;listener&gt;</div><div class="line">  &lt;listener-class&gt;com.wlx.core.application.ApplicaltionListener&lt;/listener-class&gt;</div><div class="line">&lt;/listener&gt;</div><div class="line">&lt;listener&gt;</div><div class="line">  &lt;listener-class&gt;com.wlx.core.application.ApplicaltionListener2&lt;/listener-class&gt;</div><div class="line">&lt;/listener&gt;</div><div class="line">先执行 ApplicaltionListener的contextInitialized方法后执行ApplicaltionListener2的contextInitialized方法</div></pre></td></tr></table></figure>
+<p>我们可以通过这个方法做一些初始化工作：例如初始化数据库连接池，初始化redis，启动定时器服务，启动线程池做一些socket通讯服务等等工作。 然后在contextDestroyed方法关闭这些服务即可。</p>
+<hr>
+<h2 id="依次加载Servlet的过滤器-Filter"><a href="#依次加载Servlet的过滤器-Filter" class="headerlink" title=".依次加载Servlet的过滤器-Filter"></a>.依次加载Servlet的过滤器-Filter</h2><blockquote>
+<p>并依次调用public void init(FilterConfig filterConfig) throws ServletException;方法<br>加载和调用多个filter的顺序由在web.xml中配置的依次顺序决定的。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;filter&gt;</div><div class="line">  &lt;filter-name&gt;appFilter&lt;/filter-name&gt;</div><div class="line">  &lt;filter-class&gt;com.wlx.core.application.AppFilter&lt;/filter-class&gt;</div><div class="line">&lt;/filter&gt;</div><div class="line">&lt;filter-mapping&gt;</div><div class="line">  &lt;filter-name&gt;appFilter&lt;/filter-name&gt;</div><div class="line">  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</div><div class="line">&lt;/filter-mapping&gt;</div></pre></td></tr></table></figure>
+<h2 id="依次加载Servlet"><a href="#依次加载Servlet" class="headerlink" title="依次加载Servlet"></a>依次加载Servlet</h2><blockquote>
+<p>Load-on-startup元素在web应用启动的时候指定了servlet被加载的顺序，它的值必须是一个整数。如果它的值是一个负整数或是这个元素不存在，那么容器会在该servlet被调用的时候(例如下面代码访问-/servlet/UploadFile 为后缀的时候才会去初始化init，并不会在项目启动时候访问init)，加载这个servlet。如果值是正整数或零，容器在配置的时候就加载并初始化这个servlet，容器必须保证值小的先被加载。如果值相等，容器可以自动选择先加载谁。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">在servlet的配置当中，&lt;load-on-startup&gt;5&lt;/load-on-startup&gt;的含义是：</div><div class="line"></div><div class="line">标记容器是否在启动的时候就加载这个servlet。</div><div class="line">当值为0或者大于0时，表示容器在应用启动时就加载这个servlet；</div><div class="line">当是一个负数时或者没有指定时，则指示容器在该servlet被选择时才加载。</div><div class="line">正数的值越小，启动该servlet的优先级越高。</div></pre></td></tr></table></figure>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">项目启动时会去调用 UploadFile的init方法</div><div class="line">&lt;servlet&gt;</div><div class="line">    &lt;servlet-name&gt;UploadFile&lt;/servlet-name&gt;</div><div class="line">    &lt;servlet-class&gt;com.wlx.core.application.servlet.UploadFile&lt;/servlet-class&gt;</div><div class="line">    &lt;load-on-startup&gt;2&lt;/load-on-startup&gt;</div><div class="line">  &lt;/servlet&gt;</div><div class="line">  &lt;servlet-mapping&gt;</div><div class="line">    &lt;servlet-name&gt;UploadFile&lt;/servlet-name&gt;</div><div class="line">    &lt;url-pattern&gt;/servlet/UploadFile&lt;/url-pattern&gt;</div><div class="line">  &lt;/servlet-mapping&gt;</div><div class="line">  </div><div class="line">项目启动时不会去调用 EServlet的init方法，访问匹配规则的网址时才会去调用init，而且只调用一次</div><div class="line">  &lt;servlet&gt;</div><div class="line">    &lt;servlet-name&gt;EServlet&lt;/servlet-name&gt;</div><div class="line">    &lt;servlet-class&gt;com.wlx.core.application.servlet.EServlet&lt;/servlet-class&gt;</div><div class="line">  &lt;/servlet&gt;</div><div class="line">  &lt;servlet-mapping&gt;</div><div class="line">    &lt;servlet-name&gt;EServlet&lt;/servlet-name&gt;</div><div class="line">    &lt;url-pattern&gt;/servlet/EServlet&lt;/url-pattern&gt;</div><div class="line">  &lt;/servlet-mapping&gt;</div></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
+<p>以上是Web容器在启动时加载的顺序，启动加载只会加载一次。<br>web.xml 的加载顺序是：ServletContext-&gt; context-param -&gt;listener -&gt; filter -&gt; servlet.</p>
+</blockquote>
+<hr>
+<h1 id="扩展知识-请求执行循序"><a href="#扩展知识-请求执行循序" class="headerlink" title="扩展知识-请求执行循序"></a>扩展知识-请求执行循序</h1><hr>
+<blockquote>
+<p>在上面中我们总结web加载的执行顺序，那么一个请求的执行循序呢？<br>实际上就是一个责任链模式的问题</p>
+</blockquote>
+<hr>
+<p><img src="/2017/10/10/关于web-xml中ServletContext、ServletContextListener、Filter、Servlet的执行顺序/TIM截图20171010171830.png" alt="web容器运行流程.png" title="请求过程"></p>
+<hr>
+<blockquote>
+<ul>
+<li>依次执行过滤器filter的方法public void doFilter(ServletRequest request, ServletResponse response,FilterChain chain)，这个方法应用了责任链模式，当在该方法中使用chain.doFilter(request, response);则这个过滤器就调用下一个过滤器，直到过滤器链条完成调用，进入Servlet处理，这个时候doFilter并未执行完成，仅仅在servlet之前进行一连串的过滤处理。</li>
+</ul>
+<ul>
+<li><p>进入相应Servlet并调用public void service(ServletRequest req, ServletResponse res)方法，或者说是GET和POST方法。public void doGet(HttpServletRequest request, HttpServletResponse respose)<br>进行请求响应的业务处理。</p>
+</li>
+<li><p>Servlet处理完成后，执行chain.doFilter(request, response);执行其他过滤器链条的后置过滤处理，然后执行自己的后置处理。</p>
+</li>
+</ul>
+</blockquote>
+<hr>
+<blockquote>
+<p>以上Filter和Servlet的执行顺序有点像Spring AOP 的前置通知和后置通知与业务方法关系。在Filter的doFilter方法中的chain.doFilter(request, response);之前做的业务逻辑就像前置通知，之后的逻辑像后置通知。业务方法是Sevlet中的public void service(ServletRequest req, ServletResponse res)方法。并且可以由多个有序的过滤链条进行Servlet的过滤。</p>
+<blockquote>
+<p>Filter的过滤请求的Servlet的范围与配置有关,Filter在每次访问Servlet时都会拦截过滤。</p>
+</blockquote>
+</blockquote>
+<hr>
+<p>代码例子：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class MyFilter implements Filter &#123;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void init(FilterConfig filterConfig) throws ServletException &#123;</div><div class="line">        System.out.println(&quot;执行MyFilter init&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void doFilter(ServletRequest request, ServletResponse response,</div><div class="line">            FilterChain chain) throws IOException, ServletException &#123;</div><div class="line">        System.out.println(&quot;执行MyFilter doFilter&quot;);</div><div class="line">        System.out.println(&quot;执行MyFilter doFilter before&quot;);</div><div class="line">        chain.doFilter(request, response);</div><div class="line">        System.out.println(&quot;执行MyFilter doFilter after&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void destroy() &#123;</div><div class="line">        System.out.println(&quot;执行MyFilter destroy&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line">-------------------------------------------------------------</div><div class="line">public class MyFilter1 implements Filter &#123;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void init(FilterConfig filterConfig) throws ServletException &#123;</div><div class="line">        System.out.println(&quot;执行MyFilter1 init&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void doFilter(ServletRequest request, ServletResponse response,</div><div class="line">            FilterChain chain) throws IOException, ServletException &#123;</div><div class="line">        System.out.println(&quot;执行MyFilter1 doFilter &quot;);</div><div class="line">        System.out.println(&quot;执行MyFilter1 doFilter before&quot;);</div><div class="line">        chain.doFilter(request, response);</div><div class="line">        System.out.println(&quot;执行MyFilter1 doFilter after&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void destroy() &#123;</div><div class="line">        System.out.println(&quot;执行MyFilter1 destroy&quot;);</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line">------------------------------------------------------------------------</div><div class="line"></div><div class="line">public class MyServlet1 extends HttpServlet &#123;</div><div class="line">    private static final long serialVersionUID = 1L;</div><div class="line"></div><div class="line">    public void init() throws ServletException &#123;</div><div class="line">        System.out.println(&quot;执行Servlet1 init()&quot;);</div><div class="line">    &#125;</div><div class="line">    public void destroy() &#123;</div><div class="line">        System.out.println(&quot;执行Servlet1 destroy()&quot;);</div><div class="line">    &#125;</div><div class="line">    public void doGet(HttpServletRequest request, HttpServletResponse respose)</div><div class="line">            throws ServletException, IOException &#123;</div><div class="line">        System.out.println(&quot;执行Servlet1 service&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>省略在web.xml中的配置</p>
+<p>输出：</p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"> 执行MyFilter doFilter</div><div class="line">执行MyFilter doFilter before</div><div class="line">执行MyFilter1 doFilter</div><div class="line">执行MyFilter1 doFilter before</div><div class="line">执行Servlet service</div><div class="line">执行MyFilter1 doFilter after</div><div class="line">执行MyFilter doFilter after</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;今天跑一个web项目，想做一些初始化工作，于是使用Filter来实现，但是发现ServletContex
+    
+    </summary>
+    
+      <category term="javaweb" scheme="http://kingge.top/categories/javaweb/"/>
+    
+    
+      <category term="javaweb" scheme="http://kingge.top/tags/javaweb/"/>
+    
+      <category term="web.xml" scheme="http://kingge.top/tags/web-xml/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>软技能-代码之外的生存指南-把自己当做一个企业去思考</title>
+    <link href="http://kingge.top/2017/10/09/%E8%BD%AF%E6%8A%80%E8%83%BD-%E4%BB%A3%E7%A0%81%E4%B9%8B%E5%A4%96%E7%9A%84%E7%94%9F%E5%AD%98%E6%8C%87%E5%8D%97-%E6%8A%8A%E8%87%AA%E5%B7%B1%E5%BD%93%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BC%81%E4%B8%9A%E5%8E%BB%E6%80%9D%E8%80%83/"/>
+    <id>http://kingge.top/2017/10/09/软技能-代码之外的生存指南-把自己当做一个企业去思考/</id>
+    <published>2017-10-09T00:46:26.000Z</published>
+    <updated>2017-10-09T00:51:47.087Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="http://www.jianshu.com/p/b0aefa8f6a05" title="《软技能》—— 把自己当做一个企业去思考" target="_blank" rel="external">《软技能》—— 把自己当做一个企业去思考</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;http://www.jianshu.com/p/b0aefa8f6a05&quot; title=&quot;《软技能》—— 把自己当做一个企业去思考&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;《软技能》—— 把自己当做一个企业去思考&lt;/a&gt;&lt;/p&gt;
+
+    
+    </summary>
+    
+      <category term="读书系统" scheme="http://kingge.top/categories/%E8%AF%BB%E4%B9%A6%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="软技能" scheme="http://kingge.top/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/"/>
+    
+      <category term="代码之外的生存指南" scheme="http://kingge.top/tags/%E4%BB%A3%E7%A0%81%E4%B9%8B%E5%A4%96%E7%9A%84%E7%94%9F%E5%AD%98%E6%8C%87%E5%8D%97/"/>
+    
+  </entry>
   
   <entry>
     <title>java到底是值传递还是引用传递</title>
