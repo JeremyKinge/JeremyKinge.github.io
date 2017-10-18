@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingge.top/"/>
-  <updated>2017-10-18T08:14:18.402Z</updated>
+  <updated>2017-10-18T10:00:42.654Z</updated>
   <id>http://kingge.top/</id>
   
   <author>
@@ -14,6 +14,83 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>聊聊分布式事务，再说说解决方案-cap</title>
+    <link href="http://kingge.top/2017/10/18/%E8%81%8A%E8%81%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%8C%E5%86%8D%E8%AF%B4%E8%AF%B4%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-cap/"/>
+    <id>http://kingge.top/2017/10/18/聊聊分布式事务，再说说解决方案-cap/</id>
+    <published>2017-10-18T09:57:58.000Z</published>
+    <updated>2017-10-18T10:00:42.654Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="数据库事务"><a href="#数据库事务" class="headerlink" title="数据库事务"></a>数据库事务</h1><blockquote>
+<p>在说分布式事务之前，我们先从数据库事务说起。 数据库事务可能大家都很熟悉，在开发过程中也会经常使用到。但是即使如此，可能对于一些细节问题，很多人仍然不清楚。比如很多人都知道数据库事务的几个特性：原子性(Atomicity )、一致性( Consistency )、隔离性或独立性( Isolation)和持久性(Durabilily)，简称就是ACID。但是再往下比如问到隔离性指的是什么的时候可能就不知道了，或者是知道隔离性是什么但是再问到数据库实现隔离的都有哪些级别，或者是每个级别他们有什么区别的时候可能就不知道了。</p>
+</blockquote>
+<p>本文并不打算介绍这些数据库事务的这些东西，有兴趣可以搜索一下相关资料。不过有一个知识点我们需要了解，就是假如数据库在提交事务的时候突然断电，那么它是怎么样恢复的呢？ 为什么要提到这个知识点呢？ 因为分布式系统的核心就是处理各种异常情况，这也是分布式系统复杂的地方，因为分布式的网络环境很复杂，这种“断电”故障要比单机多很多，所以我们在做分布式系统的时候，最先考虑的就是这种情况。这些异常可能有 机器宕机、网络异常、消息丢失、消息乱序、数据错误、不可靠的TCP、存储数据丢失、其他异常等等…</p>
+<p>我们接着说本地事务数据库断电的这种情况，它是怎么保证数据一致性的呢？我们使用SQL Server来举例，我们知道我们在使用 SQL Server 数据库是由两个文件组成的，一个数据库文件和一个日志文件，通常情况下，日志文件都要比数据库文件大很多。数据库进行任何写入操作的时候都是要先写日志的，同样的道理，我们在执行事务的时候数据库首先会记录下这个事务的redo操作日志，然后才开始真正操作数据库，在操作之前首先会把日志文件写入磁盘，那么当突然断电的时候，即使操作没有完成，在重新启动数据库时候，数据库会根据当前数据的情况进行undo回滚或者是redo前滚，这样就保证了数据的强一致性。</p>
+<p>接着，我们就说一下分布式事务。</p>
+<h1 id="分布式理论"><a href="#分布式理论" class="headerlink" title="分布式理论"></a>分布式理论</h1><blockquote>
+<p>当我们的单个数据库的性能产生瓶颈的时候，我们可能会对数据库进行分区，这里所说的分区指的是物理分区，分区之后可能不同的库就处于不同的服务器上了，这个时候单个数据库的ACID已经不能适应这种情况了，而在这种ACID的集群环境下，再想保证集群的ACID几乎是很难达到，或者即使能达到那么效率和性能会大幅下降，最为关键的是再很难扩展新的分区了，这个时候如果再追求集群的ACID会导致我们的系统变得很差，这时我们就需要引入一个新的理论原则来适应这种集群的情况，就是 CAP 原则或者叫CAP定理，那么CAP定理指的是什么呢？</p>
+<p>CAP定理</p>
+<blockquote>
+<p>CAP定理是由加州大学伯克利分校Eric Brewer教授提出来的，他指出WEB服务无法同时满足一下3个属性：</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>一致性(Consistency) ： 客户端知道一系列的操作都会同时发生(生效)</li>
+<li>可用性(Availability) ： 每个操作都必须以可预期的响应结束</li>
+<li>分区容错性(Partition tolerance) ： 即使出现单个组件无法可用,操作依然可以完成</li>
+<li>具体地讲在分布式系统中，在任何数据库设计中，一个Web应用至多只能同时支持上面的两个属性。显然，任何横向扩展策略都要依赖于数据分区。因此，设计人员必须在一致性与可用性之间做出选择。</li>
+</ul>
+<blockquote>
+<p>这个定理在迄今为止的分布式系统中都是适用的！ 为什么这么说呢？</p>
+</blockquote>
+<p>转载链接描述的很到位：<a href="http://www.cnblogs.com/savorboard/p/distributed-system-transaction-consistency.html" target="_blank" rel="external">http://www.cnblogs.com/savorboard/p/distributed-system-transaction-consistency.html</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;数据库事务&quot;&gt;&lt;a href=&quot;#数据库事务&quot; class=&quot;headerlink&quot; title=&quot;数据库事务&quot;&gt;&lt;/a&gt;数据库事务&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;在说分布式事务之前，我们先从数据库事务说起。 数据库事务可能大家都很熟悉，在开发过程中也会
+    
+    </summary>
+    
+      <category term="分布式" scheme="http://kingge.top/categories/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+    
+      <category term="分布式" scheme="http://kingge.top/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+      <category term="数据库" scheme="http://kingge.top/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>数据库中的undo和redo日志</title>
+    <link href="http://kingge.top/2017/10/18/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84undo%E5%92%8Credo%E6%97%A5%E5%BF%97/"/>
+    <id>http://kingge.top/2017/10/18/数据库中的undo和redo日志/</id>
+    <published>2017-10-18T09:52:46.000Z</published>
+    <updated>2017-10-18T09:55:01.852Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>转载好的博客解释1： <a href="http://blog.csdn.net/kobejayandy/article/details/50885693" target="_blank" rel="external">http://blog.csdn.net/kobejayandy/article/details/50885693</a> </p>
+<p>转载好的博客解释2： <a href="http://www.cnblogs.com/Bozh/archive/2013/03/18/2966494.html" target="_blank" rel="external">http://www.cnblogs.com/Bozh/archive/2013/03/18/2966494.html</a></p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;转载好的博客解释1： &lt;a href=&quot;http://blog.csdn.net/kobejayandy/article/details/50885693&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://blog.cs
+    
+    </summary>
+    
+      <category term="Mysql" scheme="http://kingge.top/categories/Mysql/"/>
+    
+    
+      <category term="分布式" scheme="http://kingge.top/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+      <category term="数据库" scheme="http://kingge.top/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
   
   <entry>
     <title>vSphere与Workstation虚拟机交互的几种方法</title>
@@ -1432,280 +1509,6 @@
       <category term="SSM" scheme="http://kingge.top/tags/SSM/"/>
     
       <category term="项目经验" scheme="http://kingge.top/tags/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java工程师书单（初级、中级、高级）</title>
-    <link href="http://kingge.top/2017/06/21/Java%E5%B7%A5%E7%A8%8B%E5%B8%88%E4%B9%A6%E5%8D%95%EF%BC%88%E5%88%9D%E7%BA%A7%E3%80%81%E4%B8%AD%E7%BA%A7%E3%80%81%E9%AB%98%E7%BA%A7%EF%BC%89/"/>
-    <id>http://kingge.top/2017/06/21/Java工程师书单（初级、中级、高级）/</id>
-    <published>2017-06-21T06:13:44.000Z</published>
-    <updated>2017-08-24T07:33:21.781Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>当你的能力承受不住你的欲望，你就应该静下心来读书</p>
-</blockquote>
-<h1 id="初级书籍"><a href="#初级书籍" class="headerlink" title="初级书籍"></a><strong>初级书籍</strong></h1><h2 id="《编写高质量代码——改善Java程序的151个建议》"><a href="#《编写高质量代码——改善Java程序的151个建议》" class="headerlink" title="《编写高质量代码——改善Java程序的151个建议》"></a>《编写高质量代码——改善Java程序的151个建议》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-3a0479a82ae73108.jpg" alt="编写高质量代码——改善Java程序的151个建议"></p>
-<blockquote>
-<p>这是一本值得入门java的人放在床头的书。此书内容广泛、要点翔实。大多数优秀程序设计书籍都需要看老外写的，但是这本讲述提高java编程水平的书还是不错的，适合具有基本java编程能力的人。<br>对于程序猿而言，工作久了，就感觉编程习惯对一个人很重要。习惯好，不仅工作效率告，而且bug少。这本书对提高个人的好的编程习惯很有帮助。</p>
-</blockquote>
-<h2 id="《Java程序员修炼之道》"><a href="#《Java程序员修炼之道》" class="headerlink" title="《Java程序员修炼之道》"></a>《Java程序员修炼之道》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-dc1266b4d179ca93.jpg" alt="Java程序员修炼之道"></p>
-<blockquote>
-<p>此书涵盖了Java7的新特性和Java开发的关键技术，对当前大量开源技术并存，多核处理器、并发以及海量数据给Java开发带来的挑战作出了精辟的分析，提供了实践前沿的深刻洞见，涉及依赖注入、现代并发、类与字节码、性能调优等底层概念的剖析。<em>**</em><br>书中的道理很浅显，可是对于菜鸟却是至理名言。基本为你勾勒了一个成熟软件程序员专家所需要的所有特性。。</p>
-</blockquote>
-<h2 id="《Java8实战》"><a href="#《Java8实战》" class="headerlink" title="《Java8实战》"></a>《Java8实战》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-7522c1eda632f594.jpg" alt="Java8实战"></p>
-<blockquote>
-<p>没看过。嘻嘻嘻</p>
-</blockquote>
-<h2 id="《有效的单元测试》"><a href="#《有效的单元测试》" class="headerlink" title="《有效的单元测试》"></a>《有效的单元测试》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-43a284b4c090ae7a.jpg" alt="有效的单元测试"></p>
-<blockquote>
-<p>此书由敏捷技术实践专家撰写，系统且深入地阐释单元测试用于软件设计的工具、方法、原则和佳实践；深入剖析各种测试常见问题，包含大量实践案例，可操作性强，能为用户高效编写测试提供系统实践指南。<em>**</em><br>介绍了单元测试的各个方面，TDD、test double、测试的坏味道、可测试的设计等等，每个主题需要深入的话，还需要配合其它书籍和实践，非常适合入门单元测试。书中例子非常全面，看完对使用 Junit 进行单元测试会有一个大的长进，而且用java语言编写，内容很新</p>
-</blockquote>
-<h2 id="《Java核心技术：卷1》"><a href="#《Java核心技术：卷1》" class="headerlink" title="《Java核心技术：卷1》"></a>《Java核心技术：卷1》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/juanyi.jpg" alt="《Java核心技术：卷1 》"></p>
-<blockquote>
-<p>不推荐卷2，因为这个作为初级书单来讲，太难了。</p>
-</blockquote>
-<h2 id="《代码整洁之道》"><a href="#《代码整洁之道》" class="headerlink" title="《代码整洁之道》"></a>《代码整洁之道》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-af77e6efc29482be.jpg" alt="《代码整洁之道》"></p>
-<blockquote>
-<p>没看过</p>
-</blockquote>
-<h2 id="《数据结构与算法分析-Java语言描述》"><a href="#《数据结构与算法分析-Java语言描述》" class="headerlink" title="《数据结构与算法分析-Java语言描述》"></a>《数据结构与算法分析-Java语言描述》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-1c4bce389fcc0232.jpg" alt="《数据结构与算法分析-Java语言描述》"></p>
-<blockquote>
-<p>本书是java数据结构与算法方面的三宝之一，除了这三本其他的已经没有意义了。这三宝分别是:<em>**</em><br>黑宝书《数据结构与算法分析java语言描述》mark allen weiss<br>蓝宝书《java数据结构和算法》robert lafore<br>红宝书《算法》robert sedgewick<br>黑宝书胜在公式推理和证明以及算法的简洁和精炼，此外习题较多。蓝宝书胜在对算法的深入浅出的讲解，演示和举例，让艰涩的理论变得很容易理解。红宝书胜在系出名门斯坦福，演示通俗易懂，内容丰富。有了这三宝，算法不用愁，学完以后再看《算法导论》就容易多了。<br>本书从讲解什么是数据结构开始，延伸至高级数据结构和算法分析，强调数据结构和问题求解技术。本书的目的是从抽象思维和问题求解的观点提供对数据结构的实用介绍，试图包含有关数据结构、算法分析及其Java实现的所有重要的细节</p>
-</blockquote>
-<hr>
-<h1 id="中级书单"><a href="#中级书单" class="headerlink" title="中级书单"></a><strong>中级书单</strong></h1><h2 id="《重构：改善既有代码的设计》"><a href="#《重构：改善既有代码的设计》" class="headerlink" title="《重构：改善既有代码的设计》"></a>《重构：改善既有代码的设计》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-ab38bf45a4a7b0e1.png" alt="《重构：改善既有代码的设计》"></p>
-<blockquote>
-<p>重构，绝对是写程序过程中最重要的事之一。在写程序之前我们不可能事先了解所有的需求，设计肯定会有考虑不周的地方，而且随着项目需求的修改，也有可能原来的设计已经被改得面目全非了。更何况，我们很少有机会从头到尾完成一个项目，基本上都是接手别人的代码，我们要做的是重构，从小范围的重构开始。<em>**</em><br>重构是设计,设计是art,重构也是art. 一个函数三行只是语不惊人死不休的说法,是对成百上千行代码的矫枉过正。 更一个般的看法是一个函数应该写在一页纸内。</p>
-</blockquote>
-<hr>
-<h2 id="《Effective-Java》"><a href="#《Effective-Java》" class="headerlink" title="《Effective Java》"></a>《Effective Java》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-d9337d4b531ffb2b.jpg" alt="《Effective Java》"></p>
-<blockquote>
-<p>必读</p>
-</blockquote>
-<hr>
-<h2 id="《Java并发编程实战》"><a href="#《Java并发编程实战》" class="headerlink" title="《Java并发编程实战》"></a>《Java并发编程实战》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-b008cd9c0915d0c0.png" alt="《Java并发编程实战》"></p>
-<blockquote>
-<p>没看过：</p>
-<p>本书深入浅出地介绍了Java线程和并发，是一本完美的Java并发参考手册。书中从并发性和线程安全性的基本概念出发，介绍了如何使用类库提供的基本并发构建块，用于避免并发危险、构造线程安全的类及验证线程安全的规则，如何将小的线程安全类组合成更大的线程安全类，如何利用线程来提高并发应用程序的吞吐量。<em>**</em><br>java进阶必看，多线程的最佳书籍。</p>
-</blockquote>
-<hr>
-<h2 id="实战Java高并发程序设计》"><a href="#实战Java高并发程序设计》" class="headerlink" title="实战Java高并发程序设计》"></a>实战Java高并发程序设计》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-a660ebcb96759c63.jpg" alt="实战Java高并发程序设计》"></p>
-<blockquote>
-<p>没看过</p>
-</blockquote>
-<hr>
-<h2 id="《算法》"><a href="#《算法》" class="headerlink" title="《算法》"></a>《算法》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-a617f3102707d2a8.png" alt="《算法》"></p>
-<blockquote>
-<p>没看过</p>
-</blockquote>
-<hr>
-<h2 id="《Head-First-设计模式》"><a href="#《Head-First-设计模式》" class="headerlink" title="《Head First 设计模式》"></a>《Head First 设计模式》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-ff7a658fe4ee1218.png" alt="《Head First 设计模式》"></p>
-<blockquote>
-<p>这是我看过最幽默最搞笑最亲切同时又让我收获巨大的技术书籍！ 森森的膜拜Freeman(s)！Amen！ 深入浅出，娓娓道来，有的地方能笑死你！写得很有趣，图文并茂，比起四人帮的那本，好懂了不知道多少倍。计算机世界的head first系列基本都是经典。不过只看书学明白设计模式是不可能的，这些只是前人的总结，我们唯有实践实践再实践了。<em>**</em><br>读这本书不仅仅是学习知识，而是在学习一种思考的方法，学习一种认知的技巧，学习一种成长的阶梯。 总之，用你闲暇的时间来读这本书，并不亚于你专注的工作或学习。笔者强烈推荐此书，要成长为一名高级程序员，设计模式已经是必备技能了。</p>
-</blockquote>
-<hr>
-<h2 id="《Java编程思想》"><a href="#《Java编程思想》" class="headerlink" title="《Java编程思想》"></a>《Java编程思想》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-8d6811d9766232e5.png" alt="《代码整洁之道》"></p>
-<blockquote>
-<p>没看过</p>
-</blockquote>
-<h1 id="高级书单"><a href="#高级书单" class="headerlink" title="高级书单"></a><strong>高级书单</strong></h1><hr>
-<h2 id="《深入理解Java虚拟机》"><a href="#《深入理解Java虚拟机》" class="headerlink" title="《深入理解Java虚拟机》"></a>《深入理解Java虚拟机》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-9b11d03c4bee5e71.png" alt="《深入理解Java虚拟机》"></p>
-<blockquote>
-<p>没看过</p>
-</blockquote>
-<hr>
-<h2 id="《Java性能权威指南》"><a href="#《Java性能权威指南》" class="headerlink" title="《Java性能权威指南》"></a>《Java性能权威指南》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-4626892e666e33df.png" alt="《Java性能权威指南》"></p>
-<blockquote>
-<p>没看过</p>
-</blockquote>
-<hr>
-<h2 id="《深入分析Java-Web技术内幕》"><a href="#《深入分析Java-Web技术内幕》" class="headerlink" title="《深入分析Java Web技术内幕》"></a>《深入分析Java Web技术内幕》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-8e52313d3a94ae3e.png" alt="《深入分析Java Web技术内幕》"></p>
-<blockquote>
-<p>没看过</p>
-</blockquote>
-<hr>
-<h2 id="《大型网站系统与Java中间件实践》"><a href="#《大型网站系统与Java中间件实践》" class="headerlink" title="《大型网站系统与Java中间件实践》"></a>《大型网站系统与Java中间件实践》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-ea0ddb7a2a705a6f.png" alt="《大型网站系统与Java中间件实践》"></p>
-<blockquote>
-<p>没看过</p>
-</blockquote>
-<hr>
-<h2 id="《大型网站技术架构：核心原理与案例分析》"><a href="#《大型网站技术架构：核心原理与案例分析》" class="headerlink" title="《大型网站技术架构：核心原理与案例分析》"></a>《大型网站技术架构：核心原理与案例分析》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-a3b611f69e8f6afc.png" alt="《大型网站技术架构：核心原理与案例分析》"></p>
-<blockquote>
-<p>没看过</p>
-</blockquote>
-<hr>
-<h2 id="《企业应用架构模式》"><a href="#《企业应用架构模式》" class="headerlink" title="《企业应用架构模式》"></a>《企业应用架构模式》</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/1807893-999499ccc43cb6b6.png" alt="《企业应用架构模式》"></p>
-<blockquote>
-<p>没看过</p>
-</blockquote>
-<hr>
-<h2 id="Spring3-x企业应用开发实战"><a href="#Spring3-x企业应用开发实战" class="headerlink" title="Spring3.x企业应用开发实战"></a>Spring3.x企业应用开发实战</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/avatar.png" alt="Spring3.x企业应用开发实战"></p>
-<blockquote>
-<p>这本书适合初学者看或者当做一本参考书。对于提高者而言，略看就行</p>
-</blockquote>
-<hr>
-<h2 id="Spring揭秘"><a href="#Spring揭秘" class="headerlink" title="Spring揭秘"></a>Spring揭秘</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/avatar.png" alt="《Spring揭秘》"></p>
-<blockquote>
-<p>没看过</p>
-</blockquote>
-<hr>
-<h2 id="Java程序性能优化-让你的Java程序更快、更稳定"><a href="#Java程序性能优化-让你的Java程序更快、更稳定" class="headerlink" title="Java程序性能优化:让你的Java程序更快、更稳定"></a>Java程序性能优化:让你的Java程序更快、更稳定</h2><p><img src="/2017/06/21/Java工程师书单（初级、中级、高级）/avatar.png" alt="《Java程序性能优化:让你的Java程序更快、更稳定》"></p>
-<blockquote>
-<p>没看过</p>
-</blockquote>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h1><p>talk is less show me your code，希望大家有好的书籍也可以推荐</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;当你的能力承受不住你的欲望，你就应该静下心来读书&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h1 id=&quot;初级书籍&quot;&gt;&lt;a href=&quot;#初级书籍&quot; class=&quot;headerlink&quot; title=&quot;初级书籍&quot;&gt;&lt;/a&gt;&lt;strong&gt;初级书籍&lt;/s
-    
-    </summary>
-    
-      <category term="读书系统" scheme="http://kingge.top/categories/%E8%AF%BB%E4%B9%A6%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-      <category term="Java" scheme="http://kingge.top/tags/Java/"/>
-    
-      <category term="书籍推荐" scheme="http://kingge.top/tags/%E4%B9%A6%E7%B1%8D%E6%8E%A8%E8%8D%90/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Mysql索引详解</title>
-    <link href="http://kingge.top/2016/08/01/Mysql%E7%B4%A2%E5%BC%95%E8%AF%A6%E8%A7%A3/"/>
-    <id>http://kingge.top/2016/08/01/Mysql索引详解/</id>
-    <published>2016-08-01T02:37:15.000Z</published>
-    <updated>2017-08-17T09:35:34.792Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
-<p>索引对查询的速度有着至关重要的影响，理解索引也是进行数据库性能调优的起点。考虑如下情况，假设数据库中一个表有10^6条记录，DBMS的页面大小为4K，并存储100条记录。如果没有索引，查询将对整个表进行扫描，最坏的情况下，如果所有数据页都不在内存，需要读取10^4个页面，如果这10^4个页面在磁盘上随机分布，需要进行10^4次I/O，假设磁盘每次I/O时间为10ms(忽略数据传输时间)，则总共需要100s(但实际上要好很多很多)。如果对之建立B-Tree索引，则只需要进行log100(10^6)=3次页面读取，最坏情况下耗时30ms。这就是索引带来的效果，很多时候，当你的应用程序进行SQL查询速度很慢时，应该想想是否可以建索引。进入正题：</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>有些硬啃的干货还是得了解的，下面先了解索引的基本知识</p>
-</blockquote>
-<h1 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h1><ul>
-<li>单列索引<ul>
-<li>主键索引</li>
-<li>唯一索引</li>
-<li>普通索引</li>
-</ul>
-</li>
-<li>组合索引<h3 id="用到的表"><a href="#用到的表" class="headerlink" title="用到的表"></a>用到的表</h3><figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`award`</span> (</div><div class="line">   <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT <span class="keyword">COMMENT</span> <span class="string">'用户id'</span>,</div><div class="line">   <span class="string">`aty_id`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'活动场景id'</span>,</div><div class="line">   <span class="string">`nickname`</span> <span class="built_in">varchar</span>(<span class="number">12</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'用户昵称'</span>,</div><div class="line">   <span class="string">`is_awarded`</span> tinyint(<span class="number">1</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> <span class="keyword">COMMENT</span> <span class="string">'用户是否领奖'</span>,</div><div class="line">   <span class="string">`award_time`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> <span class="keyword">COMMENT</span> <span class="string">'领奖时间'</span>,</div><div class="line">   <span class="string">`account`</span> <span class="built_in">varchar</span>(<span class="number">12</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'帐号'</span>,</div><div class="line">   <span class="string">`password`</span> <span class="built_in">char</span>(<span class="number">32</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'密码'</span>,</div><div class="line">   <span class="string">`message`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'获奖信息'</span>,</div><div class="line">   <span class="string">`created_time`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> <span class="keyword">COMMENT</span> <span class="string">'创建时间'</span>,</div><div class="line">   <span class="string">`updated_time`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> <span class="keyword">COMMENT</span> <span class="string">'更新时间'</span>,</div><div class="line">   PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</div><div class="line"> ) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">1</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8 <span class="keyword">COMMENT</span>=<span class="string">'获奖信息表'</span>;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h2 id="单列索引"><a href="#单列索引" class="headerlink" title="单列索引"></a>单列索引</h2><h3 id="普通索引"><a href="#普通索引" class="headerlink" title="普通索引"></a>普通索引</h3><blockquote>
-<p>这个是最基本的索引</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>创建语法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">其sql格式是：</div><div class="line">   第一种方式 :</div><div class="line">     CREATE INDEX IndexName ON `TableName`(`字段名`(length))</div><div class="line">   第二种方式 :</div><div class="line">	 ALTER TABLE TableName ADD INDEX IndexName(`字段名`(length))</div></pre></td></tr></table></figure></p>
-<p>创建例子：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">第一种方式 :</div><div class="line">  CREATE INDEX account_Index ON `award`(`account`);</div><div class="line">第二种方式:</div><div class="line">  ALTER TABLE award ADD INDEX account_Index(`account`)</div></pre></td></tr></table></figure></p>
-</blockquote>
-<h3 id="唯一索引"><a href="#唯一索引" class="headerlink" title="唯一索引"></a>唯一索引</h3><blockquote>
-<p>与普通索引类似,但是不同的是唯一索引要求所有的类的值是唯一的,这一点和主键索引一样.但是他允许有空值</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>创建语法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">其sql格式是：</div><div class="line">   第一种方式 :</div><div class="line">    CREATE UNIQUE INDEX IndexName ON `TableName`(`字段名`(length));</div><div class="line">   第二种方式 :</div><div class="line">	ALTER TABLE TableName ADD UNIQUE (column_list)</div></pre></td></tr></table></figure></p>
-<p>创建例子：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">CREATE UNIQUE INDEX account_UNIQUE_Index ON `award`(`account`);</div></pre></td></tr></table></figure></p>
-</blockquote>
-<h3 id="主键索引"><a href="#主键索引" class="headerlink" title="主键索引"></a>主键索引</h3><blockquote>
-<p>他与唯一索引的不同在于不允许有空值(在B+TREE中的InnoDB引擎中,主键索引起到了至关重要的地位)</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>创建语法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">其sql格式是：</div><div class="line">   第一种方式 :</div><div class="line">    CREATE UNIQUE INDEX IndexName ON `TableName`(`字段名`(length));</div><div class="line">   第二种方式 :</div><div class="line">	ALTER TABLE TableName ADD UNIQUE (column_list)</div></pre></td></tr></table></figure></p>
-<p>创建例子：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">CREATE UNIQUE INDEX account_UNIQUE_Index ON `award`(`account`);</div></pre></td></tr></table></figure></p>
-</blockquote>
-<hr>
-<h3 id="单列索引的总结"><a href="#单列索引的总结" class="headerlink" title="单列索引的总结"></a>单列索引的总结</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">mysql&gt;SELECT ｀uid｀ FROM people WHERE lname｀='Liu'  AND ｀fname｀='Zhiqun' AND ｀age｀=26</div><div class="line">因为我们不想扫描整表，故考虑用索引。</div><div class="line"></div><div class="line">单列索引：</div><div class="line"><span class="function">ALTER TABLE people ADD INDEX <span class="title">lname</span> <span class="params">(lname)</span></span>;</div><div class="line">将lname列建索引，这样就把范围限制在lname='Liu'的结果集1上，之后扫描结果集1，产生满足fname='Zhiqun'的结果集2，再扫描结果集2，找到 age=26的结果集3，即最终结果。</div><div class="line"></div><div class="line">由 于建立了lname列的索引，与执行表的完全扫描相比，效率提高了很多，但我们要求扫描的记录数量仍旧远远超过了实际所需 要的。虽然我们可以删除lname列上的索引，再创建fname或者age 列的索引，但是，不论在哪个列上创建索引搜索效率仍旧相似。</div><div class="line"></div><div class="line">&gt; 所以就需要组合索引</div></pre></td></tr></table></figure>
-<hr>
-<h2 id="组合索引"><a href="#组合索引" class="headerlink" title="组合索引"></a>组合索引</h2><blockquote>
-<p>一个表中含有多个单列索引不代表是组合索引,通俗一点讲 组合索引是:包含多个字段但是只有索引名称</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>创建语法：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">其sql格式是：</div><div class="line"> CREATE INDEX IndexName On `TableName`(`字段名`(length),`字段名`(length),...);</div></pre></td></tr></table></figure></p>
-<p>创建例子：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">CREATE INDEX nickname_account_createdTime_Index ON `award`(`nickname`, `account`, `created_time`);</div></pre></td></tr></table></figure></p>
-<hr>
-<blockquote>
-<p>如果你建立了 <strong><em>组合索引</em></strong>(nickname_account_createdTime_Index)<strong> 那么他实际包含的是3个索引 (nickname) (nickname,account)(nickname,account,created_time)</strong></p>
-</blockquote>
-</blockquote>
-<hr>
-<h3 id="组合索引的最左前缀"><a href="#组合索引的最左前缀" class="headerlink" title="组合索引的最左前缀"></a>组合索引的最左前缀</h3><blockquote>
-<p>上面的例子中给nickname,account,created_time 这三个字段建立索引他会去创建<strong>三个索引</strong>，但是在执行查询的时候只会用其中一个索引去查询，mysql会选择一个最严格(获得结果集记录数最少)的索引，所以where子句中使用最频繁的一列放在最左边。所谓最左前缀原则就是先要看第一列，在第一列满足的条件下再看左边第二列</p>
-</blockquote>
-<hr>
-<h2 id="全文索引"><a href="#全文索引" class="headerlink" title="全文索引"></a>全文索引</h2><hr>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">文本字段上(text)如果建立的是普通索引,那么只有对文本的字段内容前面的字符进行索引,其字符大小根据索引建立索引时申明的大小来规定.</div><div class="line"></div><div class="line">如果文本中出现多个一样的字符,而且需要查找的话,那么其条件只能是 where column lick &apos;%xxxx%&apos; 这样做会让索引失效</div><div class="line"></div><div class="line">.这个时候全文索引就祈祷了作用了</div><div class="line"></div><div class="line">ALTER TABLE tablename ADD FULLTEXT(column1, column2)</div><div class="line">有了全文索引，就可以用SELECT查询命令去检索那些包含着一个或多个给定单词的数据记录了。</div><div class="line"></div><div class="line">ELECT * FROM tablename</div><div class="line">WHERE MATCH(column1, column2) AGAINST(‘xxx′, ‘sss′, ‘ddd′)</div><div class="line">这条命令将把column1和column2字段里有xxx、sss和ddd的数据记录全部查询出来。</div></pre></td></tr></table></figure>
-<hr>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h2 id="使用索引的优点"><a href="#使用索引的优点" class="headerlink" title="使用索引的优点"></a>使用索引的优点</h2><ol>
-<li>可以通过建立唯一索引或者主键索引,保证数据库表中每一行数据的唯一性.</li>
-<li>建立索引可以大大提高检索的数据,以及减少表的检索行数</li>
-<li>在表连接的连接条件 可以加速表与表直接的相连 </li>
-<li>在分组和排序字句进行数据检索,可以减少查询时间中 分组 和 排序时所消耗的时间(数据库的记录会重新排序)</li>
-<li>建立索引,在查询中使用索引 可以提高性能</li>
-</ol>
-<h2 id="使用索引的缺点"><a href="#使用索引的缺点" class="headerlink" title="使用索引的缺点"></a>使用索引的缺点</h2><ol>
-<li>在创建索引和维护索引 会耗费时间,随着数据量的增加而增加</li>
-<li>索引文件会占用物理空间,除了数据表需要占用物理空间之外,每一个索引还会占用一定的物理空间</li>
-<li>当对表的数据进行 INSERT,UPDATE,DELETE 的时候,索引也要动态的维护,这样就会降低数据的维护速度,(建立索引会占用磁盘空间的索引文件。一般情况这个问题不太严重，但如果你在一个大表上创建了多种组合索引，索引文件的会膨胀很快)。</li>
-</ol>
-<h2 id="使用索引需要注意的地方"><a href="#使用索引需要注意的地方" class="headerlink" title="使用索引需要注意的地方"></a>使用索引需要注意的地方</h2><ol>
-<li><p>在经常需要搜索的列上,可以加快索引的速度</p>
-</li>
-<li><p>主键列上可以确保列的唯一性</p>
-</li>
-<li><p>在表与表的而连接条件上加上索引,可以加快连接查询的速度</p>
-</li>
-<li><p>在经常需要排序(order by),分组(group by)和的distinct 列上加索引 可以加快排序查询的时间,  (单独order by 用不了索引，索引考虑加where 或加limit)</p>
-</li>
-<li><p>在一些where 之后的 &lt; &lt;= &gt; &gt;= BETWEEN IN 以及某个情况下的like 建立字段的索引(B-TREE)</p>
-</li>
-<li><p>like语句的 如果你对nickname字段建立了一个索引.当查询的时候的语句是 nickname lick ‘%ABC%’ 那么这个索引讲不会起到作用.而nickname lick ‘ABC%’ 那么将可以用到索引</p>
-</li>
-<li><p>索引不会包含NULL列,如果列中包含NULL值都将不会被包含在索引中,复合索引中如果有一列含有NULL值那么这个组合索引都将失效,一般需要给默认值0或者 ‘ ‘字符串</p>
-</li>
-<li><p>使用短索引,如果你的一个字段是Char(32)或者int(32),在创建索引的时候指定前缀长度 比如前10个字符 (前提是多数值是唯一的..)那么短索引可以提高查询速度,并且可以减少磁盘的空间,也可以减少I/0操作.</p>
-</li>
-<li><p>不要在列上进行运算,这样会使得mysql索引失效,也会进行全表扫描</p>
-</li>
-<li><p>选择越小的数据类型越好,因为通常越小的数据类型通常在磁盘,内存,cpu,缓存中 占用的空间很少,处理起来更快</p>
-</li>
-</ol>
-<h2 id="什么情况下不建立索引"><a href="#什么情况下不建立索引" class="headerlink" title="什么情况下不建立索引"></a>什么情况下不建立索引</h2><ol>
-<li><p>查询中很少使用到的列 不应该创建索引,如果建立了索引然而还会降低mysql的性能和增大了空间需求.</p>
-</li>
-<li><p>很少数据的列也不应该建立索引,比如 一个性别字段 0或者1,在查询中,结果集的数据占了表中数据行的比例比较大,mysql需要扫描的行数很多,增加索引,并不能提高效率</p>
-</li>
-<li><p>定义为text和image和bit数据类型的列不应该增加索引</p>
-</li>
-<li><p>当表的修改(UPDATE,INSERT,DELETE)操作远远大于检索(SELECT)操作时不应该创建索引,这两个操作是互斥的关系</p>
-</li>
-</ol>
-<h1 id="好的文章"><a href="#好的文章" class="headerlink" title="好的文章"></a>好的文章</h1><p><a href="http://blog.csdn.net/zly9923218/article/details/51007554" target="_blank" rel="external">转：SQL优化</a><br><a href="http://blog.jobbole.com/86594/" target="_blank" rel="external">转：MySQL索引原理及慢查询优化</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;blockquote&gt;
-&lt;p&gt;索引对查询的速度有着至关重要的影响，理解索引也是进行数据库性能调优的起点。考虑如下情况，假设数据库中一个表有10^
-    
-    </summary>
-    
-      <category term="Mysql" scheme="http://kingge.top/categories/Mysql/"/>
-    
-    
-      <category term="Mysql" scheme="http://kingge.top/tags/Mysql/"/>
-    
-      <category term="索引" scheme="http://kingge.top/tags/%E7%B4%A2%E5%BC%95/"/>
     
   </entry>
   

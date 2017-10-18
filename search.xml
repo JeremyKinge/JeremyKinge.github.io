@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[聊聊分布式事务，再说说解决方案-cap]]></title>
+    <url>%2F2017%2F10%2F18%2F%E8%81%8A%E8%81%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%8C%E5%86%8D%E8%AF%B4%E8%AF%B4%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-cap%2F</url>
+    <content type="text"><![CDATA[数据库事务 在说分布式事务之前，我们先从数据库事务说起。 数据库事务可能大家都很熟悉，在开发过程中也会经常使用到。但是即使如此，可能对于一些细节问题，很多人仍然不清楚。比如很多人都知道数据库事务的几个特性：原子性(Atomicity )、一致性( Consistency )、隔离性或独立性( Isolation)和持久性(Durabilily)，简称就是ACID。但是再往下比如问到隔离性指的是什么的时候可能就不知道了，或者是知道隔离性是什么但是再问到数据库实现隔离的都有哪些级别，或者是每个级别他们有什么区别的时候可能就不知道了。 本文并不打算介绍这些数据库事务的这些东西，有兴趣可以搜索一下相关资料。不过有一个知识点我们需要了解，就是假如数据库在提交事务的时候突然断电，那么它是怎么样恢复的呢？ 为什么要提到这个知识点呢？ 因为分布式系统的核心就是处理各种异常情况，这也是分布式系统复杂的地方，因为分布式的网络环境很复杂，这种“断电”故障要比单机多很多，所以我们在做分布式系统的时候，最先考虑的就是这种情况。这些异常可能有 机器宕机、网络异常、消息丢失、消息乱序、数据错误、不可靠的TCP、存储数据丢失、其他异常等等… 我们接着说本地事务数据库断电的这种情况，它是怎么保证数据一致性的呢？我们使用SQL Server来举例，我们知道我们在使用 SQL Server 数据库是由两个文件组成的，一个数据库文件和一个日志文件，通常情况下，日志文件都要比数据库文件大很多。数据库进行任何写入操作的时候都是要先写日志的，同样的道理，我们在执行事务的时候数据库首先会记录下这个事务的redo操作日志，然后才开始真正操作数据库，在操作之前首先会把日志文件写入磁盘，那么当突然断电的时候，即使操作没有完成，在重新启动数据库时候，数据库会根据当前数据的情况进行undo回滚或者是redo前滚，这样就保证了数据的强一致性。 接着，我们就说一下分布式事务。 分布式理论 当我们的单个数据库的性能产生瓶颈的时候，我们可能会对数据库进行分区，这里所说的分区指的是物理分区，分区之后可能不同的库就处于不同的服务器上了，这个时候单个数据库的ACID已经不能适应这种情况了，而在这种ACID的集群环境下，再想保证集群的ACID几乎是很难达到，或者即使能达到那么效率和性能会大幅下降，最为关键的是再很难扩展新的分区了，这个时候如果再追求集群的ACID会导致我们的系统变得很差，这时我们就需要引入一个新的理论原则来适应这种集群的情况，就是 CAP 原则或者叫CAP定理，那么CAP定理指的是什么呢？ CAP定理 CAP定理是由加州大学伯克利分校Eric Brewer教授提出来的，他指出WEB服务无法同时满足一下3个属性： 一致性(Consistency) ： 客户端知道一系列的操作都会同时发生(生效) 可用性(Availability) ： 每个操作都必须以可预期的响应结束 分区容错性(Partition tolerance) ： 即使出现单个组件无法可用,操作依然可以完成 具体地讲在分布式系统中，在任何数据库设计中，一个Web应用至多只能同时支持上面的两个属性。显然，任何横向扩展策略都要依赖于数据分区。因此，设计人员必须在一致性与可用性之间做出选择。 这个定理在迄今为止的分布式系统中都是适用的！ 为什么这么说呢？ 转载链接描述的很到位：http://www.cnblogs.com/savorboard/p/distributed-system-transaction-consistency.html]]></content>
+      <categories>
+        <category>分布式</category>
+      </categories>
+      <tags>
+        <tag>分布式</tag>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[数据库中的undo和redo日志]]></title>
+    <url>%2F2017%2F10%2F18%2F%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84undo%E5%92%8Credo%E6%97%A5%E5%BF%97%2F</url>
+    <content type="text"><![CDATA[转载好的博客解释1： http://blog.csdn.net/kobejayandy/article/details/50885693 转载好的博客解释2： http://www.cnblogs.com/Bozh/archive/2013/03/18/2966494.html]]></content>
+      <categories>
+        <category>Mysql</category>
+      </categories>
+      <tags>
+        <tag>分布式</tag>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[vSphere与Workstation虚拟机交互的几种方法]]></title>
     <url>%2F2017%2F10%2F18%2FvSphere%E4%B8%8EWorkstation%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BA%A4%E4%BA%92%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95%2F</url>
     <content type="text"><![CDATA[参见转载链接： http://wangchunhai.blog.51cto.com/225186/1884052]]></content>
