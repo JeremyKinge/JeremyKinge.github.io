@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingge.top/"/>
-  <updated>2017-10-10T09:25:05.991Z</updated>
+  <updated>2017-10-18T08:14:18.402Z</updated>
   <id>http://kingge.top/</id>
   
   <author>
@@ -14,6 +14,234 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>vSphere与Workstation虚拟机交互的几种方法</title>
+    <link href="http://kingge.top/2017/10/18/vSphere%E4%B8%8EWorkstation%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BA%A4%E4%BA%92%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/"/>
+    <id>http://kingge.top/2017/10/18/vSphere与Workstation虚拟机交互的几种方法/</id>
+    <published>2017-10-18T08:11:28.000Z</published>
+    <updated>2017-10-18T08:14:18.402Z</updated>
+    
+    <content type="html"><![CDATA[<p>参见转载链接：  <a href="http://wangchunhai.blog.51cto.com/225186/1884052" target="_blank" rel="external">http://wangchunhai.blog.51cto.com/225186/1884052</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;参见转载链接：  &lt;a href=&quot;http://wangchunhai.blog.51cto.com/225186/1884052&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://wangchunhai.blog.51cto.com/2251
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://kingge.top/categories/Linux/"/>
+    
+    
+      <category term="linux" scheme="http://kingge.top/tags/linux/"/>
+    
+      <category term="centos" scheme="http://kingge.top/tags/centos/"/>
+    
+      <category term="vmware" scheme="http://kingge.top/tags/vmware/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>查看虚拟机里的Centos7的IP</title>
+    <link href="http://kingge.top/2017/10/18/%E6%9F%A5%E7%9C%8B%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%87%8C%E7%9A%84Centos7%E7%9A%84IP/"/>
+    <id>http://kingge.top/2017/10/18/查看虚拟机里的Centos7的IP/</id>
+    <published>2017-10-18T07:48:43.000Z</published>
+    <updated>2017-10-18T08:09:04.483Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="登录虚拟机"><a href="#登录虚拟机" class="headerlink" title="登录虚拟机"></a>登录虚拟机</h1><p>   输入用户名和密码（用户名一般是root）</p>
+<h1 id="查看ip-指令"><a href="#查看ip-指令" class="headerlink" title="查看ip 指令"></a>查看ip 指令</h1><blockquote>
+<p>ip addr 指令：  查看当前虚拟机ip </p>
+</blockquote>
+<p><img src="/2017/10/18/查看虚拟机里的Centos7的IP/TIM截图20171018155302.png" alt=""></p>
+<p>我们发现ens32 没有 inet 这个属性，没有出现ip，那么说明在设置的时候没有开启，需要先去设置。</p>
+<blockquote>
+<p>当前位置：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@localhost ~]# pwd</div><div class="line">/root</div><div class="line">[root@localhost ~]#</div></pre></td></tr></table></figure></p>
+<p>接着来查看ens32网卡的配置： vi /etc/sysconfig/network-scripts/ifcfg-ens32   注意vi后面加空格.  etc 文件夹的位置在于</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@localhost ~]# cd ..</div><div class="line">[root@localhost /]# ls</div><div class="line">bin   dev  home  lib64  mnt  proc  run   srv  tmp  var</div><div class="line">boot  etc  lib   media  opt  root  sbin  sys  usr</div></pre></td></tr></table></figure>
+<blockquote>
+<p>查看 ifcfg-ens32 的内容</p>
+</blockquote>
+<p><img src="/2017/10/18/查看虚拟机里的Centos7的IP/TIM截图20171018160037.png" alt=""></p>
+<blockquote>
+<p>从配置清单中可以发现 CentOS 7 默认是不启动网卡的（ONBOOT=no）。</p>
+<blockquote>
+<p>把这一项改为YES（ONBOOT=yes） – (按 i 进入编辑模式 ，修改完，按 esc退出编辑模式，然后 按 ctrl + shift + :  输入 wq 完成编辑)</p>
+</blockquote>
+<p>然后重启网络服务： sudo service network restart </p>
+<p>然后我们再输入  ip addr 命令</p>
+</blockquote>
+<hr>
+<p><img src="/2017/10/18/查看虚拟机里的Centos7的IP/TIM截图20171018160445.png" alt=""></p>
+<hr>
+<h1 id="使用第三方工具登录"><a href="#使用第三方工具登录" class="headerlink" title="使用第三方工具登录"></a>使用第三方工具登录</h1><blockquote>
+<p>这里是用的是 xshell，你也可以用winscp（这个一般是用来传文件的）</p>
+</blockquote>
+<p><img src="/2017/10/18/查看虚拟机里的Centos7的IP/TIM截图20171018160611.png" alt=""></p>
+<p>然后点击连接，输入用户名和密码，便可以进入命令界面</p>
+<p><img src="/2017/10/18/查看虚拟机里的Centos7的IP/TIM截图20171018160844.png" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;登录虚拟机&quot;&gt;&lt;a href=&quot;#登录虚拟机&quot; class=&quot;headerlink&quot; title=&quot;登录虚拟机&quot;&gt;&lt;/a&gt;登录虚拟机&lt;/h1&gt;&lt;p&gt;   输入用户名和密码（用户名一般是root）&lt;/p&gt;
+&lt;h1 id=&quot;查看ip-指令&quot;&gt;&lt;a href=&quot;#查看i
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://kingge.top/categories/Linux/"/>
+    
+    
+      <category term="linux" scheme="http://kingge.top/tags/linux/"/>
+    
+      <category term="centos" scheme="http://kingge.top/tags/centos/"/>
+    
+      <category term="vmware" scheme="http://kingge.top/tags/vmware/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>activity工作流框架——数据库表结构说明</title>
+    <link href="http://kingge.top/2017/10/12/activity%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%A1%86%E6%9E%B6%E2%80%94%E2%80%94%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%BB%93%E6%9E%84%E8%AF%B4%E6%98%8E/"/>
+    <id>http://kingge.top/2017/10/12/activity工作流框架——数据库表结构说明/</id>
+    <published>2017-10-12T06:54:33.000Z</published>
+    <updated>2017-10-12T07:08:08.890Z</updated>
+    
+    <content type="html"><![CDATA[<p>本文转载于： <a href="http://www.jianshu.com/p/f9fd1cc02eae" target="_blank" rel="external">http://www.jianshu.com/p/f9fd1cc02eae</a></p>
+<hr>
+<p>activity一共23张表</p>
+<p>   <img src="/2017/10/12/activity工作流框架——数据库表结构说明/4045508-3aa1b40649eeda13.png" alt="activity23张表" title="activity23张表"></p>
+<hr>
+<blockquote>
+<p>表的命名第一部分都是以 ACT_开头的。</p>
+<p>表的命名第二部分是一个两个字符用例表的标识</p>
+</blockquote>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">act_ge_*：</div></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p>‘ge’代表general（一般）。普通数据，各种情况都使用的数据。</p>
+</blockquote>
+<ul>
+<li><p>act_ge<em>bytearray：二进制数据表，用来保存部署文件的大文本数据<br>1.ID</em>:资源文件编号，自增长<br>2.REV<em>INT:版本号<br>3.NAME</em>:资源文件名称<br>4.DEPLOYMENT<em>ID</em>:来自于父表act_re<em>deployment的主键<br>5.BYTES</em>:大文本类型，存储文本字节流</p>
+</li>
+<li><p>act_ge<em>property：属性数据表，存储这整个流程引擎级别的数据。在初始化表结构时，会默认插入三条记录。<br>1.NAME</em>:属性名称<br>2.VALUE_:属性值<br>3.REV_INT:版本号</p>
+</li>
+</ul>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">act_hi_*：</div></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p>hi’代表 history（历史）。就是这些表包含着历史的相关数据，如结束的流程实例、变量、任务、等等。</p>
+</blockquote>
+<ul>
+<li><p>act_hi<em>actinst：历史节点表<br>1.ID</em> : 标识<br>2.PROC_DEF<em>ID</em> :流程定义id<br>3.PROC_INST<em>ID</em> : 流程实例id<br>4.EXECUTION<em>ID</em> : 执行实例<br>5.ACT<em>ID</em> : 节点id<br>6.ACT<em>NAME</em> : 节点名称<br>7.ACT<em>TYPE</em> : 节点类型<br>8.ASSIGNEE_ : 节点任务分配人<br>9.START<em>TIME</em> : 开始时间<br>10.END<em>TIME</em> : 结束时间<br>11.DURATION : 经过时长</p>
+</li>
+<li><p>act_hi_attachment：历史附件表</p>
+</li>
+<li><p>act_hi<em>comment：历史意见表<br>1.ID</em> :标识<br>2.TYPE<em> : 意见记录类型 为comment 时 为处理意见<br>3.TIME</em> : 记录时间<br>4.USER<em>ID</em> :<br>5.TASK<em>ID</em> ： 对应任务的id<br>6.PROC_INST<em>ID</em> : 对应的流程实例的id<br>7.ACTION<em> ： 为AddComment 时为处理意见<br>8.MESSAGE</em> : 处理意见<br>9.FULL<em>MSG</em> :</p>
+</li>
+<li><p>act_hi<em>detail：历史详情表，启动流程或者在任务complete之后,记录历史流程变量<br>1.ID</em> : 标识<br>2.TYPE_ : variableUpdate 和 formProperty 两种值<br>3.PROC_INST<em>ID</em> : 对应流程实例id<br>4.EXECUTION<em>ID</em> : 对应执行实例id<br>5.TASK<em>ID</em> : 对应任务id<br>6.ACT_INST<em>ID : 对应节点id<br>7.NAME</em> : 历史流程变量名称，或者表单属性的名称<br>8.VAR<em>TYPE</em> : 定义类型<br>9.REV<em> : 版本<br>10.TIME</em> : 导入时间<br>11.BYTEARRAY<em>ID</em><br>12.DOUBLE<em> : 如果定义的变量或者表单属性的类型为double，他的值存在这里<br>13.LONG</em> : 如果定义的变量或者表单属性的类型为LONG ,他的值存在这里<br>14.TEXT<em> :　　如果定义的变量或者表单属性的类型为string，值存在这里<br>15.TEXT2</em>:</p>
+</li>
+<li><p>act_hi_identitylink：历史流程人员表</p>
+</li>
+<li><p>act_hi<em>procinst： 历史流程实例表<br>1.ID</em> : 唯一标识<br>2.PROC_INST<em>ID</em> : 流程ＩＤ<br>3.BUSINESS<em>KEY</em> : 业务编号<br>4.PROC_DEF<em>ID</em> ： 流程定义id<br>5.START<em>TIME</em> : 流程开始时间<br>6.ENT_<em>TIME : 结束时间<br>7.DURATION</em> : 流程经过时间<br>8.START_USER<em>ID</em> : 开启流程用户id<br>9.START_ACT<em>ID</em> : 开始节点<br>10.END_ACT<em>ID</em>： 结束节点<br>11.SUPER_PROCESS_INSTANCE<em>ID</em> : 父流程流程id<br>12.DELETE<em>REASON</em> : 从运行中任务表中删除原因</p>
+</li>
+<li><p>act_hi<em>taskinst： 历史任务实例表<br>1.ID</em> ： 标识<br>2.PROC_DEF<em>ID</em> ： 流程定义id<br>3.TASK_DEF<em>KEY</em> : 任务定义id<br>4.PROC_INST<em>ID</em> :　流程实例ｉｄ<br>5.EXECUTION<em>ID</em> : 执行实例id<br>6.PARENT_TASK<em>ID</em> : 父任务id<br>7.NAME<em> : 任务名称<br>8.DESCRIPTION</em> : 说明<br>9.OWNER<em> :　拥有人（发起人）<br>10.ASSIGNEE</em> : 分配到任务的人<br>11.START_<em>TIME</em> : 开始任务时间<br>12.END<em>TIME</em> : 结束任务时间<br>13.DURATION_ : 时长<br>14.DELETE<em>REASON</em> :从运行时任务表中删除的原因<br>15.PRIORITY_ : 紧急程度<br>16.DUE<em>DATE</em> :</p>
+</li>
+<li><p>act_hi_varinst：历史变量表</p>
+</li>
+</ul>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">act_id_*：</div></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p>id’代表 identity（身份）。这些表包含着标识的信息，如用户、用户组、等等。</p>
+</blockquote>
+<ul>
+<li><p>act_id<em>group:用户组信息表，用来存储用户组信息。<br>1.ID</em>：用户组名<br>2.REV<em>INT:版本号<br>3.NAME</em>:用户组描述信息<br>4.TYPE_:用户组类型</p>
+</li>
+<li><p>act_id_info：用户扩展信息表</p>
+</li>
+<li><p>act_id_membership：用户与用户组对应信息表，用来保存用户的分组信息<br>1.USER<em>ID</em>:用户名<br>2.GROUP<em>ID</em>:用户组名</p>
+</li>
+<li><p>act_id<em>user：用户信息表<br>1.ID</em>:用户名<br>2.REV<em>INT:版本号<br>3.FIRST</em>:用户名称<br>4.LAST<em>:用户姓氏<br>5.EMAIL</em>:邮箱<br>6.PWD_:密码</p>
+</li>
+</ul>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">act_re_*：</div></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p>’re’代表 repository（仓库）。带此前缀的表包含的是静态信息，如，流程定义、流程的资源（图片、规则，等）。</p>
+</blockquote>
+<ul>
+<li><p>act_re<em>deployment:部署信息表,用来存储部署时需要持久化保存下来的信息<br>1.ID</em>:部署编号，自增长<br>2.NAME_:部署包的名称<br>3.DEPLOY<em>TIME</em>:部署时间</p>
+</li>
+<li><p>act_re_model 流程设计模型部署表</p>
+</li>
+<li><p>act_re<em>procdef:业务流程定义数据表<br>1.ID</em>:流程ID，由“流程编号：流程版本号：自增长ID”组成<br>2.CATEGORY<em>:流程命名空间（该编号就是流程文件targetNamespace的属性值）<br>3.NAME</em>:流程名称（该编号就是流程文件process元素的name属性值）<br>4.KEY<em>:流程编号（该编号就是流程文件process元素的id属性值）<br>5.VERSION</em>:流程版本号（由程序控制，新增即为1，修改后依次加1来完成的）<br>6.DEPLOYMENT<em>ID</em>:部署编号<br>7.RESOURCE<em>NAME</em>:资源文件名称<br>8.DGRM_RESOURCE<em>NAME</em>:图片资源文件名称<br>9.HAS_START_FROM<em>KEY</em>:是否有Start From Key</p>
+<blockquote>
+<blockquote>
+<p>注：此表和ACT_RE_DEPLOYMENT是多对一的关系，即，一个部署的bar包里可能包含多个流程定义文件，每个流程定义文件都会有一条记录在ACT_REPROCDEF表内，每个流程定义的数据，都会对于ACT_GE_BYTEARRAY表内的一个资源文件和PNG图片文件。和ACT_GE_BYTEARRAY的关联是通过程序用ACT_GE_BYTEARRAY.NAME与ACT_RE<em>PROCDEF.NAME</em>完成的，在数据库表结构中没有体现。</p>
+</blockquote>
+</blockquote>
+</li>
+</ul>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">act_ru_*：</div></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p>’ru’代表 runtime（运行时）。就是这个运行时的表存储着流程变量、用户任务、变量、作业，等中的运行时的数据。 activiti 只存储流程实例执行期间的运行时数据，当流程实例结束时，将删除这些记录。这就使这些运行时的表保持 的小且快。</p>
+</blockquote>
+<ul>
+<li><p>act_ru_event_subscr</p>
+</li>
+<li><p>act_ru<em>execution：运行时流程执行实例表<br>1.ID</em>：主键，这个主键有可能和PROC_INST<em>ID</em>相同，相同的情况表示这条记录为主实例记录。<br>2.REV_：版本，表示数据库表更新次数。<br>3.PROC_INST<em>ID</em>：流程实例编号，一个流程实例不管有多少条分支实例，这个ID都是一致的。<br>4.BUSINESS<em>KEY</em>：业务编号，业务主键，主流程才会使用业务主键，另外这个业务主键字段在表中有唯一约束。<br>5.PARENT<em>ID</em>：找到该执行实例的父级，最终会找到整个流程的执行实例<br>6.PROC_DEF<em>ID</em>：流程定义ID<br>7.SUPER<em>EXEC</em>： 引用的执行模板，这个如果存在表示这个实例记录为一个外部子流程记录，对应主流程的主键ID。<br>8.ACT<em>ID</em>： 节点id，表示流程运行到哪个节点<br>9.IS<em>ACTIVE</em>： 是否活动流程实例<br>10.IS<em>CONCURRENT</em>：是否并发。上图同步节点后为并发，如果是并发多实例也是为1。<br>11.IS<em>SCOPE</em>： 主实例为1，子实例为0。<br>12.TENANT<em>ID</em> : 这个字段表示租户ID。可以应对多租户的设计。<br>13.IS_EVENT_SCOPE: 没有使用到事件的情况下，一般都为0。<br>14.SUSPENSION<em>STATE</em>：是否暂停。</p>
+</li>
+<li><p>act_ru<em>identitylink：运行时流程人员表，主要存储任务节点与参与者的相关信息<br>1.ID</em>： 标识<br>2.REV_： 版本<br>3.GROUP<em>ID</em>： 组织id<br>4.TYPE_： 类型<br>5.USER<em>ID</em>： 用户id<br>6.TASK<em>ID</em>： 任务id</p>
+</li>
+<li><p>act_ru_job</p>
+</li>
+<li><p>act_ru<em>task：运行时任务节点表<br>1.ID</em>：<br>2.REV_：<br>3.EXECUTION<em>ID</em>： 执行实例的id<br>4.PROC_INST<em>ID</em>： 流程实例的id<br>5.PROC_DEF<em>ID</em>： 流程定义的id,对应act_re<em>procdef 的id</em><br>6.NAME_： 任务名称，对应 task 的name<br>7.PARENT_TASK<em>ID</em> : 对应父任务<br>8.DESCRIPTION_：<br>9.TASK_DEF<em>KEY</em>： task 的id<br>10.OWNER<em> : 发起人<br>11.ASSIGNEE</em>： 分配到任务的人<br>12.DELEGATION<em> : 委托人<br>13.PRIORITY</em>： 紧急程度<br>14.CREATE<em>TIME</em>： 发起时间<br>15.DUE<em>TIME</em>：审批时长</p>
+</li>
+<li><p>act_ru<em>variable：运行时流程变量数据表<br>1.ID</em>：标识<br>2.REV<em>：版本号<br>3.TYPE</em>：数据类型<br>4.NAME_：变量名<br>5.EXECUTION<em>ID</em>： 执行实例id<br>6.PROC_INST<em>ID</em>： 流程实例id<br>7.TASK<em>ID</em>： 任务id<br>8.BYTEARRAY<em>ID</em>：<br>9.DOUBLE<em>：若数据类型为double ,保存数据在此列<br>10.LONG</em>： 若数据类型为Long保存数据到此列<br>11.TEXT<em>： string 保存到此列<br>12.TEXT2</em>：</p>
+</li>
+</ul>
+<hr>
+<blockquote>
+<p>结论及总结:</p>
+</blockquote>
+<ol>
+<li><p>流程文件部署主要涉及到3个表，分别是：ACT_GE_BYTEARRAY、ACT_RE_DEPLOYMENT、ACT_RE_PROCDEF。主要完成“部署包”–&gt;“流程定义文件”–&gt;“所有包内文件”的解析部署关系。从表结构中可以看出，流程定义的元素需要每次从数据库加载并解析，因为流程定义的元素没有转化成数据库表来完成，当然流程元素解析后是放在缓存中的，具体的还需要后面详细研究。</p>
+</li>
+<li><p>流程定义中的java类文件不保存在数据库里 。</p>
+</li>
+<li><p>组织机构的管理相对较弱，如果要纳入单点登录体系内还需要改造完成，具体改造方法有待研究。</p>
+</li>
+<li><p>运行时对象的执行与数据库记录之间的关系需要继续研究</p>
+</li>
+<li><p>历史数据的保存及作用需要继续研究。</p>
+</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文转载于： &lt;a href=&quot;http://www.jianshu.com/p/f9fd1cc02eae&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.jianshu.com/p/f9fd1cc02eae&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+
+    
+    </summary>
+    
+      <category term="activity" scheme="http://kingge.top/categories/activity/"/>
+    
+    
+      <category term="activity" scheme="http://kingge.top/tags/activity/"/>
+    
+      <category term="工作流" scheme="http://kingge.top/tags/%E5%B7%A5%E4%BD%9C%E6%B5%81/"/>
+    
+  </entry>
   
   <entry>
     <title>关于web.xml中ServletContext、ServletContextListener、Filter、Servlet的执行顺序</title>
@@ -1478,101 +1706,6 @@
       <category term="Mysql" scheme="http://kingge.top/tags/Mysql/"/>
     
       <category term="索引" scheme="http://kingge.top/tags/%E7%B4%A2%E5%BC%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++文件流操作的读与写</title>
-    <link href="http://kingge.top/2014/11/08/C-%E6%96%87%E4%BB%B6%E6%B5%81%E6%93%8D%E4%BD%9C%E7%9A%84%E8%AF%BB%E4%B8%8E%E5%86%99/"/>
-    <id>http://kingge.top/2014/11/08/C-文件流操作的读与写/</id>
-    <published>2014-11-08T13:04:00.000Z</published>
-    <updated>2017-08-17T06:33:56.710Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="对文件的写入"><a href="#对文件的写入" class="headerlink" title="对文件的写入"></a>对文件的写入</h1><h2 id="put和-lt-lt-写入方式"><a href="#put和-lt-lt-写入方式" class="headerlink" title="put和&lt;&lt; 写入方式"></a>put和&lt;&lt; 写入方式</h2><ul>
-<li>put的操作：是对文件进行写入的操作，写入一个字符（可以使字母也可以是asci码值）</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">file.put(<span class="string">'   A'</span>);</div><div class="line">file.put(<span class="string">'\n'</span>);</div><div class="line">file &lt;&lt; <span class="string">"xiezejing1994"</span>;</div></pre></td></tr></table></figure>
-<hr>
-<blockquote>
-<p>输出： &nbsp;&nbsp;&nbsp;&nbsp;A// 注意到A这里有几个空格 但是不影响左对齐<br>xiezejing1994// 也就是说A的前面不会有空格</p>
-</blockquote>
-<p>##操作和&lt;&lt; 读写方式区别</p>
-<blockquote>
-<p>put操作和 file &lt;&lt;‘A’这个基本上是一样的，但是有个区别就是他不可以这样file &lt;&lt;’  A’;（A的前面有空格）因为他是格式化输入 所以中间不能有”空格“<br>但是这样file &lt;&lt;”‘       A”;（也就是以字符串的格式输入则会有空格）</p>
-</blockquote>
-<hr>
-<h1 id="文件的读操作"><a href="#文件的读操作" class="headerlink" title="文件的读操作"></a>文件的读操作</h1><h2 id="1-getline（）"><a href="#1-getline（）" class="headerlink" title="1.getline（）"></a>1.getline（）</h2><blockquote>
-<p>getline（ cin ，string类型 ）<br> getline( cin, z );<br>  file1 &lt;&lt; z;  （file1 为文件流对象）</p>
-</blockquote>
-<hr>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">例子：</div><div class="line"> char c[100];</div><div class="line"></div><div class="line"> while ( !file.eof() )</div><div class="line"> &#123;</div><div class="line">  file.getline( c,100 );</div><div class="line">  cout &lt;&lt; c;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">假设文件1.txt内有'       A</div><div class="line">                 xiezejing1994  这样文本</div><div class="line"></div><div class="line">它的输出：'       Axiezejing1994  也就是说他没有读到换行的功能</div><div class="line"> 不会输出'       A</div><div class="line">         xiezejing1994（原因就是getlibe其实里面有三个参数，第三个参数默认为<span class="string">'\n'</span>）</div></pre></td></tr></table></figure>
-<h2 id="2-getline（-fstream，string-）"><a href="#2-getline（-fstream，string-）" class="headerlink" title="2.getline（ fstream，string ）"></a>2.getline（ fstream，string ）</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">while</span> ( getline( file,z ) )</div><div class="line">&#123;</div><div class="line">  <span class="built_in">cout</span> &lt;&lt; z;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="3-get（）"><a href="#3-get（）" class="headerlink" title="3.get（）"></a>3.get（）</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"> <span class="keyword">char</span> c[<span class="number">100</span>];</div><div class="line"></div><div class="line"> <span class="keyword">while</span> ( !file.eof() )</div><div class="line"> &#123;</div><div class="line">  <span class="comment">//file.getline( c,100 ,'\0');</span></div><div class="line">  file.get( c,<span class="number">100</span> ,<span class="string">'\0'</span>);</div><div class="line">  <span class="built_in">cout</span> &lt;&lt; c;</div><div class="line"> &#125;</div><div class="line"></div><div class="line">输出同getline一样</div><div class="line">----必须要写三个参数 否则只会输出一行（第三个参数为<span class="string">'\n'</span>也是只会输出一行）。非常严格的输出。</div></pre></td></tr></table></figure>
-<h2 id="4-get操作"><a href="#4-get操作" class="headerlink" title="4.get操作"></a>4.get操作</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"> <span class="keyword">char</span> c;</div><div class="line"> file.get(c);</div><div class="line"> <span class="keyword">while</span> ( !file.eof() )</div><div class="line"> &#123;</div><div class="line">  <span class="built_in">cout</span> &lt;&lt; c;</div><div class="line">  file.get(c);</div><div class="line">  </div><div class="line"> &#125;</div><div class="line">-----和getline的区别在于 他是读取单个字符的，所以会读取到结束符号</div><div class="line">故会输出</div><div class="line">'       A</div><div class="line">xiezejing1994</div></pre></td></tr></table></figure>
-<h1 id="对文件是否读到末尾的判断"><a href="#对文件是否读到末尾的判断" class="headerlink" title="对文件是否读到末尾的判断"></a>对文件是否读到末尾的判断</h1><h1 id="1-feof（）"><a href="#1-feof（）" class="headerlink" title="1.feof（）"></a>1.feof（）</h1><blockquote>
-<p>该函数只有“已经读取了”结束标志时 feof（）才会返回非零值  也就是说当文件读取到文件结束标志位时他的返回值不是非零还是零 故还要在进行一次读.</p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">例子 假设在<span class="number">1.</span>txt中只有abc三个字符</div><div class="line">在进行 </div><div class="line"><span class="keyword">while</span>（！feof(fp)）</div><div class="line"> &#123;</div><div class="line">   ch = getc(fp);</div><div class="line">   <span class="built_in">putchar</span>(ch);</div><div class="line">  </div><div class="line"> &#125;<span class="comment">//实际上输出的是四个字符</span></div><div class="line"></div><div class="line">改为</div><div class="line">ch = getc（fp）；</div><div class="line"><span class="keyword">while</span> （ ！feof（fp））</div><div class="line">&#123;</div><div class="line">   <span class="built_in">putchar</span>（ch）；</div><div class="line">   ch = getc（fp）；</div><div class="line">&#125;<span class="comment">// 这样就可以正常运行</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="number">3.</span> 可以不调用函数eof 直接就是 </div><div class="line"><span class="keyword">while</span> （ file ） <span class="comment">// file 就是文件流的对象</span></div><div class="line">&#123;</div><div class="line"> 。。。。操作</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="number">4.</span></div><div class="line"><span class="keyword">char</span> c[<span class="number">100</span>];</div><div class="line"></div><div class="line"> <span class="keyword">while</span> ( !file.eof() )</div><div class="line"> &#123;</div><div class="line">  file.getline( c,<span class="number">100</span> ,<span class="string">'\0'</span>);</div><div class="line">  <span class="built_in">cout</span> &lt;&lt; c;</div><div class="line"> &#125;</div><div class="line"></div><div class="line">这个 和</div><div class="line"><span class="keyword">char</span> c[<span class="number">100</span>];</div><div class="line"></div><div class="line"> <span class="keyword">while</span> ( !file.eof() )</div><div class="line"> &#123;</div><div class="line">  file.getline( c,<span class="number">100</span> ,<span class="string">'\n'</span>);</div><div class="line">  <span class="built_in">cout</span> &lt;&lt; c;</div><div class="line"> &#125;</div><div class="line"></div><div class="line">假设文本为上面的。</div><div class="line">输出分别为'       A</div><div class="line">          xiezejing1994</div><div class="line"></div><div class="line"></div><div class="line">'       Axiezejing1994</div></pre></td></tr></table></figure>
-<h1 id="读写"><a href="#读写" class="headerlink" title="读写"></a>读写</h1><h2 id="1-read-数组名，接收的个数"><a href="#1-read-数组名，接收的个数" class="headerlink" title="1.read( 数组名，接收的个数 )"></a>1.read( 数组名，接收的个数 )</h2><h2 id="2-write-数组名，gcount函数"><a href="#2-write-数组名，gcount函数" class="headerlink" title="2.write( 数组名，gcount函数  )"></a>2.write( 数组名，gcount函数  )</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line"> <span class="function">ifstream <span class="title">file</span><span class="params">( <span class="string">"D:\\jjj.txt"</span>)</span></span>;</div><div class="line"> <span class="function">ofstream <span class="title">file1</span><span class="params">( <span class="string">"D:\\j.txt"</span> , ios::app)</span></span>;</div><div class="line"> <span class="built_in">string</span> z;</div><div class="line"></div><div class="line"> <span class="keyword">if</span> ( !file )</div><div class="line"> &#123;</div><div class="line">     <span class="built_in">cout</span> &lt;&lt; <span class="string">" 无法打开\n "</span>;</div><div class="line">  <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line"> &#125;</div><div class="line"> </div><div class="line"> <span class="keyword">char</span> c[<span class="number">100</span>];</div><div class="line"> </div><div class="line"> </div><div class="line"> <span class="keyword">while</span> ( !file.eof() )</div><div class="line"> &#123;</div><div class="line">  file.read( c,<span class="number">100</span>  );</div><div class="line">  file1.write( c, file.gcount() );</div><div class="line"></div><div class="line"> &#125;</div><div class="line"></div><div class="line"> </div><div class="line"></div><div class="line"></div><div class="line"> file.close();</div><div class="line"> file.close();</div><div class="line"></div><div class="line"> </div><div class="line"></div><div class="line"><span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>**</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong>判断打开是否正确<strong><strong><strong>**</strong></strong></strong></p>
-</blockquote>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> <span class="keyword">if</span>( !file )</div><div class="line"><span class="number">2.</span><span class="keyword">if</span> ( !file.good() )</div><div class="line"> &#123;</div><div class="line">     <span class="built_in">cout</span> &lt;&lt; <span class="string">" 无法打开\n "</span>;</div><div class="line">  <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"><span class="number">3.</span></div><div class="line"> <span class="keyword">if</span> ( !file.is_open() )</div><div class="line"> &#123;</div><div class="line">     <span class="built_in">cout</span> &lt;&lt; <span class="string">" 无法打开\n "</span>;</div><div class="line">  <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"><span class="number">4.</span> <span class="keyword">if</span> ( file.fail() )</div><div class="line"> &#123;</div><div class="line">     <span class="built_in">cout</span> &lt;&lt; <span class="string">" 无法打开\n "</span>;</div><div class="line">  <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;对文件的写入&quot;&gt;&lt;a href=&quot;#对文件的写入&quot; class=&quot;headerlink&quot; title=&quot;对文件的写入&quot;&gt;&lt;/a&gt;对文件的写入&lt;/h1&gt;&lt;h2 id=&quot;put和-lt-lt-写入方式&quot;&gt;&lt;a href=&quot;#put和-lt-lt-写入方式&quot; class
-    
-    </summary>
-    
-      <category term="c++" scheme="http://kingge.top/categories/c/"/>
-    
-    
-      <category term="文件" scheme="http://kingge.top/tags/%E6%96%87%E4%BB%B6/"/>
-    
-      <category term="C++" scheme="http://kingge.top/tags/C/"/>
-    
-      <category term="文件读写" scheme="http://kingge.top/tags/%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>文章例子</title>
-    <link href="http://kingge.top/2013/12/02/ceshi/"/>
-    <id>http://kingge.top/2013/12/02/ceshi/</id>
-    <published>2013-12-02T07:30:16.000Z</published>
-    <updated>2017-08-16T02:36:44.437Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>使用github pages服务搭建博客的好处有：</p>
-<ol>
-<li>全是静态文件，访问速度快；</li>
-<li>免费方便，不用花一分钱就可以搭建一个自由的个人博客，不需要服务器不需要后台；</li>
-<li>可以随意绑定自己的域名，不仔细看的话根本看不出来你的网站是基于github的；</li>
-</ol>
-<a id="more"></a>
-<ol>
-<li>数据绝对安全，基于github的版本管理，想恢复到哪个历史版本都行；</li>
-<li>博客内容可以轻松打包、转移、发布到其它平台；</li>
-<li>等等；</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      附加一段文章摘要，字数最好在140字以内，会出现在meta的description里面
-    
-    </summary>
-    
-      <category term="默认分类" scheme="http://kingge.top/categories/%E9%BB%98%E8%AE%A4%E5%88%86%E7%B1%BB/"/>
-    
-    
-      <category term="tag1" scheme="http://kingge.top/tags/tag1/"/>
-    
-      <category term="tag2" scheme="http://kingge.top/tags/tag2/"/>
-    
-      <category term="tag3" scheme="http://kingge.top/tags/tag3/"/>
     
   </entry>
   
