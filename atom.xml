@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingge.top/"/>
-  <updated>2017-08-16T02:35:53.838Z</updated>
+  <updated>2017-08-31T09:44:24.038Z</updated>
   <id>http://kingge.top/</id>
   
   <author>
@@ -14,34 +14,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>博客迁移</title>
-    <link href="http://kingge.top/2019/06/01/%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB/"/>
-    <id>http://kingge.top/2019/06/01/博客迁移/</id>
-    <published>2019-06-01T04:58:04.666Z</published>
-    <updated>2017-08-16T02:35:53.838Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>今天周一，天气炎热，调开空调。噼里啪啦的敲完今天的工作，因为今天本人决定再次迁移自己的PersonalBlog。个人一共换过很多个博客，前期使用过网易博客，后来访问量上不去(网易博客他并不是一个IT社区)，后来换到了博客园，感觉还行，但是好景不长，感觉本人有处女座的完美主义，很纠结，总感觉这个博客园UI设计不行。<br>      最后又换到了CSDN，今天又临时决定迁移到了本人的服务器上面，自由管理。<br>      我的性格知道的人应该知道，我是知无不言言无不尽，只要我会的有所感悟的都会分享出来。以后每天心情一更，工作方面一周一更。</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>最后：人生需要面对,搞笑我是认真的。</p>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;今天周一，天气炎热，调开空调。噼里啪啦的敲完今天的工作，因为今天本人决定再次迁移自己的PersonalBlog。个人一共换过很多个博客，前期使用过网易博客，后来访问量上不去(网易博客他并不是一个IT社区)，后来换到了博客园，感觉还行，但是好景不长，
-    
-    </summary>
-    
-      <category term="心情" scheme="http://kingge.top/categories/%E5%BF%83%E6%83%85/"/>
-    
-    
-  </entry>
   
   <entry>
     <title>Hessian 多系统访问</title>
@@ -67,6 +39,433 @@
     
     </summary>
     
+    
+  </entry>
+  
+  <entry>
+    <title>zookeeper知识学习</title>
+    <link href="http://kingge.top/2018/02/02/zookeeper%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/"/>
+    <id>http://kingge.top/2018/02/02/zookeeper知识学习/</id>
+    <published>2018-02-02T11:12:44.000Z</published>
+    <updated>2019-06-02T13:12:51.160Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>   最近公司开发saas模式的企业应用软件服务，所以下面是我个人使用和总结（掺杂了大数据相关的总结）</p>
+<h1 id="一、正文"><a href="#一、正文" class="headerlink" title="一、正文"></a>一、正文</h1><h2 id="0-1-下载"><a href="#0-1-下载" class="headerlink" title="0.1 下载"></a>0.1 下载</h2><p>1）官网首页：</p>
+<p><a href="https://zookeeper.apache.org/" target="_blank" rel="external">https://zookeeper.apache.org/</a></p>
+<p>2）下载截图</p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image002.jpg" alt="img"></p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image004.jpg" alt="img"></p>
+<p><img src="/2018/02/02/zookeeper知识学习/Hexoo\source\_posts\zookeeper知识学习\clip_image006.jpg" alt="img"></p>
+<h2 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h2><p>Zookeeper是一个开源的分布式的，为分布式应用提供协调服务的Apache项目。</p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image002.png" alt="img"></p>
+<h2 id="1-2-模型构造和特点"><a href="#1-2-模型构造和特点" class="headerlink" title="1.2 模型构造和特点"></a>1.2 模型构造和特点</h2><p><img src="/2018/02/02/zookeeper知识学习/clip_image0021.png" alt="img"></p>
+<p>1）Zookeeper：<strong>一个领导者（leader），多个跟随者（follower）</strong>组成的集群。</p>
+<p>2）Leader负责进行投票的发起和决议，更新系统状态。</p>
+<p>3）Follower用于接收客户请求并向客户端返回结果，在选举Leader过程中参与投票。</p>
+<p>4）<strong><em>集群中只要有半数以上节点存活，Zookeeper集群就能正常服务。（例如现在zookeeper集群现在有四台，那么挂掉两台后就不能正常工作了。假设初始时只有三台，那么最多也是挂掉两台后就不能工作了。也就是说，部署三台和部署四台的效用其实是一样的，所以一般都是部署奇数台zookeeper，节省资源）</em></strong></p>
+<p>5）<strong>全局数据一致</strong>：每个server保存一份相同的数据副本，client无论连接到哪个server，数据都是一致的。</p>
+<p>6）<strong>更新请求顺序进行</strong>（全局数据一致性的提现），来自同一个client的更新请求按其发送顺序依次执行。</p>
+<p>7）数据更新原子性，一次数据更新要么成功，要么失败。</p>
+<p>8）实时性，在一定时间范围内（<strong>数据一致性的更新会有延迟</strong>），client能读到最新数据。</p>
+<p>9）<strong>一次性监听（缺点）</strong>-这个缺点我们在后面可以用代码解决。</p>
+<h2 id="1-3-数据结构"><a href="#1-3-数据结构" class="headerlink" title="1.3 数据结构"></a>1.3 数据结构</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ZooKeeper数据模型的结构与Unix文件系统很类似，整体上可以看作是一棵树，每个节点称做一个ZNode。每一个ZNode默认能够存储1MB的数据，每个ZNode都可以通过其路径唯一标识。</div><div class="line"></div><div class="line">每个节点的存储的数据量，也决定了他的应用场景并不是存储大量的数据。下面的1.4章节会阐述到他的作用-应用场景</div></pre></td></tr></table></figure>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image0024.jpg" alt="数据结构图"></p>
+<h2 id="1-4-应用场景"><a href="#1-4-应用场景" class="headerlink" title="1.4 应用场景"></a>1.4 应用场景</h2><p><strong>如果某个需求：当某个节点发生变化，通知其他关注这个节点的其他节点。那么就可以使用**</strong>zookeeper**</p>
+<p>项目中常用到分布式锁和配置管理</p>
+<h3 id="1-4-1-统一命名服务"><a href="#1-4-1-统一命名服务" class="headerlink" title="1.4.1 统一命名服务"></a>1.4.1 统一命名服务</h3><p><img src="/2018/02/02/zookeeper知识学习/clip_image002a.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">意思就是：我们通常使用域名来访问某个网站，但是域名对应的ip我们是不需要关注的</div><div class="line">为了系统的容错性，我们访问Baidu的这个请求是会随机寻找一个正常运行的服务器去处理。那么我们就可以使用zookeeper来进行管理。管理可以访问到Baidu这个网址的ip列表。客户端每次请求百度时，只需要去请求这个zookeeper获取可访问的ip即可。</div><div class="line">实现动态ip的上下线管理</div></pre></td></tr></table></figure>
+<h3 id="1-4-2-统一配置管理"><a href="#1-4-2-统一配置管理" class="headerlink" title="1.4.2 统一配置管理"></a>1.4.2 统一配置管理</h3><p><img src="/2018/02/02/zookeeper知识学习/clip_image004.png" alt="img"></p>
+<h3 id="1-4-3-统一集群管理"><a href="#1-4-3-统一集群管理" class="headerlink" title="1.4.3 统一集群管理"></a>1.4.3 统一集群管理</h3><p>集群管理结构图如下所示。</p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image006.png" alt="img"></p>
+<h3 id="1-4-4-服务器节点动态上下线"><a href="#1-4-4-服务器节点动态上下线" class="headerlink" title="1.4.4 服务器节点动态上下线"></a>1.4.4 服务器节点动态上下线</h3><p><img src="/2018/02/02/zookeeper知识学习/clip_image008.png" alt="img"></p>
+<h3 id="1-4-5-软负载均衡"><a href="#1-4-5-软负载均衡" class="headerlink" title="1.4.5 软负载均衡"></a>1.4.5 软负载均衡</h3><p><img src="/2018/02/02/zookeeper知识学习/clip_image010.png" alt="img"></p>
+<p>控制某个服务器的访问数，达到资源合理分配</p>
+<h3 id="1-4-6-分布式锁（主要原理是同一路径下的节点名称不能重复，不能重复创建）"><a href="#1-4-6-分布式锁（主要原理是同一路径下的节点名称不能重复，不能重复创建）" class="headerlink" title="1.4.6 分布式锁（主要原理是同一路径下的节点名称不能重复，不能重复创建）"></a>1.4.6 分布式锁（<em>主要原理是同一路径下的节点名称不能重复，不能重复创建</em>）</h3><p>有了zookeeper的一致性文件系统，锁的问题变得容易。锁服务可以分为两类，一个是保持独占，另一个是控制时序。</p>
+<p>对于第一类，我们将zookeeper上的一个znode看作是一把锁，通过createznode的方式来实现。所有客户端都去创建 /distribute_lock 节点，最终成功创建的那个客户端也即拥有了这把锁。厕所有言：来也冲冲，去也冲冲，用完删除掉自己创建的distribute_lock 节点就释放出锁。</p>
+<p><strong>对于第二类， /distribute_lock 已经预先存在，所有客户端在它下面创建临时顺序编号目录节点，和选master一样，编号最小的获得锁，用完删除，依次方便。</strong>（<strong>在下面的3.2章节会讲到zookeeper顺序节点的相关内容</strong>）</p>
+<p> 好的博客：</p>
+<p><a href="https://my.oschina.net/aidelingyu/blog/1600979" target="_blank" rel="external">https://my.oschina.net/aidelingyu/blog/1600979</a> </p>
+<p> <a href="https://www.jianshu.com/p/5d12a01018e1" target="_blank" rel="external">https://www.jianshu.com/p/5d12a01018e1</a></p>
+<h3 id="1-4-7-队列管理"><a href="#1-4-7-队列管理" class="headerlink" title="1.4.7 队列管理"></a>1.4.7 队列管理</h3><p>两种类型的队列：</p>
+<p>1、 同步队列，当一个队列的成员都聚齐时，这个队列才可用，否则一直等待所有成员到达。</p>
+<p>2、队列按照 FIFO 方式进行入队和出队操作。</p>
+<p>第一类，在约定目录下创建临时目录节点，监听节点数目是否是我们要求的数目。</p>
+<p>第二类，和分布式锁服务中的控制时序场景基本原理一致，入列有编号，出列按编号。</p>
+<h1 id="二-Zookeeper安装"><a href="#二-Zookeeper安装" class="headerlink" title="二 Zookeeper安装"></a>二 Zookeeper安装</h1><h2 id="2-1-本地模式安装部署"><a href="#2-1-本地模式安装部署" class="headerlink" title="2.1 本地模式安装部署"></a>2.1 本地模式安装部署</h2><p>1）安装前准备：</p>
+<p>（1）安装jdk</p>
+<p>（2）通过cshell工具拷贝zookeeper到linux系统下</p>
+<p>（3）修改tar包权限</p>
+<p> [kingge@hadoop102 software]$ chmod u+x zookeeper-3.4.10.tar.gz</p>
+<p>（4）解压到指定目录</p>
+<p> [kingge@hadoop102 software]$ tar -zxvf zookeeper-3.4.10.tar.gz -C /opt/module/</p>
+<p>2）配置修改</p>
+<p> 将/opt/module/zookeeper-3.4.10/conf这个路径下的zoo_sample.cfg修改为zoo.cfg；</p>
+<p>​          进入zoo.cfg文件：vim zoo.cfg</p>
+<p>​                  修改dataDir路径为</p>
+<p>​                dataDir=/opt/module/zookeeper-3.4.10/zkData</p>
+<p>​          在/opt/module/zookeeper-3.4.10/这个目录上创建zkData文件夹</p>
+<p>​                  [kingge@hadoop102 zookeeper-3.4.10]$ mkdir zkData</p>
+<p>3）操作zookeeper</p>
+<p>（1）启动zookeeper</p>
+<p>[kingge@hadoop102 zookeeper-3.4.10]$ bin/zkServer.sh start</p>
+<p>（2）查看进程是否启动</p>
+<p>​         [kingge@hadoop102 zookeeper-3.4.10]$ jps</p>
+<p>4020 Jps</p>
+<p>4001 QuorumPeerMain</p>
+<p>（3）查看状态：</p>
+<p>[kingge@hadoop102 zookeeper-3.4.10]$ bin/zkServer.sh status</p>
+<p>ZooKeeper JMX enabled by default</p>
+<p>Using config: /opt/module/zookeeper-3.4.10/bin/../conf/zoo.cfg</p>
+<p>Mode: <strong>standalone</strong></p>
+<p>（4）启动客户端：</p>
+<p>[kingge@hadoop102 zookeeper-3.4.10]$ bin/zkCli.sh</p>
+<p>（5）退出客户端：</p>
+<p>[zk: localhost:2181(CONNECTED) 0] quit</p>
+<p>（6）停止zookeeper</p>
+<p> [kingge@hadoop102 zookeeper-3.4.10]$ bin/zkServer.sh stop</p>
+<h2 id="2-2-配置参数解读"><a href="#2-2-配置参数解读" class="headerlink" title="2.2 配置参数解读"></a>2.2 配置参数解读</h2><p>解读zoo.cfg文件中参数含义</p>
+<p>1）tickTime=2000：通信心跳数，Zookeeper服务器心跳时间，单位毫秒</p>
+<p>Zookeeper使用的基本时间，服务器之间或客户端与服务器之间维持心跳的时间间隔，也就是每个tickTime时间就会发送一个心跳，时间单位为毫秒。</p>
+<p>它用于心跳机制，并且设置最小的session超时时间为两倍心跳时间。(session的最小超时时间是2*tickTime)</p>
+<p>2）initLimit=10：Leader和Follower<strong>初始通信时限</strong>（<strong>10* tickTime –</strong> <strong>也就是不要超过二十秒</strong>）</p>
+<p>集群中的follower跟随者服务器与leader领导者服务器之间初始连接时能容忍的最多心跳数（tickTime的数量），用它来限定集群中的Zookeeper服务器连接到Leader的时限。</p>
+<p>投票选举新leader的初始化时间</p>
+<p>Follower在启动过程中，会从Leader同步所有最新数据，然后确定自己能够对外服务的起始状态。</p>
+<p>Leader允许Follower在initLimit时间内完成这个工作。</p>
+<p>3）syncLimit=5：Leader和Follower同步通信时限（<strong>5* tickTime –</strong> <strong>也就是不要超过十秒</strong>）</p>
+<p>集群中Leader与Follower之间的<strong>最大响应时间单位</strong>，假如响应超过syncLimit * tickTime，Leader认为Follwer死掉，从服务器列表中删除Follwer。（默认超过十秒，leader就认为follwer已经碟机）</p>
+<p>在运行过程中，Leader负责与ZK集群中所有机器进行通信，例如通过一些心跳检测机制，来检测机器的存活状态。</p>
+<p>如果L发出心跳包在syncLimit之后，还没有从F那收到响应，那么就认为这个F已经不在线了。</p>
+<p>4）dataDir：数据文件目录+数据持久化路径</p>
+<p>保存内存数据库快照信息的位置，如果没有其他说明，更新的事务日志也保存到数据库。</p>
+<p>5）clientPort=2181：客户端连接端口</p>
+<p>监听客户端连接的端口</p>
+<h2 id="2-3-分布式模式下的安装详见"><a href="#2-3-分布式模式下的安装详见" class="headerlink" title="2.3 分布式模式下的安装详见"></a>2.3 分布式模式下的安装详见</h2><p>第四章节</p>
+<h1 id="三-Zookeeper内部原理"><a href="#三-Zookeeper内部原理" class="headerlink" title="三 Zookeeper内部原理"></a>三 Zookeeper内部原理</h1><h2 id="3-1-选举机制"><a href="#3-1-选举机制" class="headerlink" title="3.1 选举机制"></a>3.1 选举机制</h2><p>1）半数机制（Paxos 协议）：集群中半数以上机器存活，集群可用。<strong>所以zookeeper**</strong>适合装在<strong>奇数台机器</strong>上**。</p>
+<p>2）Zookeeper虽然在配置文件中并没有指定master和slave。但是，zookeeper工作时，是有一个节点为leader，其他则为follower，Leader是通过内部的选举机制临时产生的。</p>
+<p>3）以一个简单的例子来说明整个选举的过程。</p>
+<p>假设有五台服务器组成的zookeeper集群，它们的id从1-5，同时它们都是最新启动的，也就是没有历史数据，在存放数据量这一点上，都是一样的。假设这些服务器依序启动，来看看会发生什么。</p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image0a02.png" alt="img"></p>
+<p>（1）服务器1启动，此时只有它一台服务器启动了，它发出去的报没有任何响应，所以它的选举状态一直是LOOKING状态。</p>
+<p>（2）服务器2启动，它与最开始启动的服务器1进行通信，互相交换自己的选举结果，由于两者都没有历史数据，所以id值较大的服务器2胜出，但是由于没有达到超过半数以上的服务器都同意选举它(这个例子中的半数以上是3    <strong>5/2=2.5 向上取整3</strong>)，所以服务器1、2还是继续保持LOOKING状态。</p>
+<p>（3）服务器3启动，根据前面的理论分析，服务器3成为服务器1、2、3中的老大，而与上面不同的是，此时有三台服务器选举了它，所以它成为了这次选举的leader。</p>
+<p>（4）服务器4启动，根据前面的分析，理论上服务器4应该是服务器1、2、3、4中最大的，但是由于前面已经有半数以上的服务器选举了服务器3，所以它只能接收当小弟的命了。</p>
+<p>（5）服务器5启动，同4一样当小弟。</p>
+<h2 id="3-2-节点类型"><a href="#3-2-节点类型" class="headerlink" title="3.2 节点类型"></a>3.2 节点类型</h2><p>1）Znode有两种类型：</p>
+<p>短暂（ephemeral）：客户端和服务器端断开连接后，创建的节点自己删除</p>
+<p>持久（persistent）：客户端和服务器端断开连接后，创建的节点不删除</p>
+<p>2）Znode有四种形式的目录节点（默认是persistent ）</p>
+<p>（1）持久化目录节点（PERSISTENT）</p>
+<p>​         客户端与zookeeper断开连接后，该节点依旧存在。</p>
+<p>（2）持久化顺序编号目录节点（PERSISTENT_SEQUENTIAL）</p>
+<p>​         客户端与zookeeper断开连接后，该节点依旧存在，只是Zookeeper给该节点名称进行顺序编号。（<strong>保证创建的节点名称不会重复</strong>）</p>
+<p>（3）临时目录节点（EPHEMERAL）</p>
+<p>客户端与zookeeper断开连接后，该节点被删除。</p>
+<p>（4）临时顺序编号目录节点（EPHEMERAL_SEQUENTIAL）</p>
+<p>客户端与zookeeper断开连接后，该节点被删除，只是Zookeeper给该节点名称进行顺序编号。</p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image00524.jpg" alt="img"></p>
+<p>3）创建znode时设置顺序标识，znode名称后会附加一个值，顺序号是一个单调递增的计数器，由父节点维护</p>
+<p>4）在分布式系统中，顺序号可以被用于为所有的事件进行全局排序，这样客户端可以通过顺序号推断事件的顺序（<strong>应用场景1.4.6 分布式锁 第二种方式</strong>）</p>
+<h2 id="3-3-stat结构体"><a href="#3-3-stat结构体" class="headerlink" title="3.3 stat结构体"></a>3.3 stat结构体</h2><p>1）czxid- 引起这个znode创建的zxid，创建节点的事务的zxid</p>
+<p>每次修改ZooKeeper状态都会收到一个zxid形式的时间戳，也就是ZooKeeper事务ID。</p>
+<p>事务ID是ZooKeeper中所有修改总的次序。每个修改都有唯一的zxid，如果zxid1小于zxid2，那么zxid1在zxid2之前发生。</p>
+<p>2）ctime - znode被创建的毫秒数(从1970年开始)</p>
+<p>3）mzxid - znode最后更新的zxid</p>
+<p>4）mtime - znode最后修改的毫秒数(从1970年开始)</p>
+<p>5）pZxid-znode最后更新的子节点zxid</p>
+<p>6）cversion - znode子节点变化号，znode子节点修改次数</p>
+<p>7）dataversion - znode数据变化号</p>
+<p>8）aclVersion - znode访问控制列表的变化号</p>
+<p>9）ephemeralOwner- 如果是临时节点，这个是znode拥有者的session id。如果不是临时节点则是0。</p>
+<p>10）dataLength- znode的数据长度</p>
+<p>11）numChildren - znode子节点数量</p>
+<h2 id="3-4-监听器原理"><a href="#3-4-监听器原理" class="headerlink" title="3.4 监听器原理"></a>3.4 监听器原理</h2><p><img src="/2018/02/02/zookeeper知识学习/clip_image0069.png" alt="img"></p>
+<h2 id="3-5-写数据流程"><a href="#3-5-写数据流程" class="headerlink" title="3.5 写数据流程"></a>3.5 写数据流程</h2><p><img src="/2018/02/02/zookeeper知识学习/clip_image0084.png" alt="img"></p>
+<p>1.收到请求，先找到leader节点</p>
+<p>2.广播请求给其他follower</p>
+<p>3.哥哥follower写入数据，写入成功后，通知leader写入成功。（<strong>半数以上follower写入成功即为写入数据成功</strong>）</p>
+<p>4.leader通知最初收到客户请求的server，数据写入成功，该server通知客户端写入数据成功</p>
+<h1 id="四-Zookeeper实战"><a href="#四-Zookeeper实战" class="headerlink" title="四 Zookeeper实战"></a>四 Zookeeper实战</h1><h2 id="4-1-分布式安装部署"><a href="#4-1-分布式安装部署" class="headerlink" title="4.1 分布式安装部署"></a>4.1 分布式安装部署</h2><p>0）集群规划</p>
+<p>在hadoop102、hadoop103和hadoop104三个节点上部署Zookeeper。</p>
+<p>1）解压安装</p>
+<p>（1）解压zookeeper安装包到/opt/module/目录下</p>
+<p> [kingge@hadoop102 software]$ tar -zxvf zookeeper-3.4.10.tar.gz -C /opt/module/</p>
+<p>（2）在/opt/module/zookeeper-3.4.10/这个目录下创建zkData</p>
+<p>​         mkdir -p zkData</p>
+<p>（3）重命名/opt/module/zookeeper-3.4.10/conf这个目录下的zoo_sample.cfg为zoo.cfg</p>
+<p>​         mv zoo_sample.cfg zoo.cfg</p>
+<p>2）配置zoo.cfg文件</p>
+<p>​         （1）具体配置</p>
+<p>​         dataDir=/opt/module/zookeeper-3.4.10/zkData</p>
+<p>​         增加如下配置</p>
+<p>​         #######################cluster##########################</p>
+<p>server.2=hadoop102:2888:3888</p>
+<p>server.3=hadoop103:2888:3888</p>
+<p>server.4=hadoop104:2888:3888</p>
+<p><strong>（2）配置参数解读</strong></p>
+<p>Server.A=B:C:D。</p>
+<p>A是一个数字，表示这个是第几号服务器；（<strong>必须唯一</strong>）</p>
+<p>B是这个服务器的ip地址；</p>
+<p>C是这个服务器与集群中的Leader服务器交换信息的端口；</p>
+<p>D是万一集群中的Leader服务器挂了，需要一个端口来重新进行选举，选出一个新的Leader，而这个端口就是用来执行选举时服务器相互通信的端口。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">集群模式下配置一个文件myid，这个文件在dataDir目录下，这个文件里面有一个数据就是A的值，Zookeeper启动时读取此文件，拿到里面的数据与zoo.cfg里面的配置信息比较从而判断到底是哪个server。</div></pre></td></tr></table></figure>
+<p>3）集群操作</p>
+<p>（1）在/opt/module/zookeeper-3.4.10/zkData目录下创建一个myid的文件</p>
+<p>​         touch myid</p>
+<p><strong>添加myid文件，注意一定要在linux里面创建，在notepad++里面很可能乱码</strong></p>
+<p>（2）编辑myid文件</p>
+<p>​         vi myid</p>
+<p>​         在文件中添加与server对应的编号：如2</p>
+<p>（3）拷贝配置好的zookeeper到其他机器上（<strong>可以用shell脚本进行分发数据</strong>）</p>
+<p>​         scp -r zookeeper-3.4.10/ <a href="mailto:root@hadoop103.kingge.com:/opt/app/" target="_blank" rel="external">root@hadoop103.kingge.com:/opt/app/</a></p>
+<p>​         scp -r zookeeper-3.4.10/ <a href="mailto:root@hadoop104.kingge.com:/opt/app/" target="_blank" rel="external">root@hadoop104.kingge.com:/opt/app/</a></p>
+<p>​         并分别修改myid文件中内容为3、4</p>
+<p>（4）分别启动zookeeper</p>
+<p>​         [root@hadoop102 zookeeper-3.4.10]# bin/zkServer.sh start</p>
+<p>[root@hadoop103 zookeeper-3.4.10]# bin/zkServer.sh start</p>
+<p>[root@hadoop104 zookeeper-3.4.10]# bin/zkServer.sh start</p>
+<p>（5）查看状态</p>
+<p>[root@hadoop102 zookeeper-3.4.10]# bin/zkServer.sh status</p>
+<p>JMX enabled by default</p>
+<p>Using config: /opt/module/zookeeper-3.4.10/bin/../conf/zoo.cfg</p>
+<p>Mode: <strong>follower</strong></p>
+<p>[root@hadoop103 zookeeper-3.4.10]# bin/zkServer.sh status</p>
+<p>JMX enabled by default</p>
+<p>Using config: /opt/module/zookeeper-3.4.10/bin/../conf/zoo.cfg</p>
+<p>Mode: <strong>leader</strong></p>
+<p>[root@hadoop104 zookeeper-3.4.5]# bin/zkServer.sh status</p>
+<p>JMX enabled by default</p>
+<p>Using config: /opt/module/zookeeper-3.4.10/bin/../conf/zoo.cfg</p>
+<p>Mode: <strong>follower</strong></p>
+<p><strong>分析：当第二个zookeeper启动时，因为2 &gt; 3/2=1.5，所以他被投票为了Leader，所以其他的节点就是follwer</strong></p>
+<h2 id="4-2-客户端命令行操作"><a href="#4-2-客户端命令行操作" class="headerlink" title="4.2 客户端命令行操作"></a>4.2 客户端命令行操作</h2><table>
+<thead>
+<tr>
+<th>命令基本语法</th>
+<th>功能描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>help</td>
+<td>显示所有操作命令</td>
+</tr>
+<tr>
+<td>ls path   [watch]</td>
+<td>使用 ls 命令来查看当前znode中所包含的内容</td>
+</tr>
+<tr>
+<td>ls2   path [watch]</td>
+<td>查看当前节点数据并能看到更新次数等数据</td>
+</tr>
+<tr>
+<td>create</td>
+<td>普通创建   -s  含有序列   -e  临时（重启或者超时消失）</td>
+</tr>
+<tr>
+<td>get   path [watch]</td>
+<td>获得节点的值</td>
+</tr>
+<tr>
+<td>set</td>
+<td>设置节点的具体值</td>
+</tr>
+<tr>
+<td>stat</td>
+<td>查看节点状态</td>
+</tr>
+<tr>
+<td>delete</td>
+<td>删除节点</td>
+</tr>
+<tr>
+<td>rmr</td>
+<td>递归删除节点</td>
+</tr>
+</tbody>
+</table>
+<p>1）启动客户端（<strong>随便连接那个zookeeper都可以，因为他们内容都是一样的，下面连接的是103服务器</strong>）</p>
+<p>[kingge@hadoop103 zookeeper-3.4.10]$ bin/zkCli.sh</p>
+<p>2）显示所有操作命令</p>
+<p>[zk: localhost:2181(CONNECTED) 1] help</p>
+<p>3）查看当前znode中所包含的内容</p>
+<p>[zk: localhost:2181(CONNECTED) 0] ls /</p>
+<p>[zookeeper]</p>
+<p>4）查看当前节点数据并能看到更新次数等数据</p>
+<p>[zk: localhost:2181(CONNECTED) 1] ls2 /</p>
+<p>[zookeeper]</p>
+<p>cZxid = 0x0</p>
+<p>ctime = Thu Jan 01 08:00:00 CST 1970</p>
+<p>mZxid = 0x0</p>
+<p>mtime = Thu Jan 01 08:00:00 CST 1970</p>
+<p>pZxid = 0x0</p>
+<p>cversion = -1</p>
+<p>dataVersion = 0</p>
+<p>aclVersion = 0</p>
+<p>ephemeralOwner = 0x0</p>
+<p>dataLength = 0</p>
+<p>numChildren = 1</p>
+<p>5）创建普通节点（<strong><em>注意创建节点时需要写入一些数据，否则创建不成功</em>-例如create /app1 这样的话创建是没有效果的</strong>）</p>
+<p>[zk: localhost:2181(CONNECTED) 2] create /app1 “hello app1”</p>
+<p>Created /app1</p>
+<p>[zk: localhost:2181(CONNECTED) 4] create /app1/server101 “192.168.1.101”</p>
+<p>Created /app1/server101</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1.不支持递归创建节点，比如你要创建/app1/a,如果app1不存在，你就不能创建a( KeeperException.NoNode)。</div><div class="line"></div><div class="line">2.不可以再ephemeral类型的节点下创建子节点(KeeperException.NoChildrenForEphemerals)。（因为他本身是临时节点）</div><div class="line"></div><div class="line">3.如果指定的节点已经存在，会触发KeeperException.NodeExists 异常,当然了对于sequential类型的，不会抛出这个异常。（有编号类型的节点名称会自动递增）</div><div class="line"></div><div class="line">4.数据内容不能超过1M,否则将抛出KeeperException异常。</div></pre></td></tr></table></figure>
+<p>6）获得节点的值</p>
+<p>[zk: localhost:2181(CONNECTED) 6] get /app1</p>
+<p>hello app1</p>
+<p>cZxid = 0x20000000a</p>
+<p>ctime = Mon Jul 17 16:08:35 CST 2017</p>
+<p>mZxid = 0x20000000a</p>
+<p>mtime = Mon Jul 17 16:08:35 CST 2017</p>
+<p>pZxid = 0x20000000b</p>
+<p>cversion = 1</p>
+<p>dataVersion = 0</p>
+<p>aclVersion = 0</p>
+<p>ephemeralOwner = 0x0</p>
+<p>dataLength = 10</p>
+<p>numChildren = 1</p>
+<p>[zk: localhost:2181(CONNECTED) 8] get /app1/server101</p>
+<p>192.168.1.101</p>
+<p>cZxid = 0x20000000b</p>
+<p>ctime = Mon Jul 17 16:11:04 CST 2017</p>
+<p>mZxid = 0x20000000b</p>
+<p>mtime = Mon Jul 17 16:11:04 CST 2017</p>
+<p>pZxid = 0x20000000b</p>
+<p>cversion = 0</p>
+<p>dataVersion = 0</p>
+<p>aclVersion = 0</p>
+<p>ephemeralOwner = 0x0</p>
+<p>dataLength = 13</p>
+<p>numChildren = 0</p>
+<p>7）创建短暂节点</p>
+<p>[zk: localhost:2181(CONNECTED) 9] create -e /app-emphemeral 8888</p>
+<p>（1）在当前客户端是能查看到的</p>
+<p>[zk: localhost:2181(CONNECTED) 10] ls /</p>
+<p>[app1, app-emphemeral, zookeeper]</p>
+<p>（2）退出当前客户端然后再重启客户端</p>
+<p>​         [zk: localhost:2181(CONNECTED) 12] quit</p>
+<p>[kingge@hadoop104 zookeeper-3.4.10]$ bin/zkCli.sh</p>
+<p>（3）再次查看根目录下短暂节点已经删除</p>
+<p>​         [zk: localhost:2181(CONNECTED) 0] ls /</p>
+<p>[app1, zookeeper]</p>
+<p>8）创建带序号的节点</p>
+<p>​         （1）先创建一个普通的根节点app2</p>
+<p>​         [zk: localhost:2181(CONNECTED) 11] create /app2 “app2”</p>
+<p>​         （2）创建带序号的节点</p>
+<p>​         [zk: localhost:2181(CONNECTED) 13] create -s /app2/aa 888</p>
+<p>Created /app2/aa0000000000</p>
+<p>[zk: localhost:2181(CONNECTED) 14] create -s /app2/bb 888</p>
+<p>Created /app2/bb0000000001</p>
+<p>[zk: localhost:2181(CONNECTED) 15] create -s /app2/cc 888</p>
+<p>Created /app2/cc0000000002</p>
+<p>如果原节点下有1个节点，则再排序时从1开始，以此类推。</p>
+<p>[zk: localhost:2181(CONNECTED) 16] create -s /app1/aa 888</p>
+<p>Created /app1/aa0000000001</p>
+<p>9）修改节点数据值</p>
+<p>[zk: localhost:2181(CONNECTED) 2] set /app1 999</p>
+<p>10）节点的值变化监听（<strong>一次性触发器</strong>）（<strong>Watch**</strong>的通知事件是从服务器发送给客户端的，是异步的**）</p>
+<p>​         （1）在104主机上注册监听/app1节点数据变化（）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">需要注意的是，注册一次监听，只能够响应一次，如果/app1节点的数据修改了两次，那么只显示第一次监听的信息，第二次不会有任何响应，想要得到响应，需要再次监听</div></pre></td></tr></table></figure>
+<p>[zk: localhost:2181(CONNECTED) 26] get /app1 watch</p>
+<p>​         （2）在103主机上修改/app1节点的数据</p>
+<p>[zk: localhost:2181(CONNECTED) 5] set /app1  777</p>
+<p>​         （3）观察104主机收到数据变化的监听</p>
+<p>WATCHER::</p>
+<p>WatchedEvent state:SyncConnected type:NodeDataChanged path:/app1</p>
+<p>11）节点的子节点变化监听（路径变化）</p>
+<p>​         （1）在104主机上注册监听/app1节点的子节点变化</p>
+<p>[zk: localhost:2181(CONNECTED) 1] ls /app1 watch</p>
+<p>[aa0000000001, server101]</p>
+<p>​         （2）在103主机/app1节点上创建子节点</p>
+<p>[zk: localhost:2181(CONNECTED) 6] create /app1/bb 666</p>
+<p>Created /app1/bb</p>
+<p>​         （3）观察104主机收到子节点变化的监听</p>
+<p>WATCHER::</p>
+<p>WatchedEvent state:SyncConnected type:NodeChildrenChanged path:/app1</p>
+<p>12）删除节点</p>
+<p>[zk: localhost:2181(CONNECTED) 4] delete /app1/bb</p>
+<p>13）递归删除节点</p>
+<p>[zk: localhost:2181(CONNECTED) 7] rmr /app2</p>
+<p>14）查看节点状态</p>
+<p>[zk: localhost:2181(CONNECTED) 12] stat /app1</p>
+<p>cZxid = 0x20000000a</p>
+<p>ctime = Mon Jul 17 16:08:35 CST 2017</p>
+<p>mZxid = 0x200000018</p>
+<p>mtime = Mon Jul 17 16:54:38 CST 2017</p>
+<p>pZxid = 0x20000001c</p>
+<p>cversion = 4</p>
+<p>dataVersion = 2</p>
+<p>aclVersion = 0</p>
+<p>ephemeralOwner = 0x0</p>
+<p>dataLength = 3</p>
+<p>numChildren = 2</p>
+<p>15）exists 节点</p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image00222.jpg" alt="img"></p>
+<p>这个函数很特殊，因为他可以监听一个尚未存在的节点，这是getData，getChildren不能做到的。exists可以监听一个节点的生命周期：从无到有，节点数据的变化，从有到无。</p>
+<p>   在传递给exists的watcher里，当path指定的节点被成功创建后，watcher会收到NodeCreated事件通知。当path所指定的节点的数据内容发送了改变后，wather会受到NodeDataChanged事件通知。</p>
+<p><strong>这里最需要注意的就是，exists可以监听一个未存在的节点，这是他与getData，getChildren本质的区别。</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">注意看上面的代码，其实我们已经实现了多次监听，解决了zookeeper单次监听的缺点。</div><div class="line"></div><div class="line">关键代码，我们在监听器里面，又再次声明了一次监听---zkClient.exists(&quot;eclipse&quot;,true)</div></pre></td></tr></table></figure>
+<p>16） getData</p>
+<p><img src="/2018/02/02/zookeeper知识学习/1clip_image004.jpg" alt="img"></p>
+<p>16） getChildren </p>
+<p><img src="/2018/02/02/zookeeper知识学习/cl8ip_image006.jpg" alt="img"></p>
+<h2 id="4-3-API应用"><a href="#4-3-API应用" class="headerlink" title="4.3 API应用"></a>4.3 API应用</h2><h3 id="4-3-1-Eclipse环境搭建"><a href="#4-3-1-Eclipse环境搭建" class="headerlink" title="4.3.1 Eclipse环境搭建"></a>4.3.1 Eclipse环境搭建</h3><p>1）创建一个工程</p>
+<p>2）解压zookeeper-3.4.10.tar.gz文件</p>
+<p>3）拷贝zookeeper-3.4.10.jar、jline-0.9.94.jar、log4j-1.2.16.jar、netty-3.10.5.Final.jar、slf4j-api-1.6.1.jar、slf4j-log4j12-1.6.1.jar到工程的lib目录。并build一下，导入工程。</p>
+<p>4）拷贝log4j.properties文件到项目根目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">log4j.rootLogger=INFO, stdout  </div><div class="line">log4j.appender.stdout=org.apache.log4j.ConsoleAppender  </div><div class="line">log4j.appender.stdout.layout=org.apache.log4j.PatternLayout  </div><div class="line">log4j.appender.stdout.layout.ConversionPattern=%d %p [%c] - %m%n  </div><div class="line">log4j.appender.logfile=org.apache.log4j.FileAppender  </div><div class="line">log4j.appender.logfile.File=target/spring.log  </div><div class="line">log4j.appender.logfile.layout=org.apache.log4j.PatternLayout  </div><div class="line">log4j.appender.logfile.layout.ConversionPattern=%d %p [%c] - %m%n</div></pre></td></tr></table></figure>
+<h3 id="4-3-2-创建ZooKeeper客户端"><a href="#4-3-2-创建ZooKeeper客户端" class="headerlink" title="4.3.2 创建ZooKeeper客户端"></a>4.3.2 创建ZooKeeper客户端</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">private static String connectString = &quot;hadoop102:2181,hadoop103:2181,hadoop104:2181&quot;;</div><div class="line">	private static int sessionTimeout = 2000;</div><div class="line">	private ZooKeeper zkClient = null;</div><div class="line"></div><div class="line">	@Before</div><div class="line">	public void init() throws Exception &#123;</div><div class="line">//创建zookeeper连接的时候同时注册一个全局的默认的事件监听器 – </div><div class="line">// event.getType() 永远为null默认监听到None事件</div><div class="line">//  //默认监听也可以使用register方法注册</div><div class="line">        //zkClient.register(watcherDefault);</div><div class="line"></div><div class="line">	zkClient = new ZooKeeper(connectString, sessionTimeout, new Watcher() &#123; </div><div class="line">			@Override</div><div class="line">			public void process(WatchedEvent event) &#123;</div><div class="line">				// 收到事件通知后的回调函数（用户的业务逻辑）</div><div class="line">				System.out.println(event.getType() + &quot;--&quot; + event.getPath());</div><div class="line"></div><div class="line">				// 再次启动监听 - 解决zookeeper单次监听的缺点</div><div class="line">				try &#123;</div><div class="line">					zkClient.getChildren(&quot;/&quot;, true);</div><div class="line">				&#125; catch (Exception e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div><div class="line">这里的watcher是该客户端总的监听方法，任何操作都会执行，而且是可以多次执行，并非单次。</div></pre></td></tr></table></figure>
+<h3 id="4-3-3-创建子节点"><a href="#4-3-3-创建子节点" class="headerlink" title="4.3.3 创建子节点"></a>4.3.3 创建子节点</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 创建子节点</div><div class="line">@Test</div><div class="line">public void create() throws Exception &#123;</div><div class="line">	// 数据的增删改查</div><div class="line">	// 参数1：要创建的节点的路径； 参数2：节点数据 ； 参数3：节点权限 ；参数4：节点的类型</div><div class="line">	String nodeCreated = zkClient.create(&quot;/eclipse&quot;, &quot;hello zk&quot;.getBytes(), Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4-3-4-获取子节点并监听"><a href="#4-3-4-获取子节点并监听" class="headerlink" title="4.3.4 获取子节点并监听"></a>4.3.4 获取子节点并监听</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 获取子节点</div><div class="line">	@Test</div><div class="line">	public void getChildren() throws Exception &#123;</div><div class="line">		List&lt;String&gt; children = zkClient.getChildren(&quot;/&quot;, true);</div><div class="line"></div><div class="line">		for (String child : children) &#123;</div><div class="line">			System.out.println(child);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		// 延时阻塞</div><div class="line">		Thread.sleep(Long.MAX_VALUE);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<h3 id="4-3-5-判断znode是否存在"><a href="#4-3-5-判断znode是否存在" class="headerlink" title="4.3.5 判断znode是否存在"></a>4.3.5 判断znode是否存在</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 判断znode是否存在</div><div class="line">	@Test</div><div class="line">	public void exist() throws Exception &#123;</div><div class="line">		Stat stat = zkClient.exists(&quot;/eclipse&quot;, false);</div><div class="line"></div><div class="line">		System.out.println(stat == null ? &quot;not exist&quot; : &quot;exist&quot;);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<h3 id="4-3-6-事件类型对照表"><a href="#4-3-6-事件类型对照表" class="headerlink" title="4.3.6 事件类型对照表"></a>4.3.6 事件类型对照表</h3><p><img src="/2018/02/02/zookeeper知识学习/clip_ima99ge002.jpg" alt="img"></p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_ima324ge002.jpg" alt="img"></p>
+<p><strong>本表总结：exits和getData设置数据监视，而getChildren设置子节点监视</strong></p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_ima555ge002.jpg" alt="img"></p>
+<h3 id="4-3-7-实现永久监听（伪）"><a href="#4-3-7-实现永久监听（伪）" class="headerlink" title="4.3.7 实现永久监听（伪）"></a>4.3.7 实现永久监听（伪）</h3><p>我们知道zookeeper的监听是一次性监听（on-time-trriger）</p>
+<p><img src="/2018/02/02/zookeeper知识学习/111.png" alt="img"></p>
+<blockquote>
+<p>详情可查看 4.3.2代码 和 4.2 的15）exists 节点</p>
+</blockquote>
+<h2 id="4-4-案例总结"><a href="#4-4-案例总结" class="headerlink" title="4.4 案例总结"></a>4.4 案例总结</h2><p>1）需求：某分布式系统中，主节点可以有多台，可以动态上下线，任意一台客户端都能实时感知到主节点服务器的上下线</p>
+<p>2）需求分析</p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image00rr2.png" alt="img"></p>
+<p>3）具体实现：</p>
+<p>（0）现在集群上创建/servers节点</p>
+<p>[zk: localhost:2181(CONNECTED) 10] create /servers “servers”</p>
+<p>Created /servers</p>
+<p>（1）服务器端代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">package</span> com.kingge.zkcase;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.CreateMode;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.WatchedEvent;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.Watcher;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooDefs.Ids;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DistributeServer</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String connectString = <span class="string">"hadoop102:2181,hadoop103:2181,hadoop104:2181"</span>;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> sessionTimeout = <span class="number">2000</span>;</div><div class="line">	<span class="keyword">private</span> ZooKeeper zk = <span class="keyword">null</span>;</div><div class="line">	<span class="keyword">private</span> String parentNode = <span class="string">"/servers"</span>;</div><div class="line">	</div><div class="line">	<span class="comment">// 创建到zk的客户端连接</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getConnect</span><span class="params">()</span> <span class="keyword">throws</span> IOException</span>&#123;</div><div class="line">		</div><div class="line">		zk = <span class="keyword">new</span> ZooKeeper(connectString, sessionTimeout, <span class="keyword">new</span> Watcher() &#123;</div><div class="line"></div><div class="line">			<span class="meta">@Override</span></div><div class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</div><div class="line"></div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="comment">// 注册服务器</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registServer</span><span class="params">(String hostname)</span> <span class="keyword">throws</span> Exception</span>&#123;</div><div class="line">		String create = zk.create(parentNode + <span class="string">"/server"</span>, hostname.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);</div><div class="line">		</div><div class="line">		System.out.println(hostname +<span class="string">" is noline "</span>+ create);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="comment">// 业务功能</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">business</span><span class="params">(String hostname)</span> <span class="keyword">throws</span> Exception</span>&#123;</div><div class="line">		System.out.println(hostname+<span class="string">" is working ..."</span>);</div><div class="line">		</div><div class="line">		Thread.sleep(Long.MAX_VALUE);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="comment">// 获取zk连接</span></div><div class="line">		DistributeServer server = <span class="keyword">new</span> DistributeServer();</div><div class="line">		server.getConnect();</div><div class="line">		</div><div class="line">		<span class="comment">// 利用zk连接注册服务器信息</span></div><div class="line">		server.registServer(args[<span class="number">0</span>]);</div><div class="line">		</div><div class="line">		<span class="comment">// 启动业务功能</span></div><div class="line">		server.business(args[<span class="number">0</span>]);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>（2）客户端代码</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package com.kingge.zkcase;</div><div class="line">import java.io.IOException;</div><div class="line">import java.util.ArrayList;</div><div class="line">import java.util.List;</div><div class="line">import org.apache.zookeeper.WatchedEvent;</div><div class="line">import org.apache.zookeeper.Watcher;</div><div class="line">import org.apache.zookeeper.ZooKeeper;</div><div class="line"></div><div class="line">public class DistributeClient &#123;</div><div class="line">	private static String connectString = &quot;hadoop102:2181,hadoop103:2181,hadoop104:2181&quot;;</div><div class="line">	private static int sessionTimeout = 2000;</div><div class="line">	private ZooKeeper zk = null;</div><div class="line">	private String parentNode = &quot;/servers&quot;;</div><div class="line">	private volatile ArrayList&lt;String&gt; serversList = new ArrayList&lt;&gt;();</div><div class="line"></div><div class="line">	// 创建到zk的客户端连接</div><div class="line">	public void getConnect() throws IOException &#123;</div><div class="line">		zk = new ZooKeeper(connectString, sessionTimeout, new Watcher() &#123;</div><div class="line"></div><div class="line">			@Override</div><div class="line">			public void process(WatchedEvent event) &#123;</div><div class="line"></div><div class="line">				// 再次启动监听</div><div class="line">				try &#123;</div><div class="line">					getServerList();</div><div class="line">				&#125; catch (Exception e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	//</div><div class="line">	public void getServerList() throws Exception &#123;</div><div class="line">		</div><div class="line">		// 获取服务器子节点信息，并且对父节点进行监听</div><div class="line">		List&lt;String&gt; children = zk.getChildren(parentNode, true);</div><div class="line">		ArrayList&lt;String&gt; servers = new ArrayList&lt;&gt;();</div><div class="line">		</div><div class="line">		for (String child : children) &#123;</div><div class="line">			byte[] data = zk.getData(parentNode + &quot;/&quot; + child, false, null);</div><div class="line"></div><div class="line">			servers.add(new String(data));</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		// 把servers赋值给成员serverList，已提供给各业务线程使用</div><div class="line">		serversList = servers;</div><div class="line"></div><div class="line">		System.out.println(serversList);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	// 业务功能</div><div class="line">	public void business() throws Exception &#123;</div><div class="line">		System.out.println(&quot;client is working ...&quot;);</div><div class="line">Thread.sleep(Long.MAX_VALUE);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws Exception &#123;</div><div class="line"></div><div class="line">		// 获取zk连接</div><div class="line">		DistributeClient client = new DistributeClient();</div><div class="line">		client.getConnect();</div><div class="line"></div><div class="line">		// 获取servers的子节点信息，从中获取服务器信息列表</div><div class="line">		client.getServerList();</div><div class="line"></div><div class="line">		// 业务进程启动</div><div class="line">		client.business();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="4-5-zookeeper核心原理（事件）"><a href="#4-5-zookeeper核心原理（事件）" class="headerlink" title="4.5 zookeeper核心原理（事件）"></a>4.5 zookeeper核心原理（事件）</h1><p><img src="/2018/02/02/zookeeper知识学习/222.png" alt="img"></p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image0304.jpg" alt="img"></p>
+<p><img src="file:///C:/Users/JEREMY~1/AppData/Local/Temp/msohtmlclip1/01/clip_image006.jpg" alt="img"></p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_imagerr008.jpg" alt="img"></p>
+<p><img src="/2018/02/02/zookeeper知识学习/333.png" alt="img"></p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image012.jpg" alt="img"></p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image013.png" alt="img"></p>
+<p><a href="https://blog.csdn.net/yinwenjie/article/details/47685077" target="_blank" rel="external">https://blog.csdn.net/yinwenjie/article/details/47685077</a>  </p>
+<h1 id="五-好的总结网站"><a href="#五-好的总结网站" class="headerlink" title="五 好的总结网站"></a>五 好的总结网站</h1><p>\1.      <a href="https://blog.csdn.net/liu857279611/article/details/70495413" target="_blank" rel="external">https://blog.csdn.net/liu857279611/article/details/70495413</a> </p>
+<p>\2.      <a href="https://www.jianshu.com/p/a1d7826073e6" target="_blank" rel="external">https://www.jianshu.com/p/a1d7826073e6</a> </p>
+<p>\3.      <a href="https://blog.csdn.net/yinwenjie/article/details/47685077" target="_blank" rel="external">https://blog.csdn.net/yinwenjie/article/details/47685077</a> </p>
+<p>\4.      <a href="https://www.jianshu.com/p/5d12a01018e1" target="_blank" rel="external">https://www.jianshu.com/p/5d12a01018e1</a> </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h1&gt;&lt;p&gt;   最近公司开发saas模式的企业应用软件服务，所以下面是我个人使用和总结（掺杂了大数据相关的总结）&lt;/p&gt;
+&lt;h1 id=&quot;一、正文&quot;&gt;
+    
+    </summary>
+    
+      <category term="zookeeper" scheme="http://kingge.top/categories/zookeeper/"/>
+    
+    
+      <category term="Java" scheme="http://kingge.top/tags/Java/"/>
+    
+      <category term="hadoop，linux" scheme="http://kingge.top/tags/hadoop%EF%BC%8Clinux/"/>
     
   </entry>
   
