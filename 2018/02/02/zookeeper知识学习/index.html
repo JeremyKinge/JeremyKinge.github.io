@@ -163,7 +163,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/clip_image002.jpg">
 <meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/clip_image004.jpg">
-<meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/Hexoo/source/_posts/zookeeper知识学习/clip_image006.jpg">
+<meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/clip_image006.jpg">
 <meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/clip_image002.png">
 <meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/clip_image0021.png">
 <meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/clip_image0024.jpg">
@@ -186,12 +186,12 @@
 <meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/clip_image00rr2.png">
 <meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/222.png">
 <meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/clip_image0304.jpg">
-<meta property="og:image" content="file:///C:/Users/JEREMY~1/AppData/Local/Temp/msohtmlclip1/01/clip_image006.jpg">
+<meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/clip_imagyye006.jpg">
 <meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/clip_imagerr008.jpg">
 <meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/333.png">
 <meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/clip_image012.jpg">
 <meta property="og:image" content="http://kingge.top/2018/02/02/zookeeper知识学习/clip_image013.png">
-<meta property="og:updated_time" content="2019-06-02T13:12:51.160Z">
+<meta property="og:updated_time" content="2019-06-02T13:24:38.033Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="zookeeper知识学习">
 <meta name="twitter:description" content="引言   最近公司开发saas模式的企业应用软件服务，所以下面是我个人使用和总结（掺杂了大数据相关的总结） 一、正文0.1 下载1）官网首页： https://zookeeper.apache.org/ 2）下载截图    1.1 概述Zookeeper是一个开源的分布式的，为分布式应用提供协调服务的Apache项目。  1.2 模型构造和特点 1）Zookeeper：一个领导者（leader），">
@@ -539,7 +539,7 @@
 <p>2）下载截图</p>
 <p><img src="/2018/02/02/zookeeper知识学习/clip_image002.jpg" alt="img"></p>
 <p><img src="/2018/02/02/zookeeper知识学习/clip_image004.jpg" alt="img"></p>
-<p><img src="/2018/02/02/zookeeper知识学习/Hexoo\source\_posts\zookeeper知识学习\clip_image006.jpg" alt="img"></p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image006.jpg" alt="img"></p>
 <h2 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h2><p>Zookeeper是一个开源的分布式的，为分布式应用提供协调服务的Apache项目。</p>
 <p><img src="/2018/02/02/zookeeper知识学习/clip_image002.png" alt="img"></p>
 <h2 id="1-2-模型构造和特点"><a href="#1-2-模型构造和特点" class="headerlink" title="1.2 模型构造和特点"></a>1.2 模型构造和特点</h2><p><img src="/2018/02/02/zookeeper知识学习/clip_image0021.png" alt="img"></p>
@@ -925,7 +925,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package com.kingge.zkcase;</div><div class="line">import java.io.IOException;</div><div class="line">import java.util.ArrayList;</div><div class="line">import java.util.List;</div><div class="line">import org.apache.zookeeper.WatchedEvent;</div><div class="line">import org.apache.zookeeper.Watcher;</div><div class="line">import org.apache.zookeeper.ZooKeeper;</div><div class="line"></div><div class="line">public class DistributeClient &#123;</div><div class="line">	private static String connectString = &quot;hadoop102:2181,hadoop103:2181,hadoop104:2181&quot;;</div><div class="line">	private static int sessionTimeout = 2000;</div><div class="line">	private ZooKeeper zk = null;</div><div class="line">	private String parentNode = &quot;/servers&quot;;</div><div class="line">	private volatile ArrayList&lt;String&gt; serversList = new ArrayList&lt;&gt;();</div><div class="line"></div><div class="line">	// 创建到zk的客户端连接</div><div class="line">	public void getConnect() throws IOException &#123;</div><div class="line">		zk = new ZooKeeper(connectString, sessionTimeout, new Watcher() &#123;</div><div class="line"></div><div class="line">			@Override</div><div class="line">			public void process(WatchedEvent event) &#123;</div><div class="line"></div><div class="line">				// 再次启动监听</div><div class="line">				try &#123;</div><div class="line">					getServerList();</div><div class="line">				&#125; catch (Exception e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	//</div><div class="line">	public void getServerList() throws Exception &#123;</div><div class="line">		</div><div class="line">		// 获取服务器子节点信息，并且对父节点进行监听</div><div class="line">		List&lt;String&gt; children = zk.getChildren(parentNode, true);</div><div class="line">		ArrayList&lt;String&gt; servers = new ArrayList&lt;&gt;();</div><div class="line">		</div><div class="line">		for (String child : children) &#123;</div><div class="line">			byte[] data = zk.getData(parentNode + &quot;/&quot; + child, false, null);</div><div class="line"></div><div class="line">			servers.add(new String(data));</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		// 把servers赋值给成员serverList，已提供给各业务线程使用</div><div class="line">		serversList = servers;</div><div class="line"></div><div class="line">		System.out.println(serversList);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	// 业务功能</div><div class="line">	public void business() throws Exception &#123;</div><div class="line">		System.out.println(&quot;client is working ...&quot;);</div><div class="line">Thread.sleep(Long.MAX_VALUE);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws Exception &#123;</div><div class="line"></div><div class="line">		// 获取zk连接</div><div class="line">		DistributeClient client = new DistributeClient();</div><div class="line">		client.getConnect();</div><div class="line"></div><div class="line">		// 获取servers的子节点信息，从中获取服务器信息列表</div><div class="line">		client.getServerList();</div><div class="line"></div><div class="line">		// 业务进程启动</div><div class="line">		client.business();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h1 id="4-5-zookeeper核心原理（事件）"><a href="#4-5-zookeeper核心原理（事件）" class="headerlink" title="4.5 zookeeper核心原理（事件）"></a>4.5 zookeeper核心原理（事件）</h1><p><img src="/2018/02/02/zookeeper知识学习/222.png" alt="img"></p>
 <p><img src="/2018/02/02/zookeeper知识学习/clip_image0304.jpg" alt="img"></p>
-<p><img src="file:///C:/Users/JEREMY~1/AppData/Local/Temp/msohtmlclip1/01/clip_image006.jpg" alt="img"></p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_imagyye006.jpg" alt="img"></p>
 <p><img src="/2018/02/02/zookeeper知识学习/clip_imagerr008.jpg" alt="img"></p>
 <p><img src="/2018/02/02/zookeeper知识学习/333.png" alt="img"></p>
 <p><img src="/2018/02/02/zookeeper知识学习/clip_image012.jpg" alt="img"></p>
@@ -1016,8 +1016,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/06/01/Hessian 多系统访问/" rel="prev" title="Hessian 多系统访问">
-                Hessian 多系统访问 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/02/19/关于2018年的计划/" rel="prev" title="关于2018年的计划">
+                关于2018年的计划 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -1125,7 +1125,7 @@ var jiathis_config={
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1136,7 +1136,7 @@ var jiathis_config={
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1147,7 +1147,7 @@ var jiathis_config={
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

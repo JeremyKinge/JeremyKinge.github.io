@@ -43,11 +43,38 @@
   </entry>
   
   <entry>
+    <title>关于2018年的计划</title>
+    <link href="http://kingge.top/2018/02/19/%E5%85%B3%E4%BA%8E2018%E5%B9%B4%E7%9A%84%E8%AE%A1%E5%88%92/"/>
+    <id>http://kingge.top/2018/02/19/关于2018年的计划/</id>
+    <published>2018-02-18T16:00:00.000Z</published>
+    <updated>2019-06-02T13:30:43.026Z</updated>
+    
+    <content type="html"><![CDATA[<p>因为公司业务的转移和相关产品的开发，再加上大数据的火热，所以本人决定更新一些hadoop生态链相关的文章。所以敬请期待吧，哈哈哈哈哈。</p>
+<p>Comming Soon！！！</p>
+<p><img src="/2018/02/19/关于2018年的计划/Hexoo\source\_posts\关于2018年的计划\111.jpg" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;因为公司业务的转移和相关产品的开发，再加上大数据的火热，所以本人决定更新一些hadoop生态链相关的文章。所以敬请期待吧，哈哈哈哈哈。&lt;/p&gt;
+&lt;p&gt;Comming Soon！！！&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/2018/02/19/关于2018年的计划/Hexoo\
+    
+    </summary>
+    
+      <category term="新年计划" scheme="http://kingge.top/categories/%E6%96%B0%E5%B9%B4%E8%AE%A1%E5%88%92/"/>
+    
+    
+      <category term="新年计划" scheme="http://kingge.top/tags/%E6%96%B0%E5%B9%B4%E8%AE%A1%E5%88%92/"/>
+    
+  </entry>
+  
+  <entry>
     <title>zookeeper知识学习</title>
     <link href="http://kingge.top/2018/02/02/zookeeper%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/"/>
     <id>http://kingge.top/2018/02/02/zookeeper知识学习/</id>
     <published>2018-02-02T11:12:44.000Z</published>
-    <updated>2019-06-02T13:12:51.160Z</updated>
+    <updated>2019-06-02T13:24:38.033Z</updated>
     
     <content type="html"><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>   最近公司开发saas模式的企业应用软件服务，所以下面是我个人使用和总结（掺杂了大数据相关的总结）</p>
 <h1 id="一、正文"><a href="#一、正文" class="headerlink" title="一、正文"></a>一、正文</h1><h2 id="0-1-下载"><a href="#0-1-下载" class="headerlink" title="0.1 下载"></a>0.1 下载</h2><p>1）官网首页：</p>
@@ -55,7 +82,7 @@
 <p>2）下载截图</p>
 <p><img src="/2018/02/02/zookeeper知识学习/clip_image002.jpg" alt="img"></p>
 <p><img src="/2018/02/02/zookeeper知识学习/clip_image004.jpg" alt="img"></p>
-<p><img src="/2018/02/02/zookeeper知识学习/Hexoo\source\_posts\zookeeper知识学习\clip_image006.jpg" alt="img"></p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_image006.jpg" alt="img"></p>
 <h2 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h2><p>Zookeeper是一个开源的分布式的，为分布式应用提供协调服务的Apache项目。</p>
 <p><img src="/2018/02/02/zookeeper知识学习/clip_image002.png" alt="img"></p>
 <h2 id="1-2-模型构造和特点"><a href="#1-2-模型构造和特点" class="headerlink" title="1.2 模型构造和特点"></a>1.2 模型构造和特点</h2><p><img src="/2018/02/02/zookeeper知识学习/clip_image0021.png" alt="img"></p>
@@ -441,7 +468,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package com.kingge.zkcase;</div><div class="line">import java.io.IOException;</div><div class="line">import java.util.ArrayList;</div><div class="line">import java.util.List;</div><div class="line">import org.apache.zookeeper.WatchedEvent;</div><div class="line">import org.apache.zookeeper.Watcher;</div><div class="line">import org.apache.zookeeper.ZooKeeper;</div><div class="line"></div><div class="line">public class DistributeClient &#123;</div><div class="line">	private static String connectString = &quot;hadoop102:2181,hadoop103:2181,hadoop104:2181&quot;;</div><div class="line">	private static int sessionTimeout = 2000;</div><div class="line">	private ZooKeeper zk = null;</div><div class="line">	private String parentNode = &quot;/servers&quot;;</div><div class="line">	private volatile ArrayList&lt;String&gt; serversList = new ArrayList&lt;&gt;();</div><div class="line"></div><div class="line">	// 创建到zk的客户端连接</div><div class="line">	public void getConnect() throws IOException &#123;</div><div class="line">		zk = new ZooKeeper(connectString, sessionTimeout, new Watcher() &#123;</div><div class="line"></div><div class="line">			@Override</div><div class="line">			public void process(WatchedEvent event) &#123;</div><div class="line"></div><div class="line">				// 再次启动监听</div><div class="line">				try &#123;</div><div class="line">					getServerList();</div><div class="line">				&#125; catch (Exception e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	//</div><div class="line">	public void getServerList() throws Exception &#123;</div><div class="line">		</div><div class="line">		// 获取服务器子节点信息，并且对父节点进行监听</div><div class="line">		List&lt;String&gt; children = zk.getChildren(parentNode, true);</div><div class="line">		ArrayList&lt;String&gt; servers = new ArrayList&lt;&gt;();</div><div class="line">		</div><div class="line">		for (String child : children) &#123;</div><div class="line">			byte[] data = zk.getData(parentNode + &quot;/&quot; + child, false, null);</div><div class="line"></div><div class="line">			servers.add(new String(data));</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		// 把servers赋值给成员serverList，已提供给各业务线程使用</div><div class="line">		serversList = servers;</div><div class="line"></div><div class="line">		System.out.println(serversList);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	// 业务功能</div><div class="line">	public void business() throws Exception &#123;</div><div class="line">		System.out.println(&quot;client is working ...&quot;);</div><div class="line">Thread.sleep(Long.MAX_VALUE);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws Exception &#123;</div><div class="line"></div><div class="line">		// 获取zk连接</div><div class="line">		DistributeClient client = new DistributeClient();</div><div class="line">		client.getConnect();</div><div class="line"></div><div class="line">		// 获取servers的子节点信息，从中获取服务器信息列表</div><div class="line">		client.getServerList();</div><div class="line"></div><div class="line">		// 业务进程启动</div><div class="line">		client.business();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h1 id="4-5-zookeeper核心原理（事件）"><a href="#4-5-zookeeper核心原理（事件）" class="headerlink" title="4.5 zookeeper核心原理（事件）"></a>4.5 zookeeper核心原理（事件）</h1><p><img src="/2018/02/02/zookeeper知识学习/222.png" alt="img"></p>
 <p><img src="/2018/02/02/zookeeper知识学习/clip_image0304.jpg" alt="img"></p>
-<p><img src="file:///C:/Users/JEREMY~1/AppData/Local/Temp/msohtmlclip1/01/clip_image006.jpg" alt="img"></p>
+<p><img src="/2018/02/02/zookeeper知识学习/clip_imagyye006.jpg" alt="img"></p>
 <p><img src="/2018/02/02/zookeeper知识学习/clip_imagerr008.jpg" alt="img"></p>
 <p><img src="/2018/02/02/zookeeper知识学习/333.png" alt="img"></p>
 <p><img src="/2018/02/02/zookeeper知识学习/clip_image012.jpg" alt="img"></p>
@@ -1849,114 +1876,6 @@
       <category term="异常" scheme="http://kingge.top/tags/%E5%BC%82%E5%B8%B8/"/>
     
       <category term="sql异常" scheme="http://kingge.top/tags/sql%E5%BC%82%E5%B8%B8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>YUM仓库配置</title>
-    <link href="http://kingge.top/2017/08/06/YUM%E4%BB%93%E5%BA%93%E9%85%8D%E7%BD%AE/"/>
-    <id>http://kingge.top/2017/08/06/YUM仓库配置/</id>
-    <published>2017-08-06T14:12:30.000Z</published>
-    <updated>2019-06-02T06:17:59.046Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h2><p>YUM（全称为 Yellow dog Updater, Modified）是一个在Fedora和RedHat以及CentOS中的Shell前端软件包管理器。基于RPM包管理，能够从指定的服务器自动下载RPM包并且安装，可以自动处理依赖性关系，并且一次安装所有依赖的软件包，无须繁琐地一次次下载、安装。-<strong>需要联网</strong></p>
-<h2 id="1-2-为什么要制作本地YUM源"><a href="#1-2-为什么要制作本地YUM源" class="headerlink" title="1.2 为什么要制作本地YUM源"></a>1.2 为什么要制作本地YUM源</h2><p>YUM源虽然可以简化我们在Linux上安装软件的过程，但是生产环境通常无法上网，不能连接外网的YUM源，说以就无法使用yum命令安装软件了。为了在内网中也可以使用yum安装相关的软件，就要配置yum源。</p>
-<p>YUM源其实就是一个保存了多个RPM包的服务器，可以通过http的方式来检索、下载并安装相关的RPM包。</p>
-<p><img src="/2017/08/06/YUM仓库配置/clip_image002.png" alt="img"></p>
-<h2 id="1-3-yum的常用命令"><a href="#1-3-yum的常用命令" class="headerlink" title="1.3 yum的常用命令"></a>1.3 yum的常用命令</h2><p>1）基本语法：</p>
-<p>yum install -y rpm软件包               （功能描述：安装httpd并确认安装）</p>
-<p>yum list                                              （功能描述：列出所有可用的package和package组）</p>
-<p>yum clean all                                     （功能描述：清除所有缓冲数据）</p>
-<p>yum deplist rpm软件包                  （功能描述：列出一个包所有依赖的包）</p>
-<p>yum remove rpm软件包                 （功能描述：删除httpd）</p>
-<p>2）案例实操</p>
-<p>​         yum install -y tree  //安装文档树结构展示插件</p>
-<h2 id="1-4-关联网络yum源"><a href="#1-4-关联网络yum源" class="headerlink" title="1.4 关联网络yum源"></a>1.4 关联网络yum源</h2><p>1）前期文件准备</p>
-<p>（1）前提条件linux系统必须可以联网</p>
-<p>（2）在Linux环境中访问该网络地址：<a href="http://mirrors.163.com/.help/centos.html" target="_blank" rel="external">http://mirrors.163.com/.help/centos.html</a>，在使用说明中点击CentOS6-&gt;再点击保存</p>
-<p><img src="/2017/08/06/YUM仓库配置/clip_image004.jpg" alt="img"></p>
-<p>（3）查看文件保存的位置</p>
-<p><img src="/2017/08/06/YUM仓库配置/clip_image006.jpg" alt="img"> <img src="/2017/08/06/YUM仓库配置/clip_image008.jpg" alt="img"></p>
-<p>在打开的终端中输入如下命令，就可以找到文件的保存位置。</p>
-<p>[kingge@hadoop101 下载]$ pwd</p>
-<p>/home/kingge/下载</p>
-<p>2）替换本地yum文件</p>
-<p>​         （1）把下载的文件移动到/etc/yum.repos.d/目录</p>
-<p>[root@hadoop101 下载]# mv CentOS6-Base-163.repo /etc/yum.repos.d/  </p>
-<p>​     （2）进入到/etc/yum.repos.d/目录</p>
-<p>[root@hadoop101 yum.repos.d]# pwd</p>
-<p>/etc/yum.repos.d</p>
-<p>​     （3）用CentOS6-Base-163.repo替换CentOS-Base.rep</p>
-<p>[root@hadoop101 yum.repos.d]# mv CentOS6-Base-163.repo  CentOS-Base.rep</p>
-<p>3）安装命令</p>
-<p>​         （1）[root@hadoop101 yum.repos.d]#yum clean all</p>
-<p>​     （2）[root@hadoop101 yum.repos.d]#yum makecache</p>
-<p>​     （3）[root@hadoop101 yum.repos.d]# yum install -y createrepo</p>
-<p>（4）[root@hadoop101 yum.repos.d]#yum install -y httpd</p>
-<h2 id="1-5-制作本地yum源"><a href="#1-5-制作本地yum源" class="headerlink" title="1.5 制作本地yum源"></a>1.5 制作本地yum源</h2><h3 id="1-5-1-制作只有本机能访问的本地YUM源"><a href="#1-5-1-制作只有本机能访问的本地YUM源" class="headerlink" title="1.5.1 制作只有本机能访问的本地YUM源"></a>1.5.1 制作只有本机能访问的本地YUM源</h3><p>（1）准备一台Linux服务器，版本CentOS-6.8-x86_64-bin-DVD1.iso</p>
-<p>（2）配置好这台服务器的IP地址</p>
-<p>（3）将CentOS-6.8-x86_64-bin-DVD1.iso镜像挂载到/mnt/cdrom目录</p>
-<p>[root@hadoop101 /]# mkdir /mnt/cdrom</p>
-<p> [root@hadoop101 /]# mount -t iso9660 /dev/cdrom /mnt/cdrom</p>
-<p>（4）安装相应的软件</p>
-<p>[root@hadoop101 yum.repos.d]#yum install -y httpd</p>
-<p>​         （5）启动httpd服务</p>
-<p>[root@hadoop101 yum.repos.d]#service httpd start</p>
-<p>（6）使用浏览器访问<a href="http://192.168.1.101:80" target="_blank" rel="external">http://192.168.1.101:80</a>（如果访问不通，检查防火墙是否开启了80端口或关闭防火墙），测试网络是否畅通</p>
-<p>（7）将YUM源配置到httpd（Apache Server）中</p>
-<p>[root@hadoop101 html]# mkdir Packages</p>
-<p>[root@hadoop101 html]# chown kingge:kingge Packages/</p>
-<p>[root@hadoop101 html]# cp -r /mnt/cdrom/Packages/* /var/www/html/Packages/</p>
-<p>（8）执行创建仓库命令：createrepo 路径</p>
-<p>[root@hadoop101 Packages]# createrepo ./</p>
-<p>（9）修改本机上的YUM源配置文件，将源指向自己</p>
-<p>备份原有的YUM源的配置文件</p>
-<p>[root@hadoop101 /]# cd /etc/yum.repos.d/</p>
-<p>[root@hadoop101 yum.repos.d]# cp CentOS-Base.repo  CentOS-Base.repo.bak</p>
-<p>​                 编辑CentOS-Base.repo文件</p>
-<p>[root@hadoop101 yum.repos.d]# vi CentOS-Base.repo</p>
-<p>   [base]   name=CentOS-Local   baseurl=file:///var/www/html/Packages   gpgcheck=0   enabled=1   #增加改行，使能   gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6   </p>
-<p>添加上面内容保存退出</p>
-<p>（10）清除YUM缓存</p>
-<p>[root@hadoop101 yum.repos.d]# yum clean all</p>
-<p>（11）列出可用的YUM仓库</p>
-<p>[root@hadoop101 yum.repos.d]# yum repolist</p>
-<p>（12）安装相应的软件</p>
-<p>[root@hadoop101 yum.repos.d]# yum install -y tree</p>
-<p>[root@hadoop101 Packages]# yum install -y firefox-45.0.1-1.el6.centos.x86_64.rpm</p>
-<h3 id="1-5-2-制作其他主机通过网络能访问的本地YUM源"><a href="#1-5-2-制作其他主机通过网络能访问的本地YUM源" class="headerlink" title="1.5.2 制作其他主机通过网络能访问的本地YUM源"></a>1.5.2 制作其他主机通过网络能访问的本地YUM源</h3><p>前期准备：检查yum源服务器的httpd服务是否启动：</p>
-<p>​    Ps aux | grep httpd –查看该进程是否存在</p>
-<p>   或者 netstat –anp | grep 80 直接查看是否监听80端口</p>
-<p>​    启动 httpd服务： service httpd start/restart</p>
-<p>启动后，可能使用yum源的服务器访问不到yum仓库（例如下面的101服务器访问不到102服务器的yum），那么有可能是101服务器防火墙屏蔽了80端口，应该设置一下防火墙规则 </p>
-<p><img src="/2017/08/06/YUM仓库配置/clip_image009.png" alt="img"></p>
-<p>（1）让其他需要安装RPM包的服务器指向这个YUM源，准备一台新的服务器，备份或删除原有的YUM源配置文件</p>
-<p>备份原有的YUM源的配置文件</p>
-<p>[root@hadoop102 /]#cd /etc/yum.repos.d/</p>
-<p>[root@hadoop102 yum.repos.d]# cp CentOS-Base.repo  CentOS-Base.repo.bak</p>
-<p>​                 编辑CentOS-Base.repo文件</p>
-<p>[root@hadoop102 yum.repos.d]# vi CentOS-Base.repo</p>
-<p>   [base]   name=CentOS-hadoop101   baseurl=<a href="http://192.168.1.101/Packages" target="_blank" rel="external">http://192.168.1.101/Packages</a>   gpgcheck=1   gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6   </p>
-<p>添加上面内容保存退出</p>
-<p>（2）在这台新的服务器上执行YUM的命令</p>
-<p>[root@hadoop102 yum.repos.d]# yum clean all</p>
-<p>[root@hadoop102 yum.repos.d]# yum repolist</p>
-<p>（3）安装软件</p>
-<p>[root@hadoop102 yum.repos.d]# yum install -y httpd</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;1-1-概述&quot;&gt;&lt;a href=&quot;#1-1-概述&quot; class=&quot;headerlink&quot; title=&quot;1.1 概述&quot;&gt;&lt;/a&gt;1.1 概述&lt;/h2&gt;&lt;p&gt;YUM（全称为 Yellow dog Updater, Modified）是一个在Fedora和RedHat
-    
-    </summary>
-    
-      <category term="Linux" scheme="http://kingge.top/categories/Linux/"/>
-    
-    
-      <category term="linux" scheme="http://kingge.top/tags/linux/"/>
-    
-      <category term="hadoop" scheme="http://kingge.top/tags/hadoop/"/>
     
   </entry>
   
