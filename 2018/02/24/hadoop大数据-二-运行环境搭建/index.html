@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hadoop,大数据," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="三 Hadoop运行环境搭建3.0 前置准备需要linux相关的知识，和安装虚拟机。所以还不了解的请看：Linux基础 3.1 虚拟机网络模式设置为NAT  ​         最后，重新启动系统。 ​                  [root@hadoop101 ~]# sync ​                  [root@hadoop101 ~]# reboot 3.2 克隆虚拟机1">
+<meta name="keywords" content="hadoop,大数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hadoop大数据(二)-运行环境搭建">
+<meta property="og:url" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="三 Hadoop运行环境搭建3.0 前置准备需要linux相关的知识，和安装虚拟机。所以还不了解的请看：Linux基础 3.1 虚拟机网络模式设置为NAT  ​         最后，重新启动系统。 ​                  [root@hadoop101 ~]# sync ​                  [root@hadoop101 ~]# reboot 3.2 克隆虚拟机1">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/9896745303.png">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image0072.jpg">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/20366.png">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image008.jpg">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image010.jpg">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image012.jpg">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image014.jpg">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image016.jpg">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image018.jpg">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image020.jpg">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image022.jpg">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image023.png">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image025.jpg">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image027.jpg">
+<meta property="og:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image029.jpg">
+<meta property="og:updated_time" content="2019-06-07T09:01:22.674Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hadoop大数据(二)-运行环境搭建">
+<meta name="twitter:description" content="三 Hadoop运行环境搭建3.0 前置准备需要linux相关的知识，和安装虚拟机。所以还不了解的请看：Linux基础 3.1 虚拟机网络模式设置为NAT  ​         最后，重新启动系统。 ​                  [root@hadoop101 ~]# sync ​                  [root@hadoop101 ~]# reboot 3.2 克隆虚拟机1">
+<meta name="twitter:image" content="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/9896745303.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/"/>
+
+
+
+
+
+  <title>hadoop大数据(二)-运行环境搭建 | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">hadoop大数据(二)-运行环境搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-24T10:21:59+08:00">
+                2018-02-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,537
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="三-Hadoop运行环境搭建"><a href="#三-Hadoop运行环境搭建" class="headerlink" title="三 Hadoop运行环境搭建"></a>三 Hadoop运行环境搭建</h1><h2 id="3-0-前置准备"><a href="#3-0-前置准备" class="headerlink" title="3.0 前置准备"></a>3.0 前置准备</h2><p>需要linux相关的知识，和安装虚拟机。所以还不了解的请看：<a href="2017/06/12/linux基础">Linux基础</a></p>
+<h2 id="3-1-虚拟机网络模式设置为NAT"><a href="#3-1-虚拟机网络模式设置为NAT" class="headerlink" title="3.1 虚拟机网络模式设置为NAT"></a>3.1 虚拟机网络模式设置为NAT</h2><p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/9896745303.png" alt="1559896745303"></p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image0072.jpg" alt="1559896834748"></p>
+<p>​         最后，重新启动系统。</p>
+<p>​                  [root@hadoop101 ~]# sync</p>
+<p>​                  [root@hadoop101 ~]# reboot</p>
+<h2 id="3-2-克隆虚拟机"><a href="#3-2-克隆虚拟机" class="headerlink" title="3.2 克隆虚拟机"></a>3.2 克隆虚拟机</h2><p>1）克隆虚拟机</p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/20366.png" alt="1559896920366"></p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image008.jpg" alt="img"></p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image010.jpg" alt="img"></p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image012.jpg" alt="img"></p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image014.jpg" alt="img"></p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image016.jpg" alt="img"></p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image018.jpg" alt="img"></p>
+<p>2）启动虚拟机</p>
+<h2 id="3-3-修改为静态ip"><a href="#3-3-修改为静态ip" class="headerlink" title="3.3 修改为静态ip"></a>3.3 修改为静态ip</h2><h3 id="1）在终端命令窗口中输入"><a href="#1）在终端命令窗口中输入" class="headerlink" title="1）在终端命令窗口中输入"></a><strong>1）在终端命令窗口中输入</strong></h3><p>[root@hadoop101 /]#vim /etc/udev/rules.d/70-persistent-net.rules</p>
+<p>进入如下页面，删除eth0该行；将eth1修改为eth0，同时复制物理ip地址</p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image020.jpg" alt="img"></p>
+<h3 id="2）修改IP地址"><a href="#2）修改IP地址" class="headerlink" title="2）修改IP地址"></a><strong>2）修改IP地址</strong></h3><p>[root@hadoop101 /]# vim /etc/sysconfig/network-scripts/ifcfg-eth0</p>
+<p>需要修改的内容有5项：</p>
+<p>IPADDR=192.168.1.101</p>
+<p>GATEWAY=192.168.1.2</p>
+<p>ONBOOT=yes</p>
+<p>BOOTPROTO=static</p>
+<p>DNS1=192.168.1.2</p>
+<p>​         <strong>（1）修改前</strong></p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image022.jpg" alt="img"></p>
+<p>​         <strong>（2）修改后</strong></p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image023.png" alt="img"></p>
+<p>：wq  保存退出</p>
+<h3 id="3）执行"><a href="#3）执行" class="headerlink" title="3）执行"></a>3）执行</h3><p>[root@hadoop101 /]# service network restart</p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image025.jpg" alt="img"></p>
+<h3 id="4）如果报错，reboot，重启虚拟机。"><a href="#4）如果报错，reboot，重启虚拟机。" class="headerlink" title="4）如果报错，reboot，重启虚拟机。"></a>4）如果报错，reboot，重启虚拟机。</h3><p>​         [root@hadoop101 /]# reboot</p>
+<h2 id="3-4-修改主机名"><a href="#3-4-修改主机名" class="headerlink" title="3.4 修改主机名"></a>3.4 修改主机名</h2><h3 id="1）修改linux的hosts文件"><a href="#1）修改linux的hosts文件" class="headerlink" title="1）修改linux的hosts文件"></a>1）修改linux的hosts文件</h3><p>（1）进入Linux系统查看本机的主机名。通过hostname命令查看。</p>
+<p>[root@hadoop100 /]# hostname</p>
+<p>hadoop100</p>
+<p>（2）如果感觉此主机名不合适，我们可以进行修改。通过编辑/etc/sysconfig/network文件。</p>
+<p>[root@hadoop100~]# vi /etc/sysconfig/network</p>
+<p>修改文件中主机名称</p>
+<p>NETWORKING=yes</p>
+<p>NETWORKING_IPV6=no</p>
+<p>HOSTNAME= hadoop101</p>
+<p>注意：主机名称不要有“_”下划线</p>
+<p>（3）打开此文件后，可以看到主机名。修改此主机名为我们想要修改的主机名hadoop101。</p>
+<p>（4）保存退出。</p>
+<p>（5）打开/etc/hosts</p>
+<p>[root@hadoop100 ~]# vim /etc/hosts</p>
+<p>添加如下内容</p>
+<p>192.168.1.100 hadoop100</p>
+<p>192.168.1.101 hadoop101</p>
+<p>192.168.1.102 hadoop102</p>
+<p>192.168.1.103 hadoop103</p>
+<p>192.168.1.104 hadoop104</p>
+<p>192.168.1.105 hadoop105</p>
+<p>192.168.1.106 hadoop106</p>
+<p>192.168.1.107 hadoop107</p>
+<p>192.168.1.108 hadoop108</p>
+<p>192.168.1.109 hadoop109</p>
+<p>192.168.1.110 hadoop110</p>
+<p>（6）并重启设备，重启后，查看主机名，已经修改成功</p>
+<h3 id="2）修改window7的hosts文件-可以不改"><a href="#2）修改window7的hosts文件-可以不改" class="headerlink" title="2）修改window7的hosts文件(可以不改)"></a>2）修改window7的hosts文件(可以不改)</h3><p>只不过是方便于在windows服务器中，使用域名的方式访问hadopp相关的组件。</p>
+<p>​         （1）进入C:\Windows\System32\drivers\etc路径</p>
+<p>​         （2）打开hosts文件并添加如下内容</p>
+<p>192.168.1.100 hadoop100</p>
+<p>192.168.1.101 hadoop101</p>
+<p>192.168.1.102 hadoop102</p>
+<p>192.168.1.103 hadoop103</p>
+<p>192.168.1.104 hadoop104</p>
+<p>192.168.1.105 hadoop105</p>
+<p>192.168.1.106 hadoop106</p>
+<p>192.168.1.107 hadoop107</p>
+<p>192.168.1.108 hadoop108</p>
+<p>192.168.1.109 hadoop109</p>
+<p>192.168.1.110 hadoop110</p>
+<h2 id="3-5-关闭防火墙"><a href="#3-5-关闭防火墙" class="headerlink" title="3.5 关闭防火墙"></a>3.5 关闭防火墙</h2><p>1）查看防火墙开机启动状态</p>
+<p>[root@hadoop101 ~]# chkconfig iptables –list</p>
+<p>2）关闭防火墙</p>
+<p>[root@hadoop101 ~]# chkconfig iptables off  </p>
+<h2 id="3-6-在opt目录下创建文件"><a href="#3-6-在opt目录下创建文件" class="headerlink" title="3.6 在opt目录下创建文件"></a>3.6 在opt目录下创建文件</h2><h3 id="1）创建kingge用户"><a href="#1）创建kingge用户" class="headerlink" title="1）创建kingge用户"></a>1）创建kingge用户</h3><p>​         在root用户里面执行如下操作</p>
+<p>   [root@hadoop101 opt]# adduser atguigu   [root@hadoop101 opt]# passwd atguigu   更改用户 test 的密码   。   新的 密码：   无效的密码： 它没有包含足够的不同字符   无效的密码： 是回文   重新输入新的 密码：   passwd： 所有的身份验证令牌已经成功更新。   </p>
+<h3 id="2）设置kingge用户具有root权限"><a href="#2）设置kingge用户具有root权限" class="headerlink" title="2）设置kingge用户具有root权限"></a>2）设置kingge用户具有root权限</h3><p>修改 /etc/sudoers 文件，找到下面一行，在root下面添加一行，如下所示：</p>
+<p>[root@hadoop101 kingge]# vi /etc/sudoers</p>
+<p>## Allow root to run any commands anywhere</p>
+<p>root    ALL=(ALL)     ALL</p>
+<p>kingge   ALL=(ALL)     ALL</p>
+<p>修改完毕，现在可以用kingge帐号登录，然后用命令 su - ，即可获得root权限进行操作。</p>
+<h3 id="3）在-opt目录下创建文件夹"><a href="#3）在-opt目录下创建文件夹" class="headerlink" title="3）在/opt目录下创建文件夹"></a>3）在/opt目录下创建文件夹</h3><p>（1）在root用户下创建module、software文件夹</p>
+<p>[root@hadoop101 opt]# mkdir module</p>
+<p>[root@hadoop101 opt]# mkdir software</p>
+<p>（2）修改module、software文件夹的所有者</p>
+<p>[root@hadoop101 opt]# chown kingge:kingge module</p>
+<p>[root@hadoop101 opt]# chown kingge:kingge sofrware</p>
+<p>[root@hadoop101 opt]# ls -al</p>
+<p>总用量 16</p>
+<p>drwxr-xr-x.  6 root    root 4096 4月  24 09:07 .</p>
+<p>dr-xr-xr-x. 23 root    root 4096 4月  24 08:52 ..</p>
+<p>drwxr-xr-x.  4 kingge kingge 4096 4月  23 16:26 module</p>
+<p>drwxr-xr-x.  2 kingge kingge 4096 4月  23 16:25 software</p>
+<h2 id="3-7-安装jdk"><a href="#3-7-安装jdk" class="headerlink" title="3.7 安装jdk"></a>3.7 安装jdk</h2><h3 id="1）卸载现有jdk"><a href="#1）卸载现有jdk" class="headerlink" title="1）卸载现有jdk"></a>1）卸载现有jdk</h3><p>（1）查询是否安装java软件：</p>
+<p>[root@hadoop101 opt]# rpm -qa|grep java</p>
+<p>（2）如果安装的版本低于1.7，卸载该jdk：</p>
+<p>[root@hadoop101 opt]# rpm -e 软件包</p>
+<h3 id="2）复制文件"><a href="#2）复制文件" class="headerlink" title="2）复制文件"></a>2）复制文件</h3><p>用SecureCRT工具将jdk、Hadoop-2.7.2.tar.gz导入到opt目录下面的software文件夹下面</p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image027.jpg" alt="img"></p>
+<p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/clip_image029.jpg" alt="img"></p>
+<h3 id="3）在linux系统下的opt目录中查看软件包是否导入成功。"><a href="#3）在linux系统下的opt目录中查看软件包是否导入成功。" class="headerlink" title="3）在linux系统下的opt目录中查看软件包是否导入成功。"></a>3）在linux系统下的opt目录中查看软件包是否导入成功。</h3><p>[root@hadoop101opt]# cd software/</p>
+<p>[root@hadoop101software]# ls</p>
+<p>hadoop-2.7.2.tar.gz  jdk-8u144-linux-x64.tar.gz</p>
+<h3 id="4）解压jdk到-opt-module目录下"><a href="#4）解压jdk到-opt-module目录下" class="headerlink" title="4）解压jdk到/opt/module目录下"></a>4）解压jdk到/opt/module目录下</h3><p>​         [root@hadoop101software]# tar -zxvf jdk-8u144-linux-x64.tar.gz -C /opt/module/</p>
+<h3 id="5）配置jdk环境变量"><a href="#5）配置jdk环境变量" class="headerlink" title="5）配置jdk环境变量"></a>5）配置jdk环境变量</h3><p>​         （1）先获取jdk路径：</p>
+<p>[root@hadoop101 jdk1.8.0_144]# pwd</p>
+<p>/opt/module/jdk1.8.0_144</p>
+<p>​         （2）打开/etc/profile文件：</p>
+<p>[root@hadoop101 jdk1.8.0_144]# vi /etc/profile</p>
+<p>​                 在profie文件末尾添加jdk路径：</p>
+<p>​                 ##JAVA_HOME</p>
+<p>export JAVA_HOME=/opt/module/jdk1.8.0_144</p>
+<p>export PATH=$PATH:$JAVA_HOME/bin</p>
+<p>​         （3）保存后退出：</p>
+<p>:wq</p>
+<p>​         （4）让修改后的文件生效：</p>
+<p>[root@hadoop101 jdk1.8.0_144]# source /etc/profile</p>
+<p>​         （5）重启（如果java -version可以用就不用重启）：      </p>
+<p>[root@hadoop101 jdk1.8.0_144]# sync</p>
+<p>​                 [root@hadoop101 jdk1.8.0_144]# reboot</p>
+<h3 id="6）测试jdk安装成功"><a href="#6）测试jdk安装成功" class="headerlink" title="6）测试jdk安装成功"></a>6）测试jdk安装成功</h3><p>[root@hadoop101 jdk1.8.0_144]# java -version</p>
+<p>java version “1.8.0_144”</p>
+<h2 id="3-8-安装Hadoop"><a href="#3-8-安装Hadoop" class="headerlink" title="3.8 安装Hadoop"></a>3.8 安装Hadoop</h2><p>  <strong>这里使用的是已经编译过后的hadoop</strong>源码，官网下载的是非编译过后的，需要编译。如何编译参见。</p>
+<p><a href="2017/02/28/hadoop大数据(四">Hadoop编译源码</a>-Hadoop编译源码)</p>
+<p>1）进入到Hadoop安装包路径下：</p>
+<blockquote>
+<p>[root@hadoop101 ~]# cd /opt/software/</p>
+</blockquote>
+<p>2）解压安装文件到/opt/module下面</p>
+<blockquote>
+<p>[root@hadoop101 software]# tar -zxf hadoop-2.7.2.tar.gz -C /opt/module/</p>
+</blockquote>
+<p>3）查看是否解压成功</p>
+<blockquote>
+<p>[root@hadoop101 software]# ls /opt/module/</p>
+<p>hadoop-2.7.2  </p>
+</blockquote>
+<p>4）在/opt/module/hadoop-2.7.2/etc/hadoop路径下配置hadoop-env.sh</p>
+<blockquote>
+<p>   （1）Linux系统中获取jdk的安装路径：   [root@hadoop101   jdk1.8.0_144]# echo $JAVA_HOME   /opt/module/jdk1.8.0_144   （2）修改hadoop-env.sh文件中JAVA_HOME   路径：   [root@hadoop101   hadoop]# vi hadoop-env.sh       修改JAVA_HOME如下   export   JAVA_HOME=/opt/module/jdk1.8.0_144   </p>
+</blockquote>
+<p>5）将hadoop添加到环境变量</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"> （1）获取hadoop安装路径：</div><div class="line"></div><div class="line">[root@ hadoop101 hadoop-2.7.2]# pwd</div><div class="line"></div><div class="line">/opt/module/hadoop-2.7.2</div><div class="line"></div><div class="line"> （2）打开/etc/profile文件：</div><div class="line"></div><div class="line">[root@ hadoop101 hadoop-2.7.2]# vi /etc/profile</div><div class="line"></div><div class="line"> 在profie文件末尾添加jdk路径：（shitf+g）</div><div class="line"></div><div class="line">\##HADOOP_HOME</div><div class="line"></div><div class="line">export HADOOP_HOME=/opt/module/hadoop-2.7.2</div><div class="line"></div><div class="line">export PATH=$PATH:$HADOOP_HOME/bin</div><div class="line"></div><div class="line">export PATH=$PATH:$HADOOP_HOME/sbin</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">（3）保存后退出：</div><div class="line"></div><div class="line">:wq</div><div class="line"></div><div class="line"> （4）让修改后的文件生效：</div><div class="line"></div><div class="line">[root@ hadoop101 hadoop-2.7.2]# source /etc/profile</div><div class="line"></div><div class="line">（5）重启(如果hadoop命令不能用再重启)：  </div><div class="line"></div><div class="line">[root@ hadoop101 hadoop-2.7.2]# sync</div><div class="line"></div><div class="line"> [root@ hadoop101 hadoop-2.7.2]# reboot</div></pre></td></tr></table></figure>
+<p>6）修改/opt目录下的所有文件所有者为kingge</p>
+<p>​         [root@hadoop101 opt]# chown kingge:kingge -R /opt/</p>
+<p>7）切换到kingge用户</p>
+<p>​         [root@hadoop101 opt]# su kingge</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag"><i class="fa fa-tag"></i> hadoop</a>
+          
+            <a href="/tags/大数据/" rel="tag"><i class="fa fa-tag"></i> 大数据</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/21/hadoop大数据-一-理论知识了解/" rel="next" title="hadoop大数据(一)-理论知识了解">
+                <i class="fa fa-chevron-left"></i> hadoop大数据(一)-理论知识了解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/" rel="prev" title="hadoop大数据(三)-Hadoop三种部署和运行方式">
+                hadoop大数据(三)-Hadoop三种部署和运行方式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">51</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#三-Hadoop运行环境搭建"><span class="nav-number">1.</span> <span class="nav-text">三 Hadoop运行环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-0-前置准备"><span class="nav-number">1.1.</span> <span class="nav-text">3.0 前置准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-虚拟机网络模式设置为NAT"><span class="nav-number">1.2.</span> <span class="nav-text">3.1 虚拟机网络模式设置为NAT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-克隆虚拟机"><span class="nav-number">1.3.</span> <span class="nav-text">3.2 克隆虚拟机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-修改为静态ip"><span class="nav-number">1.4.</span> <span class="nav-text">3.3 修改为静态ip</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）在终端命令窗口中输入"><span class="nav-number">1.4.1.</span> <span class="nav-text">1）在终端命令窗口中输入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）修改IP地址"><span class="nav-number">1.4.2.</span> <span class="nav-text">2）修改IP地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）执行"><span class="nav-number">1.4.3.</span> <span class="nav-text">3）执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4）如果报错，reboot，重启虚拟机。"><span class="nav-number">1.4.4.</span> <span class="nav-text">4）如果报错，reboot，重启虚拟机。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-修改主机名"><span class="nav-number">1.5.</span> <span class="nav-text">3.4 修改主机名</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）修改linux的hosts文件"><span class="nav-number">1.5.1.</span> <span class="nav-text">1）修改linux的hosts文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）修改window7的hosts文件-可以不改"><span class="nav-number">1.5.2.</span> <span class="nav-text">2）修改window7的hosts文件(可以不改)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-关闭防火墙"><span class="nav-number">1.6.</span> <span class="nav-text">3.5 关闭防火墙</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-6-在opt目录下创建文件"><span class="nav-number">1.7.</span> <span class="nav-text">3.6 在opt目录下创建文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）创建kingge用户"><span class="nav-number">1.7.1.</span> <span class="nav-text">1）创建kingge用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）设置kingge用户具有root权限"><span class="nav-number">1.7.2.</span> <span class="nav-text">2）设置kingge用户具有root权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）在-opt目录下创建文件夹"><span class="nav-number">1.7.3.</span> <span class="nav-text">3）在/opt目录下创建文件夹</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-7-安装jdk"><span class="nav-number">1.8.</span> <span class="nav-text">3.7 安装jdk</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）卸载现有jdk"><span class="nav-number">1.8.1.</span> <span class="nav-text">1）卸载现有jdk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）复制文件"><span class="nav-number">1.8.2.</span> <span class="nav-text">2）复制文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）在linux系统下的opt目录中查看软件包是否导入成功。"><span class="nav-number">1.8.3.</span> <span class="nav-text">3）在linux系统下的opt目录中查看软件包是否导入成功。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4）解压jdk到-opt-module目录下"><span class="nav-number">1.8.4.</span> <span class="nav-text">4）解压jdk到/opt/module目录下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5）配置jdk环境变量"><span class="nav-number">1.8.5.</span> <span class="nav-text">5）配置jdk环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6）测试jdk安装成功"><span class="nav-number">1.8.6.</span> <span class="nav-text">6）测试jdk安装成功</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-8-安装Hadoop"><span class="nav-number">1.9.</span> <span class="nav-text">3.8 安装Hadoop</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      54.9k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共54.9k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>
