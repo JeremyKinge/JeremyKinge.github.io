@@ -47,9 +47,83 @@
     <link href="http://kingge.top/2018/02/28/hadoop%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%9B%9B-Hadoop%E7%BC%96%E8%AF%91%E6%BA%90%E7%A0%81/"/>
     <id>http://kingge.top/2018/02/28/hadoop大数据-四-Hadoop编译源码/</id>
     <published>2018-02-28T11:31:59.000Z</published>
-    <updated>2019-06-07T08:58:38.885Z</updated>
+    <updated>2019-06-09T02:46:53.773Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="五-Hadoop编译源码"><a href="#五-Hadoop编译源码" class="headerlink" title="五 Hadoop编译源码"></a>五 Hadoop编译源码</h1><h2 id="5-1-前期准备工作"><a href="#5-1-前期准备工作" class="headerlink" title="5.1 前期准备工作"></a>5.1 前期准备工作</h2><p>1）CentOS联网 </p>
+<p>配置CentOS能连接外网。Linux虚拟机ping <a href="http://www.baidu.com" target="_blank" rel="external">www.baidu.com</a> 是畅通的</p>
+<p>注意：采用root角色编译，减少文件夹权限出现问题</p>
+<p>2）jar包准备(hadoop源码、JDK7 、 maven、 ant 、protobuf)</p>
+<p>（1）hadoop-2.7.2-src.tar.gz</p>
+<p>（2）jdk-7u79-linux-x64.gz</p>
+<p>（3）apache-ant-1.9.9-bin.tar.gz</p>
+<p>（4）apache-maven-3.0.5-bin.tar.gz</p>
+<p>（5）protobuf-2.5.0.tar.gz</p>
+<h2 id="5-2-jar包安装"><a href="#5-2-jar包安装" class="headerlink" title="5.2 jar包安装"></a>5.2 jar包安装</h2><p>0）注意：所有操作必须在root用户下完成</p>
+<p>1）JDK解压、配置环境变量 JAVA_HOME和PATH，验证<a href="http://lib.csdn.net/base/javase" target="_blank" rel="external">java</a>-version(如下都需要验证是否配置成功)</p>
+<p>[root@hadoop101 software] # tar -zxf jdk-7u79-linux-x64.gz -C /opt/module/</p>
+<p>[root@hadoop101 software]# vi /etc/profile</p>
+<p>   #JAVA_HOME   export   JAVA_HOME=/opt/module/jdk1.8.0_144   export   PATH=$PATH:$JAVA_HOME/bin   </p>
+<p>[root@hadoop101 software]#source /etc/profile</p>
+<p>验证命令：java -version</p>
+<p>2）Maven解压、配置  MAVEN_HOME和PATH。</p>
+<p>[root@hadoop101 software]# tar -zxvf apache-maven-3.0.5-bin.tar.gz -C /opt/module/</p>
+<p>[root@hadoop101 apache-maven-3.0.5]#  vi /etc/profile</p>
+<p>   #MAVEN_HOME   export   MAVEN_HOME=/opt/module/apache-maven-3.0.5   export   PATH=$PATH:$MAVEN_HOME/bin   </p>
+<p>[root@hadoop101 software]#source /etc/profile</p>
+<p>验证命令：mvn -version</p>
+<p>3）ant解压、配置  ANT _HOME和PATH。</p>
+<p>[root@hadoop101 software]# tar -zxvf apache-ant-1.9.9-bin.tar.gz -C /opt/module/</p>
+<p>[root@hadoop101 apache-ant-1.9.9]# vi /etc/profile</p>
+<p>   #ANT_HOME   export   ANT_HOME=/opt/module/apache-ant-1.9.9   export   PATH=$PATH:$ANT_HOME/bin   </p>
+<p>[root@hadoop101 software]#source /etc/profile</p>
+<p>验证命令：ant -version</p>
+<p>4）安装  glibc-headers 和  g++  命令如下: </p>
+<p>[root@hadoop101 apache-ant-1.9.9]# yum install glibc-headers</p>
+<p>[root@hadoop101 apache-ant-1.9.9]# yum install gcc-c++</p>
+<p>5）安装make和cmake</p>
+<p>[root@hadoop101 apache-ant-1.9.9]# yum install make</p>
+<p>[root@hadoop101 apache-ant-1.9.9]# yum install cmake</p>
+<p>6）解压protobuf ，进入到解压后protobuf主目录，/opt/module/protobuf-2.5.0</p>
+<p>然后相继执行命令：</p>
+<p>[root@hadoop101 software]# tar -zxvf protobuf-2.5.0.tar.gz -C /opt/module/</p>
+<p>[root@hadoop101 opt]# cd /opt/module/protobuf-2.5.0/</p>
+<p>[root@hadoop101 protobuf-2.5.0]#./configure </p>
+<p>[root@hadoop101 protobuf-2.5.0]# make </p>
+<p>[root@hadoop101 protobuf-2.5.0]# make check </p>
+<p>[root@hadoop101 protobuf-2.5.0]# make install </p>
+<p>[root@hadoop101 protobuf-2.5.0]# ldconfig </p>
+<p>[root@hadoop101 hadoop-dist]# vi /etc/profile</p>
+<p>   #LD_LIBRARY_PATH   export   LD_LIBRARY_PATH=/opt/module/protobuf-2.5.0   export PATH=$PATH:$LD_LIBRARY_PATH   </p>
+<p>[root@hadoop101 software]#source /etc/profile</p>
+<p>验证命令：protoc –version</p>
+<p>7）安装openssl库</p>
+<p>[root@hadoop101 software]#yum install openssl-devel</p>
+<p>8）安装 ncurses-devel库：</p>
+<p>[root@hadoop101 software]#yum install ncurses-devel</p>
+<p>到此，编译工具安装基本完成。</p>
+<h2 id="5-3-编译源码"><a href="#5-3-编译源码" class="headerlink" title="5.3 编译源码"></a>5.3 编译源码</h2><p>1）解压源码到/opt/tools目录</p>
+<p>[root@hadoop101 software]# tar -zxvf hadoop-2.7.2-src.tar.gz -C /opt/</p>
+<p>2）进入到hadoop源码主目录</p>
+<p>[root@hadoop101 hadoop-2.7.2-src]# pwd</p>
+<p>/opt/hadoop-2.7.2-src</p>
+<p>3）通过maven执行编译命令</p>
+<p>[root@hadoop101 hadoop-2.7.2-src]#mvn package -Pdist,native -DskipTests -Dtar</p>
+<p>等待时间30分钟左右，最终成功是全部SUCCESS。</p>
+<p><img src="/2018/02/28/hadoop大数据-四-Hadoop编译源码/clip_image002.jpg" alt="img"></p>
+<p>4）成功的64位hadoop包在/opt/hadoop-2.7.2-src/hadoop-dist/target下。</p>
+<p>[root@hadoop101 target]# pwd</p>
+<p>/opt/hadoop-2.7.2-src/hadoop-dist/target</p>
+<h2 id="5-4-常见的问题及解决方案"><a href="#5-4-常见的问题及解决方案" class="headerlink" title="5.4 常见的问题及解决方案"></a>5.4 常见的问题及解决方案</h2><p>1）MAVEN install时候JVM内存溢出</p>
+<p>处理方式：在环境配置文件和maven的执行文件均可调整MAVEN_OPT的heap大小。（详情查阅MAVEN 编译 JVM调优问题，如：<a href="http://outofmemory.cn/code-snippet/12652/maven-outofmemoryerror-method）" target="_blank" rel="external">http://outofmemory.cn/code-snippet/12652/maven-outofmemoryerror-method）</a></p>
+<p>2）编译期间maven报错。可能网络阻塞问题导致依赖库下载不完整导致，多次执行命令（一次通过比较难）：</p>
+<p>[root@hadoop101 hadoop-2.7.2-src]#mvn package -Pdist,native -DskipTests -Dtar</p>
+<p>3）报ant、protobuf等错误，插件下载未完整或者插件版本问题，最开始链接有较多特殊情况，同时推荐</p>
+<p>2.7.0版本的问题汇总帖子   <a href="http://www.tuicool.com/articles/IBn63qf" target="_blank" rel="external">http://www.tuicool.com/articles/IBn63qf</a></p>
+]]></content>
     
     <summary type="html">
+    
+      &lt;h1 id=&quot;五-Hadoop编译源码&quot;&gt;&lt;a href=&quot;#五-Hadoop编译源码&quot; class=&quot;headerlink&quot; title=&quot;五 Hadoop编译源码&quot;&gt;&lt;/a&gt;五 Hadoop编译源码&lt;/h1&gt;&lt;h2 id=&quot;5-1-前期准备工作&quot;&gt;&lt;a href=&quot;#5-1
     
     </summary>
     
@@ -67,9 +141,555 @@
     <link href="http://kingge.top/2018/02/26/hadoop%E5%A4%A7%E6%95%B0%E6%8D%AE-%E4%B8%89-Hadoop%E4%B8%89%E7%A7%8D%E9%83%A8%E7%BD%B2%E5%92%8C%E8%BF%90%E8%A1%8C%E6%96%B9%E5%BC%8F/"/>
     <id>http://kingge.top/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/</id>
     <published>2018-02-26T15:21:59.000Z</published>
-    <updated>2019-06-07T09:06:37.748Z</updated>
+    <updated>2019-06-09T02:46:10.040Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="四-Hadoop运行模式"><a href="#四-Hadoop运行模式" class="headerlink" title="四 Hadoop运行模式"></a>四 Hadoop运行模式</h1><p><strong>1）官方网址</strong></p>
+<p>（1）官方网站：</p>
+<p><a href="http://hadoop.apache.org/" target="_blank" rel="external">http://hadoop.apache.org/</a></p>
+<p>（2）各个版本归档库地址   </p>
+<p><a href="https://archive.apache.org/dist/hadoop/common/hadoop-2.7.2/" target="_blank" rel="external">https://archive.apache.org/dist/hadoop/common/hadoop-2.7.2/</a></p>
+<p>（3）hadoop2.7.2版本详情介绍</p>
+<p><a href="http://hadoop.apache.org/docs/r2.7.2/" target="_blank" rel="external">http://hadoop.apache.org/docs/r2.7.2/</a></p>
+<p><strong>2）Hadoop运行模式</strong></p>
+<p>（1）本地模式（默认模式）：</p>
+<p>不需要启用单独进程，直接可以运行，测试和开发时使用。</p>
+<p>（2）伪分布式模式：</p>
+<p>等同于完全分布式，只有一个节点。</p>
+<p>（3）完全分布式模式：</p>
+<p>多个节点一起运行。</p>
+<h2 id="4-1-本地运行Hadoop-案例"><a href="#4-1-本地运行Hadoop-案例" class="headerlink" title="4.1 本地运行Hadoop 案例"></a>4.1 本地运行Hadoop 案例</h2><h3 id="4-1-1-官方grep案例"><a href="#4-1-1-官方grep案例" class="headerlink" title="4.1.1 官方grep案例"></a>4.1.1 官方grep案例</h3><p>1）创建在hadoop-2.7.2文件下面创建一个input文件夹</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$mkdir input</p>
+<p>2）将hadoop的xml配置文件复制到input</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$cp etc/hadoop/*.xml input</p>
+<p>3）执行share目录下的mapreduce程序</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hadoop jar</p>
+<p>share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar grep input output ‘dfs[a-z.]+’</p>
+<p>4）查看输出结果</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ cat output/*</p>
+<h3 id="4-1-2-官方wordcount案例"><a href="#4-1-2-官方wordcount案例" class="headerlink" title="4.1.2 官方wordcount案例"></a>4.1.2 官方wordcount案例</h3><p>1）创建在hadoop-2.7.2文件下面创建一个wcinput文件夹</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$mkdir wcinput</p>
+<p>2）在wcinput文件下创建一个wc.input文件</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$cd wcinput</p>
+<p>[kingge@hadoop101 wcinput]$touch wc.input</p>
+<p>3）编辑wc.input文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[kingge@hadoop101 wcinput]$vim wc.input</div><div class="line">在文件中输入如下内容</div><div class="line">hadoop yarn</div><div class="line">hadoop mapreduce </div><div class="line">kingge</div><div class="line">kingge</div><div class="line">保存退出：：wq</div></pre></td></tr></table></figure>
+<p>4）回到hadoop目录/opt/module/hadoop-2.7.2</p>
+<p>5）执行程序：</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar wordcount wcinput wcoutput</p>
+<p>6）查看结果：</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$cat wcoutput/part-r-00000</p>
+<p>kingge 2</p>
+<p>hadoop  2</p>
+<p>mapreduce       1</p>
+<p>yarn    1</p>
+<h3 id="4-1-3-总结"><a href="#4-1-3-总结" class="headerlink" title="4.1.3 总结"></a>4.1.3 总结</h3><p>第一个案例：统计input文件里面的文件，文件内容包含’dfs[a-z.]+’ 规则的文字，筛选出来。</p>
+<p>第二个案例：统计wc.input 文件中单词出现的个数，<strong>特别注意，第二次运行之前必须删除已有的结果输出目录（wcoutput</strong>）（rm -rf wcoutput/），否则执行wordcount指令就会报错，提示文件已经存在</p>
+<p>—-  操作设计的文件都是存储在linux 的文件系统中。本地操作，不支持联网操作</p>
+<h2 id="4-2-伪分布式运行Hadoop案例"><a href="#4-2-伪分布式运行Hadoop案例" class="headerlink" title="4.2 伪分布式运行Hadoop案例"></a>4.2 伪分布式运行Hadoop案例</h2><h3 id="4-2-1-启动HDFS并运行MapReduce程序"><a href="#4-2-1-启动HDFS并运行MapReduce程序" class="headerlink" title="4.2.1 启动HDFS并运行MapReduce程序"></a>4.2.1 启动HDFS并运行MapReduce程序</h3><p>1）分析：</p>
+<p>​         （1）准备1台客户机</p>
+<p>​         （2）安装jdk</p>
+<p>​         （3）配置环境变量</p>
+<p>​         （4）安装hadoop</p>
+<p>​         （5）配置环境变量</p>
+<p>​         （6）配置集群</p>
+<p>​         （7）启动、测试集群增、删、查</p>
+<p>​         （8）执行wordcount案例</p>
+<p>2）执行步骤</p>
+<p>需要配置hadoop文件如下</p>
+<h4 id="（1）配置集群"><a href="#（1）配置集群" class="headerlink" title="（1）配置集群"></a>（1）配置集群</h4><p>  （a）配置：hadoop-env.sh</p>
+<p>​                          1.Linux系统中获取jdk的安装路径：</p>
+<p>[kingge@hadoop100 hadoop-2.7.2]$ cd etc/hadoop/</p>
+<p>[root@ hadoop101 ~]# echo $JAVA_HOME</p>
+<p>/opt/module/jdk1.8.0_144</p>
+<p>​                          2.修改Jhadoop-env.sh的JAVA_HOME 路径：</p>
+<p>   export   JAVA_HOME=/opt/module/jdk1.8.0_144   </p>
+<p>（b）配置：core-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 指定HDFS中NameNode的地址 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;fs.defaultFS&lt;/name&gt;</div><div class="line">    &lt;value&gt;hdfs://hadoop101:9000&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line">&lt;!-- 指定hadoop运行时产生文件的存储目录 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">	&lt;value&gt;/opt/module/hadoop-2.7.2/data/tmp&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>（c）配置：hdfs-site.xml  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 指定HDFS副本的数量 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;dfs.replication&lt;/name&gt;</div><div class="line">	&lt;value&gt;1&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<h4 id="（2）启动集群"><a href="#（2）启动集群" class="headerlink" title="（2）启动集群"></a>（2）启动集群</h4><p><strong>（a）格式化namenode</strong>（<strong>第一次启动时格式化，以后就不要总格式化</strong>）</p>
+<p>​                          [kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs namenode –format</p>
+<p>​                 会在上面配置配置的存储目录生成 这两个文件</p>
+<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image002.jpg" alt="img"></p>
+<p> <strong>（b）启动namenode</strong></p>
+<p>​                          [kingge@hadoop101 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start namenode</p>
+<p>​    <strong>c）启动datanode</strong></p>
+<p>​                          [kingge@hadoop101 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start datanode</p>
+<h4 id="（3）查看集群"><a href="#（3）查看集群" class="headerlink" title="（3）查看集群"></a>（3）查看集群</h4><p>​                 <strong>（a）查看是否启动成功</strong></p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ jps</p>
+<p>13586 NameNode</p>
+<p>13668 DataNode</p>
+<p>13786 Jps</p>
+<p>​                 <strong>（b）查看产生的log日志</strong></p>
+<p>当前目录：/opt/module/hadoop-2.7.2/logs</p>
+<p>[kingge@hadoop101 logs]$ ls</p>
+<p>hadoop-kingge-datanode-hadoop.kingge.com.log</p>
+<p>hadoop-kingge-datanode-hadoop.kingge.com.out</p>
+<p>hadoop-kingge-namenode-hadoop.kingge.com.log</p>
+<p>hadoop-kingge-namenode-hadoop.kingge.com.out</p>
+<p>SecurityAuth-root.audit</p>
+<p>[kingge@hadoop101 logs]# cat hadoop-kingge-datanode-hadoop101.log</p>
+<p>​                 <strong>（c）web端查看HDFS文件系统</strong></p>
+<p>​                          <a href="http://192.168.1.101:50070/dfshealth.html#tab-overview" target="_blank" rel="external">http://192.168.1.101:50070/dfshealth.html#tab-overview</a></p>
+<p>​                          注意：如果不能查看，看如下帖子处理</p>
+<p><a href="http://www.cnblogs.com/zlslch/p/6604189.html" target="_blank" rel="external">http://www.cnblogs.com/zlslch/p/6604189.html</a></p>
+<h4 id="（4）操作集群"><a href="#（4）操作集群" class="headerlink" title="（4）操作集群"></a>（4）操作集群</h4><p>​                 （a）在hdfs文件系统上<strong>创建</strong>一个input文件夹</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -mkdir -p /user/kingge/input</p>
+<p>​                 （b）将测试文件内容<strong>上传</strong>到文件系统上</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -put wcinput/wc.input  /user/kingge/input/</p>
+<p>​                 <strong>（c）查看上传的文件是否正确</strong></p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -ls  /user/kingge/input/</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -cat  /user/kingge/ input/wc.input</p>
+<p>​                 （d）运行mapreduce程序(<strong>所有数据在HDFS上</strong>)</p>
+<p>​                          [kingge@hadoop101 hadoop-2.7.2]$ bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar wordcount /user/kingge/input/ /user/kingge/output</p>
+<p>​                 （e）查看输出结果</p>
+<p>命令行查看：</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -cat /user/kingge/output/*</p>
+<p>浏览器查看</p>
+<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image004.jpg" alt="img"></p>
+<p>​                 （f）将测试文件内容<strong>下载</strong>到本地</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ hadoop fs -get /user/kingge/ output/part-r-00000 ./wcoutput/</p>
+<p>（g）<strong>删除</strong>输出结果</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ hdfs dfs -rmr /user/kingge/output</p>
+<h3 id="4-2-2-YARN上运行MapReduce-程序"><a href="#4-2-2-YARN上运行MapReduce-程序" class="headerlink" title="4.2.2 YARN上运行MapReduce 程序"></a>4.2.2 YARN上运行MapReduce 程序</h3><h4 id="1）分析："><a href="#1）分析：" class="headerlink" title="1）分析："></a>1）分析：</h4><p>​         （1）准备1台客户机</p>
+<p>​         （2）安装jdk</p>
+<p>​         （3）配置环境变量</p>
+<p>​         （4）安装hadoop</p>
+<p>​         （5）配置环境变量</p>
+<p>​         （6）配置集群yarn上运行</p>
+<p>​         （7）启动、测试集群增、删、查</p>
+<p>​         （8）在yarn上执行wordcount案例</p>
+<h4 id="2）执行步骤"><a href="#2）执行步骤" class="headerlink" title="2）执行步骤"></a>2）执行步骤</h4><p><strong>（1）配置集群</strong></p>
+<p>​（a）配置yarn-env.sh</p>
+<p>​         配置一下JAVA_HOME</p>
+<p>   export JAVA_HOME=/opt/module/jdk1.8.0_144   </p>
+<p>（b）配置yarn-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- reducer获取数据的方式 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line"> &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</div><div class="line"> &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line">&lt;!-- 指定YARN的ResourceManager的地址 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">&lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;</div><div class="line">&lt;value&gt;hadoop101&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>​                 （c）配置：mapred-env.sh</p>
+<p>​         配置一下JAVA_HOME</p>
+<p>   export   JAVA_HOME=/opt/module/jdk1.8.0_144   </p>
+<p>​                 （d）配置： (对mapred-site.xml.template重新命名为) mapred-site.xml</p>
+<p>[kingge@hadoop101 hadoop]$ mv mapred-site.xml.template mapred-site.xml</p>
+<p>[kingge@hadoop101 hadoop]$ vi mapred-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 指定mr运行在yarn上 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;mapreduce.framework.name&lt;/name&gt;</div><div class="line">	&lt;value&gt;yarn&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>​         <strong>（2）启动集群</strong></p>
+<p>（a）启动resourcemanager</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh start resourcemanager</p>
+<p>（b）启动nodemanager</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh start nodemanager</p>
+<p>​         <strong>（3）集群操作</strong></p>
+<p>（a）yarn的浏览器页面查看</p>
+<p><a href="http://192.168.1.101:8088/cluster" target="_blank" rel="external">http://192.168.1.101:8088/cluster</a></p>
+<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image006.jpg" alt="img"></p>
+<p>​                 （b）删除文件系统上的output文件</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -rm -R /user/kingge/output</p>
+<p>​                 （c）执行mapreduce程序</p>
+<p>​                          [kingge@hadoop101 hadoop-2.7.2]$ bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar wordcount /user/kingge/input  /user/kingge/output</p>
+<p>​                 （d）查看运行结果</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -cat /user/kingge/output/*</p>
+<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image008.jpg" alt="img"></p>
+<h3 id="4-2-3-配置临时文件存储路径"><a href="#4-2-3-配置临时文件存储路径" class="headerlink" title="4.2.3 配置临时文件存储路径"></a>4.2.3 配置临时文件存储路径</h3><p>1）停止进程</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh stop nodemanager</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh stop resourcemanager</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/hadoop-daemon.sh stop datanode</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/hadoop-daemon.sh stop namenode</p>
+<p>2）修改hadoop.tmp.dir</p>
+<p>​         [core-site.xml]</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 指定hadoop运行时产生文件的存储目录 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">	&lt;value&gt;/opt/module/hadoop-2.7.2/data/tmp&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>3）将/opt/module/hadoop-2.7.2路径中的logs文件夹删除掉</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ rm -rf logs/</p>
+<p>4）进入到tmp目录将tmp目录中hadoop-kingge目录删除掉</p>
+<p>[kingge@hadoop101 tmp]$ rm -rf hadoop-kingge/</p>
+<p>5）格式化NameNode</p>
+<p>​         [kingge@hadoop101 hadoop-2.7.2]$ hadoop namenode -format</p>
+<p>6）启动所有进程</p>
+<p>​         [kingge@hadoop101 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start namenode</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start datanode</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh start resourcemanager</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh start nodemanager</p>
+<p>​         7）查看/opt/module/hadoop-2.7.2/data/tmp这个目录下的内容。</p>
+<h3 id="4-2-4-配置历史服务器"><a href="#4-2-4-配置历史服务器" class="headerlink" title="4.2.4 配置历史服务器"></a>4.2.4 配置历史服务器</h3><p>​         1）配置mapred-site.xml</p>
+<p>[kingge@hadoop101 hadoop]$ vi mapred-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">&lt;name&gt;mapreduce.jobhistory.address&lt;/name&gt;</div><div class="line">&lt;value&gt;hadoop101:10020&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;mapreduce.jobhistory.webapp.address&lt;/name&gt;</div><div class="line">    &lt;value&gt;hadoop101:19888&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>​         2）查看启动历史服务器文件目录：</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ ls sbin/ | grep mr</p>
+<p>mr-jobhistory-daemon.sh</p>
+<p>​         3）启动历史服务器</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/mr-jobhistory-daemon.sh start historyserver</p>
+<p>​         4）查看历史服务器是否启动</p>
+<p>​                 [kingge@hadoop101 hadoop-2.7.2]$ jps</p>
+<p>​         5）查看jobhistory</p>
+<p><a href="http://192.168.1.101:19888/jobhistory" target="_blank" rel="external">http://192.168.1.101:19888/jobhistory</a></p>
+<h3 id="4-2-5-配置日志的聚集"><a href="#4-2-5-配置日志的聚集" class="headerlink" title="4.2.5 配置日志的聚集"></a>4.2.5 配置日志的聚集</h3><p>日志聚集概念：应用运行完成以后，将日志信息上传到HDFS系统上。</p>
+<p>开启日志聚集功能步骤：</p>
+<p>（1）配置yarn-site.xml</p>
+<p>[kingge@hadoop101 hadoop]$ vi yarn-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 日志聚集功能使能 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">&lt;name&gt;yarn.log-aggregation-enable&lt;/name&gt;</div><div class="line">&lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;!-- 日志保留时间设置7天 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">&lt;name&gt;yarn.log-aggregation.retain-seconds&lt;/name&gt;</div><div class="line">&lt;value&gt;604800&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>（2）关闭nodemanager 、resourcemanager和historymanager</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh stop resourcemanager</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh stop nodemanager</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/mr-jobhistory-daemon.sh stop historyserver</p>
+<p>（3）启动nodemanager 、resourcemanager和historymanager</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh start resourcemanager</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh start nodemanager</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/mr-jobhistory-daemon.sh start historyserver</p>
+<p>（4）删除hdfs上已经存在的hdfs文件</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -rm -R /user/kingge/output</p>
+<p>（5）执行wordcount程序</p>
+<p>[kingge@hadoop101 hadoop-2.7.2]$ hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar wordcount /user/kingge/input /user/kingge/output</p>
+<p>（6）查看日志</p>
+<p><a href="http://192.168.1.101:19888/jobhistory" target="_blank" rel="external">http://192.168.1.101:19888/jobhistory</a></p>
+<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image0022.jpg" alt="img"></p>
+<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image012.jpg" alt="img"></p>
+<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image014.jpg" alt="img"></p>
+<h3 id="4-2-6-配置文件说明"><a href="#4-2-6-配置文件说明" class="headerlink" title="4.2.6 配置文件说明"></a>4.2.6 配置文件说明</h3><p>Hadoop配置文件分两类：默认配置文件和自定义配置文件，只有用户想修改某一默认配置值时，才需要修改自定义配置文件，更改相应属性值。</p>
+<p>（1）默认配置文件：存放在hadoop相应的jar包中</p>
+<p>[core-default.xml]</p>
+<p>​                          hadoop-common-2.7.2.jar/ core-default.xml</p>
+<p>​                 [hdfs-default.xml]</p>
+<p>hadoop-hdfs-2.7.2.jar/ hdfs-default.xml</p>
+<p>​                 [yarn-default.xml]</p>
+<p>hadoop-yarn-common-2.7.2.jar/ yarn-default.xml</p>
+<p>​                 [core-default.xml]</p>
+<p>hadoop-mapreduce-client-core-2.7.2.jar/ core-default.xml</p>
+<p>​         （2）自定义配置文件：存放在$HADOOP_HOME/etc/hadoop</p>
+<p>​                 core-site.xml</p>
+<p>​                 hdfs-site.xml</p>
+<p>​                 yarn-site.xml</p>
+<p>​                 mapred-site.xml</p>
+<h3 id="4-2-7-总结"><a href="#4-2-7-总结" class="headerlink" title="4.2.7 总结"></a>4.2.7 总结</h3><p>相比于本地运行模式，伪分布式模式支持互联网操作，不过集群的副本是1（不配置的话默认是3，详情查看hdfs-default.xml的dfs.replication属性）。</p>
+<h2 id="4-3-完全分布式部署Hadoop"><a href="#4-3-完全分布式部署Hadoop" class="headerlink" title="4.3 完全分布式部署Hadoop"></a>4.3 完全分布式部署Hadoop</h2><p>分析：</p>
+<p>​         1）准备3台客户机（关闭防火墙、静态ip、主机名称）</p>
+<p>​         2）安装jdk</p>
+<p>​         3）配置环境变量</p>
+<p>​         4）安装hadoop</p>
+<p>​         5）配置环境变量</p>
+<p>​         6）安装ssh</p>
+<p>​         7）配置集群</p>
+<p>​         8）启动测试集群</p>
+<h3 id="4-3-1-虚拟机准备"><a href="#4-3-1-虚拟机准备" class="headerlink" title="4.3.1 虚拟机准备"></a>4.3.1 虚拟机准备</h3><p>详见3.2-3.3章。</p>
+<p><a href="/2018/02/24/hadoop大数据-二-运行环境搭建">Hadoop运行环境搭建3.2-3.3</a></p>
+<h3 id="4-3-2-主机名设置"><a href="#4-3-2-主机名设置" class="headerlink" title="4.3.2 主机名设置"></a>4.3.2 主机名设置</h3><p><a href="/2018/02/24/hadoop大数据-二-运行环境搭建">Hadoop运行环境搭建3.4</a></p>
+<h3 id="4-3-3-scp"><a href="#4-3-3-scp" class="headerlink" title="4.3.3 scp"></a>4.3.3 scp</h3><p>1）scp可以实现服务器与服务器之间的数据拷贝。</p>
+<p>  操作一：hadoop101 主动推送数据到hadoop102</p>
+<p>  操作二：hadoop102主动从hadoop101获取数据到本地</p>
+<p>  操作三：hadoop101 控制将hadoop102的数据拷贝到hadoop103</p>
+<p>​        <strong>接收方一般使用root**</strong>用户接受，因为有些文件夹的权限只有root<strong>用户才有，为保证传输成功，双方最好都切换到root</strong>用户**</p>
+<p>2）案例实操</p>
+<p>（1）将hadoop101中/opt/module和/opt/software文件拷贝到hadoop102、hadoop103和hadoop104上。</p>
+<p>[root@hadoop101 /]# scp -r /opt/module/  root@hadoop102:/opt</p>
+<p>[root@hadoop101 /]# scp -r /opt/software/  root@hadoop102:/opt</p>
+<p>[root@hadoop101 /]# scp -r /opt/module/  root@hadoop103:/opt</p>
+<p>[root@hadoop101 /]# scp -r /opt/software/  root@hadoop103:/opt</p>
+<p>[root@hadoop101 /]# scp -r /opt/module/  root@hadoop104:/opt</p>
+<p>[root@hadoop101 /]# scp -r /opt/software/  root@hadoop105:/opt</p>
+<p>（2）将hadoop101服务器上的/etc/profile文件拷贝到hadoop102上。</p>
+<p>[root@hadoop102 opt]# scp root@hadoop101:/etc/profile /etc/profile 例子1</p>
+<p>[root@hadoop102 opt]# scp -r  root@192.168.1.101:/opt/module/ /opt/–例子二</p>
+<p>​         （3）实现两台远程机器之间的文件传输（hadoop103主机文件拷贝到hadoop104主机上）</p>
+<p>​                 [kingge@hadoop102 test]$ scp kingge@hadoop103:/opt/test/haha kingge@hadoop104:/opt/test/</p>
+<p>注意：如果传递环境变量配置文件后需要source /etc/profile 一下，让其生效。同时可能需要修改一下文件的权限或者文件所属（chmod chown）</p>
+<h3 id="4-3-4-SSH无密码登录"><a href="#4-3-4-SSH无密码登录" class="headerlink" title="4.3.4 SSH无密码登录"></a>4.3.4 SSH无密码登录</h3><p> <em>针对执行ssh<strong>命令</strong>的</em> <em>无密码操作</em></p>
+<p>1）配置ssh</p>
+<p>（1）基本语法</p>
+<p>ssh 另一台电脑的ip地址</p>
+<p>（2）ssh连接时出现Host key verification failed的解决方法</p>
+<p>[root@hadoop102 opt]# ssh 192.168.1.103</p>
+<p>The authenticity of host ‘192.168.1.103 (192.168.1.103)’ can’t be established.</p>
+<p>RSA key fingerprint is cf:1e:de:d7:d0:4c:2d:98:60:b4:fd:ae:b1:2d:ad:06.</p>
+<p>Are you sure you want to continue connecting (yes/no)? </p>
+<p>Host key verification failed.</p>
+<p>（3）解决方案如下：直接输入yes</p>
+<p>2）无密钥配置</p>
+<p>（1）进入到我的home目录</p>
+<p>​                 [kingge@hadoop102 opt]$ cd ~/.ssh </p>
+<p>（2）生成公钥和私钥：</p>
+<p>[kingge@hadoop102 .ssh]$ ssh-keygen -t rsa </p>
+<p>然后敲（三个回车），就会生成两个文件id_rsa（私钥）、id_rsa.pub（公钥）</p>
+<p>（3）将公钥拷贝到要免密登录的目标机器上</p>
+<p>[kingge@hadoop102 .ssh]$ ssh-copy-id hadoop102 （<strong>给自己授权免密登录</strong>）</p>
+<p>[kingge@hadoop102 .ssh]$ ssh-copy-id hadoop103</p>
+<p>[kingge@hadoop102 .ssh]$ ssh-copy-id hadoop104</p>
+<p>查看103或者104的~/.ssh，发现多了authorized_keys 个文件</p>
+<p>需求： A服务器需要访问B服务器，不需要输入密码</p>
+<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/8026452.png" alt="1560048026452"></p>
+<p>3）.ssh文件夹下的文件功能解释</p>
+<p>​         （1）~/.ssh/known_hosts      ：记录ssh访问过计算机的公钥(public key)</p>
+<p>​         （2）id_rsa    ：生成的私钥</p>
+<p>​         （3）id_rsa.pub     ：生成的公钥</p>
+<p>​         （4）authorized_keys    ：存放授权过得无秘登录服务器公钥</p>
+<p><strong>注意：</strong> 如果你授权的免密登录用户，被切换了，那么还是需要输入密码才能够登录。</p>
+<p><strong>例子：hadoop100服务器的kingge用户生成了密匙，然后发给你了hadoop101，那么100服务器就可以免密登录101服务器，但是假设100服务器su root（切换为了root用户），那么当执行ssh hadoop101 操作时，就需要输入101服务器密码，而不能免密登录，所以要想在root用户下也能免密登录101服务器，就需要在root用户下重新走一遍免密登录流程</strong></p>
+<h3 id="4-3-5-rsync"><a href="#4-3-5-rsync" class="headerlink" title="4.3.5 rsync"></a>4.3.5 rsync</h3><p>rsync远程同步工具，主要用于备份和镜像。具有速度快、避免复制相同内容和支持符号链接的优点。</p>
+<p><strong>rsync**</strong>和<strong><strong>scp</strong></strong>区别：<strong><strong>用</strong></strong>rsync<strong><strong>做文件的复制要比</strong></strong>scp<strong><strong>的速度快，</strong></strong>rsync<strong><strong>只对差异文件做更新。</strong></strong>scp<strong>**是把所有文件都复制过去。</strong></p>
+<p>（1）查看rsync使用说明</p>
+<p>man rsync | more</p>
+<p>​         （2）基本语法</p>
+<p>rsync -rvl     $pdir/$fname         $user@hadoop$host:$pdir</p>
+<p>​                 命令 命令参数 要拷贝的文件路径/名称   目的用户@主机:目的路径</p>
+<p>​                 选项</p>
+<p>-r 递归</p>
+<p>-v 显示复制过程</p>
+<p>-l 拷贝符号连接</p>
+<p>​         （3）案例实操</p>
+<p>​                 把本机/opt/tmp目录同步到hadoop103服务器的root用户下的/opt/tmp目录</p>
+<p>[kingge@hadoop102 opt]$ rsync -rvl /opt/tmp  root@hadoop103:/opt/</p>
+<h3 id="4-3-6-编写集群分发脚本xsync"><a href="#4-3-6-编写集群分发脚本xsync" class="headerlink" title="4.3.6 编写集群分发脚本xsync"></a>4.3.6 编写集群分发脚本xsync</h3><p> <strong>场景：分布式系统中假设有6900**</strong>台服务器，那么假设我们需要同步配置信息，我们不可能一台台的执行scp/rsync<strong> </strong>命令，效率极低，那怎么办呢？**</p>
+<p>1）需求分析：循环复制文件到所有节点的相同目录下。</p>
+<p>​         （1）原始拷贝：</p>
+<p>rsync  -rvl     /opt/module                root@hadoop103:/opt/</p>
+<p>​         （2）期望脚本：</p>
+<p>xsync 要同步的文件名称</p>
+<p>​         （3）在/usr/local/bin这个目录下存放的脚本，可以在系统任何地方直接执行。（就是在执行xsync命令时可以不用输入/usr/local/bin这样前缀）</p>
+<p>2）案例实操：</p>
+<p>（1）在/usr/local/bin目录下创建xsync文件，文件内容如下：</p>
+<p>[root@hadoop102 bin]# touch xsync</p>
+<p>[root@hadoop102 bin]# vi xsync</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#1 获取输入参数个数，如果没有参数，直接退出</div><div class="line">pcount=$#</div><div class="line">if((pcount==0)); then</div><div class="line">echo no args;</div><div class="line">exit;</div><div class="line">fi</div><div class="line"></div><div class="line">#2 获取文件名称</div><div class="line">p1=$1</div><div class="line">fname=`basename $p1`</div><div class="line">echo fname=$fname</div><div class="line"></div><div class="line">#3 获取上级目录到绝对路径</div><div class="line">pdir=`cd -P $(dirname $p1); pwd`</div><div class="line">echo pdir=$pdir</div><div class="line"></div><div class="line">#4 获取当前用户名称</div><div class="line">user=`whoami`</div><div class="line"></div><div class="line">#5 循环</div><div class="line">for((host=103; host&lt;105; host++)); do</div><div class="line">        #echo $pdir/$fname $user@hadoop$host:$pdir</div><div class="line">        echo --------------- hadoop$host ----------------</div><div class="line">        rsync -rvl $pdir/$fname $user@hadoop$host:$pdir</div><div class="line">done</div></pre></td></tr></table></figure>
+<p>（2）修改脚本 xsync 具有执行权限</p>
+<p>[root@hadoop102 bin]# chmod 777 xsync</p>
+<p>[root@hadoop102 bin]# chown kingge:kingge -R xsync</p>
+<p>（3）调用脚本形式：xsync 文件名称</p>
+<p>[kingge@hadoop102 opt]$ xsync tmp/</p>
+<h3 id="4-3-7-编写集群操作脚本xcall"><a href="#4-3-7-编写集群操作脚本xcall" class="headerlink" title="4.3.7 编写集群操作脚本xcall"></a>4.3.7 编写集群操作脚本xcall</h3><p>1）需求分析：在所有主机上同时执行相同的命令</p>
+<p>xcall +命令</p>
+<p>2）具体实现</p>
+<p>（1）在/usr/local/bin目录下创建xcall文件，文件内容如下：</p>
+<p>[root@hadoop102 bin]# touch xcall</p>
+<p>[root@hadoop102 bin]# vi xcall</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">pcount=$#</div><div class="line">if((pcount==0));then</div><div class="line">        echo no args;</div><div class="line">        exit;</div><div class="line">fi</div><div class="line"></div><div class="line">echo -------------localhost----------</div><div class="line">$@</div><div class="line">for((host=101; host&lt;=108; host++)); do</div><div class="line">        echo ----------hadoop$host---------</div><div class="line">        ssh hadoop$host $@</div><div class="line">done</div></pre></td></tr></table></figure>
+<p>（2）修改脚本xcall具有执行权限</p>
+<p>​                [root@hadoop102 bin]# chmod 777 xcall</p>
+<p>[root@hadoop102 bin]# chown kingge:kingge xcall</p>
+<p>（3）调用脚本形式： xcall 操作命令</p>
+<p>[root@hadoop102 ~]# xcall rm -rf /opt/tmp/ </p>
+<h3 id="4-3-8-配置集群"><a href="#4-3-8-配置集群" class="headerlink" title="4.3.8 配置集群"></a>4.3.8 配置集群</h3><h4 id="1）集群部署规划"><a href="#1）集群部署规划" class="headerlink" title="1）集群部署规划"></a>1）集群部署规划</h4><table>
+<thead>
+<tr>
+<th></th>
+<th>hadoop102</th>
+<th>hadoop103</th>
+<th>hadoop104</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HDFS</td>
+<td>NameNode   DataNode</td>
+<td>DataNode</td>
+<td>SecondaryNameNode   DataNode</td>
+</tr>
+<tr>
+<td>YARN</td>
+<td>NodeManager</td>
+<td>ResourceManager   NodeManager</td>
+<td>NodeManager</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>   <strong>集群规划的原则</strong>：NameNode/SecondaryNameNode/ ResourceManager必须要单独占据一个服务器(或者这三个不能在同一个节点上运行)，因为他是相当于目录，请求他的次数最大，所以不能跟其他插件部署在一起，不能跟NameNode抢占资源，因为他不能挂掉。Datanode就没有这些限制，挂掉也无所谓。</p>
+<p>   但是下面的例子中NameNode和DataNode都部署在hadoop102这个节点，因为我们是属于测试搭建环境下，所以无所谓，<strong>但是生产环境下必须按照规则</strong></p>
+<h4 id="2）配置文件"><a href="#2）配置文件" class="headerlink" title="2）配置文件"></a>2）配置文件</h4><p>​         （1）core-site.xml</p>
+<p>[kingge@hadoop102 hadoop]$ vi core-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 指定HDFS中NameNode的地址 --&gt;</div><div class="line">	&lt;property&gt;</div><div class="line">		&lt;name&gt;fs.defaultFS&lt;/name&gt;</div><div class="line">        &lt;value&gt;hdfs://hadoop102:9000&lt;/value&gt;</div><div class="line">	&lt;/property&gt;</div><div class="line"></div><div class="line">	&lt;!-- 指定hadoop运行时产生文件的存储目录 --&gt;</div><div class="line">	&lt;property&gt;</div><div class="line">		&lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">		&lt;value&gt;/opt/module/hadoop-2.7.2/data/tmp&lt;/value&gt;</div><div class="line">	&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>​         （2）Hdfs</p>
+<p>​                 <strong>2.1 hadoop-env.sh</strong></p>
+<p>[kingge@hadoop102 hadoop]$ vi hadoop-env.sh</p>
+<p>   export   JAVA_HOME=/opt/module/jdk1.8.0_144   </p>
+<p>​                 <strong>2.2 hdfs-site.xml</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;configuration&gt;	</div><div class="line">	&lt;property&gt;</div><div class="line">		&lt;name&gt;dfs.replication&lt;/name&gt;</div><div class="line">		&lt;value&gt;3&lt;/value&gt;</div><div class="line">	&lt;/property&gt;</div><div class="line"></div><div class="line"># 如果不配置。默认是跟namenode同个位置</div><div class="line">	&lt;property&gt;</div><div class="line">        &lt;name&gt;dfs.namenode.secondary.http-address&lt;/name&gt;</div><div class="line">        &lt;value&gt;hadoop104:50090&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
+<p>​                 <strong>2.3 Slaves</strong></p>
+<p>​              <strong>配置文件里面不能存在多余的空格或者换行</strong></p>
+<p>[kingge@hadoop102 hadoop]$ vi slaves</p>
+<p>   hadoop102   hadoop103   hadoop104   </p>
+<p>​         （3）yarn</p>
+<p>​                 yarn-env.sh</p>
+<p>[kingge@hadoop102 hadoop]$ vi yarn-env.sh</p>
+<p>   export   JAVA_HOME=/opt/module/jdk1.8.0_144   </p>
+<p>​                 yarn-site.xml</p>
+<p>​                 [kingge@hadoop102 hadoop]$ vi yarn-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line"></div><div class="line">	&lt;!-- reducer获取数据的方式 --&gt;</div><div class="line">	&lt;property&gt;</div><div class="line">		 &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</div><div class="line">		 &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</div><div class="line">	&lt;/property&gt;</div><div class="line"></div><div class="line">	&lt;!-- 指定YARN的ResourceManager的地址 --&gt;</div><div class="line">	&lt;property&gt;</div><div class="line">		&lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;</div><div class="line">		&lt;value&gt;hadoop103&lt;/value&gt;</div><div class="line">	&lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
+<p>​         （4）mapreduce</p>
+<p>​                 mapred-env.sh</p>
+<p>[kingge@hadoop102 hadoop]$ vi mapred-env.sh</p>
+<p>   export   JAVA_HOME=/opt/module/jdk1.8.0_144   </p>
+<p>​                 mapred-site.xml</p>
+<p>[kingge@hadoop102 hadoop]$ vi mapred-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line">	&lt;!-- 指定mr运行在yarn上 --&gt;</div><div class="line">	&lt;property&gt;</div><div class="line">		&lt;name&gt;mapreduce.framework.name&lt;/name&gt;</div><div class="line">		&lt;value&gt;yarn&lt;/value&gt;</div><div class="line">	&lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
+<h4 id="3）在集群上分发以上所有文件"><a href="#3）在集群上分发以上所有文件" class="headerlink" title="3）在集群上分发以上所有文件"></a>3）在集群上分发以上所有文件</h4><p>[kingge@hadoop102 hadoop]$ pwd</p>
+<p>/opt/module/hadoop-2.7.2/etc/hadoop</p>
+<p>[kingge@hadoop102 hadoop]$ xsync /opt/module/hadoop-2.7.2/etc/hadoop/core-site.xml</p>
+<p>[kingge@hadoop102 hadoop]$ xsync /opt/module/hadoop-2.7.2/etc/hadoop/yarn-site.xml</p>
+<p>[kingge@hadoop102 hadoop]$ xsync /opt/module/hadoop-2.7.2/etc/hadoop/slaves</p>
+<p>4）查看文件分发情况</p>
+<p>[kingge@hadoop102 hadoop]$ xcall cat /opt/module/hadoop-2.7.2/etc/hadoop/slaves</p>
+<h3 id="4-3-9-集群启动及测试"><a href="#4-3-9-集群启动及测试" class="headerlink" title="4.3.9 集群启动及测试"></a>4.3.9 集群启动及测试</h3><p>1）启动集群</p>
+<p>​        清空之前启动namenode的数据</p>
+<p>​            Rm –rf data/ log/</p>
+<p>​       Data就是在core-site.xml中配置的文件存储目录，log就是hadoop的log目录。</p>
+<p>​         （0）如果集群是第一次启动，需要格式化namenode</p>
+<p>​                 [kingge@hadoop102 hadoop-2.7.2]$ bin/hdfs namenode -format</p>
+<p>（1）启动HDFS：</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ sbin/start-dfs.sh</p>
+<p> –<strong>这一步跟我们之前的单个启动不一样（sbin/hadoop-daemon.sh start namenode**</strong>），这个操作是启动整个集群的namenode<strong>**和datanode</strong>—那么就需要配置ssh 无密码登录</p>
+<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image00209.png" alt="img"></p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ jps</p>
+<p>4166 NameNode</p>
+<p>4482 Jps</p>
+<p>4263 DataNode</p>
+<p>[kingge@hadoop103 hadoop-2.7.2]$ jps</p>
+<p>3218 DataNode</p>
+<p>3288 Jps</p>
+<p>[kingge@hadoop104 hadoop-2.7.2]$ jps</p>
+<p>3221 DataNode</p>
+<p>3283 SecondaryNameNode</p>
+<p>3364 Jps</p>
+<p>（2）启动yarn （启动namemanager 和 resourceManager）</p>
+<p>[kingge@hadoop103 hadoop-2.7.2]$ sbin/start-yarn.sh</p>
+<p>注意：<strong>Namenode和ResourceManger如果不是同一台机器，不能在NameNode上启动 yarn，应该在ResouceManager所在的机器上启动yarn。</strong></p>
+<p> <strong>因为我们在这个集群中ResourceManager是在hadoop103上面的，所以在103上启动</strong></p>
+<p>2）集群基本测试</p>
+<p>（1）上传文件到集群</p>
+<p>​         1.上传小文件</p>
+<p>​         [kingge@hadoop102 hadoop-2.7.2]$ bin/hdfs dfs -mkdir -p /user/kingge/input</p>
+<p>​         [kingge@hadoop102 hadoop-2.7.2]$ bin/hdfs dfs -put etc/hadoop/wc.input /user/kingge/input</p>
+<p>上传完后 hadoop103和hadoop104 上面也会同步副本（即是，也会存在上面的/user/kingge/tep/conf 和 *-site.xml  这些东西）</p>
+<p> 查看HDFS系统的文件结构</p>
+<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_imag3e006.jpg" alt="img"></p>
+<p> 我们可以看到他是存储在了块0，而且有三个副本101/102/103</p>
+<p>​    接下来我们再上传一个大文件看看</p>
+<p>​         2.上传大文件</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ bin/hadoop fs -put /opt/software/hadoop-2.7.2.tar.gz  /user/kingge/input</p>
+<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_imagfe008.jpg" alt="img"></p>
+<p><strong>为什么他这里会分为两块存储呢？因为默认块大小是128，当超过这个大小时就需要分块存储</strong></p>
+<p>（2）上传文件后查看文件存放在什么位置</p>
+<p>​         文件存储路径</p>
+<p>​         [kingge@hadoop102 subdir0]$ pwd</p>
+<p>/opt/module/hadoop-2.7.2/data/tmp/dfs/data/current/BP-938951106-192.168.10.107-1495462844069/current/finalized/subdir0/subdir0</p>
+<p>​         查看文件内容(<strong>wc.input</strong>)</p>
+<p>[kingge@hadoop102 subdir0]$ cat blk_1073741825</p>
+<p>hadoop</p>
+<p>kingge</p>
+<p>kingge</p>
+<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image0r09.png" alt="img"></p>
+<p>然后26 27 就是那个大文件，分为了两块</p>
+<p>（3）拼接</p>
+<p>-rw-rw-r–. 1 kingge kingge 134217728 5月  23 16:01 blk_1073741836</p>
+<p>-rw-rw-r–. 1 kingge kingge   1048583 5月  23 16:01 blk_1073741836_1012.meta</p>
+<p>-rw-rw-r–. 1 kingge kingge  63439959 5月  23 16:01 blk_1073741837</p>
+<p>-rw-rw-r–. 1 kingge kingge    495635 5月  23 16:01 blk_1073741837_1013.meta</p>
+<p>[kingge@hadoop102 subdir0]$ cat blk_1073741836&gt;&gt;tmp.file</p>
+<p>[kingge@hadoop102 subdir0]$ cat blk_1073741837&gt;&gt;tmp.file</p>
+<p>[kingge@hadoop102 subdir0]$ tar -zxvf tmp.file</p>
+<p>  <strong>已解压发现就是我们上传那个tar**</strong>大文件的解压版本，说明这两个文件就是存放着大文件**</p>
+<p>（4）下载</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ bin/hadoop fs -get /user/kingge/input/hadoop-2.7.2.tar.gz</p>
+<p>3）性能测试集群</p>
+<p>​         写海量数据</p>
+<p>​         读海量数据</p>
+<h3 id="4-3-10-Hadoop启动停止方式"><a href="#4-3-10-Hadoop启动停止方式" class="headerlink" title="4.3.10 Hadoop启动停止方式"></a>4.3.10 Hadoop启动停止方式</h3><p>1）各个服务组件逐一启动</p>
+<p>​         （1）分别启动hdfs组件</p>
+<p>​                 hadoop-daemon.sh  start|stop  namenode|datanode|secondarynamenode</p>
+<p>​         （2）启动yarn</p>
+<p>​                 yarn-daemon.sh  start|stop  resourcemanager|nodemanager</p>
+<p>2）各个模块分开启动（配置ssh是前提）常用</p>
+<p>​         （1）整体启动/停止hdfs</p>
+<p>​                 start-dfs.sh</p>
+<p>​                 stop-dfs.sh</p>
+<p>​         （2）整体启动/停止yarn</p>
+<p>​                 start-yarn.sh</p>
+<p>​                 stop-yarn.sh</p>
+<p>3）全部启动（不建议使用）</p>
+<p>​         start-all.sh</p>
+<p>​         stop-all.sh</p>
+<h3 id="4-3-11-集群时间同步"><a href="#4-3-11-集群时间同步" class="headerlink" title="4.3.11 集群时间同步"></a>4.3.11 集群时间同步</h3><p>时间同步的方式：找一个机器，作为时间服务器，所有的机器与这台集群时间进行定时的同步，比如，每隔十分钟，同步一次时间。</p>
+<p><strong>配置时间同步实操：</strong></p>
+<p>1）时间服务器配置（必须root用户）</p>
+<p>（1）检查ntp是否安装</p>
+<p>[root@hadoop102 桌面]# rpm -qa|grep ntp</p>
+<p>ntp-4.2.6p5-10.el6.centos.x86_64</p>
+<p>fontpackages-filesystem-1.41-1.1.el6.noarch</p>
+<p>ntpdate-4.2.6p5-10.el6.centos.x86_64</p>
+<p>（2）修改ntp配置文件</p>
+<p>[root@hadoop102 桌面]# vi /etc/ntp.conf</p>
+<p>修改内容如下</p>
+<p>a）修改1</p>
+<p>#restrict 192.168.1.0 mask 255.255.255.0 nomodify notrap为</p>
+<p>restrict 192.168.1.0 mask 255.255.255.0 nomodify notrap</p>
+<p>​                 b）修改2 注释时间服务器</p>
+<p>server 0.centos.pool.ntp.org iburst</p>
+<p>server 1.centos.pool.ntp.org iburst</p>
+<p>server 2.centos.pool.ntp.org iburst</p>
+<p>server 3.centos.pool.ntp.org iburst为</p>
+<p>#server 0.centos.pool.ntp.org iburst</p>
+<p>#server 1.centos.pool.ntp.org iburst</p>
+<p>#server 2.centos.pool.ntp.org iburst</p>
+<p>#server 3.centos.pool.ntp.org iburst</p>
+<p>​                 c）添加3 自己的时间服务器<img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_imagwe010.png" alt="img"></p>
+<p>server 127.127.1.0</p>
+<p>fudge 127.127.1.0 stratum 10</p>
+<p>（3）修改/etc/sysconfig/ntpd 文件</p>
+<p>[root@hadoop102 桌面]# vim /etc/sysconfig/ntpd</p>
+<p>增加内容如下</p>
+<p>SYNC_HWCLOCK=yes</p>
+<p>​         （4）重新启动ntpd</p>
+<p>[root@hadoop102 桌面]# service ntpd status</p>
+<p>ntpd 已停</p>
+<p>[root@hadoop102 桌面]# service ntpd start</p>
+<p>正在启动 ntpd：                                            [确定]</p>
+<p>​         （5）执行：</p>
+<p>​                  [root@hadoop102 桌面]# chkconfig ntpd on</p>
+<p>2）其他机器配置（必须root用户）</p>
+<p>​         （1）在其他机器配置10分钟与时间服务器同步一次</p>
+<p>​                 [root@hadoop103 hadoop-2.7.2]# crontab -e</p>
+<p>​                 编写脚本</p>
+<p>​                 <em>/10 </em> <em> </em> * /usr/sbin/ntpdate hadoop102</p>
+<p>​         （2）修改任意机器时间</p>
+<p>​                 [root@hadoop103 hadoop]# date -s “2017-9-11 11:11:11”</p>
+<p>​         （3）十分钟后查看机器是否与时间服务器同步</p>
+<p>​                 [root@hadoop103 hadoop]# date</p>
+<h3 id="4-3-12-配置集群常见问题"><a href="#4-3-12-配置集群常见问题" class="headerlink" title="4.3.12 配置集群常见问题"></a>4.3.12 配置集群常见问题</h3><p>1）防火墙没关闭、或者没有启动yarn</p>
+<p><em>INFO client.RMProxy: Connecting to ResourceManager at hadoop108/192.168.10.108:8032</em></p>
+<p>2）主机名称配置错误</p>
+<p>3）ip地址配置错误</p>
+<p>4）ssh没有配置好</p>
+<p>5）root用户和kingge两个用户启动集群不统一</p>
+<p>6）配置文件修改不细心</p>
+<p>7）未编译源码</p>
+<p><em>Unable to load native-hadoop library for your platform… using builtin-java classes where applicable</em></p>
+<p><em>17/05/22 15:38:58 INFO client.RMProxy: Connecting to ResourceManager at hadoop108/192.168.10.108:8032</em></p>
+<p>8）datanode不被namenode识别问题</p>
+<p>Namenode在format初始化的时候会形成两个标识，blockPoolId和clusterId。新的datanode加入时，会获取这两个标识作为自己工作目录中的标识。</p>
+<p>一旦namenode重新format后，namenode的身份标识已变，而datanode如果依然持有原来的id，就不会被namenode识别。</p>
+<p>解决办法，删除datanode节点中的数据后，再次重新格式化namenode。</p>
+<p>9）不识别主机名称</p>
+<p>   java.net.UnknownHostException: hadoop102: hadoop102           at   java.net.InetAddress.getLocalHost(InetAddress.java:1475)           at   org.apache.hadoop.mapreduce.JobSubmitter.submitJobInternal(JobSubmitter.java:146)           at   org.apache.hadoop.mapreduce.Job$10.run(Job.java:1290)           at   org.apache.hadoop.mapreduce.Job$10.run(Job.java:1287)           at   java.security.AccessController.doPrivileged(Native Method)           at   javax.security.auth.Subject.doAs(Subject.java:415)   </p>
+<p>解决办法：</p>
+<p>（1）在/etc/hosts文件中添加192.168.1.102 hadoop102</p>
+<p>​         （2）主机名称不要起hadoop  hadoop000等特殊名称</p>
+<p>10）datanode和namenode进程同时只能工作一个。</p>
+<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/0048286271.png" alt="1560048286271"></p>
+<p>11）执行命令 不生效，粘贴word中命令时，遇到-和长–没区分开。导致命令失效</p>
+<p>解决办法：尽量不要粘贴word中代码。</p>
+<p>12）jps发现进程已经没有，但是重新启动集群，提示进程已经开启。原因是在linux的根目录下/tmp目录中存在启动的进程临时文件，将集群相关进程删除掉，再重新启动集群。</p>
+<p>13）jps不生效。</p>
+<p>原因：全局变量hadoop   java没有生效，需要source /etc/profile文件。</p>
+<p>14）8088端口连接不上</p>
+<p>[kingge@hadoop102 桌面]$ cat /etc/hosts</p>
+<p>注释掉如下代码</p>
+<p>#127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</p>
+<p>#::1         hadoop102</p>
+]]></content>
     
     <summary type="html">
+    
+      &lt;h1 id=&quot;四-Hadoop运行模式&quot;&gt;&lt;a href=&quot;#四-Hadoop运行模式&quot; class=&quot;headerlink&quot; title=&quot;四 Hadoop运行模式&quot;&gt;&lt;/a&gt;四 Hadoop运行模式&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;1）官方网址&lt;/strong&gt;&lt;/p&gt;
+&lt;p
     
     </summary>
     
@@ -87,7 +707,7 @@
     <link href="http://kingge.top/2018/02/24/hadoop%E5%A4%A7%E6%95%B0%E6%8D%AE-%E4%BA%8C-%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
     <id>http://kingge.top/2018/02/24/hadoop大数据-二-运行环境搭建/</id>
     <published>2018-02-24T02:21:59.000Z</published>
-    <updated>2019-06-07T09:07:33.863Z</updated>
+    <updated>2019-06-07T09:12:38.271Z</updated>
     
     <content type="html"><![CDATA[<h1 id="三-Hadoop运行环境搭建"><a href="#三-Hadoop运行环境搭建" class="headerlink" title="三 Hadoop运行环境搭建"></a>三 Hadoop运行环境搭建</h1><h2 id="3-0-前置准备"><a href="#3-0-前置准备" class="headerlink" title="3.0 前置准备"></a>3.0 前置准备</h2><p>需要linux相关的知识，和安装虚拟机。所以还不了解的请看：<a href="/2017/06/12/linux基础">Linux基础</a></p>
 <h2 id="3-1-虚拟机网络模式设置为NAT"><a href="#3-1-虚拟机网络模式设置为NAT" class="headerlink" title="3.1 虚拟机网络模式设置为NAT"></a>3.1 虚拟机网络模式设置为NAT</h2><p><img src="/2018/02/24/hadoop大数据-二-运行环境搭建/9896745303.png" alt="1559896745303"></p>
@@ -217,7 +837,7 @@
 <h3 id="6）测试jdk安装成功"><a href="#6）测试jdk安装成功" class="headerlink" title="6）测试jdk安装成功"></a>6）测试jdk安装成功</h3><p>[root@hadoop101 jdk1.8.0_144]# java -version</p>
 <p>java version “1.8.0_144”</p>
 <h2 id="3-8-安装Hadoop"><a href="#3-8-安装Hadoop" class="headerlink" title="3.8 安装Hadoop"></a>3.8 安装Hadoop</h2><p>  <strong>这里使用的是已经编译过后的hadoop</strong>源码，官网下载的是非编译过后的，需要编译。如何编译参见。</p>
-<p><a href="/2018/02/28/hadoop大数据(四">Hadoop编译源码</a>-Hadoop编译源码)</p>
+<p><a href="/2018/02/28/hadoop大数据-四-Hadoop编译源码">Hadoop编译源码</a></p>
 <p>1）进入到Hadoop安装包路径下：</p>
 <blockquote>
 <p>[root@hadoop101 ~]# cd /opt/software/</p>

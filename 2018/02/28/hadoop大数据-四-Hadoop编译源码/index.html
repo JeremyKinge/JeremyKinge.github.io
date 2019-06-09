@@ -153,18 +153,20 @@
 
 
 
-<meta name="description" content="To know everything, no words don&apos;t talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）">
+<meta name="description" content="五 Hadoop编译源码5.1 前期准备工作1）CentOS联网  配置CentOS能连接外网。Linux虚拟机ping www.baidu.com 是畅通的 注意：采用root角色编译，减少文件夹权限出现问题 2）jar包准备(hadoop源码、JDK7 、 maven、 ant 、protobuf) （1）hadoop-2.7.2-src.tar.gz （2）jdk-7u79-linux-x6">
 <meta name="keywords" content="hadoop,大数据">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hadoop大数据(四)-Hadoop编译源码">
 <meta property="og:url" content="http://kingge.top/2018/02/28/hadoop大数据-四-Hadoop编译源码/index.html">
 <meta property="og:site_name" content="King哥">
-<meta property="og:description" content="To know everything, no words don&apos;t talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）">
+<meta property="og:description" content="五 Hadoop编译源码5.1 前期准备工作1）CentOS联网  配置CentOS能连接外网。Linux虚拟机ping www.baidu.com 是畅通的 注意：采用root角色编译，减少文件夹权限出现问题 2）jar包准备(hadoop源码、JDK7 、 maven、 ant 、protobuf) （1）hadoop-2.7.2-src.tar.gz （2）jdk-7u79-linux-x6">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-07T08:58:38.885Z">
+<meta property="og:image" content="http://kingge.top/2018/02/28/hadoop大数据-四-Hadoop编译源码/clip_image002.jpg">
+<meta property="og:updated_time" content="2019-06-09T02:46:53.773Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hadoop大数据(四)-Hadoop编译源码">
-<meta name="twitter:description" content="To know everything, no words don&apos;t talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）">
+<meta name="twitter:description" content="五 Hadoop编译源码5.1 前期准备工作1）CentOS联网  配置CentOS能连接外网。Linux虚拟机ping www.baidu.com 是畅通的 注意：采用root角色编译，减少文件夹权限出现问题 2）jar包准备(hadoop源码、JDK7 、 maven、 ant 、protobuf) （1）hadoop-2.7.2-src.tar.gz （2）jdk-7u79-linux-x6">
+<meta name="twitter:image" content="http://kingge.top/2018/02/28/hadoop大数据-四-Hadoop编译源码/clip_image002.jpg">
 
 
 
@@ -463,7 +465,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  0
+                  845
                 </span>
               
 
@@ -479,7 +481,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  4
                 </span>
               
             </div>
@@ -502,7 +504,77 @@
       
 
       
-        
+        <h1 id="五-Hadoop编译源码"><a href="#五-Hadoop编译源码" class="headerlink" title="五 Hadoop编译源码"></a>五 Hadoop编译源码</h1><h2 id="5-1-前期准备工作"><a href="#5-1-前期准备工作" class="headerlink" title="5.1 前期准备工作"></a>5.1 前期准备工作</h2><p>1）CentOS联网 </p>
+<p>配置CentOS能连接外网。Linux虚拟机ping <a href="http://www.baidu.com" target="_blank" rel="external">www.baidu.com</a> 是畅通的</p>
+<p>注意：采用root角色编译，减少文件夹权限出现问题</p>
+<p>2）jar包准备(hadoop源码、JDK7 、 maven、 ant 、protobuf)</p>
+<p>（1）hadoop-2.7.2-src.tar.gz</p>
+<p>（2）jdk-7u79-linux-x64.gz</p>
+<p>（3）apache-ant-1.9.9-bin.tar.gz</p>
+<p>（4）apache-maven-3.0.5-bin.tar.gz</p>
+<p>（5）protobuf-2.5.0.tar.gz</p>
+<h2 id="5-2-jar包安装"><a href="#5-2-jar包安装" class="headerlink" title="5.2 jar包安装"></a>5.2 jar包安装</h2><p>0）注意：所有操作必须在root用户下完成</p>
+<p>1）JDK解压、配置环境变量 JAVA_HOME和PATH，验证<a href="http://lib.csdn.net/base/javase" target="_blank" rel="external">java</a>-version(如下都需要验证是否配置成功)</p>
+<p>[root@hadoop101 software] # tar -zxf jdk-7u79-linux-x64.gz -C /opt/module/</p>
+<p>[root@hadoop101 software]# vi /etc/profile</p>
+<p>   #JAVA_HOME   export   JAVA_HOME=/opt/module/jdk1.8.0_144   export   PATH=$PATH:$JAVA_HOME/bin   </p>
+<p>[root@hadoop101 software]#source /etc/profile</p>
+<p>验证命令：java -version</p>
+<p>2）Maven解压、配置  MAVEN_HOME和PATH。</p>
+<p>[root@hadoop101 software]# tar -zxvf apache-maven-3.0.5-bin.tar.gz -C /opt/module/</p>
+<p>[root@hadoop101 apache-maven-3.0.5]#  vi /etc/profile</p>
+<p>   #MAVEN_HOME   export   MAVEN_HOME=/opt/module/apache-maven-3.0.5   export   PATH=$PATH:$MAVEN_HOME/bin   </p>
+<p>[root@hadoop101 software]#source /etc/profile</p>
+<p>验证命令：mvn -version</p>
+<p>3）ant解压、配置  ANT _HOME和PATH。</p>
+<p>[root@hadoop101 software]# tar -zxvf apache-ant-1.9.9-bin.tar.gz -C /opt/module/</p>
+<p>[root@hadoop101 apache-ant-1.9.9]# vi /etc/profile</p>
+<p>   #ANT_HOME   export   ANT_HOME=/opt/module/apache-ant-1.9.9   export   PATH=$PATH:$ANT_HOME/bin   </p>
+<p>[root@hadoop101 software]#source /etc/profile</p>
+<p>验证命令：ant -version</p>
+<p>4）安装  glibc-headers 和  g++  命令如下: </p>
+<p>[root@hadoop101 apache-ant-1.9.9]# yum install glibc-headers</p>
+<p>[root@hadoop101 apache-ant-1.9.9]# yum install gcc-c++</p>
+<p>5）安装make和cmake</p>
+<p>[root@hadoop101 apache-ant-1.9.9]# yum install make</p>
+<p>[root@hadoop101 apache-ant-1.9.9]# yum install cmake</p>
+<p>6）解压protobuf ，进入到解压后protobuf主目录，/opt/module/protobuf-2.5.0</p>
+<p>然后相继执行命令：</p>
+<p>[root@hadoop101 software]# tar -zxvf protobuf-2.5.0.tar.gz -C /opt/module/</p>
+<p>[root@hadoop101 opt]# cd /opt/module/protobuf-2.5.0/</p>
+<p>[root@hadoop101 protobuf-2.5.0]#./configure </p>
+<p>[root@hadoop101 protobuf-2.5.0]# make </p>
+<p>[root@hadoop101 protobuf-2.5.0]# make check </p>
+<p>[root@hadoop101 protobuf-2.5.0]# make install </p>
+<p>[root@hadoop101 protobuf-2.5.0]# ldconfig </p>
+<p>[root@hadoop101 hadoop-dist]# vi /etc/profile</p>
+<p>   #LD_LIBRARY_PATH   export   LD_LIBRARY_PATH=/opt/module/protobuf-2.5.0   export PATH=$PATH:$LD_LIBRARY_PATH   </p>
+<p>[root@hadoop101 software]#source /etc/profile</p>
+<p>验证命令：protoc –version</p>
+<p>7）安装openssl库</p>
+<p>[root@hadoop101 software]#yum install openssl-devel</p>
+<p>8）安装 ncurses-devel库：</p>
+<p>[root@hadoop101 software]#yum install ncurses-devel</p>
+<p>到此，编译工具安装基本完成。</p>
+<h2 id="5-3-编译源码"><a href="#5-3-编译源码" class="headerlink" title="5.3 编译源码"></a>5.3 编译源码</h2><p>1）解压源码到/opt/tools目录</p>
+<p>[root@hadoop101 software]# tar -zxvf hadoop-2.7.2-src.tar.gz -C /opt/</p>
+<p>2）进入到hadoop源码主目录</p>
+<p>[root@hadoop101 hadoop-2.7.2-src]# pwd</p>
+<p>/opt/hadoop-2.7.2-src</p>
+<p>3）通过maven执行编译命令</p>
+<p>[root@hadoop101 hadoop-2.7.2-src]#mvn package -Pdist,native -DskipTests -Dtar</p>
+<p>等待时间30分钟左右，最终成功是全部SUCCESS。</p>
+<p><img src="/2018/02/28/hadoop大数据-四-Hadoop编译源码/clip_image002.jpg" alt="img"></p>
+<p>4）成功的64位hadoop包在/opt/hadoop-2.7.2-src/hadoop-dist/target下。</p>
+<p>[root@hadoop101 target]# pwd</p>
+<p>/opt/hadoop-2.7.2-src/hadoop-dist/target</p>
+<h2 id="5-4-常见的问题及解决方案"><a href="#5-4-常见的问题及解决方案" class="headerlink" title="5.4 常见的问题及解决方案"></a>5.4 常见的问题及解决方案</h2><p>1）MAVEN install时候JVM内存溢出</p>
+<p>处理方式：在环境配置文件和maven的执行文件均可调整MAVEN_OPT的heap大小。（详情查阅MAVEN 编译 JVM调优问题，如：<a href="http://outofmemory.cn/code-snippet/12652/maven-outofmemoryerror-method）" target="_blank" rel="external">http://outofmemory.cn/code-snippet/12652/maven-outofmemoryerror-method）</a></p>
+<p>2）编译期间maven报错。可能网络阻塞问题导致依赖库下载不完整导致，多次执行命令（一次通过比较难）：</p>
+<p>[root@hadoop101 hadoop-2.7.2-src]#mvn package -Pdist,native -DskipTests -Dtar</p>
+<p>3）报ant、protobuf等错误，插件下载未完整或者插件版本问题，最开始链接有较多特殊情况，同时推荐</p>
+<p>2.7.0版本的问题汇总帖子   <a href="http://www.tuicool.com/articles/IBn63qf" target="_blank" rel="external">http://www.tuicool.com/articles/IBn63qf</a></p>
+
       
     </div>
     
@@ -667,8 +739,17 @@ var jiathis_config={
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.png"
@@ -810,6 +891,25 @@ var jiathis_config={
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#五-Hadoop编译源码"><span class="nav-number">1.</span> <span class="nav-text">五 Hadoop编译源码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-前期准备工作"><span class="nav-number">1.1.</span> <span class="nav-text">5.1 前期准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-jar包安装"><span class="nav-number">1.2.</span> <span class="nav-text">5.2 jar包安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-编译源码"><span class="nav-number">1.3.</span> <span class="nav-text">5.3 编译源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-4-常见的问题及解决方案"><span class="nav-number">1.4.</span> <span class="nav-text">5.4 常见的问题及解决方案</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -847,7 +947,7 @@ var jiathis_config={
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
     <span title="Site words total count">
-      54.9k
+      62.0k
     </span>
   
 </div>
@@ -870,7 +970,7 @@ var jiathis_config={
 <span class="post-meta-divider">|</span>
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共54.9k字</span>
+  <span class="post-count">博客全站共62.0k字</span>
 </div>
 
 
