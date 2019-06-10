@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hadoop,大数据,HDFS," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="五 NameNode工作机制5.1 NameNode&amp;amp;Secondary NameNode工作机制 1）第一阶段：namenode启动（1）第一次启动namenode格式化后，创建fsimage和edits文件。如果不是第一次启动，直接加载编辑日志和镜像文件到内存（初始化系统为上一次退出时的最新状态）。 （2）客户端对元数据进行增删改的请求 （3）namenode记录操作日志，更新滚动日志">
+<meta name="keywords" content="hadoop,大数据,HDFS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hadoop大数据(七)-HDFS的Namenode和Datanode">
+<meta property="og:url" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="五 NameNode工作机制5.1 NameNode&amp;amp;Secondary NameNode工作机制 1）第一阶段：namenode启动（1）第一次启动namenode格式化后，创建fsimage和edits文件。如果不是第一次启动，直接加载编辑日志和镜像文件到内存（初始化系统为上一次退出时的最新状态）。 （2）客户端对元数据进行增删改的请求 （3）namenode记录操作日志，更新滚动日志">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/clip_image002.png">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/clip_image0024.jpg">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/clip_imag4e002.jpg">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/clip_imag9e002.jpg">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/169952390.png">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/0170177897.png">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/clip_image001.png">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/70270685.png">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/70458431.png">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/0170515392.png">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/170744123.png">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/0170775293.png">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/560171043334.png">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/1560171084624.png">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/560171100904.png">
+<meta property="og:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/60171183235.png">
+<meta property="og:updated_time" content="2019-06-10T12:56:33.609Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hadoop大数据(七)-HDFS的Namenode和Datanode">
+<meta name="twitter:description" content="五 NameNode工作机制5.1 NameNode&amp;amp;Secondary NameNode工作机制 1）第一阶段：namenode启动（1）第一次启动namenode格式化后，创建fsimage和edits文件。如果不是第一次启动，直接加载编辑日志和镜像文件到内存（初始化系统为上一次退出时的最新状态）。 （2）客户端对元数据进行增删改的请求 （3）namenode记录操作日志，更新滚动日志">
+<meta name="twitter:image" content="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/clip_image002.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/"/>
+
+
+
+
+
+  <title>hadoop大数据(七)-HDFS的Namenode和Datanode | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">hadoop大数据(七)-HDFS的Namenode和Datanode</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-10T15:38:59+08:00">
+                2018-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  6,915
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  29
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="五-NameNode工作机制"><a href="#五-NameNode工作机制" class="headerlink" title="五 NameNode工作机制"></a>五 NameNode工作机制</h1><h2 id="5-1-NameNode-amp-Secondary-NameNode工作机制"><a href="#5-1-NameNode-amp-Secondary-NameNode工作机制" class="headerlink" title="5.1 NameNode&amp;Secondary NameNode工作机制"></a>5.1 NameNode&amp;Secondary NameNode工作机制</h2><p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/clip_image002.png" alt="img"></p>
+<h3 id="1）第一阶段：namenode启动"><a href="#1）第一阶段：namenode启动" class="headerlink" title="1）第一阶段：namenode启动"></a>1）第一阶段：namenode启动</h3><p>（1）第一次启动namenode格式化后，创建fsimage和edits文件<strong>。如果不是第一次启动，直接加载编辑日志和镜像文件到内存</strong>（初始化系统为上一次退出时的最新状态）。</p>
+<p>（2）客户端对元数据进行增删改的请求</p>
+<p>（3）namenode记录操作日志，更新滚动日志。</p>
+<p>（4）namenode在内存中对数据进行增删改查</p>
+<p><strong><em>对于namenode而言最新的操作日志是 edits.in.progress(正在执行的日志)</em></strong></p>
+<h3 id="2）第二阶段：Secondary-NameNode工作"><a href="#2）第二阶段：Secondary-NameNode工作" class="headerlink" title="2）第二阶段：Secondary NameNode工作"></a><strong>2）第二阶段：Secondary NameNode工作</strong></h3><blockquote>
+<p>   <strong>核心工作：检查是否需要合并namenode的编辑日志和镜像文件（checkpoint）</strong></p>
+</blockquote>
+<p>​         （1）Secondary NameNode询问namenode是否需要checkpoint。直接带回namenode是否检查结果。<strong>定时时间默认1小时，edits默认一百万次</strong></p>
+<p>​         （2）Secondary NameNode请求执行checkpoint。（是否需要合并两个文件）</p>
+<p>​         （3）namenode滚动正在写的edits日志（<strong>edits.in.progress</strong>）</p>
+<p>​         （4）将<strong>滚动前的编辑日志和镜像文件拷贝</strong>到Secondary NameNode</p>
+<p>​         （5）Secondary NameNode加载编辑日志和镜像文件到内存，并合并。</p>
+<p>​         （6）生成新的镜像文件fsimage.chkpoint</p>
+<p>​         （7）拷贝fsimage.chkpoint到namenode</p>
+<p>​         （8）namenode将fsimage.chkpoint重新命名成fsimage</p>
+<blockquote>
+<p><strong>也就是说，secondarynamenode的主要作用是帮助namenode分担他的压力，主要是帮助namenode合并镜像和操作日志，合并后，推给namenode。</strong></p>
+</blockquote>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">正如上面所分析的，Hadoop文件系统会出现编辑日志（edits）不断增长的情况，尽管在NameNode运行期间不会对文件系统造成影响，但是如果NameNode重新启动，它将会花费大量的时间运行编辑日志中的每个操作，在此期间也就是我们前面所说的安全模式下，文件系统是不可用的。</div><div class="line"></div><div class="line">为了解决上述问题，Hadoop会运行一个Secondary NameNode进程，它的任务就是为原NameNode内存中的文件系统元数据产生检查点。其实说白了，就是辅助NameNode来处理fsimage文件与edits文件的一个进程。它从NameNode中复制fsimage与edits到临时目录并定期合并成一个新的fsimage并且删除原来的编辑日志edits。具体 步骤如下：</div><div class="line"></div><div class="line">（1）Secondary NameNode首先请求原NameNode进行edits的滚动，这样会产生一个新的编辑日志文件edits来保存对文件系统的操作（例如：上传新文件，删除文件，修改文件）。</div><div class="line"></div><div class="line">（2）Secondary NameNode通过Http方式读取原NameNode中的fsimage及edits。</div><div class="line"></div><div class="line">（3）Secondary NameNode将fsimage及edits进行合并产生新的fsimage</div><div class="line"></div><div class="line">（4）Secondary NameNode通过Http方式将新生成的fsimage发送到原来的NameNode中</div><div class="line"></div><div class="line">（5）原NameNode用新生成的fsimage替换掉旧的fsimage文件，新生成的edits文件也就是（1）生成的滚动编辑日志文件替换掉之前的edits文件</div></pre></td></tr></table></figure>
+<h3 id="3）web端访问SecondaryNameNode"><a href="#3）web端访问SecondaryNameNode" class="headerlink" title="3）web端访问SecondaryNameNode"></a><strong>3）web端访问SecondaryNameNode</strong></h3><p>​         （1）启动集群</p>
+<p>​         （2）浏览器中输入：<a href="http://hadoop102:50090/status.html" target="_blank" rel="external">http://hadoop102:50090/status.html</a></p>
+<p>​         （3）查看SecondaryNameNode信息</p>
+<p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/clip_image0024.jpg" alt="img"></p>
+<h3 id="4）chkpoint检查时间参数设置"><a href="#4）chkpoint检查时间参数设置" class="headerlink" title="4）chkpoint检查时间参数设置"></a><strong>4）chkpoint检查时间参数设置</strong></h3><p>（1）通常情况下，SecondaryNameNode每隔一小时执行一次。</p>
+<p>​         [hdfs-default.xml]</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;dfs.namenode.checkpoint.period&lt;/name&gt;</div><div class="line">  &lt;value&gt;3600&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>（2）一分钟检查一次操作次数，当操作次数达到1百万时，SecondaryNameNode执行一次。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;dfs.namenode.checkpoint.txns&lt;/name&gt;</div><div class="line">  &lt;value&gt;1000000&lt;/value&gt;</div><div class="line">&lt;description&gt;操作动作次数&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;dfs.namenode.checkpoint.check.period&lt;/name&gt;</div><div class="line">  &lt;value&gt;60&lt;/value&gt;</div><div class="line">&lt;description&gt; 1分钟检查一次操作次数&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<h2 id="5-2-镜像文件和编辑日志文件"><a href="#5-2-镜像文件和编辑日志文件" class="headerlink" title="5.2 镜像文件和编辑日志文件"></a>5.2 镜像文件和编辑日志文件</h2><h3 id="1）概念"><a href="#1）概念" class="headerlink" title="1）概念"></a>1）概念</h3><p>​         namenode被格式化之后，将在/opt/module/hadoop-2.7.2/data/tmp/dfs/name/current目录中产生如下文件</p>
+<p>   edits_0000000000000000000   fsimage_0000000000000000000.md5   seen_txid   VERSION   </p>
+<p>（1）Fsimage文件：HDFS文件系统元数据的一个永久性的检查点，其中包含HDFS文件系统的所有目录和文件idnode的序列化信息。 </p>
+<p>（2）Edits文件：存放HDFS文件系统的所有更新操作的路径，文件系统客户端执行的所有写操作首先会被记录到edits文件中。 </p>
+<p>（3）seen<em>txid文件保存的是一个数字，就是最后一个edits</em>的数字（最后一次操作的序号）</p>
+<p>（4）每次Namenode启动的时候都会将fsimage文件读入内存，并从00001开始到seen_txid中记录的数字依次执行每个edits里面的更新操作，保证内存中的元数据信息是最新的、同步的，<strong>可以看成Namenode启动的时候就将fsimage和edits文件进行了合并。</strong></p>
+<h3 id="2）oiv查看fsimage文件"><a href="#2）oiv查看fsimage文件" class="headerlink" title="2）oiv查看fsimage文件"></a>2）oiv查看fsimage文件</h3><p>（1）查看oiv和oev命令</p>
+<p>[kingge@hadoop102 current]$ hdfs</p>
+<p>oiv                  apply the offline fsimage viewer to an fsimage</p>
+<p>oev                  apply the offline edits viewer to an edits file</p>
+<p>（2）基本语法</p>
+<p>hdfs oiv -p 文件类型 -i镜像文件 -o 转换后文件输出路径</p>
+<p>（3）案例实操</p>
+<p>[kingge@hadoop102 current]$ pwd</p>
+<p>/opt/module/hadoop-2.7.2/data/tmp/dfs/name/current</p>
+<p>[kingge@hadoop102 current]$ hdfs oiv -p XML -i fsimage_0000000000000000025 -o /opt/module/hadoop-2.7.2/fsimage.xml</p>
+<p>[kingge@hadoop102 current]$ cat /opt/module/hadoop-2.7.2/fsimage.xml</p>
+<p>将显示的xml文件内容拷贝到eclipse中创建的xml文件中，并格式化。</p>
+<p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/clip_imag4e002.jpg" alt="img"></p>
+<p>​        <strong>总结</strong></p>
+<p>查看XML你会发现，里面存储了HDFS中文件或者文件夹的创建日期，权限，名称等等元数据信息。<strong>但是并没有存储文件保存的位置，也就是：并没有发现文件存储的DataNode节点信息</strong>信息那么当客户端请求读数据的时候，namenode是怎么返回数据所在块信息呢？<strong>原来他会一直跟datanode进行交互，获取数据所在块信息。</strong></p>
+<h3 id="3）oev查看edits文件"><a href="#3）oev查看edits文件" class="headerlink" title="3）oev查看edits文件"></a>3）oev查看edits文件</h3><p>edits包括两类，edits_XXX,edits_inprogress_XXX</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">edits_XXX：保存文件系统的操作，查看方式见下面语法</div><div class="line"></div><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</div><div class="line">-&lt;EDITS&gt;</div><div class="line">&lt;EDITS_VERSION&gt;-63&lt;/EDITS_VERSION&gt;</div><div class="line">-&lt;RECORD&gt;</div><div class="line">&lt;OPCODE&gt;OP_START_LOG_SEGMENT&lt;/OPCODE&gt;</div><div class="line">-&lt;DATA&gt;</div><div class="line">&lt;TXID&gt;7170&lt;/TXID&gt;</div><div class="line">&lt;/DATA&gt;</div><div class="line">&lt;/RECORD&gt;</div><div class="line">-&lt;RECORD&gt;</div><div class="line">&lt;OPCODE&gt;OP_ADD&lt;/OPCODE&gt;</div><div class="line">-&lt;DATA&gt;</div><div class="line">&lt;TXID&gt;7171&lt;/TXID&gt;</div><div class="line">&lt;LENGTH&gt;0&lt;/LENGTH&gt;</div><div class="line">&lt;INODEID&gt;17787&lt;/INODEID&gt;</div><div class="line">&lt;PATH&gt;/user/zpx/a.txt&lt;/PATH&gt;</div><div class="line">&lt;REPLICATION&gt;3&lt;/REPLICATION&gt;</div><div class="line">&lt;MTIME&gt;1489118864779&lt;/MTIME&gt;</div><div class="line">&lt;ATIME&gt;1489118864779&lt;/ATIME&gt;</div><div class="line">&lt;BLOCKSIZE&gt;数据的大小&lt;/BLOCKSIZE&gt;</div><div class="line">&lt;CLIENT_NAME&gt;DFSClient_NONMAPREDUCE_1295720148_1&lt;/CLIENT_NAME&gt;</div><div class="line">&lt;CLIENT_MACHINE&gt;192.168.231.1&lt;/CLIENT_MACHINE&gt;</div><div class="line">&lt;OVERWRITE&gt;true&lt;/OVERWRITE&gt;</div><div class="line">-&lt;PERMISSION_STATUS&gt;</div><div class="line">&lt;USERNAME&gt;Administrator&lt;/USERNAME&gt;</div><div class="line">&lt;GROUPNAME&gt;supergroup&lt;/GROUPNAME&gt;</div><div class="line">&lt;MODE&gt;420&lt;/MODE&gt;</div><div class="line">&lt;/PERMISSION_STATUS&gt;</div><div class="line">&lt;RPC_CLIENTID&gt;0c9a5af9-26a8-45d9-8754-cd0e7e47f65b&lt;/RPC_CLIENTID&gt;</div><div class="line">&lt;RPC_CALLID&gt;0&lt;/RPC_CALLID&gt;</div><div class="line">&lt;/DATA&gt;</div><div class="line">&lt;/RECORD&gt;</div><div class="line">&lt;/EDITS&gt;</div><div class="line"></div><div class="line">对Hdfs文件系统的每一个操作都保存在了edits文件中，每一个操作都是事务，有事务id——&lt;TXID&gt;7171&lt;/TXID&gt;，还有当前操作做了什么&lt;OPCODE&gt;OP_ADD&lt;/OPCODE&gt;，副本数，以及大小</div><div class="line"></div><div class="line">edits_inprogress_XXX：正在使用的过程，当前正在向前滚动。查看方式见下面语法</div></pre></td></tr></table></figure>
+<p>（1）基本语法</p>
+<p>hdfs oev -p 文件类型 -i编辑日志 -o 转换后文件输出路径</p>
+<p>（2）案例实操</p>
+<p>[kingge@hadoop102 current]$ hdfs oev -p XML -i edits_0000000000000000012-0000000000000000013 -o /opt/module/hadoop-2.7.2/edits.xml</p>
+<p>[kingge@hadoop102 current]$ cat /opt/module/hadoop-2.7.2/edits.xml</p>
+<p>将显示的xml文件内容拷贝到eclipse中创建的xml文件中，并格式化。</p>
+<p>总结</p>
+<p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/clip_imag9e002.jpg" alt="img"></p>
+<p>你会发现，edits_inprogress，记录的是当前客户端请求执行的操作（增量记录当前操作）</p>
+<h2 id="5-3-滚动编辑日志"><a href="#5-3-滚动编辑日志" class="headerlink" title="5.3 滚动编辑日志"></a>5.3 滚动编辑日志</h2><p>正常情况HDFS文件系统有更新操作时，就会滚动编辑日志。也可以用命令强制滚动编辑日志。</p>
+<p>1）滚动编辑日志（前提必须启动集群）</p>
+<p>[kingge@hadoop102 current]$ hdfs dfsadmin -rollEdits</p>
+<p>2）镜像文件什么时候产生</p>
+<p>Namenode启动时加载镜像文件和编辑日志</p>
+<p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/169952390.png" alt="1560169952390"></p>
+<h2 id="5-4-Namenode版本号"><a href="#5-4-Namenode版本号" class="headerlink" title="5.4 Namenode版本号"></a>5.4 Namenode版本号</h2><p>1）查看namenode版本号</p>
+<p>在/opt/module/hadoop-2.7.2/data/tmp/dfs/name/current这个目录下查看VERSION</p>
+<p>namespaceID=1933630176</p>
+<p>clusterID=CID-1f2bf8d1-5ad2-4202-af1c-6713ab381175</p>
+<p>cTime=0</p>
+<p>storageType=NAME_NODE</p>
+<p>blockpoolID=BP-97847618-192.168.10.102-1493726072779</p>
+<p>layoutVersion=-63</p>
+<p>2）namenode版本号具体解释</p>
+<p>（1） namespaceID在HDFS上，会有多个Namenode，所以不同Namenode的namespaceID是不同的，分别管理一组blockpoolID。</p>
+<p>（2）clusterID集群id，全局唯一</p>
+<p>（3）cTime属性标记了namenode存储系统的创建时间，对于刚刚格式化的存储系统，这个属性为0；但是在文件系统升级之后，该值会更新到新的时间戳。</p>
+<p>（4）storageType属性说明该存储目录包含的是namenode的数据结构。</p>
+<p>（5）blockpoolID：一个block pool id标识一个block pool，并且是跨集群的全局唯一。当一个新的Namespace被创建的时候(format过程的一部分)会创建并持久化一个唯一ID。在创建过程构建全局唯一的BlockPoolID比人为的配置更可靠一些。NN将BlockPoolID持久化到磁盘中，在后续的启动过程中，会再次load并使用。</p>
+<p>（6）layoutVersion是一个负整数。通常只有HDFS增加新特性时才会更新这个版本号。</p>
+<h2 id="5-5-SecondaryNameNode目录结构"><a href="#5-5-SecondaryNameNode目录结构" class="headerlink" title="5.5 SecondaryNameNode目录结构"></a>5.5 SecondaryNameNode目录结构</h2><p>Secondary NameNode用来监控HDFS状态的辅助后台程序，每隔一段时间获取HDFS元数据的快照。</p>
+<p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/0170177897.png" alt="1560170177897"></p>
+<blockquote>
+<p><strong>也即是说存在两种情况secondarynamenode会向namenode请求合并镜像文件和日志文件。（1）当上次请求时间已经间隔了一个小时后，会去请求（2）当操作数（edits，操作日志数）到达一百万次时，会去请求</strong><br><strong>那么他怎么知道操作次数到达一百万次呢？答案是，一分钟请求namenode一次，查询操作次数是否到达一百万次。注意，这个检查操作数的时间设置最好不要跟</strong><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/clip_image001.png" alt="img"></p>
+</blockquote>
+<p>一致，不然他会默认执行第一种场景（间隔一个小时）</p>
+<p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/70270685.png" alt="1560170270685"></p>
+<p>在/opt/module/hadoop-2.7.2/data/tmp/dfs/namesecondary/current这个目录中查看SecondaryNameNode目录结构。</p>
+<p>   edits_0000000000000000001-0000000000000000002   fsimage_0000000000000000002   fsimage_0000000000000000002.md5   VERSION   </p>
+<p>SecondaryNameNode的namesecondary/current目录和主namenode的current目录的布局相同。</p>
+<p><strong>好处：在主namenode**</strong>发生故障时（假设没有及时备份数据），可以从SecondaryNameNode<strong>**恢复数据。</strong></p>
+<h3 id="根据secondarynamenode恢复namenode"><a href="#根据secondarynamenode恢复namenode" class="headerlink" title="根据secondarynamenode恢复namenode"></a>根据secondarynamenode恢复namenode</h3><p>方法一：将SecondaryNameNode中数据拷贝到namenode存储数据的目录；</p>
+<p>方法二：使用-importCheckpoint选项启动namenode守护进程，从而将SecondaryNameNode中数据拷贝到namenode目录中。</p>
+<p>1）案例实操（一）：</p>
+<p>模拟namenode故障，并采用方法一，恢复namenode数据</p>
+<p>（1）kill -9 namenode进程</p>
+<p>（2）删除namenode存储的数据（/opt/module/hadoop-2.7.2/data/tmp/dfs/name）</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ rm -rf /opt/module/hadoop-2.7.2/data/tmp/dfs/name/*</p>
+<p>（3）拷贝SecondaryNameNode中数据到原namenode存储数据目录</p>
+<p>​           [kingge@hadoop102 hadoop-2.7.2]$ scp -R /opt/module/hadoop-2.7.2/data/tmp/dfs/namesecondary/* /opt/module/hadoop-2.7.2/data/tmp/dfs/name/</p>
+<p>（4）重新启动namenode</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start namenode</p>
+<p>2）案例实操（二）：</p>
+<p>模拟namenode故障，并采用方法二，恢复namenode数据</p>
+<p>（0）修改hdfs-site.xml中的</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;dfs.namenode.checkpoint.period&lt;/name&gt;</div><div class="line">  &lt;value&gt;120&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">#  120秒checkpoint一次</div><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;</div><div class="line">  &lt;value&gt;/opt/module/hadoop-2.7.2/data/tmp/dfs/name&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"># namenode镜像文件和操作日志存放目录</div></pre></td></tr></table></figure>
+<p>（1）kill -9 namenode进程</p>
+<p>（2）删除namenode存储的数据（/opt/module/hadoop-2.7.2/data/tmp/dfs/name）</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ rm -rf /opt/module/hadoop-2.7.2/data/tmp/dfs/name/*</p>
+<p>（3）如果SecondaryNameNode不和Namenode在一个主机节点上，需要将SecondaryNameNode存储数据的目录拷贝到Namenode存储数据的平级目录。Scp命令拷贝过来</p>
+<p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/70458431.png" alt="1560170458431"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">  </div><div class="line">[kingge@hadoop102 dfs]$ pwd</div><div class="line">/opt/module/hadoop-2.7.2/data/tmp/dfs</div><div class="line">[kingge@hadoop102 dfs]$ ls</div><div class="line">data  name  namesecondary</div></pre></td></tr></table></figure>
+<p>（4）导入检查点数据（等待一会ctrl+c结束掉）</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ bin/hdfs namenode -importCheckpoint</p>
+<p>（5）启动namenode</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start namenode</p>
+<p>（6）如果提示文件锁了，可以删除in_use.lock </p>
+<p>​                 [kingge@hadoop102 hadoop-2.7.2]$ rm -rf /opt/module/hadoop-2.7.2/data/tmp/dfs/namesecondary/in_use.lock</p>
+<h2 id="5-5-5-设置checkpoint检查时间"><a href="#5-5-5-设置checkpoint检查时间" class="headerlink" title="5.5.5 设置checkpoint检查时间"></a>5.5.5 设置checkpoint检查时间</h2><p>默认的checkpoint period是1个小时。可以去hdfs-site.xml中修改</p>
+<p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/0170515392.png" alt="1560170515392"></p>
+<h2 id="5-6-集群安全模式操作"><a href="#5-6-集群安全模式操作" class="headerlink" title="5.6 集群安全模式操作"></a>5.6 集群安全模式操作</h2><p>1）概述</p>
+<p>Namenode启动时，首先将映像文件（fsimage）载入内存，并执行编辑日志（edits）中的各项操作。一旦在内存中成功建立文件系统元数据的映像，则创建一个新的fsimage文件和一个空的编辑日志。此时，namenode开始监听datanode请求。但是此刻，namenode运行在安全模式，即namenode的文件系统对于客户端来说是只读的。（<strong>可以解释为什么在namenode启动的时候，我们put数据到hdfs会提示，安全模式错误</strong>）因为这个时候namenode和datanode还没有联通对方，需要等待连通后，安全模式自动关闭，然后就可以上传文件了</p>
+<p>系统中的数据块的位置并不是由namenode维护的，而是以块列表的形式存储在datanode中。在系统的正常操作期间，namenode会在内存中保留所有块位置的映射信息。在安全模式下，各个datanode会向namenode发送最新的块列表信息，namenode了解到足够多的块位置信息之后，即可高效运行文件系统。</p>
+<p>如果满足“最小副本条件”，namenode会在30秒钟之后就退出安全模式。所谓的最小副本条件指的是在整个文件系统中99.9%的块满足最小副本级别（默认值：dfs.replication.min=1）。在启动一个刚刚格式化的HDFS集群时，因为系统中还没有任何块，所以namenode不会进入安全模式。</p>
+<p>2）基本语法</p>
+<p>集群处于安全模式，不能执行重要操作（写操作）。集群启动完成后，自动退出安全模式。</p>
+<p>（1）bin/hdfs dfsadmin -safemode get          （功能描述：查看安全模式状态）</p>
+<p>（2）bin/hdfs dfsadmin -safemode enter     （功能描述：进入安全模式状态）</p>
+<p>（3）bin/hdfs dfsadmin -safemode leave      （功能描述：离开安全模式状态）</p>
+<p>（4）bin/hdfs dfsadmin -safemode wait        （功能描述：等待安全模式状态）</p>
+<p>3）案例</p>
+<p>​         模拟等待安全模式</p>
+<p>​         1）先进入安全模式</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ bin/hdfs dfsadmin -safemode enter</p>
+<p>​         2）执行下面的脚本</p>
+<p>编辑一个脚本</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">bin/hdfs dfsadmin -safemode wait</div><div class="line">bin/hdfs dfs -put ~/hello.txt /root/hello.txt</div></pre></td></tr></table></figure>
+<p>​         3）再打开一个窗口，执行</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ bin/hdfs dfsadmin -safemode leave</p>
+<h2 id="5-7-Namenode多目录配置"><a href="#5-7-Namenode多目录配置" class="headerlink" title="5.7 Namenode多目录配置"></a>5.7 Namenode多目录配置</h2><p>1）namenode的本地目录可以配置成多个，<strong>且每个目录存放内容相同</strong>，增加了可靠性。</p>
+<p>2）具体配置如下：</p>
+<p>​         hdfs-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;</div><div class="line">&lt;value&gt;file:///$&#123;hadoop.tmp.dir&#125;/dfs/name1,file:///$&#123;hadoop.tmp.dir&#125;/dfs/name2&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line"></div><div class="line"> 2.停止集群，删除数据文件 --  rm -rf data/logs (集群里有多少台服务器就删除多少台)</div><div class="line"></div><div class="line">3.格式化namenode</div><div class="line"></div><div class="line">4.调用xsync 分发脚本到各个集群 </div><div class="line"></div><div class="line">5.启动集群</div><div class="line"></div><div class="line">6.查看设置的本地目录name1、name2 你会发现里面的数据一模一样</div></pre></td></tr></table></figure>
+<h2 id="测试NameNode"><a href="#测试NameNode" class="headerlink" title="测试NameNode"></a>测试NameNode</h2><p>场景：关闭namenode（stop-dfs.sh），关闭yarn（stop-yarn.sh），删除hadoop目录下的data目录和log目录。</p>
+<p>1.格式化namenode  – bin/hdfs namenode -format</p>
+<p>2.启动hdfs和yarn</p>
+<h1 id="六-DataNode工作机制"><a href="#六-DataNode工作机制" class="headerlink" title="六 DataNode工作机制"></a>六 DataNode工作机制</h1><h2 id="6-1-DataNode工作机制"><a href="#6-1-DataNode工作机制" class="headerlink" title="6.1 DataNode工作机制"></a>6.1 DataNode工作机制</h2><p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/170744123.png" alt="1560170744123"></p>
+<p>1）一个数据块在datanode上以文件形式存储在磁盘上，包括两个文件，一个是数据本身，一个是元数据包括数据块的长度，块数据的校验和，以及时间戳。</p>
+<p>2）DataNode启动后向namenode注册，通过后，周期性（1小时）的向namenode上报所有的块信息。</p>
+<p>3）心跳是每3秒一次，心跳返回结果带有namenode给该datanode的命令如复制块数据到另一台机器，或删除某个数据块。如果超过10分钟没有收到某个datanode的心跳，则认为该节点不可用。</p>
+<p>4）<strong>集群运行中可以安全加入和退出一些机器</strong>（在不关闭集群的情况下服役和退役服务器）</p>
+<h2 id="6-2-数据完整性"><a href="#6-2-数据完整性" class="headerlink" title="6.2 数据完整性"></a>6.2 数据完整性</h2><p>1）当DataNode读取block的时候，它会计算checksum</p>
+<p>2）如果计算后的checksum，与block创建时值不一样，说明block已经损坏。</p>
+<p>3）client读取其他DataNode上的block。</p>
+<p>4）datanode在其文件创建后周期验证checksum</p>
+<p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/0170775293.png" alt="1560170775293"></p>
+<h2 id="6-3-掉线时限参数设置"><a href="#6-3-掉线时限参数设置" class="headerlink" title="6.3 掉线时限参数设置"></a>6.3 掉线时限参数设置</h2><p>datanode进程死亡或者网络故障造成datanode无法与namenode通信，namenode不会立即把该节点判定为死亡，要经过一段时间，这段时间暂称作超时时长。HDFS默认的超时时长为10分钟+30秒。如果定义超时时间为timeout，则超时时长的计算公式为：</p>
+<p>​         timeout  = 2 <em> dfs.namenode.heartbeat.recheck-interval + 10 </em> dfs.heartbeat.interval。</p>
+<p>​         而默认的dfs.namenode.heartbeat.recheck-interval 大小为5分钟，dfs.heartbeat.interval默认为3秒。</p>
+<p>​         需要注意的是hdfs-site.xml 配置文件中的heartbeat.recheck.interval的单位为毫秒，dfs.heartbeat.interval的单位为秒。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;dfs.namenode.heartbeat.recheck-interval&lt;/name&gt;</div><div class="line">    &lt;value&gt;300000&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt; dfs.heartbeat.interval &lt;/name&gt;</div><div class="line">    &lt;value&gt;3&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<h2 id="6-4-DataNode的目录结构"><a href="#6-4-DataNode的目录结构" class="headerlink" title="6.4 DataNode的目录结构"></a>6.4 DataNode的目录结构</h2><p>和namenode不同的是，datanode的存储目录是初始阶段自动创建的，不需要额外格式化。</p>
+<p>1）在/opt/module/hadoop-2.7.2/data/tmp/dfs/data/current这个目录下查看版本号</p>
+<p>[kingge@hadoop102 current]$ cat VERSION </p>
+<p>storageID=DS-1b998a1d-71a3-43d5-82dc-c0ff3294921b</p>
+<p>clusterID=CID-1f2bf8d1-5ad2-4202-af1c-6713ab381175</p>
+<p>cTime=0</p>
+<p>datanodeUuid=970b2daf-63b8-4e17-a514-d81741392165</p>
+<p>storageType=DATA_NODE</p>
+<p>layoutVersion=-56</p>
+<p>2）具体解释</p>
+<p>​         （1）storageID：存储id号</p>
+<p>​         （2）clusterID集群id，全局唯一</p>
+<p>​         （3）cTime属性标记了datanode存储系统的创建时间，对于刚刚格式化的存储系统，这个属性为0；但是在文件系统升级之后，该值会更新到新的时间戳。</p>
+<p>​         （4）datanodeUuid：datanode的唯一识别码</p>
+<p>​         （5）storageType：存储类型</p>
+<p>​         （6）layoutVersion是一个负整数。通常只有HDFS增加新特性时才会更新这个版本号。</p>
+<p>3）在/opt/module/hadoop-2.7.2/data/tmp/dfs/data/current/BP-97847618-192.168.10.102-1493726072779/current这个目录下查看该数据块的版本号</p>
+<p>[kingge@hadoop102 current]$ cat VERSION </p>
+<p>#Mon May 08 16:30:19 CST 2017</p>
+<p>namespaceID=1933630176</p>
+<p>cTime=0</p>
+<p>blockpoolID=BP-97847618-192.168.10.102-1493726072779</p>
+<p>layoutVersion=-56</p>
+<p>4）具体解释</p>
+<p>（1）namespaceID：是datanode首次访问namenode的时候从namenode处获取的storageID对每个datanode来说是唯一的（但对于单个datanode中所有存储目录来说则是相同的），namenode可用这个属性来区分不同datanode。</p>
+<p>（2）cTime属性标记了datanode存储系统的创建时间，对于刚刚格式化的存储系统，这个属性为0；但是在文件系统升级之后，该值会更新到新的时间戳。</p>
+<p>（3）blockpoolID：一个block pool id标识一个block pool，并且是跨集群的全局唯一。当一个新的Namespace被创建的时候(format过程的一部分)会创建并持久化一个唯一ID。在创建过程构建全局唯一的BlockPoolID比人为的配置更可靠一些。NN将BlockPoolID持久化到磁盘中，在后续的启动过程中，会再次load并使用。</p>
+<p>（4）layoutVersion是一个负整数。通常只有HDFS增加新特性时才会更新这个版本号。</p>
+<h2 id="6-5-服役新数据节点"><a href="#6-5-服役新数据节点" class="headerlink" title="6.5 服役新数据节点"></a>6.5 服役新数据节点</h2><p>0）需求：</p>
+<p>随着公司业务的增长，数据量越来越大，原有的数据节点的容量已经不能满足存储数据的需求，需要在原有集群基础上动态添加新的数据节点。</p>
+<p>1）环境准备</p>
+<p>​         （1）克隆一台虚拟机</p>
+<p>​         （2）修改ip地址和主机名称</p>
+<p>​         （3）修改xcall和xsync文件，增加新`增节点的同步ssh</p>
+<p>​         （4）删除原来HDFS文件系统留存的文件</p>
+<p>​                 /opt/module/hadoop-2.7.2/data 和 /opt/module/hadoop-2.7.2/log目录</p>
+<p>2）服役新节点具体步骤（<strong>下面的操作建议在namenode所在节点进行操作</strong>）</p>
+<p>​         （1）在<strong>namenode</strong>的/opt/module/hadoop-2.7.2/etc/hadoop目录下创建dfs.hosts文件</p>
+<p>[kingge@hadoop105 hadoop]$ pwd</p>
+<p>/opt/module/hadoop-2.7.2/etc/hadoop</p>
+<p>[kingge@hadoop105 hadoop]$ touch dfs.hosts （<strong>名字任意</strong>）</p>
+<p>[kingge@hadoop105 hadoop]$ vi dfs.hosts</p>
+<p>添加如下主机名称（包含新服役的节点）</p>
+<p>hadoop102</p>
+<p>hadoop103</p>
+<p>hadoop104</p>
+<p>hadoop105</p>
+<p>​         （2）在namenode的hdfs-site.xml配置文件中增加dfs.hosts属性</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">&lt;name&gt;dfs.hosts&lt;/name&gt;</div><div class="line">      &lt;value&gt;/opt/module/hadoop-2.7.2/etc/hadoop/dfs.hosts&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>​         （3）刷新namenode </p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hdfs dfsadmin -refreshNodes</p>
+<p>Refresh nodes successful</p>
+<p>​         （4）更新resourcemanager节点</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ yarn rmadmin -refreshNodes</p>
+<p>17/06/24 14:17:11 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.1.103:8033</p>
+<p><strong>操作完后，打开**</strong>hdfs<strong><strong>文件系统，发现已经服役了一个新的</strong></strong>data<strong>**节点</strong></p>
+<p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/560171043334.png" alt="1560171043334"></p>
+<p>​         （5）在namenode的slaves文件中增加新主机名称</p>
+<p>​                 增加105  不需要分发</p>
+<p>hadoop102</p>
+<p>hadoop103</p>
+<p>hadoop104</p>
+<p>hadoop105</p>
+<p>​         （6）单独命令启动新的数据节点和节点管理器</p>
+<p>[kingge@hadoop105 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start datanode</p>
+<p>starting datanode, logging to /opt/module/hadoop-2.7.2/logs/hadoop-kingge-datanode-hadoop105.out</p>
+<p>[kingge@hadoop105 hadoop-2.7.2]$ sbin/yarn-daemon.sh start nodemanager</p>
+<p>starting nodemanager, logging to /opt/module/hadoop-2.7.2/logs/yarn-kingge-nodemanager-hadoop105.out</p>
+<p>​         （7）在web浏览器上检查是否ok</p>
+<p>3）如果数据不均衡，可以用命令实现集群的再平衡</p>
+<p>​         [kingge@hadoop102 sbin]$ ./start-balancer.sh</p>
+<p>starting balancer, logging to /opt/module/hadoop-2.7.2/logs/hadoop-kingge-balancer-hadoop102.out</p>
+<p>Time Stamp               Iteration#  Bytes Already Moved  Bytes Left To Move  Bytes Being Moved</p>
+<h2 id="6-6-退役旧数据节点"><a href="#6-6-退役旧数据节点" class="headerlink" title="6.6 退役旧数据节点"></a>6.6 退役旧数据节点</h2><p>1）在namenode的/opt/module/hadoop-2.7.2/etc/hadoop目录下创建dfs.hosts.exclude文件</p>
+<p>​         [kingge@hadoop102 hadoop]$ pwd</p>
+<p>/opt/module/hadoop-2.7.2/etc/hadoop</p>
+<p>[kingge@hadoop102 hadoop]$ touch dfs.hosts.exclude</p>
+<p>[kingge@hadoop102 hadoop]$ vi dfs.hosts.exclude</p>
+<p>添加如下主机名称（要退役的节点）</p>
+<p>hadoop105</p>
+<p>2）在namenode的hdfs-site.xml配置文件中增加dfs.hosts.exclude属性</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">&lt;name&gt;dfs.hosts.exclude&lt;/name&gt;</div><div class="line">      &lt;value&gt;/opt/module/hadoop-2.7.2/etc/hadoop/dfs.hosts.exclude&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>3）刷新namenode、刷新resourcemanager</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hdfs dfsadmin -refreshNodes</p>
+<p>Refresh nodes successful</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ yarn rmadmin -refreshNodes</p>
+<p>17/06/24 14:55:56 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.1.103:8033</p>
+<p>4）检查web浏览器，退役节点的状态为decommission in progress（退役中），说明数据节点正在复制块到其他节点。</p>
+<p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/1560171084624.png" alt="1560171084624"></p>
+<p>5）等待退役节点状态为decommissioned（所有块已经复制完成），停止该节点及节点资源管理器。注意：如果副本数是3，服役的节点小于等于3，是不能退役成功的，需要修改副本数后才能退役。·</p>
+<p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/560171100904.png" alt="1560171100904"></p>
+<p>[kingge@hadoop105 hadoop-2.7.2]$ sbin/hadoop-daemon.sh stop datanode</p>
+<p>stopping datanode</p>
+<p>[kingge@hadoop105 hadoop-2.7.2]$ sbin/yarn-daemon.sh stop nodemanager</p>
+<p>stopping nodemanager</p>
+<p>6）从include文件中删除退役节点，再运行刷新节点的命令</p>
+<p>​         （1）从namenode的dfs.hosts文件中删除退役节点hadoop105</p>
+<p>hadoop102</p>
+<p>hadoop103</p>
+<p>hadoop104</p>
+<p>​         （2）刷新namenode，刷新resourcemanager</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hdfs dfsadmin -refreshNodes</p>
+<p>Refresh nodes successful</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ yarn rmadmin -refreshNodes</p>
+<p>17/06/24 14:55:56 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.1.103:8033</p>
+<p>7）从namenode的slave文件中删除退役节点hadoop105</p>
+<p>hadoop102</p>
+<p>hadoop103</p>
+<p>hadoop104</p>
+<p>8）如果数据不均衡，可以用命令实现集群的再平衡</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ sbin/start-balancer.sh </p>
+<p>starting balancer, logging to /opt/module/hadoop-2.7.2/logs/hadoop-kingge-balancer-hadoop102.out</p>
+<p>Time Stamp               Iteration#  Bytes Already Moved  Bytes Left To Move  Bytes Being Moved</p>
+<h2 id="6-7-Datanode多目录配置"><a href="#6-7-Datanode多目录配置" class="headerlink" title="6.7 Datanode多目录配置"></a>6.7 Datanode多目录配置</h2><p>1）datanode也可以配置成多个目录，<strong>每个目录存储的数据不一样，即是上传一个文本，那么文本存储在data，但是data2什么都没有（跟namenode多目录区别）</strong>。即：数据不是副本。</p>
+<p>2）具体配置如下：</p>
+<p>​         hdfs-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">        &lt;name&gt;dfs.datanode.data.dir&lt;/name&gt;</div><div class="line">        &lt;value&gt;file:///$&#123;hadoop.tmp.dir&#125;/dfs/data1,file:///$&#123;hadoop.tmp.dir&#125;/dfs/data2&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<h1 id="七-HDFS其他功能"><a href="#七-HDFS其他功能" class="headerlink" title="七 HDFS其他功能"></a>七 HDFS其他功能</h1><h2 id="7-1-集群间数据拷贝"><a href="#7-1-集群间数据拷贝" class="headerlink" title="7.1 集群间数据拷贝"></a>7.1 集群间数据拷贝</h2><p>1）scp实现两个远程主机之间的文件复制</p>
+<p>​         scp -r hello.txt <a href="mailto:root@hadoop103:/user/kingge/hello.txt" target="_blank" rel="external">root@hadoop103:/user/kingge/hello.txt</a>                 // 推 push</p>
+<p>​         scp -r <a href="mailto:root@hadoop103:/user/kingge/hello.txt%20%20hello.txt" target="_blank" rel="external">root@hadoop103:/user/kingge/hello.txt  hello.txt</a>             // 拉 pull</p>
+<p>​         scp -r <a href="mailto:root@hadoop103:/user/kingge/hello.txt" target="_blank" rel="external">root@hadoop103:/user/kingge/hello.txt</a> root@hadoop104:/user/kingge   //是通过本地主机中转实现两个远程主机的文件复制；如果在两个远程主机之间ssh没有配置的情况下可以使用该方式。</p>
+<p>2）采用discp命令实现两个hadoop集群之间的递归数据复制</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$  bin/hadoop distcp hdfs://haoop102:9000/user/kingge/hello.txt hdfs://hadoop103:9000/user/kingge/hello.txt</p>
+<h2 id="7-2-Hadoop存档"><a href="#7-2-Hadoop存档" class="headerlink" title="7.2 Hadoop存档"></a>7.2 Hadoop存档</h2><p>1）理论概述</p>
+<p>每个文件均按块存储，每个块的元数据存储在namenode的内存中，因此hadoop存储小文件会非常低效。因为大量的小文件会耗尽namenode中的大部分内存。但注意，存储小文件所需要的磁盘容量和存储这些文件原始内容所需要的磁盘空间相比也不会增多。例如，一个1MB的文件以大小为128MB的块存储，使用的是1MB的磁盘空间，而不是128MB。</p>
+<p>Hadoop存档文件或HAR文件，是一个更高效的文件存档工具，它将文件存入HDFS块，在减少namenode内存使用的同时，允许对文件进行透明的访问。具体说来，Hadoop存档文件可以用作MapReduce的输入。</p>
+<p>2）案例实操</p>
+<p>（1）需要启动yarn进程</p>
+<p>​         [kingge@hadoop102 hadoop-2.7.2]$ start-yarn.sh</p>
+<p>（2）归档文件</p>
+<p>​         归档成一个叫做xxx.har的文件夹，该文件夹下有相应的数据文件。Xx.har目录是一个整体，该目录看成是一个归档文件即可。</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ bin/hadoop archive -archiveName myhar.har -p /user/kingge   /user/my</p>
+<p>（3）查看归档</p>
+<p>​         [kingge@hadoop102 hadoop-2.7.2]$ hadoop fs -lsr /user/my/myhar.har</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hadoop fs -lsr har:///myhar.har</p>
+<p>（4）解归档文件</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hadoop fs -cp har:/// user/my/myhar.har /* /user/kingge</p>
+<h2 id="7-3-快照管理"><a href="#7-3-快照管理" class="headerlink" title="7.3 快照管理"></a>7.3 快照管理</h2><p>快照相当于对目录做一个备份。并不会立即复制所有文件，而是指向同一个文件。当写入发生时，才会产生新文件。</p>
+<p>1）基本语法</p>
+<p>​         （1）hdfs dfsadmin -allowSnapshot 路径   （功能描述：开启指定目录的快照功能）</p>
+<p>​         （2）hdfs dfsadmin -disallowSnapshot 路径 （功能描述：禁用指定目录的快照功能，默认是禁用）</p>
+<p>​         （3）hdfs dfs -createSnapshot 路径        （功能描述：对目录创建快照）</p>
+<p>​         （4）hdfs dfs -createSnapshot 路径 名称   （功能描述：指定名称创建快照）</p>
+<p>​         （5）hdfs dfs -renameSnapshot 路径 旧名称 新名称 （功能描述：重命名快照）</p>
+<p>​         （6）hdfs lsSnapshottableDir         （功能描述：列出当前用户所有可快照目录）</p>
+<p>​         （7）hdfs snapshotDiff 路径1 路径2 （功能描述：比较两个快照目录的不同之处）</p>
+<p>​         （8）hdfs dfs -deleteSnapshot <path></path> <snapshotname>  （功能描述：删除快照）</snapshotname></p>
+<p>2）案例实操</p>
+<p>​         （1）开启/禁用指定目录的快照功能</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hdfs dfsadmin -allowSnapshot /user/kingge/data</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hdfs dfsadmin -disallowSnapshot /user/kingge/data</p>
+<p>​         （2）对目录创建快照</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hdfs dfs -createSnapshot /user/kingge/data      </p>
+<p>通过web访问hdfs://hadoop102:9000/user/kingge/data/.snapshot/s…..// 快照和源文件使用相同数据块</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hdfs dfs -lsr /user/kingge/data/.snapshot/</p>
+<p>​         （3）指定名称创建快照</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hdfs dfs -createSnapshot /user/kingge/data miao170508</p>
+<p>​         （4）重命名快照</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hdfs dfs -renameSnapshot /user/kingge/data/ miao170508 kingge170508</p>
+<p>​         （5）列出当前用户所有可快照目录</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hdfs lsSnapshottableDir</p>
+<p>​         （6）比较两个快照目录的不同之处</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hdfs snapshotDiff /user/kingge/data/  .  .snapshot/kingge170508 </p>
+<p>​         （7）恢复快照</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hdfs dfs -cp /user/kingge/input/.snapshot/s20170708-134303.027 /user</p>
+<h2 id="7-4-回收站"><a href="#7-4-回收站" class="headerlink" title="7.4 回收站"></a>7.4 回收站</h2><p>1）默认回收站</p>
+<p>默认值fs.trash.interval=0，0表示禁用回收站，可以设置删除文件的存活时间。</p>
+<p>默认值fs.trash.checkpoint.interval=0，检查回收站的间隔时间。</p>
+<p>要求fs.trash.checkpoint.interval&lt;=fs.trash.interval。</p>
+<p><img src="/2018/03/10/hadoop大数据-七-HDFS的Namenode和Datanode/60171183235.png" alt="1560171183235"></p>
+<p>2）启用回收站</p>
+<p>修改core-site.xml，配置垃圾回收时间为1分钟。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;fs.trash.interval&lt;/name&gt;</div><div class="line">    &lt;value&gt;1&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>3）查看回收站</p>
+<p>回收站在集群中的；路径：/user/kingge/.Trash/….</p>
+<p>4）修改访问垃圾回收站用户名称(<strong>如果不修改为想要查看该回收站的用户的名称，那么该用户试图进入回收站时会提示权限问题</strong>)</p>
+<p>​         进入垃圾回收站用户名称，默认是dr.who，修改为kingge用户</p>
+<p>​         [core-site.xml]</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;hadoop.http.staticuser.user&lt;/name&gt;</div><div class="line">  &lt;value&gt;kingge&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>5）通过程序删除的文件不会经过回收站，需要调用moveToTrash()才进入回收站</p>
+<p>Trash trash = New Trash(conf);</p>
+<p>trash.moveToTrash(path);</p>
+<p>6）恢复回收站数据</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hadoop fs -mv /user/kingge/.Trash/Current/user/kingge/input    /user/kingge/input</p>
+<p>7）清空回收站（<strong>他并不是真正删除文件，而是生成一个当前时间戳的文件夹然后把回收站里面的文件都放到这个文件夹里面</strong>）</p>
+<p>[kingge@hadoop102 hadoop-2.7.2]$ hdfs dfs -expunge</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag"><i class="fa fa-tag"></i> hadoop</a>
+          
+            <a href="/tags/大数据/" rel="tag"><i class="fa fa-tag"></i> 大数据</a>
+          
+            <a href="/tags/HDFS/" rel="tag"><i class="fa fa-tag"></i> HDFS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/08/hadoop大数据-六-HDFS的读写数据流程/" rel="next" title="hadoop大数据(六)-HDFS的读写数据流程">
+                <i class="fa fa-chevron-left"></i> hadoop大数据(六)-HDFS的读写数据流程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/12/hadoop大数据-八-namenode和resourcemanager高可用/" rel="prev" title="hadoop大数据(八)-namenode和resourcemanager高可用">
+                hadoop大数据(八)-namenode和resourcemanager高可用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#五-NameNode工作机制"><span class="nav-number">1.</span> <span class="nav-text">五 NameNode工作机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-NameNode-amp-Secondary-NameNode工作机制"><span class="nav-number">1.1.</span> <span class="nav-text">5.1 NameNode&Secondary NameNode工作机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）第一阶段：namenode启动"><span class="nav-number">1.1.1.</span> <span class="nav-text">1）第一阶段：namenode启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）第二阶段：Secondary-NameNode工作"><span class="nav-number">1.1.2.</span> <span class="nav-text">2）第二阶段：Secondary NameNode工作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）web端访问SecondaryNameNode"><span class="nav-number">1.1.3.</span> <span class="nav-text">3）web端访问SecondaryNameNode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4）chkpoint检查时间参数设置"><span class="nav-number">1.1.4.</span> <span class="nav-text">4）chkpoint检查时间参数设置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-镜像文件和编辑日志文件"><span class="nav-number">1.2.</span> <span class="nav-text">5.2 镜像文件和编辑日志文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）概念"><span class="nav-number">1.2.1.</span> <span class="nav-text">1）概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）oiv查看fsimage文件"><span class="nav-number">1.2.2.</span> <span class="nav-text">2）oiv查看fsimage文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）oev查看edits文件"><span class="nav-number">1.2.3.</span> <span class="nav-text">3）oev查看edits文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-滚动编辑日志"><span class="nav-number">1.3.</span> <span class="nav-text">5.3 滚动编辑日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-4-Namenode版本号"><span class="nav-number">1.4.</span> <span class="nav-text">5.4 Namenode版本号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-5-SecondaryNameNode目录结构"><span class="nav-number">1.5.</span> <span class="nav-text">5.5 SecondaryNameNode目录结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#根据secondarynamenode恢复namenode"><span class="nav-number">1.5.1.</span> <span class="nav-text">根据secondarynamenode恢复namenode</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-5-5-设置checkpoint检查时间"><span class="nav-number">1.6.</span> <span class="nav-text">5.5.5 设置checkpoint检查时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-6-集群安全模式操作"><span class="nav-number">1.7.</span> <span class="nav-text">5.6 集群安全模式操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-7-Namenode多目录配置"><span class="nav-number">1.8.</span> <span class="nav-text">5.7 Namenode多目录配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试NameNode"><span class="nav-number">1.9.</span> <span class="nav-text">测试NameNode</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六-DataNode工作机制"><span class="nav-number">2.</span> <span class="nav-text">六 DataNode工作机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-DataNode工作机制"><span class="nav-number">2.1.</span> <span class="nav-text">6.1 DataNode工作机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-数据完整性"><span class="nav-number">2.2.</span> <span class="nav-text">6.2 数据完整性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3-掉线时限参数设置"><span class="nav-number">2.3.</span> <span class="nav-text">6.3 掉线时限参数设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4-DataNode的目录结构"><span class="nav-number">2.4.</span> <span class="nav-text">6.4 DataNode的目录结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-5-服役新数据节点"><span class="nav-number">2.5.</span> <span class="nav-text">6.5 服役新数据节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-6-退役旧数据节点"><span class="nav-number">2.6.</span> <span class="nav-text">6.6 退役旧数据节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-7-Datanode多目录配置"><span class="nav-number">2.7.</span> <span class="nav-text">6.7 Datanode多目录配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#七-HDFS其他功能"><span class="nav-number">3.</span> <span class="nav-text">七 HDFS其他功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-集群间数据拷贝"><span class="nav-number">3.1.</span> <span class="nav-text">7.1 集群间数据拷贝</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2-Hadoop存档"><span class="nav-number">3.2.</span> <span class="nav-text">7.2 Hadoop存档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3-快照管理"><span class="nav-number">3.3.</span> <span class="nav-text">7.3 快照管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-4-回收站"><span class="nav-number">3.4.</span> <span class="nav-text">7.4 回收站</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      79.8k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共79.8k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>
