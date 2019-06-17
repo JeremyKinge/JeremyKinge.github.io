@@ -153,18 +153,25 @@
 
 
 
-<meta name="description" content="To know everything, no words don&apos;t talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）">
+<meta name="description" content="一 MapReduce入门1.1 MapReduce定义Mapreduce是一个分布式运算程序的编程框架，是用户开发“基于hadoop的数据分析应用”的核心框架。 Mapreduce核心功能是将用户编写的业务逻辑代码和自带默认组件整合成一个完整的分布式运算程序，并发运行在一个hadoop集群上。 1.2 MapReduce优缺点1.2.1 优点1**）MapReduce 易于编程。**它简单的实现">
 <meta name="keywords" content="hadoop,大数据,MapReduce">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hadoop大数据(十)-Mapreduce基础">
 <meta property="og:url" content="http://kingge.top/2018/03/16/hadoop大数据-十-Mapreduce基础/index.html">
 <meta property="og:site_name" content="King哥">
-<meta property="og:description" content="To know everything, no words don&apos;t talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）">
+<meta property="og:description" content="一 MapReduce入门1.1 MapReduce定义Mapreduce是一个分布式运算程序的编程框架，是用户开发“基于hadoop的数据分析应用”的核心框架。 Mapreduce核心功能是将用户编写的业务逻辑代码和自带默认组件整合成一个完整的分布式运算程序，并发运行在一个hadoop集群上。 1.2 MapReduce优缺点1.2.1 优点1**）MapReduce 易于编程。**它简单的实现">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-10T13:32:11.952Z">
+<meta property="og:image" content="http://kingge.top/2018/03/16/hadoop大数据-十-Mapreduce基础/5C1560695415804.png">
+<meta property="og:image" content="http://kingge.top/2018/03/16/hadoop大数据-十-Mapreduce基础/1560696740319.png">
+<meta property="og:image" content="http://kingge.top/2018/03/16/hadoop大数据-十-Mapreduce基础/1560696778909.png">
+<meta property="og:image" content="http://kingge.top/2018/03/16/hadoop大数据-十-Mapreduce基础/clip_image001.png">
+<meta property="og:image" content="http://kingge.top/2018/03/16/hadoop大数据-十-Mapreduce基础/1560697913154.png">
+<meta property="og:image" content="http://kingge.top/2018/03/16/hadoop大数据-十-Mapreduce基础/0697933916.png">
+<meta property="og:updated_time" content="2019-06-17T12:46:35.921Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hadoop大数据(十)-Mapreduce基础">
-<meta name="twitter:description" content="To know everything, no words don&apos;t talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）">
+<meta name="twitter:description" content="一 MapReduce入门1.1 MapReduce定义Mapreduce是一个分布式运算程序的编程框架，是用户开发“基于hadoop的数据分析应用”的核心框架。 Mapreduce核心功能是将用户编写的业务逻辑代码和自带默认组件整合成一个完整的分布式运算程序，并发运行在一个hadoop集群上。 1.2 MapReduce优缺点1.2.1 优点1**）MapReduce 易于编程。**它简单的实现">
+<meta name="twitter:image" content="http://kingge.top/2018/03/16/hadoop大数据-十-Mapreduce基础/5C1560695415804.png">
 
 
 
@@ -463,7 +470,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  0
+                  4,726
                 </span>
               
 
@@ -479,7 +486,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  21
                 </span>
               
             </div>
@@ -502,7 +509,159 @@
       
 
       
-        
+        <h1 id="一-MapReduce入门"><a href="#一-MapReduce入门" class="headerlink" title="一 MapReduce入门"></a>一 MapReduce入门</h1><h2 id="1-1-MapReduce定义"><a href="#1-1-MapReduce定义" class="headerlink" title="1.1 MapReduce定义"></a>1.1 MapReduce定义</h2><p>Mapreduce是一个分布式运算程序的编程框架，是用户开发“基于hadoop的数据分析应用”的核心框架。</p>
+<p>Mapreduce核心功能是将用户编写的业务逻辑代码和自带默认组件整合成一个完整的分布式运算程序，并发运行在一个hadoop集群上。</p>
+<h2 id="1-2-MapReduce优缺点"><a href="#1-2-MapReduce优缺点" class="headerlink" title="1.2 MapReduce优缺点"></a>1.2 MapReduce优缺点</h2><h3 id="1-2-1-优点"><a href="#1-2-1-优点" class="headerlink" title="1.2.1 优点"></a>1.2.1 优点</h3><p><strong>1**</strong>）MapReduce<strong> </strong>易于编程。**它简单的实现一些接口，就可以完成一个分布式程序，这个分布式程序可以分布到大量廉价的PC机器上运行。也就是说你写一个分布式程序，跟写一个简单的串行程序是一模一样的。就是因为这个特点使得MapReduce编程变得非常流行。</p>
+<p><strong>2**</strong>）良好的扩展性。**当你的计算资源不能得到满足的时候，你可以通过简单的增加机器来扩展它的计算能力。</p>
+<p><strong>3**</strong>）高容错性。**MapReduce设计的初衷就是使程序能够部署在廉价的PC机器上，这就要求它具有很高的容错性。比如其中一台机器挂了，它可以把上面的计算任务转移到另外一个节点上运行，不至于这个任务运行失败，而且这个过程不需要人工参与，而完全是由 Hadoop内部完成的。</p>
+<p><strong>4**</strong>）适合PB<strong>**级以上海量数据的</strong>离线处理<strong>（他跟其他的分布式运行框架不同，例如spark等等）。</strong>这里加红字体离线处理，说明它适合离线处理而不适合在线处理。比如像毫秒级别的返回一个结果，MapReduce很难做到。</p>
+<h3 id="1-2-2-缺点"><a href="#1-2-2-缺点" class="headerlink" title="1.2.2 缺点"></a>1.2.2 缺点</h3><p><strong>MapReduce不擅长做实时计算、流式计算、DAG（有向图）计算。</strong></p>
+<p><strong>1）实时计算。</strong>MapReduce无法像Mysql一样，在毫秒或者秒级内返回结果。</p>
+<p><strong>2）流式计算。</strong>流式计算的输入数据是动态的，而MapReduce的输入数据集是静态的，不能动态变化。这是因为MapReduce自身的设计特点决定了<strong>数据源必须是静态的</strong>。</p>
+<p><strong>3）DAG</strong>（有向图）计算。多个应用程序存在依赖关系，后一个应用程序的输入为前一个的输出。在这种情况下，MapReduce并不是不能做，而是使用后，每个MapReduce作业的输出结果都会写入到磁盘，会造成大量的磁盘IO，导致性能非常的低下。</p>
+<h2 id="1-3-MapReduce核心思想"><a href="#1-3-MapReduce核心思想" class="headerlink" title="1.3 MapReduce核心思想"></a>1.3 MapReduce核心思想</h2><p>  下面根据一个小小的案例来体现 mapreduce的运转流程。</p>
+<p><img src="/2018/03/16/hadoop大数据-十-Mapreduce基础/5C1560695415804.png" alt=""></p>
+<p>根据块大小（128M）进行分片运算，每个maptask负责处理自己所属的块数据，把每个单词出现个数计算统计然后放到hashmap（实际上是放到磁盘上）中，key是单词，value是单词出现次数。</p>
+<p>1）分布式的运算程序往往需要分成至少2个阶段。（<strong>map阶段和reduce阶段</strong>）</p>
+<p>2）第一个阶段的maptask并发实例，完全并行运行，互不相干。</p>
+<p>3）第二个阶段的reduce task并发实例互不相干，但是他们的数据依赖于上一个阶段的所有maptask并发实例的输出。</p>
+<p>4）MapReduce编程模型只能包含一个map阶段和一个reduce阶段，<strong>如果用户的业务逻辑非常复杂，那就只能多个mapreduce程序，串行运行</strong>。</p>
+<h2 id="1-4-MapReduce进程"><a href="#1-4-MapReduce进程" class="headerlink" title="1.4 MapReduce进程"></a>1.4 <em>MapReduce进程</em></h2><p>一个完整的mapreduce程序在分布式运行时有三类实例进程：</p>
+<p>1）MrAppMaster：负责整个程序的过程调度及状态协调。</p>
+<p>2）MapTask：负责map阶段的整个数据处理流程。</p>
+<p>3）ReduceTask：负责reduce阶段的整个数据处理流程。</p>
+<h2 id="1-5-MapReduce编程规范"><a href="#1-5-MapReduce编程规范" class="headerlink" title="1.5 MapReduce编程规范"></a>1.5 MapReduce编程规范</h2><p>用户编写的程序分成三个部分：Mapper，Reducer，Driver(提交运行mr程序的客户端)</p>
+<h3 id="1）Mapper阶段"><a href="#1）Mapper阶段" class="headerlink" title="1）Mapper阶段"></a>1）Mapper阶段</h3><p>​         （1）用户自定义的Mapper要继承自己的父类</p>
+<p>​         （2）Mapper的输入数据是KV对的形式（KV的类型可自定义）</p>
+<p>​         （3）Mapper中的业务逻辑写在map()方法中</p>
+<p>​         （4）Mapper的输出数据是KV对的形式（KV的类型可自定义）</p>
+<p>​         （5）map()方法（maptask进程）对每一个<k,v>调用一次</k,v></p>
+<h3 id="2）Reducer阶段"><a href="#2）Reducer阶段" class="headerlink" title="2）Reducer阶段"></a>2）Reducer阶段</h3><p>​         （1）用户自定义的Reducer要继承自己的父类</p>
+<p>​         （2）Reducer的输入数据类型对应Mapper的输出数据类型，也是KV</p>
+<p>​         （3）Reducer的业务逻辑写在reduce()方法中</p>
+<p>​         （4）Reducetask进程对每一组相同k的<k,v>组调用一次reduce()方法</k,v></p>
+<h3 id="3）Driver阶段"><a href="#3）Driver阶段" class="headerlink" title="3）Driver阶段"></a>3）Driver阶段</h3><p>整个程序需要一个Drvier来进行提交，提交的是一个描述了各种必要信息的job对象</p>
+<h3 id="4）案例"><a href="#4）案例" class="headerlink" title="4）案例"></a>4）案例</h3><p>​         统计一堆文件中单词出现的个数（WordCount案例）。</p>
+<p>在一堆给定的文本文件中统计输出每一个单词出现的总次数</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1.数据准备 anly.text 包涵一下数据。</div><div class="line"></div><div class="line">hello world</div><div class="line">kingge kingge</div><div class="line">hadoop </div><div class="line">spark</div><div class="line">hello world</div><div class="line">kingge	kingge</div><div class="line">hadoop </div><div class="line">spark</div><div class="line">hello world</div><div class="line">hadoop </div><div class="line">spark</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">2.按照mapreduce编程规范，分别编写Mapper，Reducer，Driver。</div></pre></td></tr></table></figure>
+<p><img src="/2018/03/16/hadoop大数据-十-Mapreduce基础/1560696740319.png" alt=""></p>
+<p>简单案例分析</p>
+<p><img src="/2018/03/16/hadoop大数据-十-Mapreduce基础/1560696778909.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">3.书写java代码</div><div class="line">（1）编写mapper类</div><div class="line"></div><div class="line">package com.kingge.mapreduce;</div><div class="line">import java.io.IOException;</div><div class="line">import org.apache.hadoop.io.IntWritable;</div><div class="line">import org.apache.hadoop.io.LongWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.Mapper;</div><div class="line">//四个参数：前两个是map的输入参数类型，后两个数输出参数类型</div><div class="line">//很明显，执行一个map，数据的key值是long类型代表着数据所属的行号，那么value值就是string类型，对应Hadoop的序列化类型是text.</div><div class="line">//输出的结果是，每个单词对应的个数。那么输出的key应该是Text,代表单词,value应该是Int类型，代表这个单词的个数</div><div class="line">public class WordcountMapper extends Mapper&lt;LongWritable, Text, Text, IntWritable&gt;&#123;</div><div class="line">	</div><div class="line">	Text k = new Text();</div><div class="line">	IntWritable v = new IntWritable(1);</div><div class="line">	</div><div class="line">	@Override</div><div class="line">	protected void map(LongWritable key, Text value, Context context)</div><div class="line">			throws IOException, InterruptedException &#123;</div><div class="line">		</div><div class="line">		// 1 获取一行-因为map是一行一行进行处理的</div><div class="line">		String line = value.toString();</div><div class="line">		</div><div class="line">		// 2 切割</div><div class="line">		String[] words = line.split(&quot; &quot;);</div><div class="line">		</div><div class="line">		// 3 输出</div><div class="line">		for (String word : words) &#123;</div><div class="line">			</div><div class="line">			k.set(word);</div><div class="line">			context.write(k, v);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">（2）编写reducer类</div><div class="line"></div><div class="line">package com.kingge.mapreduce.wordcount;</div><div class="line">import java.io.IOException;</div><div class="line">import org.apache.hadoop.io.IntWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.Reducer;</div><div class="line"></div><div class="line">public class WordcountReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;&#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	protected void reduce(Text key, Iterable&lt;IntWritable&gt; value,</div><div class="line">			Context context) throws IOException, InterruptedException &#123;</div><div class="line">		</div><div class="line">		// 1 累加求和</div><div class="line">		int sum = 0;</div><div class="line">		for (IntWritable count : value) &#123;</div><div class="line">			sum += count.get();</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		// 2 输出</div><div class="line">		context.write(key, new IntWritable(sum));</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">执行到reduce阶段，那么经过map的计算和排序，最终会形成了一组一组的相同key的KV键值对（key group）。然后相同组的会进行reduce统计。一组接着一组进行计算。并不是所有组都通过reduce。</div><div class="line">//例如假设最终返回的KV值是：</div><div class="line">//hello 1</div><div class="line">//hello 1</div><div class="line">//word 1</div><div class="line">//word 1</div><div class="line">   那么 前两个hello为一组，经过reduce运算，然后返回，同时word为一组也经过统计返回。这两组并不会都由同一个reduce处理</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">（3）编写驱动类</div><div class="line">package com.kingge.mapreduce.wordcount;</div><div class="line">import java.io.IOException;</div><div class="line">import org.apache.hadoop.conf.Configuration;</div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.IntWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.Job;</div><div class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</div><div class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</div><div class="line"></div><div class="line">public class WordcountDriver &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException &#123;</div><div class="line"></div><div class="line">		// 1 获取配置信息</div><div class="line">		Configuration configuration = new Configuration();</div><div class="line">		Job job = Job.getInstance(configuration);</div><div class="line"></div><div class="line">		// 2 设置jar加载路径</div><div class="line">		job.setJarByClass(WordcountDriver.class);</div><div class="line"></div><div class="line">		// 3 设置map和Reduce类</div><div class="line">		job.setMapperClass(WordcountMapper.class);</div><div class="line">		job.setReducerClass(WordcountReducer.class);</div><div class="line"></div><div class="line">		// 4 设置map输出</div><div class="line">		job.setMapOutputKeyClass(Text.class);</div><div class="line">		job.setMapOutputValueClass(IntWritable.class);</div><div class="line"></div><div class="line">		// 5 设置Reduce输出</div><div class="line">		job.setOutputKeyClass(Text.class);</div><div class="line">		job.setOutputValueClass(IntWritable.class);</div><div class="line">		</div><div class="line">		// 6 设置输入和输出路径</div><div class="line">		FileInputFormat.setInputPaths(job, new Path(args[0]));</div><div class="line">		FileOutputFormat.setOutputPath(job, new Path(args[1]));</div><div class="line"></div><div class="line">		// 7 提交</div><div class="line">		boolean result = job.waitForCompletion(true);</div><div class="line"></div><div class="line">		System.exit(result ? 0 : 1);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>4）集群上测试</p>
+<p>（1）将程序打成jar包，然后拷贝到hadoop集群中。</p>
+<p>（2）启动hadoop集群</p>
+<p>（3）执行wordcount程序</p>
+<p>[kingge@hadoop102 software]$ hadoop jar  wc.jar com.kingge.wordcount.WordcountDriver /user/kingge/input /user/kingge/output1</p>
+<p>5）本地测试</p>
+<p>（1）在windows环境上配置HADOOP_HOME环境变量。</p>
+<p>（2）在eclipse上运行程序</p>
+<p><strong>（3）注意：如果eclipse打印不出日志，在控制台上只显示</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1.log4j:WARN No appenders could be found for logger (org.apache.hadoop.util.Shell).  </div><div class="line">2.log4j:WARN Please initialize the log4j system properly.  </div><div class="line">3.log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.</div></pre></td></tr></table></figure>
+<p>需要在项目的src目录下，新建一个文件，命名为“log4j.properties”，在文件中填入</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">log4j.rootLogger=INFO, stdout  </div><div class="line">log4j.appender.stdout=org.apache.log4j.ConsoleAppender  </div><div class="line">log4j.appender.stdout.layout=org.apache.log4j.PatternLayout  </div><div class="line">log4j.appender.stdout.layout.ConversionPattern=%d %p [%c] - %m%n  </div><div class="line">log4j.appender.logfile=org.apache.log4j.FileAppender  </div><div class="line">log4j.appender.logfile.File=target/spring.log  </div><div class="line">log4j.appender.logfile.layout=org.apache.log4j.PatternLayout  </div><div class="line">log4j.appender.logfile.layout.ConversionPattern=%d %p [%c] - %m%n  </div><div class="line"></div><div class="line">经过debug发现，只有当map处理完所有数据，才会进入reduce，map处理数据是一行一行进行处理的，每一行数据的处理都会经过一次map方法，直到所有数据处理完毕。Map处理完所有数据后，会排序所有的key，进行分组。然后一组一组的经过reduce，进行统计操作。直到所有组统计完毕，然后输出数据。</div></pre></td></tr></table></figure>
+<h1 id="二-Hadoop序列化"><a href="#二-Hadoop序列化" class="headerlink" title="二 Hadoop序列化"></a>二 Hadoop序列化</h1><h2 id="2-1-为什么要序列化？"><a href="#2-1-为什么要序列化？" class="headerlink" title="2.1 为什么要序列化？"></a>2.1 为什么要序列化？</h2><p>​        一般来说，“活的”对象只生存在内存里，关机断电就没有了。而且“活的”对象只能由本地的进程使用，不能被发送到网络上的另外一台计算机。 然而序列化可以存储“活的”对象，可以将“活的”对象发送到远程计算机。</p>
+<h2 id="2-2-什么是序列化？"><a href="#2-2-什么是序列化？" class="headerlink" title="2.2 什么是序列化？"></a>2.2 什么是序列化？</h2><p>序列化就是把内存中的对象，转换成字节序列（或其他数据传输协议）以便于存储（持久化）和网络传输。 </p>
+<p>反序列化就是将收到字节序列（或其他数据传输协议）或者是硬盘的持久化数据，转换成内存中的对象。</p>
+<h2 id="2-3-为什么不用Java的序列化？"><a href="#2-3-为什么不用Java的序列化？" class="headerlink" title="2.3 为什么不用Java的序列化？"></a>2.3 为什么不用Java的序列化？</h2><p>​        Java的序列化是一个重量级序列化框架（Serializable），一个对象被序列化后，会附带很多额外的信息（各种校验信息，header，继承体系等），不便于在网络中高效传输。所以，hadoop自己开发了一套序列化机制（Writable），精简、高效。</p>
+<h2 id="2-4-为什么序列化对Hadoop很重要？"><a href="#2-4-为什么序列化对Hadoop很重要？" class="headerlink" title="2.4 为什么序列化对Hadoop很重要？"></a>2.4 为什么序列化对Hadoop很重要？</h2><p>​         <strong>因为Hadoop在集群之间进行通讯或者RPC调用的时候</strong>，需要序列化，而且要求序列化要快，且体积要小，占用带宽要小。所以必须理解Hadoop的序列化机制。</p>
+<p>​        序列化和反序列化在分布式数据处理领域经常出现：进程通信和永久存储。然而Hadoop中各个节点的通信是通过远程调用（RPC）实现的，那么RPC序列化要求具有以下特点：</p>
+<p>1）紧凑：紧凑的格式能让我们充分利用网络带宽，而带宽是数据中心最稀缺的资源</p>
+<p>2）快速：进程通信形成了分布式系统的骨架，所以需要尽量减少序列化和反序列化的性能开销，这是基本的；</p>
+<p>3）可扩展：协议为了满足新的需求变化，所以控制客户端和服务器过程中，需要直接引进相应的协议，这些是新协议，原序列化方式能支持新的协议报文；</p>
+<p>4）互操作：能支持不同语言写的客户端和服务端进行交互； </p>
+<h2 id="2-5-常用数据序列化类型"><a href="#2-5-常用数据序列化类型" class="headerlink" title="2.5 常用数据序列化类型"></a>2.5 常用数据序列化类型</h2><p>常用的数据类型对应的hadoop数据序列化类型</p>
+<table>
+<thead>
+<tr>
+<th><strong>Java**</strong>类型**</th>
+<th><strong>Hadoop Writable**</strong>类型**</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>BooleanWritable</td>
+</tr>
+<tr>
+<td>byte</td>
+<td>ByteWritable</td>
+</tr>
+<tr>
+<td>int</td>
+<td>IntWritable</td>
+</tr>
+<tr>
+<td>float</td>
+<td>FloatWritable</td>
+</tr>
+<tr>
+<td>long</td>
+<td>LongWritable</td>
+</tr>
+<tr>
+<td>double</td>
+<td>DoubleWritable</td>
+</tr>
+<tr>
+<td>string</td>
+<td>Text</td>
+</tr>
+<tr>
+<td>map</td>
+<td>MapWritable</td>
+</tr>
+<tr>
+<td>array</td>
+<td>ArrayWritable</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-6-自定义bean对象实现序列化接口（Writable）"><a href="#2-6-自定义bean对象实现序列化接口（Writable）" class="headerlink" title="2.6 自定义bean对象实现序列化接口（Writable）"></a>2.6 自定义bean对象实现序列化接口（Writable）</h2><p>1）自定义bean对象要想序列化传输，必须实现序列化接口，需要注意以下7项。</p>
+<p>（1）必须实现Writable接口</p>
+<p> <img src="/2018/03/16/hadoop大数据-十-Mapreduce基础/clip_image001.png" alt=""></p>
+<p>（2）反序列化时，需要反射调用空参构造函数，所以必须有空参构造</p>
+<p>​            <strong>public</strong>   FlowBean() {                    <strong>super</strong>();            }   </p>
+<p>（3）重写序列化方法</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">	public void write(DataOutput out) throws IOException &#123;</div><div class="line">		out.writeLong(upFlow);</div><div class="line">		out.writeLong(downFlow);</div><div class="line">		out.writeLong(sumFlow);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>（4）重写反序列化方法</p>
+<p>​            </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">public void readFields(DataInput in) throws IOException &#123;</div><div class="line">	upFlow = in.readLong();</div><div class="line">	downFlow = in.readLong();</div><div class="line">	sumFlow = in.readLong();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>（5）<strong>注意反序列化的顺序和序列化的顺序完全一致</strong></p>
+<p>（6）要想把结果显示在文件中，需要重写toString()，可用”\t”分开，方便后续用。</p>
+<p>（7）如果需要将<strong>自定义的bean放在key中传输</strong>，则还需要实现WritableComparable接口，因为mapreduce框中的shuffle过程一定会对key进行排序。</p>
+<p>​     <strong>《自定义的bean放在key中传输》是什么意思呢？因为我们知道map操作中输入数据的存储结构是-key-value的形式.</strong>上面的例子中统计文本单词数，那么文本文件中每一行的文本的序号就是key（0,1,2,3）每一行的文本，就是value<strong><strong>的值。Map</strong></strong>操作完后输出的数据结构也是key-value<strong><strong>的形式。</strong></strong>而且输出的数据会根据key<strong><strong>排序</strong></strong>，以便reduce<strong><strong>处理。那么怎么排序在hadoop</strong></strong>中有一个默认规则（如果key<strong><strong>是2.5</strong></strong>中的常用数据类型），如果使我们自定义的序列化数据类型作为key<strong><strong>。那么默认排序规则就会失效，那么就需要我们制定一个排序规则就需要覆盖compareTo</strong></strong>方法。**</p>
+<p>​           </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">public int compareTo(FlowBean o) &#123;</div><div class="line">	// 倒序排列，从大到小</div><div class="line">	return this.sumFlow &gt; o.getSumFlow() ? -1 : 1;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2）案例"><a href="#2）案例" class="headerlink" title="2）案例"></a>2）案例</h3><p>​         每一个手机号耗费的总上行流量、下行流量、总流量（序列化）。</p>
+<h4 id="2-1-数据准备"><a href="#2-1-数据准备" class="headerlink" title="2.1 数据准备"></a>2.1 数据准备</h4><p>pd.txt</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1363157985066 	13726230503	00-FD-07-A4-72-B8:CMCC	120.196.100.82	i02.c.aliimg.com		24	27	2481	24681	200</div><div class="line">1363157995052 	13826544101	5C-0E-8B-C7-F1-E0:CMCC	120.197.40.4			4	0	264	0	200</div><div class="line">1363157991076 	13926435656	20-10-7A-28-CC-0A:CMCC	120.196.100.99			2	4	132	1512	200</div><div class="line">1363154400022 	13926251106	5C-0E-8B-8B-B1-50:CMCC	120.197.40.4			4	0	240	0	200</div><div class="line">1363157993044 	18211575961	94-71-AC-CD-E6-18:CMCC-EASY	120.196.100.99	iface.qiyi.com	视频网站	15	12	1527	2106	200</div><div class="line">1363157995074 	84138413	5C-0E-8B-8C-E8-20:7DaysInn	120.197.40.4	122.72.52.12		20	16	4116	1432	200</div><div class="line">1363157993055 	13560439658	C4-17-FE-BA-DE-D9:CMCC	120.196.100.99			18	15	1116	954	200</div><div class="line">1363157995033 	15920133257	5C-0E-8B-C7-BA-20:CMCC	120.197.40.4	sug.so.360.cn	信息安全	20	20	3156	2936	200</div><div class="line">1363157983019 	13719199419	68-A1-B7-03-07-B1:CMCC-EASY	120.196.100.82			4	0	240	0	200</div><div class="line">1363157984041 	13660577991	5C-0E-8B-92-5C-20:CMCC-EASY	120.197.40.4	s19.cnzz.com	站点统计	24	9	6960	690	200</div><div class="line">1363157973098 	15013685858	5C-0E-8B-C7-F7-90:CMCC	120.197.40.4	rank.ie.sogou.com	搜索引擎	28	27	3659	3538	200</div><div class="line">1363157986029 	15989002119	E8-99-C4-4E-93-E0:CMCC-EASY	120.196.100.99	www.umeng.com	站点统计	3	3	1938	180	200</div><div class="line">1363157992093 	13560439658	C4-17-FE-BA-DE-D9:CMCC	120.196.100.99			15	9	918	4938	200</div><div class="line">1363157986041 	13480253104	5C-0E-8B-C7-FC-80:CMCC-EASY	120.197.40.4			3	3	180	180	200</div><div class="line">1363157984040 	13602846565	5C-0E-8B-8B-B6-00:CMCC	120.197.40.4	2052.flash2-http.qq.com	综合门户	15	12	1938	2910	200</div><div class="line">1363157995093 	13922314466	00-FD-07-A2-EC-BA:CMCC	120.196.100.82	img.qfc.cn		12	12	3008	3720	200</div><div class="line">1363157982040 	13502468823	5C-0A-5B-6A-0B-D4:CMCC-EASY	120.196.100.99	y0.ifengimg.com	综合门户	57	102	7335	110349	200</div><div class="line">1363157986072 	18320173382	84-25-DB-4F-10-1A:CMCC-EASY	120.196.100.99	input.shouji.sogou.com	搜索引擎	21	18	9531	2412	200</div><div class="line">1363157990043 	13925057413	00-1F-64-E1-E6-9A:CMCC	120.196.100.55	t3.baidu.com	搜索引擎	69	63	11058	48243	200</div><div class="line">1363157988072 	13760778710	00-FD-07-A4-7B-08:CMCC	120.196.100.82			2	2	120	120	200</div><div class="line">1363157985066 	13560436666	00-FD-07-A4-72-B8:CMCC	120.196.100.82	i02.c.aliimg.com		24	27	2481	24681	200</div><div class="line">1363157993055 	13560436666	C4-17-FE-BA-DE-D9:CMCC	120.196.100.99			18	15	1116	954	200</div></pre></td></tr></table></figure>
+<p>输入数据格式： </p>
+<p><img src="/2018/03/16/hadoop大数据-十-Mapreduce基础/1560697913154.png" alt=""></p>
+<p>输出数据格式</p>
+<p><img src="/2018/03/16/hadoop大数据-十-Mapreduce基础/0697933916.png" alt=""></p>
+<h4 id="2-2-分析"><a href="#2-2-分析" class="headerlink" title="2.2 分析"></a>2.2 分析</h4><p>基本思路：</p>
+<p>Map阶段：</p>
+<p>（1）读取一行数据，切分字段</p>
+<p>（2）抽取手机号、上行流量、下行流量</p>
+<p>（3）以手机号为key，bean对象为value输出，即context.write(手机号,bean);</p>
+<p>Reduce阶段：</p>
+<p>（1）累加上行流量和下行流量得到总流量。</p>
+<p>（2）实现自定义的bean来封装流量信息，并将bean作为map输出的key来传输</p>
+<p>（3）MR程序在处理数据的过程中会对数据排序(map输出的kv对传输到reduce之前，会排序)，排序的依据是map输出的key</p>
+<p><strong>所以，我们如果要实现自己需要的排序规则，则可以考虑将排序因素放到key中，让key实现接口：WritableComparable。然后重写key的compareTo方法。</strong></p>
+<h4 id="2-3-编写mapreduce程序"><a href="#2-3-编写mapreduce程序" class="headerlink" title="2.3 编写mapreduce程序"></a>2.3 编写mapreduce程序</h4><p>（1）编写流量统计的bean对象</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package com.kingge.mapreduce.flowsum;</div><div class="line">import java.io.DataInput;</div><div class="line">import java.io.DataOutput;</div><div class="line">import java.io.IOException;</div><div class="line">import org.apache.hadoop.io.Writable;</div><div class="line"></div><div class="line">// 1 实现writable接口</div><div class="line">public class FlowBean implements Writable&#123;</div><div class="line"></div><div class="line">	private long upFlow ;</div><div class="line">	private long downFlow;</div><div class="line">	private long sumFlow;</div><div class="line">	</div><div class="line">	//2  反序列化时，需要反射调用空参构造函数，所以必须有</div><div class="line">	public FlowBean() &#123;</div><div class="line">		super();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public FlowBean(long upFlow, long downFlow) &#123;</div><div class="line">		super();</div><div class="line">		this.upFlow = upFlow;</div><div class="line">		this.downFlow = downFlow;</div><div class="line">		this.sumFlow = upFlow + downFlow;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	//3  写序列化方法</div><div class="line">	@Override</div><div class="line">	public void write(DataOutput out) throws IOException &#123;</div><div class="line">		out.writeLong(upFlow);</div><div class="line">		out.writeLong(downFlow);</div><div class="line">		out.writeLong(sumFlow);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	//4 反序列化方法</div><div class="line">	//5 反序列化方法读顺序必须和写序列化方法的写顺序必须一致</div><div class="line">	@Override</div><div class="line">	public void readFields(DataInput in) throws IOException &#123;</div><div class="line">		this.upFlow  = in.readLong();</div><div class="line">		this.downFlow = in.readLong();</div><div class="line">		this.sumFlow = in.readLong();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	// 6 编写toString方法，方便后续打印到文本</div><div class="line">	@Override</div><div class="line">	public String toString() &#123;</div><div class="line">		return upFlow + &quot;\t&quot; + downFlow + &quot;\t&quot; + sumFlow;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public long getUpFlow() &#123;</div><div class="line">		return upFlow;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public void setUpFlow(long upFlow) &#123;</div><div class="line">		this.upFlow = upFlow;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public long getDownFlow() &#123;</div><div class="line">		return downFlow;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public void setDownFlow(long downFlow) &#123;</div><div class="line">		this.downFlow = downFlow;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public long getSumFlow() &#123;</div><div class="line">		return sumFlow;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public void setSumFlow(long sumFlow) &#123;</div><div class="line">		this.sumFlow = sumFlow;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>（2）编写mapper</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package com.kingge.mapreduce.flowsum;</div><div class="line">import java.io.IOException;</div><div class="line">import org.apache.hadoop.io.LongWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.Mapper;</div><div class="line"></div><div class="line">public class FlowCountMapper extends Mapper&lt;LongWritable, Text, Text, FlowBean&gt;&#123;</div><div class="line">	</div><div class="line">	FlowBean v = new FlowBean();</div><div class="line">	Text k = new Text();</div><div class="line">	</div><div class="line">	@Override</div><div class="line">	protected void map(LongWritable key, Text value, Context context)</div><div class="line">			throws IOException, InterruptedException &#123;</div><div class="line">		</div><div class="line">		// 1 获取一行</div><div class="line">		String line = value.toString();</div><div class="line">		</div><div class="line">		// 2 切割字段</div><div class="line">		String[] fields = line.split(&quot;\t&quot;);</div><div class="line">		</div><div class="line">		// 3 封装对象</div><div class="line">		// 取出手机号码</div><div class="line">		String phoneNum = fields[1];</div><div class="line">		// 取出上行流量和下行流量</div><div class="line">		long upFlow = Long.parseLong(fields[fields.length - 3]);</div><div class="line">		long downFlow = Long.parseLong(fields[fields.length - 2]);</div><div class="line">		</div><div class="line">		v.set(downFlow, upFlow);</div><div class="line">		</div><div class="line">		// 4 写出</div><div class="line">		context.write(new Text(phoneNum), new FlowBean(upFlow, downFlow));</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>（3）编写reducer</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package com.kingge.mapreduce.flowsum;</div><div class="line">import java.io.IOException;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.Reducer;</div><div class="line"></div><div class="line">public class FlowCountReducer extends Reducer&lt;Text, FlowBean, Text, FlowBean&gt; &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	protected void reduce(Text key, Iterable&lt;FlowBean&gt; values, Context context)</div><div class="line">			throws IOException, InterruptedException &#123;</div><div class="line"></div><div class="line">		long sum_upFlow = 0;</div><div class="line">		long sum_downFlow = 0;</div><div class="line"></div><div class="line">		// 1 遍历所用bean，将其中的上行流量，下行流量分别累加</div><div class="line">		for (FlowBean flowBean : values) &#123;</div><div class="line">			sum_upFlow += flowBean.getSumFlow();</div><div class="line">			sum_downFlow += flowBean.getDownFlow();</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		// 2 封装对象</div><div class="line">		FlowBean resultBean = new FlowBean(sum_upFlow, sum_downFlow);</div><div class="line">		</div><div class="line">		// 3 写出</div><div class="line">		context.write(key, resultBean);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>（4）编写驱动</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package com.kingge.mapreduce.flowsum;</div><div class="line">import java.io.IOException;</div><div class="line">import org.apache.hadoop.conf.Configuration;</div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.Job;</div><div class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</div><div class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</div><div class="line"></div><div class="line">public class FlowsumDriver &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException &#123;</div><div class="line">		</div><div class="line">		// 1 获取配置信息，或者job对象实例</div><div class="line">		Configuration configuration = new Configuration();</div><div class="line">		Job job = Job.getInstance(configuration);</div><div class="line"></div><div class="line">		// 6 指定本程序的jar包所在的本地路径</div><div class="line">		job.setJarByClass(FlowsumDriver.class);</div><div class="line"></div><div class="line">		// 2 指定本业务job要使用的mapper/Reducer业务类</div><div class="line">		job.setMapperClass(FlowCountMapper.class);</div><div class="line">		job.setReducerClass(FlowCountReducer.class);</div><div class="line"></div><div class="line">		// 3 指定mapper输出数据的kv类型</div><div class="line">		job.setMapOutputKeyClass(Text.class);</div><div class="line">		job.setMapOutputValueClass(FlowBean.class);</div><div class="line"></div><div class="line">		// 4 指定最终输出的数据的kv类型</div><div class="line">		job.setOutputKeyClass(Text.class);</div><div class="line">		job.setOutputValueClass(FlowBean.class);</div><div class="line">		</div><div class="line">		// 5 指定job的输入原始文件所在目录</div><div class="line">		FileInputFormat.setInputPaths(job, new Path(args[0]));</div><div class="line">		FileOutputFormat.setOutputPath(job, new Path(args[1]));</div><div class="line"></div><div class="line">		// 7 将job中配置的相关参数，以及job所用的java类所在的jar包， 提交给yarn去运行</div><div class="line">		boolean result = job.waitForCompletion(true);</div><div class="line">		System.exit(result ? 0 : 1);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
       
     </div>
     
@@ -585,8 +744,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/06/01/Hessian 多系统访问/" rel="prev" title="Hessian 多系统访问">
-                Hessian 多系统访问 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/03/18/hadoop大数据-十一-Mapreduce框架原理/" rel="prev" title="hadoop大数据(十一)-Mapreduce框架原理">
+                hadoop大数据(十一)-Mapreduce框架原理 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -669,8 +828,17 @@ var jiathis_config={
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.png"
@@ -685,7 +853,7 @@ var jiathis_config={
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -812,6 +980,25 @@ var jiathis_config={
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一-MapReduce入门"><span class="nav-number">1.</span> <span class="nav-text">一 MapReduce入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-MapReduce定义"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 MapReduce定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-MapReduce优缺点"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 MapReduce优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-1-优点"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.2.1 优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-2-缺点"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2.2 缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-MapReduce核心思想"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 MapReduce核心思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-MapReduce进程"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 MapReduce进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-5-MapReduce编程规范"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 MapReduce编程规范</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）Mapper阶段"><span class="nav-number">1.5.1.</span> <span class="nav-text">1）Mapper阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）Reducer阶段"><span class="nav-number">1.5.2.</span> <span class="nav-text">2）Reducer阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）Driver阶段"><span class="nav-number">1.5.3.</span> <span class="nav-text">3）Driver阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4）案例"><span class="nav-number">1.5.4.</span> <span class="nav-text">4）案例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二-Hadoop序列化"><span class="nav-number">2.</span> <span class="nav-text">二 Hadoop序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-为什么要序列化？"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 为什么要序列化？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-什么是序列化？"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 什么是序列化？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-为什么不用Java的序列化？"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 为什么不用Java的序列化？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-为什么序列化对Hadoop很重要？"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 为什么序列化对Hadoop很重要？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-常用数据序列化类型"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 常用数据序列化类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-自定义bean对象实现序列化接口（Writable）"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 自定义bean对象实现序列化接口（Writable）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2）案例"><span class="nav-number">2.6.1.</span> <span class="nav-text">2）案例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-数据准备"><span class="nav-number">2.6.1.1.</span> <span class="nav-text">2.1 数据准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-分析"><span class="nav-number">2.6.1.2.</span> <span class="nav-text">2.2 分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-编写mapreduce程序"><span class="nav-number">2.6.1.3.</span> <span class="nav-text">2.3 编写mapreduce程序</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -849,7 +1036,7 @@ var jiathis_config={
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
     <span title="Site words total count">
-      79.8k
+      101.3k
     </span>
   
 </div>
@@ -872,7 +1059,7 @@ var jiathis_config={
 <span class="post-meta-divider">|</span>
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共79.8k字</span>
+  <span class="post-count">博客全站共101.3k字</span>
 </div>
 
 
