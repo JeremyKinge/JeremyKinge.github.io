@@ -47,9 +47,244 @@
     <link href="http://kingge.top/2018/03/20/hadoop%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%8D%81%E4%BA%8C-%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9/"/>
     <id>http://kingge.top/2018/03/20/hadoop大数据-十二-数据压缩/</id>
     <published>2018-03-20T14:59:59.000Z</published>
-    <updated>2019-06-17T13:48:06.159Z</updated>
+    <updated>2019-08-01T13:08:48.852Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="4-1-概述"><a href="#4-1-概述" class="headerlink" title="4.1 概述"></a>4.1 概述</h2><p>压缩技术能够有效减少底层存储系统（HDFS）读写字节数。压缩提高了网络带宽和磁盘空间的效率。在Hadoop下，尤其是数据规模很大和工作负载密集的情况下，使用数据压缩显得非常重要。在这种情况下，I/O操作和网络数据传输要花大量的时间。还有，Shuffle与Merge过程同样也面临着巨大的I/O压力。</p>
+<p>​         鉴于磁盘I/O和网络带宽是Hadoop的宝贵资源，数据压缩对于节省资源、最小化磁盘I/O和网络传输非常有帮助。不过，尽管压缩与解压操作的CPU开销不高，其性能的提升和资源的节省并非没有代价。</p>
+<p>​         如果磁盘I/O和网络带宽影响了MapReduce作业性能，在任意MapReduce阶段启用压缩都可以改善端到端处理时间并减少I/O和网络流量。</p>
+<p>压缩<strong>Mapreduce的一种优化策略：通过压缩编码对Mapper或者Reducer的输出进行压缩，以减少磁盘IO，提高MR程序运行速度（但相应增加了cpu运算负担）。</strong></p>
+<p>注意：压缩特性运用得当能提高性能，但运用不当也可能降低性能。</p>
+<p>基本原则：</p>
+<p>（1）运算密集型的job，少用压缩</p>
+<p>（2）IO密集型的job，多用压缩</p>
+<h2 id="4-2-MR支持的压缩编码"><a href="#4-2-MR支持的压缩编码" class="headerlink" title="4.2 MR支持的压缩编码"></a>4.2 MR支持的压缩编码</h2><table>
+<thead>
+<tr>
+<th>压缩格式</th>
+<th>hadoop自带？</th>
+<th>算法</th>
+<th>文件扩展名</th>
+<th>是否可切分</th>
+<th>换成压缩格式后，原来的程序是否需要修改</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DEFAULT</td>
+<td>是，直接使用</td>
+<td>DEFAULT</td>
+<td>.deflate</td>
+<td>否</td>
+<td>和文本处理一样，不需要修改</td>
+</tr>
+<tr>
+<td>Gzip</td>
+<td>是，直接使用</td>
+<td>DEFAULT</td>
+<td>.gz</td>
+<td>否</td>
+<td>和文本处理一样，不需要修改</td>
+</tr>
+<tr>
+<td>bzip2</td>
+<td>是，直接使用</td>
+<td>bzip2</td>
+<td>.bz2</td>
+<td>是</td>
+<td>和文本处理一样，不需要修改</td>
+</tr>
+<tr>
+<td>LZO</td>
+<td>否，需要安装</td>
+<td>LZO</td>
+<td>.lzo</td>
+<td>是</td>
+<td>需要建索引，还需要指定输入格式</td>
+</tr>
+<tr>
+<td>Snappy</td>
+<td>否，需要安装</td>
+<td>Snappy</td>
+<td>.snappy</td>
+<td>否</td>
+<td>和文本处理一样，不需要修改</td>
+</tr>
+</tbody>
+</table>
+<p>为了支持多种压缩/解压缩算法，Hadoop引入了编码/解码器，如下表所示</p>
+<table>
+<thead>
+<tr>
+<th>压缩格式</th>
+<th>对应的编码/解码器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DEFLATE</td>
+<td>org.apache.hadoop.io.compress.DefaultCodec</td>
+</tr>
+<tr>
+<td>gzip</td>
+<td>org.apache.hadoop.io.compress.GzipCodec</td>
+</tr>
+<tr>
+<td>bzip2</td>
+<td>org.apache.hadoop.io.compress.BZip2Codec</td>
+</tr>
+<tr>
+<td>LZO</td>
+<td>com.hadoop.compression.lzo.LzopCodec</td>
+</tr>
+<tr>
+<td>Snappy</td>
+<td>org.apache.hadoop.io.compress.SnappyCodec</td>
+</tr>
+</tbody>
+</table>
+<p>压缩性能的比较</p>
+<table>
+<thead>
+<tr>
+<th>压缩算法</th>
+<th>原始文件大小</th>
+<th>压缩文件大小</th>
+<th>压缩速度</th>
+<th>解压速度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gzip</td>
+<td>8.3GB</td>
+<td>1.8GB</td>
+<td>17.5MB/s</td>
+<td>58MB/s</td>
+</tr>
+<tr>
+<td>bzip2</td>
+<td>8.3GB</td>
+<td>1.1GB</td>
+<td>2.4MB/s</td>
+<td>9.5MB/s</td>
+</tr>
+<tr>
+<td>LZO</td>
+<td>8.3GB</td>
+<td>2.9GB</td>
+<td>49.3MB/s</td>
+<td>74.6MB/s</td>
+</tr>
+</tbody>
+</table>
+<p><a href="http://google.github.io/snappy/" target="_blank" rel="external">http://google.github.io/snappy/</a></p>
+<p>On a single core of a Core i7 processor in 64-bit mode, Snappy compresses at about 250 MB/sec or more and decompresses at about 500 MB/sec or more.</p>
+<h2 id="4-3-压缩方式选择"><a href="#4-3-压缩方式选择" class="headerlink" title="4.3 压缩方式选择"></a>4.3 压缩方式选择</h2><h3 id="4-3-1-Gzip压缩"><a href="#4-3-1-Gzip压缩" class="headerlink" title="4.3.1 Gzip压缩"></a>4.3.1 Gzip压缩</h3><p>优点：压缩率比较高，而且压缩/解压速度也比较快；hadoop本身支持，在应用中处理gzip格式的文件就和直接处理文本一样；大部分linux系统都自带gzip命令，使用方便。</p>
+<p>缺点：不支持split。</p>
+<p>应用场景：当每个文件压缩之后在130M以内的（1个块大小内），都可以考虑用gzip压缩格式。例如说一天或者一个小时的日志压缩成一个gzip文件，运行mapreduce程序的时候通过多个gzip文件达到并发。hive程序，streaming程序，和java写的mapreduce程序完全和文本处理一样，压缩之后原来的程序不需要做任何修改。</p>
+<h3 id="4-3-2-Bzip2压缩"><a href="#4-3-2-Bzip2压缩" class="headerlink" title="4.3.2 Bzip2压缩"></a>4.3.2 Bzip2压缩</h3><p>优点：支持split；具有很高的压缩率，比gzip压缩率都高；hadoop本身支持，但不支持native；在linux系统下自带bzip2命令，使用方便。</p>
+<p>缺点：压缩/解压速度慢；不支持native。</p>
+<p>应用场景：适合对速度要求不高，但需要较高的压缩率的时候，可以作为mapreduce作业的输出格式；或者输出之后的数据比较大，处理之后的数据需要压缩存档减少磁盘空间并且以后数据用得比较少的情况；或者对单个很大的文本文件想压缩减少存储空间，同时又需要支持split，而且兼容之前的应用程序（即应用程序不需要修改）的情况。</p>
+<h3 id="4-3-3-Lzo压缩"><a href="#4-3-3-Lzo压缩" class="headerlink" title="4.3.3 Lzo压缩"></a>4.3.3 Lzo压缩</h3><p>优点：压缩/解压速度也比较快，合理的压缩率；支持split，是hadoop中最流行的压缩格式；可以在linux系统下安装lzop命令，使用方便。</p>
+<p>缺点：压缩率比gzip要低一些；hadoop本身不支持，需要安装；在应用中对lzo格式的文件需要做一些特殊处理（为了支持split需要建索引，还需要指定inputformat为lzo格式）。</p>
+<p>应用场景：一个很大的文本文件，压缩之后还大于200M以上的可以考虑，而且单个文件越大，lzo优点越越明显。</p>
+<h3 id="4-3-4-Snappy压缩"><a href="#4-3-4-Snappy压缩" class="headerlink" title="4.3.4 Snappy压缩"></a>4.3.4 Snappy压缩</h3><p>优点：高速压缩速度和合理的压缩率。</p>
+<p>缺点：不支持split；压缩率比gzip要低；hadoop本身不支持，需要安装； </p>
+<p>应用场景：当Mapreduce作业的Map输出的数据比较大的时候，作为Map到Reduce的中间数据的压缩格式；或者作为一个Mapreduce作业的输出和另外一个Mapreduce作业的输入。</p>
+<h2 id="4-4-压缩位置选择"><a href="#4-4-压缩位置选择" class="headerlink" title="4.4 压缩位置选择"></a>4.4 压缩位置选择</h2><p>​         压缩可以在MapReduce作用的任意阶段启用。</p>
+<p><img src="/2018/03/20/hadoop大数据-十二-数据压缩/64664559133.png" alt="1564664559133"></p>
+<h2 id="4-5-压缩配置参数"><a href="#4-5-压缩配置参数" class="headerlink" title="4.5 压缩配置参数"></a>4.5 压缩配置参数</h2><p>要在Hadoop中启用压缩，可以配置如下参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>默认值</th>
+<th>阶段</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>io.compression.codecs      （在core-site.xml中配置）</td>
+<td>org.apache.hadoop.io.compress.DefaultCodec,   org.apache.hadoop.io.compress.GzipCodec, org.apache.hadoop.io.compress.BZip2Codec</td>
+<td>输入压缩</td>
+<td>Hadoop使用文件扩展名判断是否支持某种编解码器</td>
+</tr>
+<tr>
+<td>mapreduce.map.output.compress（在mapred-site.xml中配置）</td>
+<td>false</td>
+<td>mapper输出</td>
+<td>这个参数设为true启用压缩</td>
+</tr>
+<tr>
+<td>mapreduce.map.output.compress.codec（在mapred-site.xml中配置）</td>
+<td>org.apache.hadoop.io.compress.DefaultCodec</td>
+<td>mapper输出</td>
+<td>使用LZO或snappy编解码器在此阶段压缩数据</td>
+</tr>
+<tr>
+<td>mapreduce.output.fileoutputformat.compress（在mapred-site.xml中配置）</td>
+<td>false</td>
+<td>reducer输出</td>
+<td>这个参数设为true启用压缩</td>
+</tr>
+<tr>
+<td>mapreduce.output.fileoutputformat.compress.codec（在mapred-site.xml中配置）</td>
+<td>org.apache.hadoop.io.compress.   DefaultCodec</td>
+<td>reducer输出</td>
+<td>使用标准工具或者编解码器，如gzip和bzip2</td>
+</tr>
+<tr>
+<td>mapreduce.output.fileoutputformat.compress.type（在mapred-site.xml中配置）</td>
+<td>RECORD</td>
+<td>reducer输出</td>
+<td>SequenceFile输出使用的压缩类型：NONE和BLOCK</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-6-压缩实战"><a href="#4-6-压缩实战" class="headerlink" title="4.6 压缩实战"></a>4.6 压缩实战</h2><h3 id="4-6-1-数据流的压缩和解压缩"><a href="#4-6-1-数据流的压缩和解压缩" class="headerlink" title="4.6.1 数据流的压缩和解压缩"></a>4.6.1 数据流的压缩和解压缩</h3><p>​    CompressionCodec有两个方法可以用于轻松地压缩或解压缩数据。要想对正在被写入一个输出流的数据进行压缩，<strong>我们可以使用createOutputStream(OutputStreamout)方法创建一个CompressionOutputStream</strong>，将其以压缩格式写入底层的流。相反，要想对从输入流读取而来的数据进行解压缩，则调用createInputStream(InputStreamin)函数，从而获得一个CompressionInputStream，从而从底层的流读取未压缩的数据。</p>
+<p>测试一下如下压缩方式：</p>
+<table>
+<thead>
+<tr>
+<th>DEFLATE</th>
+<th>org.apache.hadoop.io.compress.DefaultCodec</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gzip</td>
+<td>org.apache.hadoop.io.compress.GzipCodec</td>
+</tr>
+<tr>
+<td>bzip2</td>
+<td>org.apache.hadoop.io.compress.BZip2Codec</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">package</span> com.kingge.mapreduce.compress;</div><div class="line"><span class="keyword">import</span> java.io.File;</div><div class="line"><span class="keyword">import</span> java.io.FileInputStream;</div><div class="line"><span class="keyword">import</span> java.io.FileNotFoundException;</div><div class="line"><span class="keyword">import</span> java.io.FileOutputStream;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.io.IOUtils;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.io.compress.CompressionCodec;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.io.compress.CompressionCodecFactory;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.io.compress.CompressionInputStream;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.io.compress.CompressionOutputStream;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.util.ReflectionUtils;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCompress</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		compress(<span class="string">"e:/hello.txt"</span>,<span class="string">"org.apache.hadoop.io.compress.BZip2Codec"</span>);</div><div class="line"><span class="comment">//		decompress("e:/hello.txt.bz2");</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 压缩</span></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">compress</span><span class="params">(String filename, String method)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		</div><div class="line">		<span class="comment">// 1 获取输入流</span></div><div class="line">		FileInputStream fis = <span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(filename));</div><div class="line">		</div><div class="line">		Class codecClass = Class.forName(method);</div><div class="line">		</div><div class="line">		CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, <span class="keyword">new</span> Configuration());</div><div class="line">		</div><div class="line">		<span class="comment">// 2 获取输出流</span></div><div class="line">		FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="keyword">new</span> File(filename +codec.getDefaultExtension()));</div><div class="line">		CompressionOutputStream cos = codec.createOutputStream(fos);</div><div class="line">		</div><div class="line">		<span class="comment">// 3 流的对拷</span></div><div class="line">		IOUtils.copyBytes(fis, cos, <span class="number">1024</span>*<span class="number">1024</span>*<span class="number">5</span>, <span class="keyword">false</span>);</div><div class="line">		</div><div class="line">		<span class="comment">// 4 关闭资源</span></div><div class="line">		fis.close();</div><div class="line">		cos.close();</div><div class="line">		fos.close();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 解压缩</span></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">decompress</span><span class="params">(String filename)</span> <span class="keyword">throws</span> FileNotFoundException, IOException </span>&#123;</div><div class="line">		</div><div class="line">		<span class="comment">// 0 校验是否能解压缩</span></div><div class="line">		CompressionCodecFactory factory = <span class="keyword">new</span> CompressionCodecFactory(<span class="keyword">new</span> Configuration());</div><div class="line">		CompressionCodec codec = factory.getCodec(<span class="keyword">new</span> Path(filename));</div><div class="line">		</div><div class="line">		<span class="keyword">if</span> (codec == <span class="keyword">null</span>) &#123;</div><div class="line">			System.out.println(<span class="string">"cannot find codec for file "</span> + filename);</div><div class="line">			<span class="keyword">return</span>;</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		<span class="comment">// 1 获取输入流</span></div><div class="line">		CompressionInputStream cis = codec.createInputStream(<span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(filename)));</div><div class="line">		</div><div class="line">		<span class="comment">// 2 获取输出流</span></div><div class="line">		FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="keyword">new</span> File(filename + <span class="string">".decoded"</span>));</div><div class="line">		</div><div class="line">		<span class="comment">// 3 流的对拷</span></div><div class="line">		IOUtils.copyBytes(cis, fos, <span class="number">1024</span>*<span class="number">1024</span>*<span class="number">5</span>, <span class="keyword">false</span>);</div><div class="line">		</div><div class="line">		<span class="comment">// 4 关闭资源</span></div><div class="line">		cis.close();</div><div class="line">		fos.close();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>   package com.atguigu.mapreduce.compress;   import java.io.File;   import java.io.FileInputStream;   import java.io.FileNotFoundException;   import java.io.FileOutputStream;   import java.io.IOException;   import   org.apache.hadoop.conf.Configuration;   import org.apache.hadoop.fs.Path;   import org.apache.hadoop.io.IOUtils;   import   org.apache.hadoop.io.compress.CompressionCodec;   import org.apache.hadoop.io.compress.CompressionCodecFactory;   import   org.apache.hadoop.io.compress.CompressionInputStream;   import   org.apache.hadoop.io.compress.CompressionOutputStream;   import   org.apache.hadoop.util.ReflectionUtils;       public class TestCompress {                public   static void main(String[] args) throws Exception {                    compress(“e:/hello.txt”,”org.apache.hadoop.io.compress.BZip2Codec”);   //               decompress(“e:/hello.txt.bz2”);            }                //   压缩            private   static void compress(String filename, String method) throws Exception {                                        //   1 获取输入流                    FileInputStream   fis = new FileInputStream(new File(filename));                                        Class   codecClass = Class.forName(method);                                        CompressionCodec   codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, new   Configuration());                                        //   2 获取输出流                    FileOutputStream   fos = new FileOutputStream(new File(filename +codec.getDefaultExtension()));                    CompressionOutputStream   cos = codec.createOutputStream(fos);                                        //   3 流的对拷                    IOUtils.copyBytes(fis,   cos, 1024<em>1024</em>5, false);                                        //   4 关闭资源                    fis.close();                    cos.close();                    fos.close();            }                //   解压缩            private   static void decompress(String filename) throws FileNotFoundException,   IOException {                                        //   0 校验是否能解压缩                    CompressionCodecFactory   factory = new CompressionCodecFactory(new Configuration());                    CompressionCodec   codec = factory.getCodec(new Path(filename));                                        if   (codec == null) {                             System.out.println(“cannot   find codec for file “ + filename);                             return;                    }                                        //   1 获取输入流                    CompressionInputStream   cis = codec.createInputStream(new FileInputStream(new File(filename)));                                        //   2 获取输出流                    FileOutputStream   fos = new FileOutputStream(new File(filename + “.decoded”));                                        //   3 流的对拷                    IOUtils.copyBytes(cis,   fos, 1024<em>1024</em>5, false);                                        //   4 关闭资源                    cis.close();                    fos.close();            }   }   </p>
+<h3 id="4-6-2-Map输出端采用压缩"><a href="#4-6-2-Map输出端采用压缩" class="headerlink" title="4.6.2 Map输出端采用压缩"></a>4.6.2 Map输出端采用压缩</h3><p>​    即使你的MapReduce的输入输出文件都是未压缩的文件，你仍然可以对map任务的中间结果输出做压缩，因为它要写在硬盘并且通过网络传输到reduce节点，对其压缩可以提高很多性能，这些工作只要设置两个属性即可，我们来看下代码怎么设置：</p>
+<p>1）给大家提供的hadoop源码支持的压缩格式有：<strong>BZip2Codec 、DefaultCodec</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package com.kingge.mapreduce.compress;</div><div class="line">import java.io.IOException;</div><div class="line">import org.apache.hadoop.conf.Configuration;</div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.IntWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.io.compress.BZip2Codec;	</div><div class="line">import org.apache.hadoop.io.compress.CompressionCodec;</div><div class="line">import org.apache.hadoop.io.compress.GzipCodec;</div><div class="line">import org.apache.hadoop.mapreduce.Job;</div><div class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</div><div class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</div><div class="line"></div><div class="line">public class WordCountDriver &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException &#123;</div><div class="line"></div><div class="line">		Configuration configuration = new Configuration();</div><div class="line"></div><div class="line">		// 开启map端输出压缩</div><div class="line">		configuration.setBoolean(&quot;mapreduce.map.output.compress&quot;, true);</div><div class="line">		// 设置map端输出压缩方式</div><div class="line">		configuration.setClass(&quot;mapreduce.map.output.compress.codec&quot;, BZip2Codec.class, CompressionCodec.class);</div><div class="line"></div><div class="line">		Job job = Job.getInstance(configuration);</div><div class="line"></div><div class="line">		job.setJarByClass(WordCountDriver.class);</div><div class="line"></div><div class="line">		job.setMapperClass(WordCountMapper.class);</div><div class="line">		job.setReducerClass(WordCountReducer.class);</div><div class="line"></div><div class="line">		job.setMapOutputKeyClass(Text.class);</div><div class="line">		job.setMapOutputValueClass(IntWritable.class);</div><div class="line"></div><div class="line">		job.setOutputKeyClass(Text.class);</div><div class="line">		job.setOutputValueClass(IntWritable.class);</div><div class="line"></div><div class="line">		FileInputFormat.setInputPaths(job, new Path(args[0]));</div><div class="line">		FileOutputFormat.setOutputPath(job, new Path(args[1]));</div><div class="line"></div><div class="line">		boolean result = job.waitForCompletion(true);</div><div class="line"></div><div class="line">		System.exit(result ? 1 : 0);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>   <strong>package</strong>   com.atguigu.mapreduce.compress;   <strong>import</strong>   java.io.IOException;   <strong>import</strong>   org.apache.hadoop.conf.Configuration;   <strong>import</strong>   org.apache.hadoop.fs.Path;   <strong>import</strong>   org.apache.hadoop.io.IntWritable;   <strong>import</strong>   org.apache.hadoop.io.Text;   <strong>import</strong> org.apache.hadoop.io.compress.BZip2Codec;                                                                           <strong>import</strong>   org.apache.hadoop.io.compress.CompressionCodec;   <strong>import</strong>   org.apache.hadoop.io.compress.GzipCodec;   <strong>import</strong>   org.apache.hadoop.mapreduce.Job;   <strong>import</strong>   org.apache.hadoop.mapreduce.lib.input.FileInputFormat;   <strong>import</strong>   org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;       <strong>public</strong> <strong>class</strong>   WordCountDriver {                <strong>public</strong>   <strong>static</strong> <strong>void</strong> main(String[] args) <strong>throws</strong> IOException,   ClassNotFoundException, InterruptedException {                        Configuration   configuration = <strong>new</strong> Configuration();                        // 开启map端输出压缩                    configuration.setBoolean(“mapreduce.map.output.compress”,   <strong>true</strong>);                    // 设置map端输出压缩方式                    configuration.setClass(“mapreduce.map.output.compress.codec”,   BZip2Codec.<strong>class</strong>, CompressionCodec.<strong>class</strong>);                        Job   job = Job.<em>getInstance</em>(configuration);                        job.setJarByClass(WordCountDriver.<strong>class</strong>);                        job.setMapperClass(WordCountMapper.<strong>class</strong>);                    job.setReducerClass(WordCountReducer.<strong>class</strong>);                        job.setMapOutputKeyClass(Text.<strong>class</strong>);                    job.setMapOutputValueClass(IntWritable.<strong>class</strong>);                        job.setOutputKeyClass(Text.<strong>class</strong>);                    job.setOutputValueClass(IntWritable.<strong>class</strong>);                        FileInputFormat.<em>setInputPaths</em>(job,   <strong>new</strong> Path(args[0]));                    FileOutputFormat.<em>setOutputPath</em>(job,   <strong>new</strong> Path(args[1]));                        <strong>boolean</strong>   result = job.waitForCompletion(<strong>true</strong>);                        System.<em>exit</em>(result   ? 1 : 0);            }   }   </p>
+<p>2）Mapper保持不变</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package com.kingge.mapreduce.compress;</div><div class="line">import java.io.IOException;</div><div class="line">import org.apache.hadoop.io.IntWritable;</div><div class="line">import org.apache.hadoop.io.LongWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.Mapper;</div><div class="line"></div><div class="line">public class WordCountMapper extends Mapper&lt;LongWritable, Text, Text, IntWritable&gt;&#123;</div><div class="line">	</div><div class="line">	@Override</div><div class="line">	protected void map(LongWritable key, Text value, Context context)</div><div class="line">			throws IOException, InterruptedException &#123;</div><div class="line">		// 1 获取一行</div><div class="line">		String line = value.toString();</div><div class="line">		// 2 切割</div><div class="line">		String[] words = line.split(&quot; &quot;);</div><div class="line">		// 3 循环写出</div><div class="line">		for(String word:words)&#123;</div><div class="line">			context.write(new Text(word), new IntWritable(1));</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>   <strong>package</strong>   com.atguigu.mapreduce.compress;   <strong>import</strong>   java.io.IOException;   <strong>import</strong>   org.apache.hadoop.io.IntWritable;   <strong>import</strong>   org.apache.hadoop.io.LongWritable;   <strong>import</strong>   org.apache.hadoop.io.Text;   <strong>import</strong>   org.apache.hadoop.mapreduce.Mapper;       <strong>public</strong> <strong>class</strong>   WordCountMapper <strong>extends</strong> Mapper<longwritable, text,="" intwritable="">{                        @Override            <strong>protected</strong>   <strong>void</strong> map(LongWritable key, Text value, Context context)                             <strong>throws</strong>   IOException, InterruptedException {                    //   1 获取一行                    String   line = value.toString();                    //   2 切割                    String[]   words = line.split(“ “);                    //   3 循环写出                    <strong>for</strong>(String   word:words){                             context.write(<strong>new</strong>   Text(word), <strong>new</strong> IntWritable(1));                    }            }   }   </longwritable,></p>
+<p>3）Reducer保持不变</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package com.kingge.mapreduce.compress;</div><div class="line">import java.io.IOException;</div><div class="line">import org.apache.hadoop.io.IntWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.Reducer;</div><div class="line"></div><div class="line">public class WordCountReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;&#123;</div><div class="line">	</div><div class="line">	@Override</div><div class="line">	protected void reduce(Text key, Iterable&lt;IntWritable&gt; values,</div><div class="line">			Context context) throws IOException, InterruptedException &#123;</div><div class="line">		</div><div class="line">		int count = 0;</div><div class="line">		// 1 汇总</div><div class="line">		for(IntWritable value:values)&#123;</div><div class="line">			count += value.get();</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">        // 2 输出</div><div class="line">		context.write(key, new IntWritable(count));</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>   <strong>package</strong>   com.atguigu.mapreduce.compress;   <strong>import</strong>   java.io.IOException;   <strong>import</strong>   org.apache.hadoop.io.IntWritable;   <strong>import</strong>   org.apache.hadoop.io.Text;   <strong>import</strong>   org.apache.hadoop.mapreduce.Reducer;       <strong>public</strong> <strong>class</strong>   WordCountReducer <strong>extends</strong> Reducer<text, intwritable,="" text,="" intwritable="">{                        @Override            <strong>protected</strong>   <strong>void</strong> reduce(Text key, Iterable<intwritable> values,                             Context   context) <strong>throws</strong> IOException, InterruptedException {                                        <strong>int</strong>   count = 0;                    //   1 汇总                    <strong>for</strong>(IntWritable   value:values){                             count   += value.get();                    }                               // 2 输出                    context.write(key,   <strong>new</strong> IntWritable(count));            }   }   </intwritable></text,></p>
+<h3 id="7-10-3-Reduce输出端采用压缩"><a href="#7-10-3-Reduce输出端采用压缩" class="headerlink" title="7.10.3 Reduce输出端采用压缩"></a>7.10.3 Reduce输出端采用压缩</h3><p>基于wordcount案例处理</p>
+<p>1）修改驱动</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package com.kingge.mapreduce.compress;</div><div class="line">import java.io.IOException;</div><div class="line">import org.apache.hadoop.conf.Configuration;</div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.IntWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.io.compress.BZip2Codec;</div><div class="line">import org.apache.hadoop.io.compress.DefaultCodec;</div><div class="line">import org.apache.hadoop.io.compress.GzipCodec;</div><div class="line">import org.apache.hadoop.io.compress.Lz4Codec;</div><div class="line">import org.apache.hadoop.io.compress.SnappyCodec;</div><div class="line">import org.apache.hadoop.mapreduce.Job;</div><div class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</div><div class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</div><div class="line"></div><div class="line">public class WordCountDriver &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException &#123;</div><div class="line">		</div><div class="line">		Configuration configuration = new Configuration();</div><div class="line">		</div><div class="line">		Job job = Job.getInstance(configuration);</div><div class="line">		</div><div class="line">		job.setJarByClass(WordCountDriver.class);</div><div class="line">		</div><div class="line">		job.setMapperClass(WordCountMapper.class);</div><div class="line">		job.setReducerClass(WordCountReducer.class);</div><div class="line">		</div><div class="line">		job.setMapOutputKeyClass(Text.class);</div><div class="line">		job.setMapOutputValueClass(IntWritable.class);</div><div class="line">		</div><div class="line">		job.setOutputKeyClass(Text.class);</div><div class="line">		job.setOutputValueClass(IntWritable.class);</div><div class="line">		</div><div class="line">		FileInputFormat.setInputPaths(job, new Path(args[0]));</div><div class="line">		FileOutputFormat.setOutputPath(job, new Path(args[1]));</div><div class="line">		</div><div class="line">		// 设置reduce端输出压缩开启</div><div class="line">		FileOutputFormat.setCompressOutput(job, true);</div><div class="line">		</div><div class="line">		// 设置压缩的方式</div><div class="line">	    FileOutputFormat.setOutputCompressorClass(job, BZip2Codec.class); </div><div class="line">//	    FileOutputFormat.setOutputCompressorClass(job, GzipCodec.class); </div><div class="line">//	    FileOutputFormat.setOutputCompressorClass(job, DefaultCodec.class); </div><div class="line">	    </div><div class="line">		boolean result = job.waitForCompletion(true);</div><div class="line">		</div><div class="line">		System.exit(result?1:0);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>2）Mapper和Reducer保持不变（详见4.6.2）</p>
+<p>   <strong>package</strong>   com.atguigu.mapreduce.compress;   <strong>import</strong>   java.io.IOException;   <strong>import</strong>   org.apache.hadoop.conf.Configuration;   <strong>import</strong>   org.apache.hadoop.fs.Path;   <strong>import</strong>   org.apache.hadoop.io.IntWritable;   <strong>import</strong>   org.apache.hadoop.io.Text;   <strong>import</strong>   org.apache.hadoop.io.compress.BZip2Codec;   <strong>import</strong> org.apache.hadoop.io.compress.DefaultCodec;   <strong>import</strong> org.apache.hadoop.io.compress.GzipCodec;   <strong>import</strong> org.apache.hadoop.io.compress.Lz4Codec;   <strong>import</strong> org.apache.hadoop.io.compress.SnappyCodec;   <strong>import</strong>   org.apache.hadoop.mapreduce.Job;   <strong>import</strong>   org.apache.hadoop.mapreduce.lib.input.FileInputFormat;   <strong>import</strong>   org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;       <strong>public</strong> <strong>class</strong>   WordCountDriver {                <strong>public</strong>   <strong>static</strong> <strong>void</strong> main(String[] args) <strong>throws</strong> IOException,   ClassNotFoundException, InterruptedException {                                        Configuration   configuration = <strong>new</strong> Configuration();                                        Job   job = Job.<em>getInstance</em>(configuration);                                        job.setJarByClass(WordCountDriver.<strong>class</strong>);                                        job.setMapperClass(WordCountMapper.<strong>class</strong>);                    job.setReducerClass(WordCountReducer.<strong>class</strong>);                                        job.setMapOutputKeyClass(Text.<strong>class</strong>);                    job.setMapOutputValueClass(IntWritable.<strong>class</strong>);                                        job.setOutputKeyClass(Text.<strong>class</strong>);                    job.setOutputValueClass(IntWritable.<strong>class</strong>);                                        FileInputFormat.<em>setInputPaths</em>(job,   <strong>new</strong> Path(args[0]));                    FileOutputFormat.<em>setOutputPath</em>(job,   <strong>new</strong> Path(args[1]));                                        // 设置reduce端输出压缩开启                    FileOutputFormat.<em>setCompressOutput</em>(job, <strong>true</strong>);                                        // 设置压缩的方式                  FileOutputFormat.<em>setOutputCompressorClass</em>(job, BZip2Codec.<strong>class</strong>);      //            FileOutputFormat.setOutputCompressorClass(job, GzipCodec.class);    //            FileOutputFormat.setOutputCompressorClass(job, DefaultCodec.class);                                     <strong>boolean</strong>   result = job.waitForCompletion(<strong>true</strong>);                                         System.<em>exit</em>(result?1:0);            }   }   </p>
+<p>2）Mapper和Reducer保持不变（详见7.10.2）</p>
+]]></content>
     
     <summary type="html">
+    
+      &lt;h2 id=&quot;4-1-概述&quot;&gt;&lt;a href=&quot;#4-1-概述&quot; class=&quot;headerlink&quot; title=&quot;4.1 概述&quot;&gt;&lt;/a&gt;4.1 概述&lt;/h2&gt;&lt;p&gt;压缩技术能够有效减少底层存储系统（HDFS）读写字节数。压缩提高了网络带宽和磁盘空间的效率。在Hadoop下
     
     </summary>
     
@@ -831,9 +1066,106 @@
     <link href="http://kingge.top/2018/03/14/hadoop%E5%A4%A7%E6%95%B0%E6%8D%AE-%E4%B9%9D-yarn/"/>
     <id>http://kingge.top/2018/03/14/hadoop大数据-九-yarn/</id>
     <published>2018-03-14T14:59:59.000Z</published>
-    <updated>2019-06-10T13:31:50.743Z</updated>
+    <updated>2019-08-01T13:33:46.678Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="5-1-Hadoop1-x和Hadoop2-x架构区别"><a href="#5-1-Hadoop1-x和Hadoop2-x架构区别" class="headerlink" title="5.1 Hadoop1.x和Hadoop2.x架构区别"></a>5.1 Hadoop1.x和Hadoop2.x架构区别</h2><p>在Hadoop1.x时代，Hadoop中的MapReduce同时处理业务逻辑运算和资源的调度，耦合性较大。</p>
+<blockquote>
+<ol>
+<li>ResourceManagement 资源管理</li>
+<li>JobScheduling/JobMonitoring 任务调度监控</li>
+</ol>
+</blockquote>
+<p>在Hadoop2.x时代，增加了Yarn。Yarn只负责资源的调度，MapReduce只负责运算。这样就能够各司其职</p>
+<blockquote>
+<ol>
+<li>ResourceManger</li>
+<li>ApplicationMaster</li>
+</ol>
+</blockquote>
+<p>​    需要注意的是，在Yarn中我们把job的概念换成了<code>application</code>，因为在新的Hadoop2.x中，运行的应用不只是MapReduce了，还有可能是其它应用如一个DAG（有向无环图Directed Acyclic Graph，例如storm应用）。Yarn的另一个目标就是拓展Hadoop，使得它不仅仅可以支持MapReduce计算，还能很方便的管理诸如Hive、Hbase、Pig、Spark/Shark等应用。这种新的架构设计能够使得各种类型的应用运行在Hadoop上面，并通过Yarn从系统层面进行统一的管理，也就是说，有了Yarn，各种应用就可以互不干扰的运行在同一个Hadoop系统中，共享整个集群资源。</p>
+<h2 id="5-2-Yarn概述"><a href="#5-2-Yarn概述" class="headerlink" title="5.2 Yarn概述"></a>5.2 Yarn概述</h2><p><strong>Yarn是一个资源调度平台，负责为运算程序提供服务器运算资源</strong>，相当于一个分布式的操作系统平台，而<strong>MapReduce等运算程序则相当于运行于操作系统之上的应用程序</strong>。</p>
+<p><img src="/2018/03/14/hadoop大数据-九-yarn/5399709.png" alt="1564665399709"></p>
+<h2 id="5-3-Yarn基本架构"><a href="#5-3-Yarn基本架构" class="headerlink" title="5.3 Yarn基本架构"></a>5.3 Yarn基本架构</h2><p>​         YARN主要由ResourceManager、NodeManager、ApplicationMaster和Container等组件构成。</p>
+<p><img src="/2018/03/14/hadoop大数据-九-yarn/4665463356.png" alt="1564665463356"></p>
+<h2 id="5-4-Yarn工作机制"><a href="#5-4-Yarn工作机制" class="headerlink" title="5.4 Yarn工作机制"></a>5.4 Yarn工作机制</h2><p>1）Yarn运行机制</p>
+<p><img src="/2018/03/14/hadoop大数据-九-yarn/665729629.png" alt="1564665729629"></p>
+<p>2）工作机制详解</p>
+<blockquote>
+<p>​         （0）Mr程序提交到客户端所在的节点。</p>
+<p>​         （1）Yarnrunner向Resourcemanager申请一个Application。</p>
+<p>​         （2）rm将该应用程序的资源路径返回给yarnrunner。</p>
+<p>​         （3）该程序将运行所需资源提交到HDFS上。</p>
+<p>​         （4）程序资源提交完毕后，申请运行mrAppMaster。</p>
+<p>​         （5）RM将用户的请求初始化成一个task。</p>
+<p>​         （6）其中一个NodeManager领取到task任务。</p>
+<p>​         （7）该NodeManager创建容器Container，并产生MRAppmaster。</p>
+<p>​         （8）Container从HDFS上拷贝资源到本地。</p>
+<p>​         （9）MRAppmaster向RM 申请运行maptask资源。</p>
+<p>​         （10）RM将运行maptask任务分配给另外两个NodeManager，另两个NodeManager分别领取任务并创建容器。</p>
+<p>​         （11）MR向两个接收到任务的NodeManager发送程序启动脚本，这两个NodeManager分别启动maptask，maptask对数据分区排序。</p>
+<p>（12）MrAppMaster等待所有maptask运行完毕后，向RM申请容器，运行reduce task。</p>
+<p>​         （13）reduce task向maptask获取相应分区的数据。</p>
+<p>​         （14）程序运行完毕后，MR会向RM申请注销自己。</p>
+</blockquote>
+<h2 id="5-5-作业提交全过程"><a href="#5-5-作业提交全过程" class="headerlink" title="5.5 作业提交全过程"></a>5.5 作业提交全过程</h2><p>1）作业提交过程之YARN</p>
+<p><img src="/2018/03/14/hadoop大数据-九-yarn/665811570.png" alt="1564665811570"></p>
+<p>作业提交全过程详解</p>
+<h3 id="（1）作业提交"><a href="#（1）作业提交" class="headerlink" title="（1）作业提交"></a>（1）作业提交</h3><p>第0步：client调用job.waitForCompletion方法，向整个集群提交MapReduce作业。</p>
+<p>第1步：client向RM申请一个作业id。</p>
+<p>第2步：RM给client返回该job资源的提交路径和作业id。</p>
+<p>第3步：client提交jar包、切片信息和配置文件到指定的资源提交路径。</p>
+<p>第4步：client提交完资源后，向RM申请运行MrAppMaster。</p>
+<h3 id="（2）作业初始化"><a href="#（2）作业初始化" class="headerlink" title="（2）作业初始化"></a>（2）作业初始化</h3><p>第5步：当RM收到client的请求后，将该job添加到容量调度器中。</p>
+<p>第6步：某一个空闲的NM领取到该job。</p>
+<p>第7步：该NM创建Container，并产生MRAppmaster。</p>
+<p>第8步：下载client提交的资源到本地。</p>
+<h3 id="（3）任务分配"><a href="#（3）任务分配" class="headerlink" title="（3）任务分配"></a>（3）任务分配</h3><p>第9步：MrAppMaster向RM申请运行多个maptask任务资源。</p>
+<p>第10步：RM将运行maptask任务分配给另外两个NodeManager，另两个NodeManager分别领取任务并创建容器。</p>
+<h3 id="（4）任务运行"><a href="#（4）任务运行" class="headerlink" title="（4）任务运行"></a>（4）任务运行</h3><p>第11步：MR向两个接收到任务的NodeManager发送程序启动脚本，这两个NodeManager分别启动maptask，maptask对数据分区排序。</p>
+<p>第12步：MrAppMaster等待所有maptask运行完毕后，向RM申请容器，运行reduce task。</p>
+<p>第13步：reduce task向maptask获取相应分区的数据。</p>
+<p>第14步：程序运行完毕后，MR会向RM申请注销自己。</p>
+<h3 id="（5）进度和状态更新"><a href="#（5）进度和状态更新" class="headerlink" title="（5）进度和状态更新"></a>（5）进度和状态更新</h3><p>YARN中的任务将其进度和状态(包括counter)返回给应用管理器, 客户端每秒(通过mapreduce.client.progressmonitor.pollinterval设置)向应用管理器请求进度更新, 展示给用户。</p>
+<h3 id="（6）作业完成"><a href="#（6）作业完成" class="headerlink" title="（6）作业完成"></a>（6）作业完成</h3><p>除了向应用管理器请求作业进度外, 客户端每5分钟都会通过调用waitForCompletion()来检查作业是否完成。时间间隔可以通过mapreduce.client.completion.pollinterval来设置。作业完成之后, 应用管理器和container会清理工作状态。作业的信息会被作业历史服务器存储以备之后用户核查。</p>
+<p>2）作业提交过程之MapReduce</p>
+<p><img src="/2018/03/14/hadoop大数据-九-yarn/65974601.png" alt="1564665974601"></p>
+<p>3）作业提交过程之读数据</p>
+<p><img src="/2018/03/14/hadoop大数据-九-yarn/4666063752.png" alt="1564666063752"></p>
+<p>4）作业提交过程之写数据</p>
+<p><img src="/2018/03/14/hadoop大数据-九-yarn/64666122043.png" alt="1564666122043"></p>
+<h2 id="5-6-资源调度器"><a href="#5-6-资源调度器" class="headerlink" title="5.6 资源调度器"></a>5.6 资源调度器</h2><p>目前，Hadoop作业调度器主要有三种：FIFO、Capacity Scheduler和Fair Scheduler。Hadoop2.7.2默认的资源调度器是Capacity Scheduler。</p>
+<p>具体设置详见：yarn-default.xml文件</p>
+   <property>       <description>The class to use as   the resource scheduler.</description>         <name>yarn.resourcemanager.scheduler.class</name>   <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>   </property>   
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">    &lt;description&gt;The class to use as the resource scheduler.&lt;/description&gt;</div><div class="line">    &lt;name&gt;yarn.resourcemanager.scheduler.class&lt;/name&gt;</div><div class="line">&lt;value&gt;org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<p>　　1）先进先出调度器（FIFO）</p>
+<p><img src="/2018/03/14/hadoop大数据-九-yarn/66221031.png" alt="1564666221031">      </p>
+<p>   2）容量调度器（Capacity Scheduler）</p>
+<p><img src="/2018/03/14/hadoop大数据-九-yarn/4666258448.png" alt="1564666258448">        </p>
+<p> 3）公平调度器（Fair Scheduler）</p>
+<p><img src="/2018/03/14/hadoop大数据-九-yarn/564666314115.png" alt="1564666314115"></p>
+<h2 id="5-7-任务的推测执行"><a href="#5-7-任务的推测执行" class="headerlink" title="5.7 任务的推测执行"></a>5.7 任务的推测执行</h2><p>1）作业完成时间取决于最慢的任务完成时间</p>
+<p>一个作业由若干个Map任务和Reduce任务构成。因硬件老化、软件Bug等，某些任务可能运行非常慢。</p>
+<p>典型案例：系统中有99%的Map任务都完成了，只有少数几个Map老是进度很慢，完不成，怎么办？</p>
+<p>2）推测执行机制：</p>
+<p>发现拖后腿的任务，比如某个任务运行速度远慢于任务平均速度。为拖后腿任务启动一个备份任务，同时运行。谁先运行完，则采用谁的结果。</p>
+<p>3）执行推测任务的前提条件</p>
+<p>（1）每个task只能有一个备份任务；</p>
+<p>（2）当前job已完成的task必须不小于0.05（5%）</p>
+<p>（3）开启推测执行参数设置。Hadoop2.7.2 mapred-site.xml文件中默认是打开的。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;mapreduce.map.speculative&lt;/name&gt;</div><div class="line">  &lt;value&gt;true&lt;/value&gt;</div><div class="line">  &lt;description&gt;If true, then multiple instances of some map tasks                may be executed in parallel.&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;mapreduce.reduce.speculative&lt;/name&gt;</div><div class="line">  &lt;value&gt;true&lt;/value&gt;</div><div class="line">  &lt;description&gt;If true, then multiple instances of some reduce tasks </div><div class="line">               may be executed in parallel.&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+   <property>       <name>mapreduce.map.speculative</name>       <value>true</value>     <description>If   true, then multiple instances of some map tasks                may be executed in   parallel.</description>   </property>       <property>       <name>mapreduce.reduce.speculative</name>       <value>true</value>       <description>If true, then multiple instances of some reduce   tasks                   may be executed in   parallel.</description>   </property>   
+
+<p>4）不能启用推测执行机制情况</p>
+<p>   （1）任务间存在严重的负载倾斜；</p>
+<p>   （2）特殊任务，比如任务向数据库中写数据。</p>
+<p>5）算法原理：</p>
+<p><img src="/2018/03/14/hadoop大数据-九-yarn/64666366883.png" alt="1564666366883"></p>
+]]></content>
     
     <summary type="html">
+    
+      &lt;h2 id=&quot;5-1-Hadoop1-x和Hadoop2-x架构区别&quot;&gt;&lt;a href=&quot;#5-1-Hadoop1-x和Hadoop2-x架构区别&quot; class=&quot;headerlink&quot; title=&quot;5.1 Hadoop1.x和Hadoop2.x架构区别&quot;&gt;&lt;/a&gt;5.1 H
     
     </summary>
     
