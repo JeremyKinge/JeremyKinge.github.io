@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="持续集成技术,容器管理,自动部署," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="一、DockerMaven插件的使用这个插件的目的就是，能够把本地项目远程打包到docker，并生成相应的镜像。 微服务部署有两种方法： （1）手动部署：首先基于源码打包生成jar包（或war包）,将jar包（或war包）上传至虚 拟机并拷贝至JDK容器。 （2）通过Maven插件自动部署。 对于数量众多的微服务，手动部署无疑是非常麻烦的做法，并且容易出错。所以我们这 里学习如何自动部署，这也是企">
+<meta name="keywords" content="持续集成技术,容器管理,自动部署">
+<meta property="og:type" content="article">
+<meta property="og:title" content="持续集成技术">
+<meta property="og:url" content="http://kingge.top/2019/03/08/持续集成技术个人总结/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="一、DockerMaven插件的使用这个插件的目的就是，能够把本地项目远程打包到docker，并生成相应的镜像。 微服务部署有两种方法： （1）手动部署：首先基于源码打包生成jar包（或war包）,将jar包（或war包）上传至虚 拟机并拷贝至JDK容器。 （2）通过Maven插件自动部署。 对于数量众多的微服务，手动部署无疑是非常麻烦的做法，并且容易出错。所以我们这 里学习如何自动部署，这也是企">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image002.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image004.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image006.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image008.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image009.png">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image011.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image013.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image014.png">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image016.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image018.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image020.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image022.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image024.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image026.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image028.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image030.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image032.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image034.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image036.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image038.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image040.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image042.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image044.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image046.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image048.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image050.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image052.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image054.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image056.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image057.png">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image059.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image061.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image063.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image065.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image067.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image068.png">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image070.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image071.png">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image073.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image075.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image076.png">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image078.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image080.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image082.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image084.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image085.png">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image086.png">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image088.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image090.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image092.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image094.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image096.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image098.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image100.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image102.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image104.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image106.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image108.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image110.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image112.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image114.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image115.png">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image117.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image119.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image121.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image123.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image125.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image127.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image129.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image131.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image133.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image135.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image137.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image139.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image141.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image143.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image145.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image147.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image149.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image151.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image153.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image155.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image157.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image159.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image161.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image163.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image165.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image167.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image169.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image171.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image173.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image175.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image177.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image179.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image181.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image183.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image185.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image187.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image189.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image191.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image193.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image195.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image197.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image199.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image201.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image203.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image205.jpg">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image206.png">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image207.png">
+<meta property="og:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image208.png">
+<meta property="og:updated_time" content="2019-08-25T03:12:59.170Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="持续集成技术">
+<meta name="twitter:description" content="一、DockerMaven插件的使用这个插件的目的就是，能够把本地项目远程打包到docker，并生成相应的镜像。 微服务部署有两种方法： （1）手动部署：首先基于源码打包生成jar包（或war包）,将jar包（或war包）上传至虚 拟机并拷贝至JDK容器。 （2）通过Maven插件自动部署。 对于数量众多的微服务，手动部署无疑是非常麻烦的做法，并且容易出错。所以我们这 里学习如何自动部署，这也是企">
+<meta name="twitter:image" content="http://kingge.top/2019/03/08/持续集成技术个人总结/clip_image002.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2019/03/08/持续集成技术个人总结/"/>
+
+
+
+
+
+  <title>持续集成技术 | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2019/03/08/持续集成技术个人总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">持续集成技术</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-08T23:59:59+08:00">
+                2019-03-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/持续集成技术/" itemprop="url" rel="index">
+                    <span itemprop="name">持续集成技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  7,411
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  30
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、DockerMaven插件的使用"><a href="#一、DockerMaven插件的使用" class="headerlink" title="一、DockerMaven插件的使用"></a>一、DockerMaven插件的使用</h1><p>这个插件的目的就是，能够把本地项目远程打包到docker，并生成相应的镜像。</p>
+<p>微服务部署有两种方法：</p>
+<p>（1）手动部署：首先基于源码打包生成jar包（或war包）,将jar包（或war包）上传至虚 拟机并拷贝至JDK容器。</p>
+<p>（2）通过Maven插件自动部署。</p>
+<p>对于数量众多的微服务，手动部署无疑是非常麻烦的做法，并且容易出错。所以我们这 里学习如何自动部署，这也是企业实际开发中经常使用的方法</p>
+<p> 而且使用dockermaven插件自动部署项目，有两种方式，一种是编写Dockerfile方式，一种是纯xml方式。第一种方式在本人的总结的《Docker总结》第十二章有写到。下面的案例主要是讲解通过xml的方式部署项目。</p>
+<p>  <strong>其实他们本质上是一样的</strong></p>
+<h2 id="Maven插件自动部署步骤："><a href="#Maven插件自动部署步骤：" class="headerlink" title="Maven插件自动部署步骤："></a>Maven插件自动部署步骤：</h2><p>（1）修改宿主机的docker配置，让其可以远程访问</p>
+<p>Vi  /lib/systemd/system/docker.service</p>
+<p>其中ExecStart=后添加配置</p>
+<p> ‐H tcp://0.0.0.0:2375 ‐H unix:///var/run/docker.sock</p>
+<p>修改后如下：</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image002.jpg" alt="img"></p>
+<p>（2）刷新配置，重启服务</p>
+<p>systemctl daemon‐reload </p>
+<p> systemctl restart docker </p>
+<p> docker start registry</p>
+<p>   注意：这里的registry是本人新建的本地仓库（怎么新建本地仓库以及怎么使用，参见docker的文章）-当然你也可以把镜像提交到阿里云镜像仓库中。</p>
+<p><strong>使用SpringBoot2.0+DockerFile+Maven插件构建镜像并推送到阿里云仓库</strong></p>
+<p><strong><a href="https://blog.csdn.net/haogexiang9700/article/details/88318867" target="_blank" rel="external">https://blog.csdn.net/haogexiang9700/article/details/88318867</a></strong></p>
+<p>（3）在工程pom.xml 增加配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;build&gt;         </div><div class="line">&lt;finalName&gt;app&lt;/finalName&gt;         </div><div class="line">&lt;plugins&gt;            </div><div class="line"> &lt;plugin&gt;</div><div class="line">&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;                 </div><div class="line">&lt;artifactId&gt;spring‐boot‐maven‐plugin&lt;/artifactId&gt;             </div><div class="line">&lt;/plugin&gt;</div><div class="line"> &lt;plugin&gt;                 </div><div class="line">&lt;groupId&gt;com.spotify&lt;/groupId&gt;                 </div><div class="line">&lt;artifactId&gt;docker‐maven‐plugin&lt;/artifactId&gt;                 </div><div class="line">&lt;version&gt;0.4.13&lt;/version&gt;                 </div><div class="line">&lt;configuration&gt;</div><div class="line">&lt;imageName&gt;192.168.1.105:5000/$&#123;project.artifactId&#125;:$&#123;project.version&#125; &lt;/imageName&gt;</div><div class="line">&lt;baseImage&gt;jdk1.8&lt;/baseImage&gt;                     </div><div class="line">&lt;entryPoint&gt;[&quot;java&quot;, &quot;‐jar&quot;,  &quot;/$&#123;project.build.finalName&#125;.jar&quot;]</div><div class="line">&lt;/entryPoint&gt;                     </div><div class="line">&lt;resources&gt;</div><div class="line"> &lt;resource&gt;</div><div class="line"> &lt;targetPath&gt;/&lt;/targetPath&gt;                             </div><div class="line">&lt;directory&gt;$&#123;project.build.directory&#125; &lt;/directory&gt;</div><div class="line">&lt;include&gt;$&#123;project.build.finalName&#125;.jar&lt;/include&gt;                         </div><div class="line">&lt;/resource&gt;                     </div><div class="line">&lt;/resources&gt;                     </div><div class="line">&lt;dockerHost&gt;http://192.168.1.105:2375&lt;/dockerHost&gt;                 </div><div class="line">&lt;/configuration&gt;            </div><div class="line"> &lt;/plugin&gt;         </div><div class="line">&lt;/plugins&gt;     </div><div class="line">&lt;/build&gt;</div></pre></td></tr></table></figure>
+   <build>            <finalname>app</finalname>              <plugins>                  <plugin>   <groupid>org.springframework.boot</groupid>                      <artifactid>spring‐boot‐maven‐plugin</artifactid>                  </plugin>    <plugin>                      <groupid>com.spotify</groupid>                      <artifactid>docker‐maven‐plugin</artifactid>                      <version>0.4.13</version>                      <configuration>   <imagename>192.168.1.105:5000/${project.artifactId}:${project.version}   </imagename>   <baseimage>jdk1.8</baseimage>                          <entrypoint>[“java”, “‐jar”,    “/${project.build.finalName}.jar”]   </entrypoint>                          <resources>    <resource>    <targetpath>/</targetpath>                                  <directory>${project.build.directory}   </directory>   <include>${project.build.finalName}.jar</include>                              </resource>                          </resources>                          <dockerhost><a href="http://192.168.1.105:2375" target="_blank" rel="external">http://192.168.1.105:2375</a></dockerhost>                      </configuration>                  </plugin>              </plugins>          </build>   
+
+<p>以上配置会自动生成Dockerfile</p>
+<p>   FROM jdk1.8     ADD app.jar /     ENTRYPOINT [“java”,”‐jar”,”/app.jar”]   </p>
+<p>创建一个镜像，继承自jdk1.8，同时拷贝本地的app.jar到镜像的根目录。在容器启动时，执行java –jar /app.jar(也就是启动项目)</p>
+<p>（4）在windows的命令提示符下，进入工程app所在的目录，进行打包和上传镜像</p>
+<p>mvn install</p>
+<p>mvn docker:build  ‐DpushImage</p>
+<p>执行后，会有如下输出，代码正在上传</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image004.jpg" alt="img"></p>
+<p>（6）进入宿主机 , 查看镜像</p>
+<p>​      Docker images</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image006.jpg" alt="img"></p>
+<p>（7）启动容器</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image008.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image009.png" alt="img"></p>
+<p>访问成功！！！</p>
+<h1 id="二、持续集成工具Jenkins"><a href="#二、持续集成工具Jenkins" class="headerlink" title="二、持续集成工具Jenkins"></a>二、持续集成工具Jenkins</h1><p>官网：<a href="https://jenkins.io/zh/doc/tutorials/build-a-java-app-with-maven/" target="_blank" rel="external">https://jenkins.io/zh/doc/tutorials/build-a-java-app-with-maven/</a></p>
+<p>主要是解决自动化构建项目，发布项目等等问题。</p>
+<p>微服务架构下，带来了运维上的额外复杂性，尤其是在服务部署和服务监控上。单体应用是集中式的，就一个单体跑在一起，部署和管理的时候非常简单。而微服务是一个网状分布的，有很多服务需要维护和管理，对它进行部署和维护的时候则比较复杂，所以就需要一个工具能够自动化的完成自动编译、发布和测试，从而尽快地发现集成错误，让团队能够更快的开发内聚的软件。</p>
+<p>​       <strong>持续集成具有的特点：</strong></p>
+<p>它是一个自动化的周期性的集成测试过程，从检出代码、编译构建、运行测试、结果 记录、测试统计等都是自动完成的，无需人工干预； </p>
+<p>需要有专门的集成服务器来执行集成构建； </p>
+<p>需要有代码托管工具支持，我们下一小节将介绍Git以及可视化界面Gogs的使用</p>
+<p><strong>持续集成的作用：</strong></p>
+<p>保证团队开发人员提交代码的质量，减轻了软件发布时的压力； </p>
+<p>持续集成中的任何一个环节都是自动完成的，无需太多的人工干预，有利于减少重复 过程以节省时间、费用和工作量；</p>
+<p><strong>基本思路：</strong></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image011.jpg" alt="https://www.centos.bz/wp-content/uploads/2017/11/1-17.jpg"></p>
+<h2 id="1-Jenkins简介"><a href="#1-Jenkins简介" class="headerlink" title="1.Jenkins简介"></a>1.Jenkins简介</h2><p> Jenkins，原名Hudson，2011年改为现在的名字，它 是一个开源的实现持续集成的 软件工具。官方网站：<a href="http://jenkins-ci.org/。" target="_blank" rel="external">http://jenkins-ci.org/。</a></p>
+<p> Jenkins 能实施监控集成中存在的错误，提供详细的日志文件和提醒功能，还能用图 表的形式形象地展示项目构建的趋势和稳定性。</p>
+<p> <strong>特点：</strong> </p>
+<p><strong>易安装：</strong>仅仅一个 java -jar jenkins.war，从官网下载该文件后，直接运行，无需额 外的安装，更无需安装数据库； </p>
+<p><strong>易配置：</strong>提供友好的GUI配置界面； </p>
+<p><strong>变更支持：</strong>Jenkins能从代码仓库（Subversion/CVS）中获取并产生代码更新列表并 输出到编译输出信息中； </p>
+<p><strong>支持永久链接：</strong>用户是通过web来访问Jenkins的，而这些web页面的链接地址都是 永久链接地址，因此，你可以在各种文档中直接使用该链接； </p>
+<p><strong>集成E-Mail/RSS/IM：</strong>当完成一次集成时，可通过这些工具实时告诉你集成结果（据 我所知，构建一次集成需要花费一定时间，有了这个功能，你就可以在等待结果过程 中，干别的事情）；</p>
+<p> <strong>JUnit/TestNG**</strong>测试报告：**也就是用以图表等形式提供详细的测试报表功能； </p>
+<p><strong>支持分布式构建：</strong>Jenkins可以把集成构建等工作分发到多台计算机中完成； </p>
+<p><strong>文件指纹信息：</strong>Jenkins会保存哪次集成构建产生了哪些jars文件，哪一次集成构建使 用了哪个版本的jars文件等构建记录； </p>
+<p><strong>支持第三方插件：</strong>使得 Jenkins 变得越来越强大</p>
+<h2 id="2-Jenkins安装"><a href="#2-Jenkins安装" class="headerlink" title="2. Jenkins安装"></a>2. Jenkins安装</h2><p>资源准备</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image013.jpg" alt="img"></p>
+<p>当然你可以通过wget命令进行下载相应的rpm包</p>
+<h3 id="2-1-JDK安装"><a href="#2-1-JDK安装" class="headerlink" title="2.1 JDK安装"></a>2.1 JDK安装</h3><p>（1）将jdk-8u171-linux-x64.rpm上传至服务器（虚拟机）</p>
+<p>（2）执行安装命令</p>
+<p>rpm ‐ivh jdk‐8u171‐linux‐x64.rpm</p>
+<p>（3）查看是否安装成功</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image014.png" alt="img"></p>
+<p>​       因为rpm包已经自动为我们做了相关的环境变量配置，所以不需要额外配置（相关的命令在 /usr/bin）</p>
+<h3 id="2-2-maven安装"><a href="#2-2-maven安装" class="headerlink" title="2.2 maven安装"></a>2.2 maven安装</h3><p>（1）将 apache‐maven‐3.5.4‐bin.tar.gz上传至服务器（虚拟机）</p>
+<p>（2）解压</p>
+<p>tar zxvf apache‐maven‐3.5.4‐bin.tar.gz</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image016.jpg" alt="img"></p>
+<p>（3））编辑setting.xml配置文件</p>
+<p>vi /opt/software/apache-maven-3.5.4/conf/settings.xml</p>
+<p>   增加如下配置</p>
+<localrepository>/opt/software/mavenRepostory</localrepository>
+
+
+
+<p>（4）将开发环境（win10）的本地仓库上传至服务器（虚拟机）并移动到/opt/software/mavenRepostory</p>
+<p>执行此步是为了以后在打包的时候不必重新下载，缩短打包的时间  </p>
+<h3 id="2-3-Jenkins安装与启动"><a href="#2-3-Jenkins安装与启动" class="headerlink" title="2.3 Jenkins安装与启动"></a>2.3 Jenkins安装与启动</h3><p><strong>在安装jenkins之前必须要安装jdk。</strong></p>
+<p>（1）下载jenkins</p>
+<p>wget <a href="https://pkg.jenkins.io/redhat/jenkins‐2.83‐1.1.noarch.rpm" target="_blank" rel="external">https://pkg.jenkins.io/redhat/jenkins‐2.83‐1.1.noarch.rpm</a></p>
+<p>或将应下载好的jenkins-2.83-1.1.noarch.rpm上传至服务器</p>
+<p><a href="https://pkg.jenkins.io/redhat-stable/" target="_blank" rel="external">https://pkg.jenkins.io/redhat-stable/</a> 官网下载（建议下载最新版本，避免安装插件时报错 jenkins-2.187-1.1.noarch.rpm）</p>
+<p>（2）安装jenkins</p>
+<p>rpm ‐ivh jenkins‐2.83‐1.1.noarch.rpm</p>
+<p><strong>自动安装完成之后：</strong> </p>
+<p><strong>/usr/lib/jenkins/jenkins.war    WAR**</strong>包** </p>
+<p><strong>/etc/sysconfig/jenkins</strong>       <strong>配置文件</strong></p>
+<p><strong>/var/lib/jenkins/</strong>       <strong>默认的JENKINS_HOME目录</strong></p>
+<p><strong>/var/log/jenkins/jenkins.log    Jenkins**</strong>日志文件**</p>
+<p>（3）配置jenkins</p>
+<p>vi /etc/sysconfig/jenkins</p>
+<p>修改用户和端口</p>
+<p>JENKINS_USER=”root”  JENKINS_PORT=”8888”</p>
+<p>（4）启动服务</p>
+<p>systemctl start Jenkins</p>
+<p>（5）访问链接 <a href="http://49.234.188.74:8888" target="_blank" rel="external">http://49.234.188.74:8888</a></p>
+<p>从/var/lib/jenkins/secrets/initialAdminPassword中获取初始密码串</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image018.jpg" alt="img"></p>
+<p>（6）安装插件</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image020.jpg" alt="img"></p>
+<p>选择推荐安装，避免漏掉一些jenkins必须依赖的插件，后面有额外需要的插件我们还可以手动安装</p>
+<p>安装插件中</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image022.jpg" alt="img"></p>
+<p><strong>需要注意的是，在安装插件的可能会失败，一般是因为当前jenkins版本太低的原因，可以先忽略错误，进去后更新jenkins为新的版本，插件自己会自动安装成功。</strong></p>
+<p>（7）新建用户</p>
+<p>完成安装进入主界面</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image024.jpg" alt="img"></p>
+<h2 id="3-Jenkins插件安装"><a href="#3-Jenkins插件安装" class="headerlink" title="3. Jenkins插件安装"></a>3. Jenkins插件安装</h2><p>我们以安装maven插件为例，演示插件的安装</p>
+<p>（1）点击左侧的“系统管理”菜单 ,然后点点击</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image026.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image028.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image030.jpg" alt="img"></p>
+<h2 id="4-全局工具配置"><a href="#4-全局工具配置" class="headerlink" title="4.全局工具配置"></a>4.全局工具配置</h2><p>选择系统管理，全局工具配置</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image032.jpg" alt="img"></p>
+<p>（1）JDK配置</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image034.jpg" alt="img"></p>
+<p>设置javahome为 /usr/java/jdk1.8.0_171-amd64</p>
+<p>（2）Git配置   （本地已经安装了Git软件）</p>
+<p>   如果linux 没有安装过git。那么可以参考 《额外补充》第三章节进行安装。</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image036.jpg" alt="img"></p>
+<p>如果不知道本地git的地址可以使用命令：whereis git 获取地址。</p>
+<p>  默认在启动jenkins时，应安装好了git插件</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image038.jpg" alt="img"></p>
+<p>（3）Maven配置</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image040.jpg" alt="img"></p>
+<p>然后保存即可，接下来上传代码到git，然后创建任务。</p>
+<h2 id="5-代码上传至Git服务器"><a href="#5-代码上传至Git服务器" class="headerlink" title="5 代码上传至Git服务器"></a>5 代码上传至Git服务器</h2><h3 id="5-1-Gogs搭建与配置"><a href="#5-1-Gogs搭建与配置" class="headerlink" title="5.1 Gogs搭建与配置"></a>5.1 Gogs搭建与配置</h3><p>Gogs 是一款极易搭建的自助 Git 服务。</p>
+<p>Gogs 的目标是打造一个最简单、最快速和最轻松的方式搭建自助 Git 服务。使用 Go 语 言开发使得 Gogs 能够通过独立的二进制分发，并且支持 Go 语言支持的 所有平台，包 括 Linux、Mac OS X、Windows 以及 ARM 平台</p>
+<p>地址：<a href="https://gitee.com/Unknown/gogs" target="_blank" rel="external">https://gitee.com/Unknown/gogs</a></p>
+<p>（1）下载镜像</p>
+<p>docker pull gogs/gogs</p>
+<p>（2）创建容器</p>
+<p>  docker run -d -p 10022:22 -p 10080:3000 \ </p>
+<p>–name=gogs \</p>
+<p>-v /opt/docker/gogs/:/data \ </p>
+<p>gogs/gogs</p>
+<p>（3）安装gogs</p>
+<p>在地址栏输入 <a href="http://49.234.188.74:3000/" target="_blank" rel="external">http://49.234.188.74: 10080/</a>，会进入首次运行安装程序页面，我们可以选择一种数据 库作为gogs数据的存储，最简单的是选择SQLite3。如果对于规模较大的公司，可以选择 MySQL  </p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image042.jpg" alt="img"></p>
+<p>点击“立即安装”</p>
+<p>这里的域名要设置为centos的IP地址,安装后显示主界面</p>
+<p>（4）注册</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image044.jpg" alt="img"></p>
+<p>（5）登录</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image046.jpg" alt="img"></p>
+<p>登陆后</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image048.jpg" alt="img"></p>
+<p>（6）创建仓库 </p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image050.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image052.jpg" alt="img"></p>
+<h3 id="5-2-提交代码到git"><a href="#5-2-提交代码到git" class="headerlink" title="5.2 提交代码到git"></a>5.2 提交代码到git</h3><p>步骤：</p>
+<p>（1）在本地安装git(Windows版本)</p>
+<p>（2）在IDEA中选择菜单 :  File – settings ,  在窗口中选择Version Control –  Gi</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image054.jpg" alt="img"></p>
+<p>（3）选择菜单VCS  –&gt; Enable Version Control Integration</p>
+<p>（4）设置远程地址:  右键点击工程选择菜单    Git –&gt; Repository   –&gt;Remotes…</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image056.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image057.png" alt="img"></p>
+<p>url填写我们之前用gogs创建的git仓库：<a href="http://49.234.188.74:10080/root/kingge.git" target="_blank" rel="external">http://49.234.188.74:10080/root/kingge.git</a></p>
+<p>（5）右键点击工程选择菜单    Git –&gt; Add </p>
+<p>（6）右键点击工程选择菜单    Git –&gt; Commit Directory…</p>
+<p>（7）右键点击工程选择菜单    Git –&gt; Repository   –&gt; Push …</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image059.jpg" alt="img"></p>
+<h2 id="6-jenkins任务的创建与执行"><a href="#6-jenkins任务的创建与执行" class="headerlink" title="6 jenkins任务的创建与执行"></a>6 jenkins任务的创建与执行</h2><p>（1）回到首页，点击新建按钮 .如下图，输入名称，选择创建一个Maven项目，点击OK</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image061.jpg" alt="img"></p>
+<p>（2）源码管理，选择Git</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image063.jpg" alt="img"></p>
+<p>（3）填写构建语句</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image065.jpg" alt="img"></p>
+<p>clean package docker:build ‐DpushImage</p>
+<p>（4）查看项目</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image067.jpg" alt="img"></p>
+<p>我们点击执行后，可以看到左下角出现这个任务进度</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image068.png" alt="img"></p>
+<p>这样就能够上传成功了</p>
+<h2 id="7-总结"><a href="#7-总结" class="headerlink" title="7.总结"></a>7.总结</h2><p>通过jenkins，我们可以很好的集成、部署了我们开发的项目，自动构建项目的镜像，这样为我们节省了很多的时间。</p>
+<h1 id="三、容器管理工具Rancher"><a href="#三、容器管理工具Rancher" class="headerlink" title="三、容器管理工具Rancher"></a>三、容器管理工具Rancher</h1><p>管理docker和Kubernetes容器，通过可视化界面的方式，管理，部署，启动docker容器，同时支持分布式集群部署docekr容器。</p>
+<h2 id="1-安装Rancher"><a href="#1-安装Rancher" class="headerlink" title="1.安装Rancher"></a>1.安装Rancher</h2><p>Rancher是一个开源的企业级全栈化容器部署及管理平台。Rancher为容器提供一揽 子基础架构服务：CNI兼容的网络服务、存储服务、主机管理、负载均衡、防护墙…… Rancher让上述服务跨越公有云、私有云、虚拟机、物理机环境运行，真正实现一键式应 用部署和管理</p>
+<p><a href="https://www.cnrancher.com/" target="_blank" rel="external">https://www.cnrancher.com/</a> </p>
+<p>（1）下载Rancher 镜像</p>
+<p>docker pull rancher/server</p>
+<p>（2）创建Rancher容器</p>
+<p>docker run ‐di ‐‐name=rancher ‐p 9090:8080 rancher/server</p>
+<p>（3）在浏览器输入地址： <a href="http://192.168.184.136:9090" target="_blank" rel="external">http://192.168.184.136:9090</a>  </p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image070.jpg" alt="img"></p>
+<h2 id="2-初始化Rancher"><a href="#2-初始化Rancher" class="headerlink" title="2.初始化Rancher"></a>2.初始化Rancher</h2><h3 id="2-1-添加环境"><a href="#2-1-添加环境" class="headerlink" title="2.1 添加环境"></a>2.1 添加环境</h3><p>Rancher 支持将资源分组归属到多个环境。 每个环境具有自己独立的基础架构资源及服 务，并由一个或多个用户、团队或组织所管理。</p>
+<p>例如，您可以创建独立的“开发”、“测试”及“生产”环境以确保环境之间的安全隔离，将“开 发”环境的访问权限赋予全部人员，但限制“生产”环境的访问权限给一个小的团队。</p>
+<p>（1）     选择“Default –&gt;环境管理” 菜单</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image071.png" alt="img"></p>
+<p>（2）填写名称，点击“创建”按钮</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image073.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image075.jpg" alt="img"></p>
+<p>可以添加多个环境，分别给区分不同用户使用场景</p>
+<p>（4））你可以通过点击logo右侧的菜单在各种环境下切换</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image076.png" alt="img"></p>
+<h3 id="2-2-添加主机"><a href="#2-2-添加主机" class="headerlink" title="2.2 添加主机"></a>2.2 添加主机</h3><p>（1）选择基础架构–&gt;主机 菜单，点击添加主机</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image078.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image080.jpg" alt="img"></p>
+<p>直接保存，当然你也可以选择其他主机（管理非当前服务器）</p>
+<p>（2）拷贝脚本，主机和rancher服务建立连接</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image082.jpg" alt="img"></p>
+<p>（3）在主机上运行脚本</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image084.jpg" alt="img"></p>
+<p>（4）点击关闭按钮后，会看到界面中显示此主机。我们可以很方便地管理主机的每个容 器的开启和关闭</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image085.png" alt="img"></p>
+<p>在这里可以看到当前主机下，已经创建好的容器</p>
+<h3 id="2-3-添加应用"><a href="#2-3-添加应用" class="headerlink" title="2.3 添加应用"></a>2.3 添加应用</h3><p>（1）点击应用–&gt;全部(或用户)  ，点击“添加应用”按钮</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image086.png" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image088.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image090.jpg" alt="img"></p>
+<p>应用是多个服务的载体。例如一个mysql容器就是一个服务，它提供数据库服务。例如redis也是一个服务等等。</p>
+<h3 id="2-4-添加服务"><a href="#2-4-添加服务" class="headerlink" title="2.4 添加服务"></a>2.4 添加服务</h3><p><strong>相对于docker而言，添加一个服务就等同于创建一个容器</strong></p>
+<h4 id="2-4-1-添加mysql服务"><a href="#2-4-1-添加mysql服务" class="headerlink" title="2.4.1 添加mysql服务"></a>2.4.1 添加mysql服务</h4><p>镜像：mysql:latest   增加mysql数据库服务</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image092.jpg" alt="img"></p>
+<p>打开我们在2.3节创建的应用，然后点击创建服务</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image094.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image096.jpg" alt="img"></p>
+<p>点击创建按钮，完成创建。上述操作相当于以下docker命令</p>
+<p>docker run ‐di ‐‐name mysql ‐p 3306:3306 ‐e MYSQL_ROOT_PASSWORD=123456  mysql:latest</p>
+<p>创建中</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image098.jpg" alt="img"></p>
+<p>创建完毕</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image100.jpg" alt="img"></p>
+<h4 id="2-4-2-添加RabbitMQ服务"><a href="#2-4-2-添加RabbitMQ服务" class="headerlink" title="2.4.2 添加RabbitMQ服务"></a>2.4.2 添加RabbitMQ服务</h4><p>镜像：rabbitmq:management     端口映射5671   5672  4369    15671  15672  25672</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image102.jpg" alt="img"></p>
+<h4 id="2-4-3-Redis服务"><a href="#2-4-3-Redis服务" class="headerlink" title="2.4.3 Redis服务"></a>2.4.3 Redis服务</h4><p><img src="/2019/03/08/持续集成技术个人总结/clip_image104.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image106.jpg" alt="img"></p>
+<h4 id="2-5-部署我们在第一章节dockermaven构建的app容器"><a href="#2-5-部署我们在第一章节dockermaven构建的app容器" class="headerlink" title="2.5 部署我们在第一章节dockermaven构建的app容器"></a>2.5 部署我们在第一章节dockermaven构建的app容器</h4><p><img src="/2019/03/08/持续集成技术个人总结/clip_image108.jpg" alt="img"></p>
+<p>开始部署服务</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image110.jpg" alt="img"></p>
+<p>点击创建部署中</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image112.jpg" alt="img"></p>
+<p>创建成功</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image114.jpg" alt="img"></p>
+<p>访问</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image115.png" alt="img"></p>
+<h2 id="3-rancher的扩容与缩容"><a href="#3-rancher的扩容与缩容" class="headerlink" title="3. rancher的扩容与缩容"></a>3. rancher的扩容与缩容</h2><p>就是对某个服务（容器）进行数量的增加或者减少，因为我们知道大型的项目一个服务是部署到多台服务器的，构建成一个服务集群，是为了应变访问量的高低。所以rancher也是提供了这种功能。</p>
+<p> 一下例子，以我们在上面构建的app服务为例子。</p>
+<p>（1）部署app服务，不指定端口</p>
+<p>  这里为什么不指定端口，因为假设我们把服务扩容到两台，那么端口号就会冲突，所以这里让docker为我们默认分配端口。</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image117.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image119.jpg" alt="img"></p>
+<p>（2）在选择菜单API  –&gt;WebHooks  ，点击“添加接收器”按钮</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image121.jpg" alt="img"></p>
+<p>（3）填写名称等信息，选择要扩容的服务，点击创建按钮</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image123.jpg" alt="img"></p>
+<p>创建成功</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image125.jpg" alt="img"></p>
+<p>提供了一个触发扩容操作的url</p>
+<p><a href="http://192.168.1.105:9090/v1-webhooks/endpoint?key=ctm3rFpH6oAsbOA5mXMHvZyW7BoCkz1QQgpw00ay&amp;projectId=1a5" target="_blank" rel="external">http://192.168.1.105:9090/v1-webhooks/endpoint?key=ctm3rFpH6oAsbOA5mXMHvZyW7BoCkz1QQgpw00ay&amp;projectId=1a5</a></p>
+<p>（4）测试扩容服务</p>
+<p>必须使用post的方式，触发上面提供的url</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image127.jpg" alt="img"></p>
+<p>在触发之前，我们先查看一下app服务的数量</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image129.jpg" alt="img"></p>
+<p>是一个</p>
+<p>开始触发</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image131.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image133.jpg" alt="img"></p>
+<p>扩容成功，数量变成了3</p>
+<p>那么这个时候，我么你会有个疑问，我们怎么访问这些服务呢？这些服务并没有提供对外暴露的端口？</p>
+<p> 答案是：采用创建负载均衡服务的方式访问</p>
+<h2 id="4-负载均衡"><a href="#4-负载均衡" class="headerlink" title="4.负载均衡"></a>4.负载均衡</h2><p>（1）创建负载均衡服务  </p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image135.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image137.jpg" alt="img"></p>
+<p>创建负载均衡服务中</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image139.jpg" alt="img"></p>
+<p>创建成功</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image141.jpg" alt="img"></p>
+<p>尝试访问</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image143.jpg" alt="img"></p>
+<p>访问成功，他会通过轮询的方式访问这三台容器。</p>
+<h1 id="四、时间序列数据库influxDB"><a href="#四、时间序列数据库influxDB" class="headerlink" title="四、时间序列数据库influxDB"></a>四、时间序列数据库influxDB</h1><p>他主要是用来存储一些实时的数据，例如下面我们将会学习的cAdvisor，监控容器的内存相关的信息，就是存储在influDB中。记住他并不是用来存储大量数据的，不是mysql这样类型的数据库。</p>
+<h2 id="1-什么是influxDB"><a href="#1-什么是influxDB" class="headerlink" title="1. 什么是influxDB"></a>1. 什么是influxDB</h2><p> influxDB是一个分布式时间序列数据库。cAdvisor仅仅显示实时信息，但是不存储 监视数据。因此，我们需要提供时序数据库用于存储cAdvisor组件所提供的监控信息， 以便显示除实时信息之外的时序数据。 </p>
+<h2 id="2-influxDB安装"><a href="#2-influxDB安装" class="headerlink" title="2 influxDB安装"></a>2 influxDB安装</h2><p>（1）下载镜像</p>
+<p>docker pull tutum/influxdb</p>
+<p>（2）创建容器</p>
+<p>docker run ‐di \     </p>
+<p>‐p 8083:8083 \     </p>
+<p>‐p 8086:8086 \     </p>
+<p>‐‐expose 8090 \     </p>
+<p>‐‐expose 8099 \     </p>
+<p>‐‐name influxsrv \     </p>
+<p>tutum/influxdb</p>
+<p>端口概述：  8083端口:web访问端口     8086:数据写入端口 （<strong>后面启动adviosr的时候会用到</strong>）</p>
+<p>docker run -di -p 8083:8083 -p 8086:8086 –expose 8090 –expose 8099 –name influxsrv tutum/influxdb</p>
+<p>打开浏览器   <a href="http://192.168.1.105:8083/" target="_blank" rel="external">http://192.168.1.105:8083/</a></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image145.jpg" alt="img"></p>
+<h2 id="3-influxDB常用操作"><a href="#3-influxDB常用操作" class="headerlink" title="3 influxDB常用操作"></a>3 influxDB常用操作</h2><p>3.1 创建数据库 </p>
+<p>CREATE DATABASE “cadvisor”</p>
+<p>回车创建数据库</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image147.jpg" alt="img"></p>
+<p>查看数据库 </p>
+<p>SHOW DATABASES</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image149.jpg" alt="img"></p>
+<p>3.2 创建用户并授权 </p>
+<p>创建用户</p>
+<p>CREATE USER “cadvisor” WITH PASSWORD ‘cadvisor’ WITH ALL PRIVILEGES</p>
+<p>查看用户</p>
+<p>SHOW USRES</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image151.jpg" alt="img"></p>
+<p>用户授权</p>
+<p>grant all privileges on cadvisor to cadvisor  （on后面跟的是数据库名，to后面跟的是 用户名）</p>
+<p>grant WRITE on cadvisor to cadvisor  </p>
+<p>grant READ on cadvisor to cadvisor</p>
+<p>3.3 查看采集的数据 </p>
+<p>切换到cadvisor数据库，使用以下命令查看采集的数据</p>
+<p>SHOW MEASUREMENTS</p>
+<p>现在我们还没有数据，如果想采集系统的数据，我们需要使用Cadvisor软件来实现</p>
+<h1 id="五、容器监控工具cAdvisor"><a href="#五、容器监控工具cAdvisor" class="headerlink" title="五、容器监控工具cAdvisor"></a>五、容器监控工具cAdvisor</h1><h2 id="1-什么是cAdvisor"><a href="#1-什么是cAdvisor" class="headerlink" title="1 什么是cAdvisor"></a>1 什么是cAdvisor</h2><p> Google开源的用于监控基础设施应用的工具，它是一个强大的监控工具，不需要任何配置就可以通过运行在Docker主机上的容器来监控Docker容器，而且可以监控Docker 主机。更多详细操作和配置选项可以查看Github上的cAdvisor项目文档。 </p>
+<h2 id="2-cAdvisor安装"><a href="#2-cAdvisor安装" class="headerlink" title="2 cAdvisor安装"></a>2 cAdvisor安装</h2><h3 id="（1）下载镜像"><a href="#（1）下载镜像" class="headerlink" title="（1）下载镜像"></a>（1）下载镜像</h3><p>docker pull google/cadvisor</p>
+<h3 id="（2）创建容器"><a href="#（2）创建容器" class="headerlink" title="（2）创建容器"></a>（2）创建容器</h3><p>   docker run –volume=/:/rootfs:ro –volume=/var/run:/var/run:rw    –volume=/sys:/sys:ro –volume=/var/lib/docker/:/var/lib/docker:ro    –publish=8080:8080 –detach=true –link influxsrv:influxsrv    –name=cadvisor google/cadvisor    -storage_driver=influxdb    -storage_driver_db=cadvisor    -storage_driver_host=influxsrv:8086   </p>
+<p>我们可以看到启动cadvisor容器时，可以看到storage_driver 指定了存储的用的数据库，storage_driver_db指定了用的数据库名称，storage_driver_host指定写入数据库地址，–link 表示连接到我们在上面创建的influxsrv容器</p>
+<h3 id="（3）查看容器"><a href="#（3）查看容器" class="headerlink" title="（3）查看容器"></a>（3）查看容器</h3><p>WEB前端访问地址 <a href="http://192.168.1.105:8080/containers/" target="_blank" rel="external">http://192.168.1.105:8080/containers/</a></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image153.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image155.jpg" alt="img"></p>
+<p>性能指标含义参照如下地址</p>
+<p><a href="https://blog.csdn.net/ZHANG_H_A/article/details/53097084" target="_blank" rel="external">https://blog.csdn.net/ZHANG_H_A/article/details/53097084</a></p>
+<h3 id="（4）查看influxsrv容器"><a href="#（4）查看influxsrv容器" class="headerlink" title="（4）查看influxsrv容器"></a>（4）查看influxsrv容器</h3><p>再次查看influxDB，发现已经有很多数据被采集进去了</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image157.jpg" alt="img"></p>
+<p>可以使用select语句查询某张表的数据</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image159.jpg" alt="img"></p>
+<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h2><p>经过上面的学习，cadvisor和influxsrv 的使用我们可以检测采集，以及采集数据保存到influxdb中，但是有个缺点，那就是采集到infludb的数据，通过select语句查询，不是那么直观，那么下面我们将使用grafana图表工具展示influx的数据。</p>
+<h1 id="六、图表工具Grafana"><a href="#六、图表工具Grafana" class="headerlink" title="六、图表工具Grafana"></a>六、图表工具Grafana</h1><h2 id="1-什么是Grafana"><a href="#1-什么是Grafana" class="headerlink" title="1 什么是Grafana"></a>1 什么是Grafana</h2><p> Grafana是一个可视化面板（Dashboard），有着非常漂亮的图表和布局展示，功能齐全的度量仪表盘和图形编辑器。支持Graphite、zabbix、InfluxDB、Prometheus和 OpenTSDB作为数据源。 Grafana主要特性：灵活丰富的图形化选项；可以混合多种风格；支持白天和夜间模式，多个数据源。 </p>
+<h2 id="2-Grafana安装"><a href="#2-Grafana安装" class="headerlink" title="2 Grafana安装"></a>2 Grafana安装</h2><h3 id="（1）下载镜像-1"><a href="#（1）下载镜像-1" class="headerlink" title="（1）下载镜像"></a>（1）下载镜像</h3><p>docker pull grafana/grafana</p>
+<h3 id="（2）创建容器-1"><a href="#（2）创建容器-1" class="headerlink" title="（2）创建容器"></a>（2）创建容器</h3><p>​       </p>
+<p>   docker run -d -p 3001:3000 -e INFLUXDB_HOST=influxsrv -e   INFLUXDB_PORT=8086 -e INFLUXDB_NAME=cadvisor -e INFLUXDB_USER=root -e   INFLUXDB_PASS=itcast –link influxsrv:influxsrv –name=grafana   grafana/grafana   </p>
+<h3 id="（3）访问"><a href="#（3）访问" class="headerlink" title="（3）访问"></a>（3）访问</h3><p><a href="http://192.168.1.105:3001" target="_blank" rel="external">http://192.168.1.105:3001</a></p>
+<p>用户名密码均为admin</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image161.jpg" alt="img"></p>
+<p>登录后需要修改密码，密码修改为：123456</p>
+<h3 id="（4）之后进入主页面"><a href="#（4）之后进入主页面" class="headerlink" title="（4）之后进入主页面"></a>（4）之后进入主页面</h3><p><img src="/2019/03/08/持续集成技术个人总结/clip_image163.jpg" alt="img"></p>
+<p>（5）添加数据源</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image165.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image167.jpg" alt="img"></p>
+<p>选择InfluxDB</p>
+<p>（5）填写数据源信息</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image169.jpg" alt="img"></p>
+<p>点击save</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image171.jpg" alt="img"></p>
+<p>连接成功</p>
+<h3 id="（5）添加仪表盘"><a href="#（5）添加仪表盘" class="headerlink" title="（5）添加仪表盘"></a>（5）添加仪表盘</h3><p>选择Dashboards –Manager</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image173.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image175.jpg" alt="img"></p>
+<p>然后选择展示数据的图表样式</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image177.jpg" alt="img"></p>
+<p>这里我们选择第一个，柱状图</p>
+<p>（6）设置图表数据源</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image179.jpg" alt="img"></p>
+<p>进入下个界面</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image181.jpg" alt="img"></p>
+<p>点击edit</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image183.jpg" alt="img"></p>
+<p>然后点击右上角保存即可</p>
+<p>（6）预警通知设置</p>
+<p>（1）选择菜单  alerting–&gt; Notification channels</p>
+<p>（2）点击Add channel 按钮</p>
+<p>（3）填写名称，选择类型为webhook  ,填写钩子地址</p>
+<p>这个钩子地址是之前对base微服务扩容的地址</p>
+<p>（4）点击SendTest  测试  观察基础微服务是否增加容器</p>
+<p>（5）点击save保存</p>
+<p>（6）按照同样的方法添加缩容地址 6.4.4 仪表盘预警设置 </p>
+<p>（7）再次打开刚刚编辑的仪表盘</p>
+<p>（8）点击 Create Alert </p>
+<p>设置预警线</p>
+<p>（9）选择通知</p>
+<p>保存更改</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Influxdb和cadvisor、grafana，这三者一般都是一起使用，cadvisor负责往influxdb里面写入监控的数据，grafana负责从infuxdb中读取数据，并做可视化显示。</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image185.jpg" alt="img"></p>
+<h1 id="额外补充"><a href="#额外补充" class="headerlink" title="额外补充"></a>额外补充</h1><h2 id="1-使用docker安装jenkins"><a href="#1-使用docker安装jenkins" class="headerlink" title="1 使用docker安装jenkins"></a>1 使用docker安装jenkins</h2><p>在第二章节中我们是使用rpm的方式安装jenkins，其实我们也是可以使用docker镜像的方式安装jenkins。<strong>但是这种方式创建数据卷会存在权限问题，所以一般也不常用</strong></p>
+<p><a href="https://hub.docker.com/_/jenkins/" target="_blank" rel="external">https://hub.docker.com/_/jenkins/</a> 官网。注意查看jenkins容器启动后配置文件在容器中的位置，方便我们设置容器卷链接到本地虚拟机</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image187.jpg" alt="img"></p>
+<h3 id="1-1-下载jenkins镜像"><a href="#1-1-下载jenkins镜像" class="headerlink" title="1.1 下载jenkins镜像"></a>1.1 下载jenkins镜像</h3><p>docker pull jenkins</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image189.jpg" alt="img"></p>
+<h3 id="1-2-启动jenkins容器"><a href="#1-2-启动jenkins容器" class="headerlink" title="1.2 启动jenkins容器"></a>1.2 启动jenkins容器</h3><p>在镜像文档里，我们知道Jenkins访问的端口号是8080，另外还需要暴露一个tcp的端口号50000。我们使用如下命令启动Jenkins镜像</p>
+<p>1.首先创建本地挂载目录并修改权限</p>
+<p>创建目录赋权限</p>
+<p>mkdir /home/jenkins</p>
+<p>ls -nd jenkins</p>
+<p>chown -R 1000:1000 jenkins/ （设置权限）</p>
+<p>为什么需要修改本地数据卷文件的权限呢？</p>
+<p>我们首先查看一下jenkins容器数据卷的权限信息</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image191.jpg" alt="img"></p>
+<p>如果不把全权限修改一致，那么当本地数据卷信息同步到容器数据卷目录的时候，就会出现没有权限的问题。</p>
+<p><a href="https://www.cnblogs.com/jackluo/p/5783116.html" target="_blank" rel="external">https://www.cnblogs.com/jackluo/p/5783116.html</a> 可以查看这篇文章。</p>
+<p>\2. docker run -itd -p 6666:8080 -p 6660:50000 –name jenkins –privileged=true -v /home/jenkins:/var/jenkins_home jenkins</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image193.jpg" alt="img"></p>
+<h3 id="1-3-开始安装"><a href="#1-3-开始安装" class="headerlink" title="1.3 开始安装"></a>1.3 开始安装</h3><p>访问</p>
+<p><a href="http://192.168.1.105:6666" target="_blank" rel="external">http://192.168.1.105:6666</a></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image195.jpg" alt="img"></p>
+<p>查看初始化密码</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image197.jpg" alt="img"></p>
+<p>位置在我们关联的本地数据卷目录中</p>
+<p>如果安装过程中出现下面这个错误</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image199.jpg" alt="img"></p>
+<p>说明需要更换jenkin安装插件地址</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image201.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image203.jpg" alt="img"></p>
+<h2 id="2-Docker-Volume-之权限管理"><a href="#2-Docker-Volume-之权限管理" class="headerlink" title="2. Docker Volume 之权限管理"></a>2. Docker Volume 之权限管理</h2><p><a href="https://www.cnblogs.com/jackluo/p/5783116.html" target="_blank" rel="external">https://www.cnblogs.com/jackluo/p/5783116.html</a></p>
+<p>1.启动Jenkins官方镜像，并检查日志</p>
+<p>docker run -d -p 8080:8080 -p 50000:50000 –name jenkins jenkin</p>
+<p>docker logs jenkins</p>
+<p>我们可以发现”jenkins”容器日志显示结果一切正常</p>
+<p>2.然而为了持久化Jenkins配置数据，当我们把宿主机当前目录下的data文件夹挂载到容器中的目录”/var/jenkins_home”的时候，问题出现了：</p>
+<p>docker rm -f jenkins</p>
+<p>docker run -d -p 8080:8080 -p 50000:50000 -v $(pwd)/data:/var/jenkins_home –name jenkins jenkins</p>
+<p>docker logs jenkins</p>
+<p>错误日志如下</p>
+<p>touch: cannot touch ‘/var/jenkins_home/copy_reference_file.log’: Permission denied</p>
+<p>Can not write to /var/jenkins_home/copy_reference_file.log. Wrong volume permissions?</p>
+<p>\3. 我们检查一下之前启动方式的”/var/jenkins_home”目录权限，查看Jenkins容器的当前用户: 当前用户是”jenkins”而且”/var/jenkins_home”目录是属于jenkins用户拥有的</p>
+<p>   docker@default:~$ docker run -ti –rm   –entrypoint=”/bin/bash” jenkins -c “whoami &amp;&amp;   id”   jenkins   uid=1000(jenkins) gid=1000(jenkins) groups=1000(jenkins)       docker@default:~$ docker run -ti –rm   –entrypoint=”/bin/bash” jenkins -c “ls -la   /var/jenkins_home”   total 20   drwxr-xr-x  2 jenkins jenkins   4096 Jun  5 08:39 .   drwxr-xr-x 28 root    root    4096 May 24 16:43 ..   -rw-r–r–  1 jenkins   jenkins  220 Nov 12  2014 .bash_logout   -rw-r–r–  1 jenkins jenkins   3515 Nov 12  2014 .bashrc   -rw-r–r–  1 jenkins   jenkins  675 Nov 12  2014 .profile   </p>
+<p>而当映射本地数据卷时，/var/jenkins_home目录的拥有者变成了root用户</p>
+<p>docker run -ti –rm -v $(pwd)/data:/var/jenkins_home –entrypoint=”/bin/bash” jenkins -c “ls -la /var/jenkins_home”</p>
+<p>total 4</p>
+<p>drwxr-sr-x  2 root staff   40 Jun  5 08:32 .</p>
+<p>drwxr-xr-x 28 root root  4096 May 24 16:43 ..</p>
+<p>这就解释了为什么当”jenkins”用户的进程访问”/var/jenkins_home”目录时，会出现 Permission denied 的问题</p>
+<p>我们再检查一下宿主机上的数据卷目录，当前路径下”data”目录的拥有者是”root”，这是因为这个目录是Docker进程缺省创建出来的。</p>
+<p>docker@default:~$ ls -la data</p>
+<p>total 0</p>
+<p>drwxr-sr-x    2 root     staff           40 Jun  5 08:32 ./</p>
+<p>drwxr-sr-x    5 docker   staff          160 Jun  5 08:32 ../</p>
+<p>发现问题之后，相应的解决方法也很简单：把当前目录的拥有者赋值给uid 1000，再启动”jenkins”容器就一切正常了。</p>
+<p>sudo chown -R 1000 data</p>
+<p>docker start jenkins</p>
+<p>这时利用浏览器访问 “<a href="http://192.168.99.100:8080/" target="_blank" rel="external">http://192.168.99.100:8080/</a>“ 就可以看到Jenkins的Web界面了。注：如无法访问，可能需要通过docker-machine ip命令获得当前Docker宿主机的IP地址。</p>
+<p>当我们再进入容器内部查看”/var/jenkins_home”目录的权限，其拥有者已经变成 “jenkins”</p>
+<p>复制代码</p>
+<p>docker@default:~$ docker exec jenkins ls -la /var/jenkins_home</p>
+<p>total 24</p>
+<p>drwxr-sr-x 11 jenkins staff  340 Jun  5 09:00 .</p>
+<p>drwxr-xr-x 28 root    root  4096 May 24 16:43 ..</p>
+<p>drwxr-sr-x  3 jenkins staff   60 Jun  5 08:59 .java</p>
+<p>-rw-r–r–  1 jenkins staff  289 Jun  5 08:59 copy_reference_file.log</p>
+<p>…</p>
+<p>复制代码</p>
+<p>而有趣的是在宿主机上我们看到的 “data”目录的拥有者是”docker”，这是因为”docker”用户在”boot2docker”宿主机上的uid也是”1000”。</p>
+<p>docker@default:~$ ls -la data</p>
+<p>total 20</p>
+<p>drwxr-sr-x    2 docker   staff           40 Jun  5 11:55 ./</p>
+<p>drwxr-sr-x    6 docker   staff          180 Jun  5 11:55 ../</p>
+<p>…</p>
+<p>这时我们已经可以知道：容器的本地数据卷中文件/目录的权限是和宿主机上一致的，只是uid/gid在Docker容器和宿主机中可能映射为不同的用户/组名称。</p>
+<p>在上文，我们使用了一个常见的技巧，即在宿主机上执行chown命令时采用了uid而不是具体的用户名，这样就可以保证设置正确的拥有者。</p>
+<p>问题虽然解决了，但思考并没有结束。因为当使用本地数据卷时，Jenkins容器会依赖宿主机目录权限的正确性，这会给自动化部署带来额外的工作。有没有方法让Jenkins容器为数据卷自动地设置正确的权限呢？这个问题对很多以non-root方式运行的应用也都有借鉴意义。</p>
+<p>为non-root应用正确地挂载本地数据卷</p>
+<p>我们可以从万能的stackoverflow.com找到很多相关的讨论，其中一个非常有借鉴意义问答如下</p>
+<p><a href="http://stackoverflow.com/questions/23544282/what-is-the-best-way-to-manage-permissions-for-docker-shared-volumes" target="_blank" rel="external">http://stackoverflow.com/questions/23544282/what-is-the-best-way-to-manage-permissions-for-docker-shared-volumes</a></p>
+<p>其中的基本思路有两个：</p>
+<p>一个是利用Data Container的方法在容器间共享数据卷。这样就规避了解决宿主机上数据卷的权限问题。由于在1.9版本之后，Docker提供了named volume来取代纯数据容器，我们还需要真正地解决这个问题。</p>
+<p>另外一个思路就是让容器中以root用户启动，在容器启动脚本中利用”chown”命令来修正数据卷文件权限，之后切换到non-root用户来执行程序</p>
+<p>我们来参照第二个思路来解决这个问题</p>
+<p>下面是一个基于Jenkins镜像的Dockerfile：它会切换到”root”用户并在镜像中添加”gosu”命令，和新的入口点”/entrypoint.sh”</p>
+<p>   FROM jenkins:latest   USER root   RUN   GOSU_SHA=5ec5d23079e94aea5f7ed92ee8a1a34bbf64c2d4053dadf383992908a2f9dc8a \     &amp;&amp; curl -sSL -o   /usr/local/bin/gosu   “<a href="https://github.com/tianon/gosu/releases/download/1.9/gosu-$(dpkg" target="_blank" rel="external">https://github.com/tianon/gosu/releases/download/1.9/gosu-$(dpkg</a>   –print-architecture)” \     &amp;&amp; chmod +x   /usr/local/bin/gosu \     &amp;&amp; echo   “$GOSU_SHA    /usr/local/bin/gosu” | sha256sum -c -    COPY entrypoint.sh /entrypoint.sh   ENTRYPOINT [“/entrypoint.sh”]   </p>
+<p>注释：gosu 是经常出现在官方Docker镜像中的一个小工具。它是”su”和”sudo”命令的轻量级替代品，并解决了它们在tty和信号传递中的一些问题。</p>
+<p>新入口点的”entrypoint.sh”的内容如下：它会为”JENKINS_HOME”目录设置”jenkins”的拥有权限，并且再利用”gosu”命令切换到”jenkins”用户来执行”jenkins”应用。</p>
+<p>#! /bin/bash</p>
+<p>set -e</p>
+<p>chown -R 1000 “$JENKINS_HOME”</p>
+<p>exec gosu jenkins /bin/tini – /usr/local/bin/jenkins.sh</p>
+<p>您可以直接从 <a href="https://github.com/denverdino/docker-jenkins" target="_blank" rel="external">https://github.com/denverdino/docker-jenkins</a> 获得相关代码，并构建自己的Jenkins镜像。执行命令如下：</p>
+<p>git clone <a href="https://github.com/AliyunContainerService/docker-jenkins" target="_blank" rel="external">https://github.com/AliyunContainerService/docker-jenkins</a></p>
+<p>cd docker-jenkins/jenkins</p>
+<p>docker build -t denverdino/jenkins .</p>
+<p>然后基于新镜像启动Jenkins容器</p>
+<p>docker rm -f jenkins</p>
+<p>docker run -d -p 8080:8080 -p 50000:50000 -v $(pwd)/data:/var/jenkins_home –name jenkins denverdino/jenkins</p>
+<h2 id="3-linux安装git"><a href="#3-linux安装git" class="headerlink" title="3.linux安装git"></a>3.linux安装git</h2><h3 id="3-1-使用yum命令进行安装"><a href="#3-1-使用yum命令进行安装" class="headerlink" title="3.1 使用yum命令进行安装"></a>3.1 使用yum命令进行安装</h3><p>yum install git</p>
+<p>安装简单，但是安装的git版本太老，而且版本不好控制，推荐使用下面的方式进行安装</p>
+<h3 id="3-2-源码编译安装Git"><a href="#3-2-源码编译安装Git" class="headerlink" title="3.2 源码编译安装Git"></a>3.2 源码编译安装Git</h3><p>①、获取github最新的Git安装包下载链接，进入Linux服务器，执行下载，命令为： wget <a href="https://github.com/git/git/archive/v2.22.0.tar.gz" target="_blank" rel="external">https://github.com/git/git/archive/v2.22.0.tar.gz</a> ；</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image205.jpg" alt="img"></p>
+<p>②、压缩包解压，命令为： tar -zxvf v2.22.0.tar.gz ；</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image206.png" alt="img"></p>
+<p>③、安装编译源码所需依赖，命令为： yum install curl-devel expat-devel gettext-devel openssl-devel zlib-devel gcc perl-ExtUtils-MakeMaker </p>
+<p>耐心等待安装，出现提示输入y即可；</p>
+<p>④、安装依赖时，yum自动安装了Git，需要卸载旧版本Git，命令为： yum remove git 出现提示输入y即可；</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image207.png" alt="img">很明显自己安装了一个1.8.3.1版本的git，卸载。</p>
+<p>⑤、进入解压后的文件夹，命令 cd git-2.22.0 ，然后执行编译，命令为 make prefix=/usr/local/git all 耐心等待编译即可；</p>
+<p>⑥、安装Git至/usr/local/git路径，命令为 make prefix=/usr/local/git install ；</p>
+<p>⑦、打开环境变量配置文件，命令 vim /etc/profile ，在底部加上Git相关配置信息：</p>
+<p>PATH=$PATH:/usr/local/git/bin </p>
+<p>export PATH </p>
+<p>然后保存，退出！</p>
+<p>⑧、输入命令 git –version ，查看安装的git版本，校验通过，安装成功。</p>
+<p>source /etc/profile</p>
+<p><img src="/2019/03/08/持续集成技术个人总结/clip_image208.png" alt="img"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/持续集成技术/" rel="tag"><i class="fa fa-tag"></i> 持续集成技术</a>
+          
+            <a href="/tags/容器管理/" rel="tag"><i class="fa fa-tag"></i> 容器管理</a>
+          
+            <a href="/tags/自动部署/" rel="tag"><i class="fa fa-tag"></i> 自动部署</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/28/docker个人总结/" rel="next" title="docker个人总结">
+                <i class="fa fa-chevron-left"></i> docker个人总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/27/浅谈dubbo和springcloud/" rel="prev" title="浅谈dubbo和springcloud">
+                浅谈dubbo和springcloud <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">48</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">64</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、DockerMaven插件的使用"><span class="nav-number">1.</span> <span class="nav-text">一、DockerMaven插件的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Maven插件自动部署步骤："><span class="nav-number">1.1.</span> <span class="nav-text">Maven插件自动部署步骤：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、持续集成工具Jenkins"><span class="nav-number">2.</span> <span class="nav-text">二、持续集成工具Jenkins</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Jenkins简介"><span class="nav-number">2.1.</span> <span class="nav-text">1.Jenkins简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Jenkins安装"><span class="nav-number">2.2.</span> <span class="nav-text">2. Jenkins安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-JDK安装"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.1 JDK安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-maven安装"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2 maven安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Jenkins安装与启动"><span class="nav-number">2.2.3.</span> <span class="nav-text">2.3 Jenkins安装与启动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Jenkins插件安装"><span class="nav-number">2.3.</span> <span class="nav-text">3. Jenkins插件安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-全局工具配置"><span class="nav-number">2.4.</span> <span class="nav-text">4.全局工具配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-代码上传至Git服务器"><span class="nav-number">2.5.</span> <span class="nav-text">5 代码上传至Git服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-Gogs搭建与配置"><span class="nav-number">2.5.1.</span> <span class="nav-text">5.1 Gogs搭建与配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-提交代码到git"><span class="nav-number">2.5.2.</span> <span class="nav-text">5.2 提交代码到git</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-jenkins任务的创建与执行"><span class="nav-number">2.6.</span> <span class="nav-text">6 jenkins任务的创建与执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-总结"><span class="nav-number">2.7.</span> <span class="nav-text">7.总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、容器管理工具Rancher"><span class="nav-number">3.</span> <span class="nav-text">三、容器管理工具Rancher</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-安装Rancher"><span class="nav-number">3.1.</span> <span class="nav-text">1.安装Rancher</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-初始化Rancher"><span class="nav-number">3.2.</span> <span class="nav-text">2.初始化Rancher</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-添加环境"><span class="nav-number">3.2.1.</span> <span class="nav-text">2.1 添加环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-添加主机"><span class="nav-number">3.2.2.</span> <span class="nav-text">2.2 添加主机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-添加应用"><span class="nav-number">3.2.3.</span> <span class="nav-text">2.3 添加应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-添加服务"><span class="nav-number">3.2.4.</span> <span class="nav-text">2.4 添加服务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-1-添加mysql服务"><span class="nav-number">3.2.4.1.</span> <span class="nav-text">2.4.1 添加mysql服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-2-添加RabbitMQ服务"><span class="nav-number">3.2.4.2.</span> <span class="nav-text">2.4.2 添加RabbitMQ服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-3-Redis服务"><span class="nav-number">3.2.4.3.</span> <span class="nav-text">2.4.3 Redis服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-部署我们在第一章节dockermaven构建的app容器"><span class="nav-number">3.2.4.4.</span> <span class="nav-text">2.5 部署我们在第一章节dockermaven构建的app容器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-rancher的扩容与缩容"><span class="nav-number">3.3.</span> <span class="nav-text">3. rancher的扩容与缩容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-负载均衡"><span class="nav-number">3.4.</span> <span class="nav-text">4.负载均衡</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、时间序列数据库influxDB"><span class="nav-number">4.</span> <span class="nav-text">四、时间序列数据库influxDB</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-什么是influxDB"><span class="nav-number">4.1.</span> <span class="nav-text">1. 什么是influxDB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-influxDB安装"><span class="nav-number">4.2.</span> <span class="nav-text">2 influxDB安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-influxDB常用操作"><span class="nav-number">4.3.</span> <span class="nav-text">3 influxDB常用操作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、容器监控工具cAdvisor"><span class="nav-number">5.</span> <span class="nav-text">五、容器监控工具cAdvisor</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-什么是cAdvisor"><span class="nav-number">5.1.</span> <span class="nav-text">1 什么是cAdvisor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-cAdvisor安装"><span class="nav-number">5.2.</span> <span class="nav-text">2 cAdvisor安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）下载镜像"><span class="nav-number">5.2.1.</span> <span class="nav-text">（1）下载镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）创建容器"><span class="nav-number">5.2.2.</span> <span class="nav-text">（2）创建容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（3）查看容器"><span class="nav-number">5.2.3.</span> <span class="nav-text">（3）查看容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（4）查看influxsrv容器"><span class="nav-number">5.2.4.</span> <span class="nav-text">（4）查看influxsrv容器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-总结"><span class="nav-number">5.3.</span> <span class="nav-text">3.总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六、图表工具Grafana"><span class="nav-number">6.</span> <span class="nav-text">六、图表工具Grafana</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-什么是Grafana"><span class="nav-number">6.1.</span> <span class="nav-text">1 什么是Grafana</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Grafana安装"><span class="nav-number">6.2.</span> <span class="nav-text">2 Grafana安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）下载镜像-1"><span class="nav-number">6.2.1.</span> <span class="nav-text">（1）下载镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）创建容器-1"><span class="nav-number">6.2.2.</span> <span class="nav-text">（2）创建容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（3）访问"><span class="nav-number">6.2.3.</span> <span class="nav-text">（3）访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（4）之后进入主页面"><span class="nav-number">6.2.4.</span> <span class="nav-text">（4）之后进入主页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（5）添加仪表盘"><span class="nav-number">6.2.5.</span> <span class="nav-text">（5）添加仪表盘</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#额外补充"><span class="nav-number">7.</span> <span class="nav-text">额外补充</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-使用docker安装jenkins"><span class="nav-number">7.1.</span> <span class="nav-text">1 使用docker安装jenkins</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-下载jenkins镜像"><span class="nav-number">7.1.1.</span> <span class="nav-text">1.1 下载jenkins镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-启动jenkins容器"><span class="nav-number">7.1.2.</span> <span class="nav-text">1.2 启动jenkins容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-开始安装"><span class="nav-number">7.1.3.</span> <span class="nav-text">1.3 开始安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Docker-Volume-之权限管理"><span class="nav-number">7.2.</span> <span class="nav-text">2. Docker Volume 之权限管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-linux安装git"><span class="nav-number">7.3.</span> <span class="nav-text">3.linux安装git</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-使用yum命令进行安装"><span class="nav-number">7.3.1.</span> <span class="nav-text">3.1 使用yum命令进行安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-源码编译安装Git"><span class="nav-number">7.3.2.</span> <span class="nav-text">3.2 源码编译安装Git</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      183.5k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共183.5k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>
