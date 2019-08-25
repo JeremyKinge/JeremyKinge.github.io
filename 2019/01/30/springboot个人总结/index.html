@@ -1,0 +1,2392 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="分布式,springboot,微服务," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="一．前言1.1 什么是微服务？单服务场景  开发简单，测试简单，部署简单 下面举个例子，一种单一的服务场景：所有的模块都是打包成一个war包的形式，然后部署到tomcat中。  缺点： 1)      只能采用同一种技术，很难用不同的语言或者语言不同版本开发不同模块； 2)      系统耦合性强，一旦其中一个模块有问题，整个系统就瘫痪了；一旦升级其中一个模块，整个系统就停机了； 3)">
+<meta name="keywords" content="分布式,springboot,微服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springboot个人总结">
+<meta property="og:url" content="http://kingge.top/2019/01/30/springboot个人总结/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="一．前言1.1 什么是微服务？单服务场景  开发简单，测试简单，部署简单 下面举个例子，一种单一的服务场景：所有的模块都是打包成一个war包的形式，然后部署到tomcat中。  缺点： 1)      只能采用同一种技术，很难用不同的语言或者语言不同版本开发不同模块； 2)      系统耦合性强，一旦其中一个模块有问题，整个系统就瘫痪了；一旦升级其中一个模块，整个系统就停机了； 3)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image002.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image004.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image006.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image008.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image010.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image012.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image014.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image016.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image018.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image020.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image022.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image024.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image026.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image027.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image029.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image031.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image032.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image033.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image035.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image036.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image037.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image038.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image040.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/5C1566700814119.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image042.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image044.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image046.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image048.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image050.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image052.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image054.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image056.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image058.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image060.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image062.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image064.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image066.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image068.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image070.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image071.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image073.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image074.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image076.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image077.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image078.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image080.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image082.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image084.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image086.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image088.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image090.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image092.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image094.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image096.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image098.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image100.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image102.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image104.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image106.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image108.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image110.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image112.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image114.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image116.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image118.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image119.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image120.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image122.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image123.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image124.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image126.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image128.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image130.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image132.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image134.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image135.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image136.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image138.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image139.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image140.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image142.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image144.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image146.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image148.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image150.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image152.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image154.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image156.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image158.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image160.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image162.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image164.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image166.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image168.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image170.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image172.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image174.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image175.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image177.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image179.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image180.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image182.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image184.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image186.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image188.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image190.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image192.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image193.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image195.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image197.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image199.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image201.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image203.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image205.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image207.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image208.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image209.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image211.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image213.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image215.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image216.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image218.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image220.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image222.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image224.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image226.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image228.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image230.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image231.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image233.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image235.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image237.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image239.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image241.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image243.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image244.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image246.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image248.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image250.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image252.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image254.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image256.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image258.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image260.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image262.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image264.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image266.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image268.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image270.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image272.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image274.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image276.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image278.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image279.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image281.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image283.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image285.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image287.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image289.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image291.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image293.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image295.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image297.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image299.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image301.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image303.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image305.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image307.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image309.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image311.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image312.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image313.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image314.png">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image316.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image318.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image320.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image322.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image324.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image326.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image328.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image330.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image332.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image334.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image336.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image338.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image340.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image342.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image344.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image346.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image348.jpg">
+<meta property="og:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image350.jpg">
+<meta property="og:updated_time" content="2019-08-25T02:55:36.431Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="springboot个人总结">
+<meta name="twitter:description" content="一．前言1.1 什么是微服务？单服务场景  开发简单，测试简单，部署简单 下面举个例子，一种单一的服务场景：所有的模块都是打包成一个war包的形式，然后部署到tomcat中。  缺点： 1)      只能采用同一种技术，很难用不同的语言或者语言不同版本开发不同模块； 2)      系统耦合性强，一旦其中一个模块有问题，整个系统就瘫痪了；一旦升级其中一个模块，整个系统就停机了； 3)">
+<meta name="twitter:image" content="http://kingge.top/2019/01/30/springboot个人总结/clip_image002.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2019/01/30/springboot个人总结/"/>
+
+
+
+
+
+  <title>springboot个人总结 | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2019/01/30/springboot个人总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">springboot个人总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-30T22:21:59+08:00">
+                2019-01-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SpringBoot/" itemprop="url" rel="index">
+                    <span itemprop="name">SpringBoot</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  13,115
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  51
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一．前言"><a href="#一．前言" class="headerlink" title="一．前言"></a>一．前言</h1><h2 id="1-1-什么是微服务？"><a href="#1-1-什么是微服务？" class="headerlink" title="1.1 什么是微服务？"></a>1.1 什么是微服务？</h2><p><strong>单服务场景</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image002.jpg" alt="img"></p>
+<p><strong>开发简单，测试简单，部署简单</strong></p>
+<p>下面举个例子，一种单一的服务场景：所有的模块都是打包成一个war包的形式，然后部署到tomcat中。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image004.jpg" alt="img"></p>
+<p>缺点：</p>
+<p>1)      只能采用同一种技术，很难用不同的语言或者语言不同版本开发不同模块；</p>
+<p>2)      系统耦合性强，一旦其中一个模块有问题，整个系统就瘫痪了；一旦升级其中一个模块，整个系统就停机了；</p>
+<p>3)      集群只能是复制整个系统，即使只是其中一个模块压力大。（可能整个订单处理，仅仅是支付模块压力过大， 按道理只需要升级支付模块，但是在单一场景里面是不能的）</p>
+<h2 id="1-2-微服务概念"><a href="#1-2-微服务概念" class="headerlink" title="1.2 微服务概念"></a>1.2 微服务概念</h2><p><img src="/2019/01/30/springboot个人总结/clip_image006.jpg" alt="img"></p>
+<p>下面是微服务（Micro-Service）架构，<strong>不同模块放到不同的进程**</strong>/<strong>**服务器上，模块之间通过网络通讯进行协作。</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image008.jpg" alt="img"></p>
+<p>各个模块都部署在不同的服务器上面，模块之间可以通过http请求进行协作。例如web服务器收到请求，那么可以根据请求的业务吧请求分配到响应的处理服务器，例如短信消息服务器。</p>
+<p>优点：</p>
+<p>1)      可以用不同的语言或者语言不同版本开发不同模块；</p>
+<p>2)      系统耦合性弱，其中一个模块有问题，可以通过“降级熔断”等手段来保证不停机；</p>
+<p>3)      可以对不同模块用不同的集群策略，哪里慢集群哪里。</p>
+<p>缺点：</p>
+<p>1)      开发难度大，系统结构更复杂；</p>
+<p>2)      运行效率低； （模块之间相互请求时间长等等）</p>
+<p>  <a href="https://martinfowler.com/articles/microservices.html#MicroservicesAndSoa" target="_blank" rel="external">详细参照微服务文档</a></p>
+<p><a href="https://martinfowler.com/articles/microservices.html#MicroservicesAndSoa" target="_blank" rel="external">https://martinfowler.com/articles/microservices.html#MicroservicesAndSoa</a></p>
+<p>所以就衍生出了 springboot和springcloud两个框架，当然springboot并不能代表微服务的概念，springcloud才是。</p>
+<p>  因为springboot只是简化了单一web服务开发的流程，摒弃了大量的xml配置，提供了大量的自动化配置。</p>
+<p>   那么springboot跟springcloud是什么关系呢？ SpringBoot专注于快速方便的开发单个个体微服务。SpringCloud是关注全局的微服务协调整理治理框架，它将SpringBoot开发的一个个单体微服务整合并管理起来，为各个微服务之间提供，配置管理、服务发现、断路器、路由、微代理、事件总线、全局锁、决策竞选、分布式会话等等集成服务。SpringBoot可以离开SpringCloud独立使用开发项目，但是SpringCloud离不开SpringBoot，属于依赖的关系.</p>
+<p>SpringBoot专注于快速、方便的开发单个微服务个体，SpringCloud关注全局的服务治理框架。</p>
+<h2 id="1-3-spring的演化"><a href="#1-3-spring的演化" class="headerlink" title="1.3 spring的演化"></a>1.3 spring的演化</h2><h3 id="Spring1-x-时代"><a href="#Spring1-x-时代" class="headerlink" title="Spring1.x 时代"></a>Spring1.x 时代</h3><p>在Spring1.x时代，都是通过xml文件配置bean，随着项目的不断扩大，需要将xml配置分放到不同的配置文件中，需要频繁的在java类和xml配置文件中切换。</p>
+<h3 id="Spring2-x时代"><a href="#Spring2-x时代" class="headerlink" title="Spring2.x时代"></a>Spring2.x时代</h3><p>随着JDK 1.5带来的注解支持，Spring2.x可以使用注解对Bean进行申明和注入，大大的减少了xml配置文件，同时也大大简化了项目的开发。</p>
+<p>那么，问题来了，究竟是应该使用xml还是注解呢？</p>
+<p>最佳实践：</p>
+<p>1、  应用的基本配置用xml，比如：数据源、资源文件等；</p>
+<p>2、  业务开发用注解，比如：Service中注入bean等；</p>
+<h3 id="Spring3-x到Spring4-x"><a href="#Spring3-x到Spring4-x" class="headerlink" title="Spring3.x到Spring4.x"></a>Spring3.x到Spring4.x</h3><p>从Spring3.x开始提供了Java配置方式，使用Java配置方式可以更好的理解你配置的Bean，现在我们就处于这个时代，并且Spring4.x和Spring boot都推荐使用java配置的方式。</p>
+<h2 id="1-4为什么要学习SpringBoot"><a href="#1-4为什么要学习SpringBoot" class="headerlink" title="1.4为什么要学习SpringBoot"></a>1.4为什么要学习SpringBoot</h2><p>java一直被人诟病的一点就是臃肿、麻烦。当我们还在辛苦的搭建项目时，可能Python程序员已经把功能写好了，究其原因主要是两点：</p>
+<p>·        复杂的配置</p>
+<p>项目各种配置其实是开发时的损耗， 因为在思考 Spring 特性配置和解决业务问题之间需要进行思维切换，所以写配置挤占了写应用程序逻辑的时间。</p>
+<p>·        混乱的依赖管理</p>
+<p><strong>项目的依赖管理也是件吃力不讨好的事情。决定项目里要用哪些库就已经够让人头痛的了，你还要知道这些库的哪个版本和其他库不会有冲突，这也是件棘手的问题。并且，依赖管理也是一种损耗，添加依赖不是写应用程序代码。一旦选错了依赖的版本，随之而来的不兼容问题毫无疑问会是生产力杀手</strong>。</p>
+<p>而SpringBoot让这一切成为过去！</p>
+<h1 id="二．-什么是springboot"><a href="#二．-什么是springboot" class="headerlink" title="二． 什么是springboot"></a>二． 什么是springboot</h1><p><img src="/2019/01/30/springboot个人总结/clip_image010.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image012.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image014.jpg" alt="img"></p>
+<h1 id="三．Springboot使用"><a href="#三．Springboot使用" class="headerlink" title="三．Springboot使用"></a>三．Springboot使用</h1><p>这里开发工具使用的是sts和idea，他们两者开发springboot 的方式没有什么区别，所以下面两种方式我都会嵌套使用。下面的工程采用springboot版本是：1.5.9。</p>
+<h2 id="3-1-使用maven方式手动搭建sb项目"><a href="#3-1-使用maven方式手动搭建sb项目" class="headerlink" title="3.1 使用maven方式手动搭建sb项目"></a>3.1 使用maven方式手动搭建sb项目</h2><p>Idea maven环境配置</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image016.png" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image018.png" alt="img"></p>
+<p>编码设置：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image020.png" alt="img"></p>
+<p>需求：浏览器发送hello请求，服务器接受请求并处理，响应Hello World字符串；</p>
+<h3 id="1、创建一个maven工程"><a href="#1、创建一个maven工程" class="headerlink" title="1、创建一个maven工程"></a>1、创建一个maven工程</h3><h3 id="2、导入spring-boot相关的依赖"><a href="#2、导入spring-boot相关的依赖" class="headerlink" title="2、导入spring boot相关的依赖"></a>2、导入spring boot相关的依赖</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;parent&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;1.5.9.RELEASE&lt;/version&gt;</div><div class="line">&lt;/parent&gt;</div><div class="line">&lt;dependencies&gt;</div><div class="line">    &lt;dependency&gt;</div><div class="line">        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</div><div class="line">    &lt;/dependency&gt;</div><div class="line">&lt;/dependencies&gt;</div></pre></td></tr></table></figure>
+<p>​       <parent>             <groupid>org.springframework.boot</groupid>             <artifactid>spring-boot-starter-parent</artifactid>             <version>1.5.9.RELEASE</version>       </parent>       <dependencies>           <dependency>                 <groupid>org.springframework.boot</groupid>                 <artifactid>spring-boot-starter-web</artifactid>           </dependency>       </dependencies>   </p>
+<h3 id="3、-编写一个主程序；启动Spring-Boot应用"><a href="#3、-编写一个主程序；启动Spring-Boot应用" class="headerlink" title="3、        编写一个主程序；启动Spring Boot应用"></a>3、        编写一个主程序；启动Spring Boot应用</h3><p>   /<em>*    </em>  @SpringBootApplication 来标注一个主程序类，说明这是一个Spring Boot应用    */   @SpringBootApplication   public class HelloWorldMainApplication {       public static void   main(String[] args) {           // Spring应用启动起来           SpringApplication.run(HelloWorldMainApplication.class,args);       }   }   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/**</div><div class="line"> *  @SpringBootApplication 来标注一个主程序类，说明这是一个Spring Boot应用</div><div class="line"> */</div><div class="line">@SpringBootApplication</div><div class="line">public class HelloWorldMainApplication &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        // Spring应用启动起来</div><div class="line">      SpringApplication.run(HelloWorldMainApplication.class,args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4、编写相关的Controller、Service"><a href="#4、编写相关的Controller、Service" class="headerlink" title="4、编写相关的Controller、Service"></a>4、编写相关的Controller、Service</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Controller</div><div class="line">public class HelloController &#123;</div><div class="line">    @ResponseBody</div><div class="line">    @RequestMapping(&quot;/hello&quot;)</div><div class="line">    public String hello()&#123;</div><div class="line">        return &quot;Hello World!&quot;;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>   @Controller   public class HelloController {       @ResponseBody         @RequestMapping(“/hello”)       public String hello(){           return “Hello   World!”;       }   }   </p>
+<h3 id="5、运行主程序测试"><a href="#5、运行主程序测试" class="headerlink" title="5、运行主程序测试"></a>5、运行主程序测试</h3><p>直接运行HelloWorldMainApplication的main方法，启动sb程序。</p>
+<p>在浏览器输入 127.0.0.1:8080/hello 可看到输出 Hello World!</p>
+<h3 id="6、打包成嵌入式web的可执行jar包"><a href="#6、打包成嵌入式web的可执行jar包" class="headerlink" title="6、打包成嵌入式web的可执行jar包"></a>6、打包成嵌入式web的可执行jar包</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 这个插件，可以将应用打包成一个可执行的jar包；--&gt;</div><div class="line">    &lt;build&gt;</div><div class="line">        &lt;plugins&gt;</div><div class="line">            &lt;plugin&gt;</div><div class="line">                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;</div><div class="line">            &lt;/plugin&gt;</div><div class="line">        &lt;/plugins&gt;</div><div class="line">    &lt;/build&gt;</div></pre></td></tr></table></figure>
+<p>运行maven的 mvn package 打包命令，可以看到生成的jar包。</p>
+<p>直接使用java -jar的命令进行执行，效果同 5 。</p>
+<h2 id="3-2-使用Spring-Initializer快速创建Spring-Boot项目-推荐"><a href="#3-2-使用Spring-Initializer快速创建Spring-Boot项目-推荐" class="headerlink" title="3.2 使用Spring Initializer快速创建Spring Boot项目-推荐"></a>3.2 使用Spring Initializer快速创建Spring Boot项目-推荐</h2><h3 id="3-2-1-sts编译器方式"><a href="#3-2-1-sts编译器方式" class="headerlink" title="3.2.1 sts编译器方式"></a>3.2.1 sts编译器方式</h3><p>STS工具下创建CRUD的步骤（IDEA相同的步骤）</p>
+<h4 id="1-主菜单：File→New→Spring-Starter-Project。"><a href="#1-主菜单：File→New→Spring-Starter-Project。" class="headerlink" title="1.主菜单：File→New→Spring Starter Project。"></a>1.主菜单：File→New→Spring Starter Project。</h4><p>在Type中选Maven，Package选War</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image022.jpg" alt="img"></p>
+<p>​         下一步中搜索勾选Web。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image024.jpg" alt="img"></p>
+<p>​         点击【Finish】会创建项目，第一次创建完成后会进行maven包的下载等，需要几分钟。项目创建成功后，他会生成一个springboot的启动类。后面就是靠他来启动springboot</p>
+<h4 id="2-新建一个Controller"><a href="#2-新建一个Controller" class="headerlink" title="2.新建一个Controller"></a>2.新建一个Controller</h4><p><img src="/2019/01/30/springboot个人总结/clip_image026.jpg" alt="img"></p>
+<h4 id="3-新建一个index-html"><a href="#3-新建一个index-html" class="headerlink" title="3.新建一个index.html"></a>3.新建一个index.html</h4><p>  需要注意的是，界面要放置在 resouces – templates 目录下（不是放在我们以前的webroot下面了）</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image027.png" alt="img"></p>
+<h4 id="4-启动程序，访问。"><a href="#4-启动程序，访问。" class="headerlink" title="4.启动程序，访问。"></a>4.启动程序，访问。</h4><p><img src="/2019/01/30/springboot个人总结/clip_image029.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image031.jpg" alt="img"></p>
+<p>可以看到，他非常的简单。不需要配置一大堆文件</p>
+<h3 id="3-2-2-IDEA编译器方式"><a href="#3-2-2-IDEA编译器方式" class="headerlink" title="3.2.2  IDEA编译器方式"></a>3.2.2  IDEA编译器方式</h3><p>方式同上</p>
+<p>IDE都支持使用Spring的项目创建向导快速创建一个Spring Boot项目；</p>
+<p>选择我们需要的模块；向导会联网创建Spring Boot项目；</p>
+<p>默认生成的Spring Boot项目；</p>
+<p>- 主程序已经生成好了，我们只需要我们自己的逻辑</p>
+<p>- resources文件夹中目录结构</p>
+<p>  - static：保存所有的静态资源； js css  images；</p>
+<p>  - templates：保存所有的模板页面；（Spring Boot默认jar包使用嵌入式的Tomcat，默认不支持JSP页面）；可以使用模板引擎（freemarker、thymeleaf）；</p>
+<p>  - application.properties：Spring Boot应用的配置文件；可以修改一些默认设置；例如修改服务器端口号</p>
+<h1 id="四-Springboot核心"><a href="#四-Springboot核心" class="headerlink" title="四.  Springboot核心"></a>四.  Springboot核心</h1><p>下面分析根据helloworld 源码。</p>
+<h2 id="4-1、POM文件"><a href="#4-1、POM文件" class="headerlink" title="4.1、POM文件"></a>4.1、POM文件</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;parent&gt;</div><div class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</div><div class="line">	&lt;version&gt;2.1.5.RELEASE&lt;/version&gt;</div><div class="line">	&lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;</div><div class="line">&lt;/parent&gt;</div></pre></td></tr></table></figure>
+<p>​          <parent>                 <groupid>org.springframework.boot</groupid>                 <artifactid>spring-boot-starter-parent</artifactid>                 <version>2.1.5.RELEASE</version>                 <relativepath>   <!-- lookup parent from repository -->          </relativepath></parent>   </p>
+<p>单击进去查看，发现他的父项目是：</p>
+<p>​     <parent>         <groupid>org.springframework.boot</groupid>         <artifactid>spring-boot-dependencies</artifactid>         <version>2.1.5.RELEASE</version>         <relativepath>../../spring-boot-dependencies</relativepath>     </parent>   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;parent&gt;</div><div class="line">  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">  &lt;artifactId&gt;spring-boot-dependencies&lt;/artifactId&gt;</div><div class="line">  &lt;version&gt;2.1.5.RELEASE&lt;/version&gt;</div><div class="line">  &lt;relativePath&gt;../../spring-boot-dependencies&lt;/relativePath&gt;</div><div class="line">&lt;/parent&gt;</div></pre></td></tr></table></figure>
+<p>再单击进去发现</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image032.png" alt="img"></p>
+<p>它里面配置了很多properties,定义了各种依赖的版本。<strong><em>也就是说他是用来真正管理Spring Boot应用里面的所有依赖版本，Spring Boot的版本仲裁中心；以后我们导入依赖默认是不需要写版本；（没有在dependencies里面管理的依赖自然需要声明版本号-）</em></strong></p>
+<h3 id="4-2、web启动器"><a href="#4-2、web启动器" class="headerlink" title="4.2、web启动器"></a>4.2、web启动器</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<p>​                 <dependency>                        <groupid>org.springframework.boot</groupid>                        <artifactid>spring-boot-starter-web</artifactid>                 </dependency>   </p>
+<p>spring-boot-starter-web：</p>
+<p>​       spring-boot-starter：spring-boot场景启动器；帮我们导入了web模块正常运行所依赖的组件；</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image033.png" alt="img"></p>
+<p>Spring Boot将所有的功能场景都抽取出来，做成一个个的starters（启动器），只需要在项目里面引入这些starter相关场景的所有依赖都会导入进来。要用什么功能就导入什么场景的启动器</p>
+<h2 id="4-2、主程序类，主入口类"><a href="#4-2、主程序类，主入口类" class="headerlink" title="4.2、主程序类，主入口类"></a>4.2、主程序类，主入口类</h2><p>   /<em>*    </em>  @SpringBootApplication 来标注一个主程序类，说明这是一个Spring Boot应用    */   @SpringBootApplication   public class HelloWorldMainApplication {       public static void main(String[]   args) {           // Spring应用启动起来             SpringApplication.run(HelloWorldMainApplication.class,args);       }   }   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/**</div><div class="line"> *  @SpringBootApplication 来标注一个主程序类，说明这是一个Spring Boot应用</div><div class="line"> */</div><div class="line">@SpringBootApplication</div><div class="line">public class HelloWorldMainApplication &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        // Spring应用启动起来</div><div class="line">        SpringApplication.run(HelloWorldMainApplication.class,args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="1-注解分析-SpringBootApplication"><a href="#1-注解分析-SpringBootApplication" class="headerlink" title="1 注解分析-@SpringBootApplication"></a>1 注解分析-@SpringBootApplication</h3><p>@SpringBootApplication:    Spring Boot应用标注在某个类上说明这个类是SpringBoot的主配置类，SpringBoot就应该运行这个类的main方法来启动SpringBoot应用；</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image035.jpg" alt="img"></p>
+<h4 id="1．-SpringBootConfiguration"><a href="#1．-SpringBootConfiguration" class="headerlink" title="1．@SpringBootConfiguration"></a>1．@SpringBootConfiguration</h4><p><img src="/2019/01/30/springboot个人总结/clip_image036.png" alt="img"></p>
+<p>@SpringBootConfiguration:Spring Boot的配置类，sb自定义的一个注解，标注在某个类上，表示这是一个Spring Boot的配置类。</p>
+<p>点进去发现实际上他是使用spring的@Configuration来注解的，而@Configuration的上一层是@Component。</p>
+<p>在Spring Boot项目中推荐使用@ SpringBootConfiguration替代@Configuration</p>
+<p>​      <strong>总的来说：这个注解的作用是把当前启动类加入到spring容器中，同时当做一个配置类来使用。</strong></p>
+<h4 id="2-EnableAutoConfiguration"><a href="#2-EnableAutoConfiguration" class="headerlink" title="2. @EnableAutoConfiguration"></a>2. @<strong>EnableAutoConfiguration</strong></h4><p><img src="/2019/01/30/springboot个人总结/clip_image037.png" alt="img"></p>
+<p>@<strong>EnableAutoConfiguration</strong>：<strong>开启自动配置功能</strong>，以前我们需要配置的东西，Spring Boot帮我们自动配置；例如：我们添加了spring-boot-starter-web的依赖，项目中也就会引入SpringMVC的依赖，Spring Boot就会自动配置tomcat和SpringMVC，下面我们查看这个注解具体的作用。</p>
+<h5 id="AutoConfigurationPackage：自动配置包"><a href="#AutoConfigurationPackage：自动配置包" class="headerlink" title="@AutoConfigurationPackage：自动配置包"></a>@AutoConfigurationPackage：自动配置包</h5><p><img src="/2019/01/30/springboot个人总结/clip_image038.png" alt="img"></p>
+<p>利用Spring的底层注解@Import，给IOC容器中导入组件，导入的组件由AutoConfigurationPackages.Registrar.class来控制。</p>
+<blockquote>
+<p>额外提示：</p>
+</blockquote>
+<p><strong>可以参见在网站上发布的《spring注解》文章，关于@import注解导入bean的三种方式</strong></p>
+<p><strong>（1）源码分析</strong></p>
+<p>查看AutoConfigurationPackages的内部类Registrar，他实现了ImportBeanDefinitionRegistrar接口。通过这个接口的重载方法registerBeanDefinitions（），控制导入IOC容器的bean。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">static class Registrar implements ImportBeanDefinitionRegistrar,</div><div class="line">DeterminableImports &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void registerBeanDefinitions(AnnotationMetadata metadata,</div><div class="line">			BeanDefinitionRegistry registry) &#123;</div><div class="line">	1.	register(registry, new PackageImport(metadata).getPackageName());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public Set&lt;Object&gt; determineImports(AnnotationMetadata metadata) &#123;</div><div class="line">		return Collections.singleton(new PackageImport(metadata));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​          static class Registrar   implements ImportBeanDefinitionRegistrar,    DeterminableImports {                     @Override                 public void   registerBeanDefinitions(AnnotationMetadata metadata,                               BeanDefinitionRegistry   registry) {                 1.    register(registry, new   PackageImport(metadata).getPackageName());                 }                     @Override                 public   Set<object> determineImports(AnnotationMetadata metadata) {                        return   Collections.singleton(new PackageImport(metadata));                 }              }   </object></p>
+<p>会去调用registerBeanDefinitions方法注册bean，紧接着registerBeanDefinitions方法调用register方法。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image040.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/5C1566700814119.png" alt="1566700814119"></p>
+<p>该方法会首先判断，IOC容器中是否存在</p>
+<p>org.springframework.boot.autoconfigure.AutoConfigurationPackages 类，不存在则把该类注册到容器中，不存在则创建</p>
+<blockquote>
+<p>在1处打个断点</p>
+</blockquote>
+<p><strong>发现获取的metadata元数据信息是HelloWorldMainApplication的。计算new PackageImport(metadata).getPackageName()的值得出的是HelloWorldMainApplication所在包的包名。Registry是IOC容器实例</strong></p>
+<blockquote>
+<p>  总结：</p>
+</blockquote>
+<p><strong>@AutoConfigurationPackage注解的作用是将主配置类（@SpringBootApplication标注的类）的所在包及下面所有子包里面的所有组件扫描到Spring容器，也就是说，如果controller，service等等类不在这个包下的话，是不会注册到spring容器中的，所以需要注意。</strong></p>
+<blockquote>
+<p>尖叫提示：</p>
+</blockquote>
+<p><strong>我们知道spring启动的时候会默认扫描启动类所在的包下面的所有类，注入springioc容器中，但是如果我们需要注入ioc容器的类不在启动类包下，那么我们可以通过这个@ImportResource(locations = {“classpath:beans.xml”})</strong><br><strong>注解进行注入额外的类（注解加在 启动类上）</strong></p>
+<p><strong>注解进行注入额外的类（注解加在</strong> <strong>启动类上）</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image042.jpg" alt="img"></p>
+<h5 id="Import-AutoConfigurationImportSelector-class"><a href="#Import-AutoConfigurationImportSelector-class" class="headerlink" title="@Import(AutoConfigurationImportSelector.class)"></a>@Import(AutoConfigurationImportSelector.class)</h5><p><strong>（1）整体结构分析</strong></p>
+<p><a href="mailto:还是利用了@import注解导入了AutoConfigurationImportSelector.class" target="_blank" rel="external">还是利用了@import注解导入了AutoConfigurationImportSelector.class</a> 类，</p>
+<p>查看他的继承结构。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image044.jpg" alt="img"></p>
+<blockquote>
+<p>​    题外话：</p>
+</blockquote>
+<p><strong>可以看到很多组件都实现了Aware接口，关于实现Aware的作用是，我们可以在自定义组件中使用Spring底层的一些组件，例如创建一个bean时候，我们想查看IOC容器的信息或者查看当前系统的信息，那么这个时候就需要用到Aware接口，注入这些底层组件，供自定义组件调用。</strong></p>
+<hr>
+<blockquote>
+<p><strong>可以参见在网站上发布的《spring注解》文章，关于Aware接口</strong></p>
+<p>关键代码</p>
+</blockquote>
+<p><img src="/2019/01/30/springboot个人总结/clip_image046.jpg" alt="img"></p>
+<p><strong>selectImports方法，返回的是需要导入到IOC容器的bean的全类名</strong>。类似</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image048.jpg" alt="img"></p>
+<p><strong>(2)详细分析</strong></p>
+<ol>
+<li>查看selectImport()，可以看到最终返回的是自动配置实体类autoConfigurationEntry. getConfigurations()方法的返回值，就是一个List<string></string></li>
+</ol>
+<p><img src="/2019/01/30/springboot个人总结/clip_image050.jpg" alt="img"></p>
+<p>那么很明显获取自动配置实体类的代码是接下来我们所要关注的重点。</p>
+<p>2.进入AutoConfigurationImportSelector.getAutoConfigurationEntry()方法</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image052.jpg" alt="img"></p>
+<p>同理可得，关键代码是：List<string> configurations</string></p>
+<p>3.接着看getCandidateConfigurations方法里面的关键代码段。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image054.jpg" alt="img"></p>
+<p> 关键代码：loadFactoryNames()方法，他的第一个参数通过debug我们可以得知，也就是getSpringFactoriesLoaderFactoryClass()方法的值是：</p>
+<p>EnableAutoConfiguration.class –&gt; org.springframework.boot.autoconfigure.EnableAutoConfiguration </p>
+<p><strong>SpringFactoriesLoader.loadFactoryNames(EnableAutoConfiguration.class,classLoader)**</strong>；**</p>
+<p>深入查看loadFactoryNames方法可知。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image056.jpg" alt="img"></p>
+<p>他是通过</p>
+<p>最终loadFactoryNames()方法的返回值是：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image058.jpg" alt="img"></p>
+<p><strong>（3）总结：</strong></p>
+<p>@Import(AutoConfigurationImportSelector.class)注解的作用是，通过以key为</p>
+<p>org.springframework.boot.autoconfigure.EnableAutoConfiguration，然后在META-INF/spring.factories文件中，获取key对应的value值，然后打包成一个值是全类名的List<string>，最终返回到selectImport()方法，然后调用IOC容器把这些List<string>里面bean，注册到IOC容器中，完成自动配置。</string></string></p>
+<p>META-INF/spring.factories文件的位置。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image060.png" alt="img"></p>
+<p><strong>J2EE**</strong>的整体整合解决方案和自动配置都在<strong>**spring-boot-autoconfigure-2.0.5.RELEASE.jar</strong></p>
+<p><strong>关于自动配置：下面的5.12章节也会阐述到。</strong></p>
+<h4 id="3-ComponentScan"><a href="#3-ComponentScan" class="headerlink" title="3. @ComponentScan"></a>3. @ComponentScan</h4><p><img src="/2019/01/30/springboot个人总结/clip_image062.jpg" alt="img"></p>
+<h2 id="4-3-关闭自动配置"><a href="#4-3-关闭自动配置" class="headerlink" title="4.3 关闭自动配置"></a>4.3 关闭自动配置</h2><p>通过上述，我们得知，Spring Boot会根据项目中的jar包依赖，自动做出配置，Spring Boot支持的自动配置如下（非常多）：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image064.jpg" alt="img"></p>
+<p>如果我们不需要Spring Boot自动配置，想关闭某一项的自动配置，该如何设置呢？</p>
+<p>比如：我们不想自动配置Redis，想手动配置。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image066.jpg" alt="img"></p>
+<p>当然了，其他的配置就类似了。</p>
+<h2 id="4-4-自定义Banner-了解即可-没什么用"><a href="#4-4-自定义Banner-了解即可-没什么用" class="headerlink" title="4.4 自定义Banner-了解即可-没什么用"></a>4.4 自定义Banner-了解即可-没什么用</h2><p>启动Spring Boot项目后会看到这样的图案：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image068.jpg" alt="img"></p>
+<p>这个图片其实是可以自定义的：</p>
+<p>\1.       打开网站：</p>
+<p><a href="http://patorjk.com/software/taag/#p=display&amp;h=3&amp;v=3&amp;f=4Max&amp;t=itcast%20Spring%20Boot" target="_blank" rel="external">http://patorjk.com/software/taag/#p=display&amp;h=3&amp;v=3&amp;f=4Max&amp;t=itcast%20Spring%20Boot</a><br> <img src="/2019/01/30/springboot个人总结/clip_image070.jpg" alt="img">拷贝生成的字符到一个文本文件中，并且将该文件命名为banner.txt</p>
+<p>\2.       将banner.txt拷贝到项目的resources目录中：<br> <img src="/2019/01/30/springboot个人总结/clip_image071.png" alt="img"></p>
+<p>\3.       重新启动程序，查看效果：</p>
+<p>如果不想看到任何的banner，也是可以将其关闭的：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image073.jpg" alt="img"></p>
+<h2 id="4-5全局配置文件"><a href="#4-5全局配置文件" class="headerlink" title="4.5全局配置文件"></a>4.5全局配置文件</h2><p>Spring Boot项目使用一个全局的配置文件application.properties或者是application.yml，在resources目录下或者类路径下的/config下，一般我们放到resources下。</p>
+<p>1、  修改tomcat的端口为8088<br> <img src="/2019/01/30/springboot个人总结/clip_image074.png" alt="img"><br> 重新启动应用，查看效果：<br> <img src="/2019/01/30/springboot个人总结/clip_image076.jpg" alt="img"></p>
+<p>2、  修改进入DispatcherServlet的规则为：*.html<br> <img src="/2019/01/30/springboot个人总结/clip_image077.png" alt="img"><br> 测试：<br> <img src="/2019/01/30/springboot个人总结/clip_image078.png" alt="img"><br> <img src="/2019/01/30/springboot个人总结/clip_image080.jpg" alt="img"></p>
+<h1 id="五-配置文件"><a href="#五-配置文件" class="headerlink" title="五. 配置文件"></a>五. 配置文件</h1><p><strong>SpringBoot使用一个全局的配置文件，配置文件名是固定的（名字不能更改否则无效）</strong></p>
+<p>•application.properties （默认生成）</p>
+<p>•application.yml</p>
+<p><strong>而且通过观察发现</strong> <strong>application.properties</strong> <strong>的优先级别比</strong> <strong>application.yml</strong> <strong>高，同样的属性配置，**</strong>properties<strong><strong>会覆盖</strong></strong>yml<strong>**的配置</strong></p>
+<p>配置文件的作用：修改SpringBoot自动配置的默认值，SpringBoot在底层都给我们自动配置好。</p>
+<h2 id="5-1-YAML"><a href="#5-1-YAML" class="headerlink" title="5.1 YAML"></a>5.1 YAML</h2><p>他是一种标记语言</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image082.jpg" alt="img"></p>
+<h2 id="5-2YAML语法"><a href="#5-2YAML语法" class="headerlink" title="5.2YAML语法"></a>5.2YAML语法</h2><p><img src="/2019/01/30/springboot个人总结/clip_image084.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image086.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image088.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image090.jpg" alt="img"></p>
+<h2 id="5-3配置文件值注入"><a href="#5-3配置文件值注入" class="headerlink" title="5.3配置文件值注入"></a>5.3配置文件值注入</h2><p><img src="/2019/01/30/springboot个人总结/clip_image092.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image094.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image096.jpg" alt="img"></p>
+<h2 id="5-4-Value获取值和-ConfigurationProperties获取值比较"><a href="#5-4-Value获取值和-ConfigurationProperties获取值比较" class="headerlink" title="5.4 @Value获取值和@ConfigurationProperties获取值比较"></a>5.4 @Value获取值和@ConfigurationProperties获取值比较</h2><p><img src="/2019/01/30/springboot个人总结/clip_image098.jpg" alt="img"></p>
+<h2 id="5-5、配置文件注入值数据校验"><a href="#5-5、配置文件注入值数据校验" class="headerlink" title="5.5、配置文件注入值数据校验"></a>5.5、配置文件注入值数据校验</h2><p><img src="/2019/01/30/springboot个人总结/clip_image100.jpg" alt="img"></p>
+<h2 id="5-6、-PropertySource-amp-ImportResource-amp-Bean"><a href="#5-6、-PropertySource-amp-ImportResource-amp-Bean" class="headerlink" title="5.6、@PropertySource&amp;@ImportResource&amp;@Bean"></a>5.6、@PropertySource&amp;@ImportResource&amp;@Bean</h2><p><strong>1. @PropertySource：加载指定的配置文件；</strong></p>
+<p>应用场景，我们知道application.properties是项目的整体配置文件，但是如果存在大量跟项目关系不是那么密切的配置信息，我们是可以配置到其他的配置的文件中去，避免造成application.peoperties文件的大小过大。这个时候就需要PropertySource注解进行指定。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image102.jpg" alt="img"></p>
+<p><strong>2.</strong> <strong>@ImportResource**</strong>：**</p>
+<p>导入Spring的配置文件，让配置文件里面的内容生效，Spring Boot里面没有Spring的配置文件，我们自己编写的配置文件，也不能自动识别，想让Spring的配置文件生效，加载进来，@<strong>ImportResource</strong>标注在一个配置类上。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image104.jpg" alt="img"></p>
+<p><strong>3.@bean</strong></p>
+<p>Bean注解一般是配合着@Configure注解使用</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image106.jpg" alt="img"></p>
+<h2 id="5-7比较application-properties和application-yml和自定义properti的优先级别"><a href="#5-7比较application-properties和application-yml和自定义properti的优先级别" class="headerlink" title="5.7比较application.properties和application.yml和自定义properti的优先级别"></a>5.7比较application.properties和application.yml和自定义properti的优先级别</h2><p>同样的属性配置 ：  application.properties &gt; application.yml &gt; 自定义properties</p>
+<p><strong>前者会覆盖后者</strong></p>
+<h2 id="5-8、配置文件占位符"><a href="#5-8、配置文件占位符" class="headerlink" title="5.8、配置文件占位符"></a>5.8、配置文件占位符</h2><p><img src="/2019/01/30/springboot个人总结/clip_image108.jpg" alt="img"></p>
+<h2 id="5-9、Profile"><a href="#5-9、Profile" class="headerlink" title="5.9、Profile"></a>5.9、Profile</h2><p>使用场景，针对于配置文件。例如我们在开发过程中使用的是开发环境的properties，那么生产使用的是生产的properties。那么我们怎么指定呢？ spring提供了profile功能</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image110.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image112.jpg" alt="img"></p>
+<h2 id="5-10、配置文件加载位置-Important"><a href="#5-10、配置文件加载位置-Important" class="headerlink" title="5.10、配置文件加载位置(Important)"></a>5.10、配置文件加载位置(Important)</h2><p>springboot 启动会扫描以下位置的application.properties或者application.yml文件作为Spring boot的默认配置文件</p>
+<p>–file:./config/    （在项目的的根目录下新建config）</p>
+<p>–file:./                  （在项目的的根目录下）</p>
+<p>–classpath:/config/  （项目的resource目录下新建config）</p>
+<p>–classpath:/     （默认生成的application.properties是在类路径下面的）</p>
+<p>优先级由高到底，高优先级的配置会覆盖低优先级的配置；</p>
+<p>SpringBoot会从这四个位置全部加载主配置文件；互补配置；</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image114.jpg" alt="img"></p>
+<h2 id="5-11、外部配置加载顺序"><a href="#5-11、外部配置加载顺序" class="headerlink" title="5.11、外部配置加载顺序"></a>5.11、外部配置加载顺序</h2><p><img src="/2019/01/30/springboot个人总结/clip_image116.jpg" alt="img"></p>
+<p><a href="https://docs.spring.io/spring-boot/docs/1.5.9.RELEASE/reference/htmlsingle/#boot-features-external-config" target="_blank" rel="external">参考官方文档</a></p>
+<h2 id="5-11-bookstrap-yml"><a href="#5-11-bookstrap-yml" class="headerlink" title="5.11 bookstrap.yml"></a>5.11 bookstrap.yml</h2><p>其实还有一个系统级别的配置文件，这个是springcloud的在使用configserver组件的时候使用的，详情可查看后续的springcloud文章-springcloud的配置中心。</p>
+<h2 id="5-12、自动配置原理"><a href="#5-12、自动配置原理" class="headerlink" title="5.12、自动配置原理"></a>5.12、自动配置原理</h2><p>配置文件到底能写什么？怎么写？自动配置原理；</p>
+<p><a href="https://docs.spring.io/spring-boot/docs/1.5.9.RELEASE/reference/htmlsingle/#common-application-properties" target="_blank" rel="external">配置文件能配置的属性参照</a></p>
+<h3 id="1、自动配置原理"><a href="#1、自动配置原理" class="headerlink" title="1、自动配置原理"></a>1、<strong>自动配置原理</strong></h3><p>1）、SpringBoot启动的时候加载主配置类，开启了自动配置功能通过这个注解@EnableAutoConfiguration</p>
+<p><strong>2）、@EnableAutoConfiguration作用：</strong></p>
+<p>·        利用EnableAutoConfigurationImportSelector给容器中导入一些组件？</p>
+<p>·        可以查看selectImports()方法的内容；</p>
+<p>·        List<string> configurations = getCandidateConfigurations(annotationMetadata, attributes);获取候选的配置</string></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">SpringFactoriesLoader.loadFactoryNames()</div><div class="line"></div><div class="line">扫描所有jar包类路径下  META-INF/spring.factories</div><div class="line"></div><div class="line">把扫描到的这些文件的内容包装成properties对象</div><div class="line"></div><div class="line">从properties中获取到EnableAutoConfiguration.class类（类名）对应的值，然后把他们添加在容器中</div></pre></td></tr></table></figure>
+<p><strong>将</strong> <strong>类路径下</strong> <strong>META-INF/spring.factories</strong> <strong>里面配置的所有**</strong>EnableAutoConfiguration<strong>**的值加入到了容器中</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Auto Configure</div><div class="line"></div><div class="line">org.springframework.boot.autoconfigure.EnableAutoConfiguration=\</div><div class="line"></div><div class="line">org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration,\</div><div class="line"></div><div class="line">org.springframework.boot.autoconfigure.aop.AopAutoConfiguration,\</div><div class="line"></div><div class="line">org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration,\</div><div class="line"></div><div class="line">org.springframework.boot.autoconfigure.batch.BatchAutoConfiguration,\</div><div class="line"></div><div class="line">org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration,\</div><div class="line"></div><div class="line">org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration,\</div><div class="line"></div><div class="line">org.springframework.boot.autoconfigure.cloud.CloudAutoConfiguration,\</div><div class="line"></div><div class="line">org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration,\</div><div class="line"></div><div class="line">org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration,\</div><div class="line"></div><div class="line">org.springframework.boot.autoconfigure.context.PropertyPlaceholderAu</div><div class="line">。。。。。。。。。。。。。。。。等等</div></pre></td></tr></table></figure>
+<p>每一个这样的 xxxAutoConfiguration类都是容器中的一个组件，都加入到容器中；用他们来做自动配置；</p>
+<p>3）、每一个自动配置类进行自动配置功能；</p>
+<p>4）、以<strong>HttpEncodingAutoConfiguration（Http编码自动配置）</strong>为例解释自动配置原理；</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Configuration   //表示这是一个配置类，以前编写的配置文件一样，也可以给容器中添加组件</div><div class="line"></div><div class="line">@EnableConfigurationProperties(HttpEncodingProperties.class)  //启动指定类的ConfigurationProperties功能；将配置文件中对应的值和HttpEncodingProperties绑定起来；并把HttpEncodingProperties加入到ioc容器中</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">@ConditionalOnWebApplication //Spring底层@Conditional注解（Spring注解版），根据不同的条件，如果满足指定的条件，整个配置类里面的配置就会生效；    判断当前应用是否是web应用，如果是，当前配置类生效</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">@ConditionalOnClass(CharacterEncodingFilter.class)  //判断当前项目有没有这个类CharacterEncodingFilter；SpringMVC中进行乱码解决的过滤器；</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">@ConditionalOnProperty(prefix = &quot;spring.http.encoding&quot;, value = &quot;enabled&quot;, matchIfMissing = true)  //判断配置文件中是否存在某个配置  spring.http.encoding.enabled；如果不存在，判断也是成立的</div><div class="line"></div><div class="line">//即使我们配置文件中不配置pring.http.encoding.enabled=true，也是默认生效的；</div><div class="line"></div><div class="line">public class HttpEncodingAutoConfiguration &#123;</div><div class="line"></div><div class="line">  </div><div class="line"></div><div class="line">    //他已经和SpringBoot的配置文件映射了</div><div class="line"></div><div class="line">    private final HttpEncodingProperties properties;</div><div class="line"></div><div class="line">  </div><div class="line"></div><div class="line">   //只有一个有参构造器的情况下，参数的值就会从容器中拿</div><div class="line"></div><div class="line">    public HttpEncodingAutoConfiguration(HttpEncodingProperties properties) &#123;</div><div class="line"></div><div class="line">        this.properties = properties;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">  </div><div class="line"></div><div class="line">    @Bean   //给容器中添加一个组件，这个组件的某些值需要从properties中获取</div><div class="line"></div><div class="line">    @ConditionalOnMissingBean(CharacterEncodingFilter.class) //判断容器没有这个组件？</div><div class="line"></div><div class="line">    public CharacterEncodingFilter characterEncodingFilter() &#123;</div><div class="line"></div><div class="line">        CharacterEncodingFilter filter = new OrderedCharacterEncodingFilter();</div><div class="line"></div><div class="line">        filter.setEncoding(this.properties.getCharset().name());</div><div class="line"></div><div class="line">        filter.setForceRequestEncoding(this.properties.shouldForce(Type.REQUEST));</div><div class="line"></div><div class="line">        filter.setForceResponseEncoding(this.properties.shouldForce(Type.RESPONSE));</div><div class="line"></div><div class="line">        return filter;</div><div class="line"></div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>根据当前不同的条件判断，决定这个配置类是否生效？</p>
+<p>一但这个配置类生效；这个配置类就会给容器中添加各种组件；这些组件的属性是从对应的properties类中获取的，这些类里面的每一个属性又是和配置文件绑定的；</p>
+<p>5）、所有在配置文件中能配置的属性都是在xxxxProperties类中封装者。配置文件能配置什么就可以参照某个功能对应的这个属性类</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@ConfigurationProperties(prefix = &quot;spring.http.encoding&quot;)  //从配置文件中获取指定的值和bean的属性进行绑定</div><div class="line"></div><div class="line">public class HttpEncodingProperties &#123;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">   public static final Charset DEFAULT_CHARSET = Charset.forName(&quot;UTF-8&quot;);</div></pre></td></tr></table></figure>
+<p><strong>精髓：</strong></p>
+<p> <strong>1**</strong>）、<strong><strong>SpringBoot</strong></strong>启动会加载大量的自动配置类**</p>
+<p> <strong>2**</strong>）、我们看我们需要的功能有没有<strong><strong>SpringBoot</strong></strong>默认写好的自动配置类；**</p>
+<p> <strong>3**</strong>）、我们再来看这个自动配置类中到底配置了哪些组件；（只要我们要用的组件有，我们就不需要再来配置了）**</p>
+<p> <strong>4**</strong>）、给容器中自动配置类添加组件的时候，会从<strong><strong>properties</strong></strong>类中获取某些属性。我们就可以在配置文件中指定这些属性的值；**</p>
+<p>xxxxAutoConfigurartion：自动配置类；</p>
+<p>给容器中添加组件</p>
+<p>xxxxProperties:封装配置文件中相关属性；</p>
+<h3 id="2、细节"><a href="#2、细节" class="headerlink" title="2、细节"></a>2、细节</h3><h4 id="1、-Conditional派生注解（Spring注解版原生的-Conditional作用）"><a href="#1、-Conditional派生注解（Spring注解版原生的-Conditional作用）" class="headerlink" title="1、@Conditional派生注解（Spring注解版原生的@Conditional作用）"></a>1、@Conditional派生注解（Spring注解版原生的@Conditional作用）</h4><p>作用：必须是@Conditional指定的条件成立，才给容器中添加组件，配置配里面的所有内容才生效；</p>
+<table>
+<thead>
+<tr>
+<th><strong>@Conditional**</strong>扩展注解**</th>
+<th><strong>作用（判断是否满足当前指定条件）</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@ConditionalOnJava</td>
+<td>系统的java版本是否符合要求</td>
+</tr>
+<tr>
+<td>@ConditionalOnBean</td>
+<td>容器中存在指定Bean；</td>
+</tr>
+<tr>
+<td>@ConditionalOnMissingBean</td>
+<td>容器中不存在指定Bean；</td>
+</tr>
+<tr>
+<td>@ConditionalOnExpression</td>
+<td>满足SpEL表达式指定</td>
+</tr>
+<tr>
+<td>@ConditionalOnClass</td>
+<td>系统中有指定的类</td>
+</tr>
+<tr>
+<td>@ConditionalOnMissingClass</td>
+<td>系统中没有指定的类</td>
+</tr>
+<tr>
+<td>@ConditionalOnSingleCandidate</td>
+<td>容器中只有一个指定的Bean，或者这个Bean是首选Bean</td>
+</tr>
+<tr>
+<td>@ConditionalOnProperty</td>
+<td>系统中指定的属性是否有指定的值</td>
+</tr>
+<tr>
+<td>@ConditionalOnResource</td>
+<td>类路径下是否存在指定资源文件</td>
+</tr>
+<tr>
+<td>@ConditionalOnWebApplication</td>
+<td>当前是web环境</td>
+</tr>
+<tr>
+<td>@ConditionalOnNotWebApplication</td>
+<td>当前不是web环境</td>
+</tr>
+<tr>
+<td>@ConditionalOnJndi</td>
+<td>JNDI存在指定项</td>
+</tr>
+</tbody>
+</table>
+<p><strong>自动配置类必须在一定的条件下才能生效；</strong></p>
+<p>我们怎么知道哪些自动配置类生效；</p>
+<p><strong>==**</strong>我们可以通过在<strong><strong>application.properties</strong></strong>中启用<strong> </strong>debug=true<strong><strong>属性；来让控制台打印自动配置报告</strong></strong>==**，这样我们就可以很方便的知道哪些自动配置类生效；</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">=========================</div><div class="line"></div><div class="line">AUTO-CONFIGURATION REPORT</div><div class="line"></div><div class="line">=========================</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">Positive matches:（自动配置类启用的）</div><div class="line"></div><div class="line">-----------------</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">   DispatcherServletAutoConfiguration matched:</div><div class="line"></div><div class="line">      - @ConditionalOnClass found required class &apos;org.springframework.web.servlet.DispatcherServlet&apos;; @ConditionalOnMissingClass did not find unwanted class (OnClassCondition)</div><div class="line"></div><div class="line">      - @ConditionalOnWebApplication (required) found StandardServletEnvironment (OnWebApplicationCondition)</div><div class="line"></div><div class="line">        </div><div class="line"></div><div class="line">    </div><div class="line"></div><div class="line">Negative matches:（没有启动，没有匹配成功的自动配置类）</div><div class="line"></div><div class="line">-----------------</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">   ActiveMQAutoConfiguration:</div><div class="line"></div><div class="line">      Did not match:</div><div class="line"></div><div class="line">         - @ConditionalOnClass did not find required classes &apos;javax.jms.ConnectionFactory&apos;, &apos;org.apache.activemq.ActiveMQConnectionFactory&apos; (OnClassCondition)</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">   AopAutoConfiguration:</div><div class="line"></div><div class="line">      Did not match:</div><div class="line"></div><div class="line">         - @ConditionalOnClass did not find required classes &apos;org.aspectj.lang.annotation.Aspect&apos;, &apos;org.aspectj.lang.reflect.Advice&apos; (OnClassCondition)</div></pre></td></tr></table></figure>
+<h1 id="六．日志"><a href="#六．日志" class="headerlink" title="六．日志"></a>六．日志</h1><h1 id="七-springboot的web开发"><a href="#七-springboot的web开发" class="headerlink" title="七 springboot的web开发"></a>七 springboot的web开发</h1><h2 id="7-1-引言"><a href="#7-1-引言" class="headerlink" title="7.1 引言"></a>7.1 引言</h2><p>使用SpringBoot；</p>
+<p><strong>1**</strong>）、创建<strong><strong>SpringBoot</strong></strong>应用，选中我们需要的模块；**</p>
+<p><strong>2**</strong>）、<strong><strong>SpringBoot</strong></strong>已经默认将这些场景配置好了，只需要在配置文件中指定少量配置就可以运行起来**</p>
+<p><strong>3**</strong>）、自己编写业务代码；**</p>
+<p>我们知道sb框架已经给我们自动配置了很多相关的配置，我们只需要着重于业务代码的编写，但是有些细则还是需要了解的，例如我们打包的sb程序成jar包的形式，那么我们网站的css js等等资源是放置在那个目录呢？换言说，静态资源的访问是个怎么流程呢？</p>
+<h2 id="7-2、SpringBoot对静态资源的映射规则"><a href="#7-2、SpringBoot对静态资源的映射规则" class="headerlink" title="7.2、SpringBoot对静态资源的映射规则"></a>7.2、SpringBoot对静态资源的映射规则</h2><p><strong>1.Web**</strong>开发的自动配置类**</p>
+<p>org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration</p>
+<p>查看关键代码</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image118.jpg" alt="img"></p>
+<h3 id="7-2-1-查看第一层映射关系"><a href="#7-2-1-查看第一层映射关系" class="headerlink" title="7.2.1 查看第一层映射关系"></a>7.2.1 查看第一层映射关系</h3><p>这段代码的意思是：所有/webjars/**的请求 ，都去classpath:/META-INF/resources/webjars/ 找资源。</p>
+<p>例如请求jauery的请求 localhost:8080/webjars/jquery/3.3.1/jquery.js </p>
+<p><strong>1.**</strong>什么是<strong><strong>webjars</strong></strong>？**</p>
+<p>以jar包的方式引入静态资源，可登陆这个网址了解<a href="http://www.webjars.org/" target="_blank" rel="external">http://www.webjars.org/</a></p>
+<p>也就是说，网站需要的jq等等资源你可以通过maven的方式导入到项目中。</p>
+   <!--引入jquery-webjar-->在访问的时候只需要写webjars下面资源的名称即可                 <dependency>                        <groupid>org.webjars</groupid>                        <artifactid>jquery</artifactid>                        <version>3.3.1</version>                 </dependency><br><br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!--引入jquery-webjar--&gt;在访问的时候只需要写webjars下面资源的名称即可</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.webjars&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;jquery&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;3.3.1&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<p>导入到sb项目后查看依赖</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image119.png" alt="img"></p>
+<p>启动项目请求：localhost:8080/webjars/jquery/3.3.1/jquery.js。  输出jquery内容。</p>
+<p>总结：</p>
+<p>也就是说，如果我们需要引用网上相关的资源可以使用webjars的方式导入相关的组件，<strong>但是有个问题，那就是如果我们项目中已经存在某些**</strong>css<strong><strong>和</strong></strong>js<strong><strong>，那么怎么引用到</strong></strong>sb<strong>**项目中呢（也就是请求不满足第一层映射关系）</strong>？</p>
+<p>例如：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image120.png" alt="img"></p>
+<h3 id="7-2-2-第二层映射关系"><a href="#7-2-2-第二层映射关系" class="headerlink" title="7.2.2 第二层映射关系"></a>7.2.2 第二层映射关系</h3><p><img src="/2019/01/30/springboot个人总结/clip_image122.jpg" alt="img"></p>
+<p>查看staticPathPattern的值：staticPathPattern = “/<strong>“。</strong>也就是说改代码块匹配访问当前项目任何资源的请求**</p>
+<p>那么他是去哪里寻找资源回应请求呢？</p>
+<p>查看getStaticLocations()方法，通过查看发现：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">private static final String[] CLASSPATH_RESOURCE_LOCATIONS = &#123;</div><div class="line">		&quot;classpath:/META-INF/resources/&quot;, &quot;classpath:/resources/&quot;,</div><div class="line">		&quot;classpath:/static/&quot;, &quot;classpath:/public/&quot; &#125;;</div></pre></td></tr></table></figure>
+<p>​          private static final String[] CLASSPATH_RESOURCE_LOCATIONS   = {                        “classpath:/META-INF/resources/“,   “classpath:/resources/“,                        “classpath:/static/“,   “classpath:/public/“ };   </p>
+<p>也就是说，请求会去类路径的根路径下的这个几个目录寻找相应的资源响应。</p>
+<p>类路径是指：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image123.png" alt="img">例如sbp项目中，java和resources都是属于类路径的根路径。静态资源，我们可以在resources下创建 resources目录存放，或者创建public目录存放，<strong>static**</strong>目录默认已经创建**</p>
+<h4 id="2-案例"><a href="#2-案例" class="headerlink" title="2.案例"></a>2.案例</h4><p><img src="/2019/01/30/springboot个人总结/clip_image124.png" alt="img"></p>
+<p>我们把一些样式文件放置到static目录下</p>
+<p>启动sb项目，访问静态资源。<a href="http://127.0.0.1:8080/asserts/img/4D74191A.jpg" target="_blank" rel="external">http://127.0.0.1:8080/asserts/img/4D74191A.jpg</a></p>
+<p>访问成功。<strong>很明显不满足第一层映射关系，走的是第二层映射关系的逻辑</strong></p>
+<h3 id="7-2-3-欢迎页配置"><a href="#7-2-3-欢迎页配置" class="headerlink" title="7.2.3 欢迎页配置"></a>7.2.3 欢迎页配置</h3><p><img src="/2019/01/30/springboot个人总结/clip_image126.jpg" alt="img"></p>
+<p>通过查看他也是从7.2.2章节中静态资源存放目录下寻找index.html。</p>
+<p>localhost:8080/ 找index页面</p>
+<h3 id="7-2-4-网站图标"><a href="#7-2-4-网站图标" class="headerlink" title="7.2.4 网站图标"></a>7.2.4 网站图标</h3><p>所有的 **/favicon.ico 都是在静态资源文件下找；==（也是从7.2.2章节中静态资源存放目录下）</p>
+<h3 id="7-2-5-修改静态资源文件夹路径"><a href="#7-2-5-修改静态资源文件夹路径" class="headerlink" title="7.2.5 修改静态资源文件夹路径"></a>7.2.5 修改静态资源文件夹路径</h3><p><img src="/2019/01/30/springboot个人总结/clip_image128.jpg" alt="img"></p>
+<h2 id="7-3、模板引擎"><a href="#7-3、模板引擎" class="headerlink" title="7.3、模板引擎"></a>7.3、模板引擎</h2><p>常用的模板引擎有JSP、Velocity、Freemarker、Thymeleaf。核心理念是，通过传入模板代码和需要替换的数据到模板引擎中，模板引擎自动转化成静态的界面显示</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image130.jpg" alt="img"></p>
+<p>SpringBoot推荐的Thymeleaf，语法更简单，功能更强大；</p>
+<h3 id="1、引入thymeleaf"><a href="#1、引入thymeleaf" class="headerlink" title="1、引入thymeleaf"></a>1、引入thymeleaf</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<p>我这里默认导入的是3.011版本。</p>
+<p>如果你们想要修改导入版本，那么也是可以的：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image132.jpg" alt="img"></p>
+<p>Pom.xml文件中添加版本覆盖即可</p>
+<h3 id="2、Thymeleaf使用"><a href="#2、Thymeleaf使用" class="headerlink" title="2、Thymeleaf使用"></a>2、Thymeleaf使用</h3><p>我们通过查看他的自动配置源码来了解一下他的加载结构：</p>
+<p>org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration</p>
+<p>的ThymeleafProperties 属性</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image134.jpg" alt="img"></p>
+<p>发下它默认加载类路径下的templates目录下的后缀为html的文件。</p>
+<p><strong>只要我们把HTML页面放在classpath:/templates/，thymeleaf就能自动渲染；</strong></p>
+<h4 id="2-1-案例1（常规使用）"><a href="#2-1-案例1（常规使用）" class="headerlink" title="2.1 案例1（常规使用）"></a>2.1 案例1（常规使用）</h4><p>（1）    在templates目录下新建ok.html界面</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image135.png" alt="img"></p>
+<p>（2）    在controller中添加请求处理，最终是跳转到ok.html界面</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image136.png" alt="img"></p>
+<p>（3）启动sb项目，并访问<a href="http://127.0.0.1:8080/ok" target="_blank" rel="external">http://127.0.0.1:8080/ok</a> </p>
+<h4 id="2-2-动态赋值"><a href="#2-2-动态赋值" class="headerlink" title="2.2 动态赋值"></a>2.2 动态赋值</h4><p>1.修改ok.html界面 </p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image138.jpg" alt="img"></p>
+<p>2.修改请求处理方法 ok()</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image139.png" alt="img"></p>
+<p>3.启动sb项目，并访问<a href="http://127.0.0.1:8080/ok" target="_blank" rel="external">http://127.0.0.1:8080/ok</a></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image140.png" alt="img"></p>
+<p>总结：</p>
+<p>这里建议给html界面加上命名空间，这样在使用thyeleaf语法时会有提示</p>
+   <html lang="en" xmlns:th="http://www.thymeleaf.org">   
+
+
+
+
+
+
+
+
+
+<h3 id="4-Thymeleaf语法"><a href="#4-Thymeleaf语法" class="headerlink" title="4.     Thymeleaf语法"></a>4.     Thymeleaf语法</h3><p><a href="https://www.thymeleaf.org/" target="_blank" rel="external">https://www.thymeleaf.org/</a> 官方地址</p>
+<p>1）、th:text；改变当前元素里面的文本内容；</p>
+<p> th：任意html属性；来替换原生属性的值</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image142.jpg" alt="img"></p>
+<p>2）、表达式？</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image144.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image146.jpg" alt="img"></p>
+<h2 id="7-4、SpringMVC自动配置"><a href="#7-4、SpringMVC自动配置" class="headerlink" title="7.4、SpringMVC自动配置"></a>7.4、SpringMVC自动配置</h2><p><a href="https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/reference/html/boot-features-developing-web-applications.html#boot-features-spring-mvc-auto-configuration" target="_blank" rel="external">https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/reference/html/boot-features-developing-web-applications.html#boot-features-spring-mvc-auto-configuration</a> 官方文档</p>
+<h3 id="1-Spring-MVC-auto-configuration"><a href="#1-Spring-MVC-auto-configuration" class="headerlink" title="1. Spring MVC auto-configuration"></a>1. Spring MVC auto-configuration</h3><p>通过查看官方文档查看springboot为springmvc自动配置了那些工作</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image148.jpg" alt="img"></p>
+<p>逐句分析：</p>
+<p>Spring Boot 自动配置好了SpringMVC</p>
+<p>以下是SpringBoot对SpringMVC的默认配置:关键类WebMvcAutoConfiguration</p>
+<p><strong>1 Inclusion of ContentNegotiatingViewResolver and BeanNameViewResolver beans.</strong></p>
+<p>  - 自动配置了ViewResolver（视图解析器：根据方法的返回值得到视图对象（View），视图对象决定如何渲染（转发或者重定向））</p>
+<p>  - ContentNegotiatingViewResolver：组合所有的视图解析器的；</p>
+<p>  - <strong>如何定制：我们可以自己给容器中添加一个视图解析器；自动的将其组合进来</strong></p>
+<p><strong>2.Support for serving static resources, including support for WebJars (see below).静态资源文件夹路径,webjars</strong></p>
+<p><strong>3.Static index.html support.</strong> <strong>静态首页访问</strong></p>
+<p><strong>4.Custom Favicon support (see below).  favicon.ico</strong></p>
+<p><strong>5.自动注册了</strong> <strong>of Converter, GenericConverter, Formatter beans.</strong></p>
+<p>  - Converter：转换器；  public String hello(User user)：类型转换使用Converter</p>
+<p>  - Formatter  格式化器；  2017.12.17===Date；</p>
+<p>关键代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Bean</div><div class="line">@ConditionalOnProperty(prefix = &quot;spring.mvc&quot;, name = &quot;date-format&quot;)//在文件中配置日期格式化的规则</div><div class="line">public Formatter&lt;Date&gt; dateFormatter() &#123;</div><div class="line">	return new DateFormatter(this.mvcProperties.getDateFormat());//日期格式化组件</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​                 @Bean                 @ConditionalOnProperty(prefix =   “spring.mvc”, name = “date-format”)//在文件中配置日期格式化的规则                 public Formatter<date> dateFormatter() {                        return new   DateFormatter(this.mvcProperties.getDateFormat());//日期格式化组件                 }   </date></p>
+<p><strong>自己添加的格式化器转换器，我们只需要放在容器中即可</strong></p>
+<p><strong>6**</strong>.Support for HttpMessageConverters (see below).**</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image150.jpg" alt="img"></p>
+<p><strong>7**</strong>. Automatic registration of MessageCodesResolver (see below).<strong>**定义错误代码生成规则</strong></p>
+<p><strong>8**</strong>. Automatic use of a ConfigurableWebBindingInitializer bean (see below).**</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image152.jpg" alt="img"></p>
+<h3 id="2、扩展SpringMVC"><a href="#2、扩展SpringMVC" class="headerlink" title="2、扩展SpringMVC"></a>2、扩展SpringMVC</h3><p>虽然springboot框架给我们自动配置了很多组件，但是在真实的应用场景中，肯定还需要自己实现一些组件，来扩展我们的springboot程序，例如我们需要定义一个拦截器和一个特定功能的视图解析器。那么就需要扩展了。</p>
+<p>官方文档有段话，给我们阐述了如果扩展：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image154.jpg" alt="img"></p>
+<p><strong>总的来说：编写一个配置类（@Configuration），是WebMvcConfigurer类型，不能标注@EnableWebMvc，即可实现扩展功能。</strong></p>
+<p>​    <strong>尖叫提示：有些文档还是使用WebMvcConfigurerAdapter。</strong></p>
+<p><strong>需要注意的是：在springboot2.0版本以上，WebMvcConfigurerAdapter类已经过时，需要使用WebMvcConfigurer 接口或者WebMvcConfigurationSupport</strong></p>
+<p>   过时原因：原因是springboot2.0以后，引用的是spring5.0，而spring5.0取消了<strong>WebMvcConfigurerAdapter</strong> </p>
+<h4 id="2-1-案例"><a href="#2-1-案例" class="headerlink" title="2.1 案例"></a>2.1 案例</h4><p>实现一个视图解析器，将请求是/no时，直接重定向到success界面(<strong>也就是说不用编写controller**</strong>方法**)。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image156.jpg" alt="img"></p>
+<p>访问请求：<a href="http://127.0.0.1:8080/no" target="_blank" rel="external">http://127.0.0.1:8080/no</a> </p>
+<h4 id="重要总结"><a href="#重要总结" class="headerlink" title="重要总结"></a>重要总结</h4><p><strong>总结：建议以后所有关于**</strong>mvc<strong><strong>扩展的自定义的功能组件（视图解析器，国际化，拦截器等等），都放在某一个自实现的</strong></strong>mvcConfig<strong><strong>中（例如上面的</strong></strong>MyViewConfig<strong><strong>），方便管理，也可以实现多个扩展的</strong></strong>webMvcConfig,<strong>**按照功能放置自定义的组件。</strong></p>
+<h4 id="2-2-扩展mvc原理"><a href="#2-2-扩展mvc原理" class="headerlink" title="2.2 扩展mvc原理"></a>2.2 扩展mvc原理</h4><p>查看<strong>WebMvcAutoConfiguration**</strong>代码的适配器代码，可以知道关键代码是<strong>**@Import(EnableWebMvcConfiguration.class)</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image158.jpg" alt="img"></p>
+<p>点进去 <strong>EnableWebMvcConfiguration.class**</strong>，发现他还是<strong><strong>WebMvcAutoConfiguration</strong></strong>的一个内部类。**</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image160.jpg" alt="img"></p>
+<p><strong>查看</strong> <strong>DelegatingWebMvcConfiguration</strong> <strong>类。</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image162.jpg" alt="img"></p>
+<p><strong>可以看到他是加载了容器中所有**</strong>WebMvcConfigurer<strong><strong>类型的配置类，然后逐个调用。这里也可以证明了，我们自定义的扩展类仅仅只是扩展了</strong></strong>mvc<strong>**的功能而已，并没有让其他自动配置功能失效。</strong></p>
+<h3 id="3、全面接管SpringMVC"><a href="#3、全面接管SpringMVC" class="headerlink" title="3、全面接管SpringMVC"></a>3、全面接管SpringMVC</h3><p>全面接管也就意味着：<strong>SpringBoot**</strong>对<strong><strong>SpringMVC</strong></strong>的自动配置不需要了，所有都是我们自己配置，所有的<strong><strong>SpringMVC</strong></strong>的自动配置都会失效。**</p>
+<p><strong>我们需要在配置类中添加**</strong>@EnableWebMvc<strong>**即可</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image164.jpg" alt="img"></p>
+<p>访问：发现提示界面找不到了。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image166.jpg" alt="img"></p>
+<p>加上注解，启动springboot项目，我们通过控制台输出的日志中我们发现少了一些filter。然后我们对于静态资源的默认访问路径等等都失效了。也就是说，访问html界面等等都行不通了。</p>
+<p><strong>这些代码都会失效，所以请求访问不到静态界面</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image168.jpg" alt="img"></p>
+<h4 id="3-1-原理"><a href="#3-1-原理" class="headerlink" title="3.1 原理"></a>3.1 原理</h4><p><strong>1**</strong>）<strong><strong>@EnableWebMvc</strong></strong>的核心**</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image170.jpg" alt="img"></p>
+<p>可以看到他的核心是导入一个类 DelegatingWebMvcConfiguration</p>
+<p><strong>2**</strong>）<strong><strong>DelegatingWebMvcConfiguration</strong></strong>类**</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image172.jpg" alt="img"></p>
+<p>这个类就是我们上面2.2节查看注册各种适配器的关键代码，那么这里并没有什么代码控制 <strong>mvc**</strong>自动配置失效** </p>
+<p><strong>发现它继承</strong> <strong>WebMvcConfigurationSupport</strong> <strong>，这个类我们好像在那里看见过</strong></p>
+<p><strong>2**</strong>）查看<strong>**WebMvcAutoConfiguration</strong></p>
+<p>让我们回过头查看mvc自动配置类</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image174.jpg" alt="img"></p>
+<p>注意到一段代码：@ConditionalOnMissingBean(WebMvcConfigurationSupport.class)</p>
+<p>意思是：当WebMvcConfigurationSupport类在容器中找不到时，执行自动配置类。</p>
+<p>那么我们加上了<strong>@EnableWebMvc**</strong>注解，就相当于把<strong><strong>WebMvcConfigurationSupport</strong></strong>类注入到了容器中，所以<strong><strong>WebMvcAutoConfiguration</strong></strong>自动配置类失效。**</p>
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p><strong>3**</strong>）、<strong><strong>@EnableWebMvc</strong></strong>将<strong><strong>WebMvcConfigurationSupport</strong></strong>组件导入进来；**</p>
+<p><strong>4**</strong>）、导入的<strong><strong>WebMvcConfigurationSupport</strong></strong>只是<strong><strong>SpringMVC</strong></strong>最基本的功能；**</p>
+<h2 id="7-5-默认访问首页"><a href="#7-5-默认访问首页" class="headerlink" title="7.5 默认访问首页"></a>7.5 默认访问首页</h2><p>通过查看WebMVCAutoConfiguration源代码可以知道，默认的”/”请求是会定向到类路径</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image175.png" alt="img"></p>
+<p>下的index.html界面，那么我们可不可以手动控制他呢？</p>
+<p>很明显是可以的。</p>
+<h3 id="1-实现方式1"><a href="#1-实现方式1" class="headerlink" title="1.实现方式1"></a>1.实现方式1</h3><p>实现一个controller，映射”/”请求</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image177.jpg" alt="img"></p>
+<p>​    </p>
+<h3 id="2-实现方式2"><a href="#2-实现方式2" class="headerlink" title="2.实现方式2"></a>2.实现方式2</h3><p><img src="/2019/01/30/springboot个人总结/clip_image179.jpg" alt="img"></p>
+<h2 id="7-6-国际化"><a href="#7-6-国际化" class="headerlink" title="7.6 国际化"></a>7.6 国际化</h2><p><strong>1**</strong>）、编写国际化配置文件；**</p>
+<p>2）、使用ResourceBundleMessageSource管理国际化资源文件</p>
+<p>3）、在页面使用fmt:message取出国际化内容</p>
+<p>步骤：</p>
+<p>1）、编写国际化配置文件，抽取页面需要显示的国际化消息</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image180.png" alt="img"></p>
+<p>第一个properties表示是在没有指定语言的情况下，默认的显示值</p>
+<p>2）、SpringBoot自动配置好了管理国际化资源文件的组件；</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image182.jpg" alt="img"></p>
+<p>3）、配置国际化基础名</p>
+<p>   在application.properties中设置</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image184.jpg" alt="img"></p>
+<p>3）、去页面获取国际化的值；</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image186.jpg" alt="img"></p>
+<p>效果：根据浏览器语言设置的信息切换了国际化；</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>国际化的核心是：</p>
+<p> 国际化Locale（区域信息对象）；LocaleResolver（获取区域信息对象）；</p>
+<p>查看默认的区域信息解析器：</p>
+<p>在WebMvcAutoConfiguration中</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image188.jpg" alt="img"></p>
+<p>初始化了一个区域信息解析器，查看获取区域信息相关带代码</p>
+<p>AcceptHeaderLocaleResolver ，看到这个类，我们可以猜测他是通过请求头中获取区域编码</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image190.jpg" alt="img"></p>
+<p>看到 Accept-Language 说明上面我们的猜测是正确的。</p>
+<p><strong>也就是说，国际化的区域信息，默认是通过请求头中获取。而且需要注意的是当**</strong>spring<strong><strong>容器中如果缺失</strong></strong>LocaleResolver<strong><strong>这个</strong></strong>bean<strong>**实例，那么才会去加载默认的，区域化信息解析器。（下面的点击链接切换国际化就是很好的利用了这个注解）</strong></p>
+<h3 id="点击链接切换国际化"><a href="#点击链接切换国际化" class="headerlink" title="点击链接切换国际化"></a>点击链接切换国际化</h3><p>知道了上的原理，我们就可以手动的控制，切换语言环境。</p>
+<p>1.实现一个区域信息解析器，通过获取请求中l的值，设定响应的语言环境。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image192.jpg" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">因为我们自定义实现了LocalResolver，那么根据@ConditionalOnMissingBean这个注解</div></pre></td></tr></table></figure>
+<p><img src="/2019/01/30/springboot个人总结/clip_image193.png" alt="img"></p>
+<p>那么springboot默认的区域化解析器就会失效。</p>
+<p>\2. 实例化到spring容器中</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image195.jpg" alt="img"></p>
+<p><strong>上面的两个步骤可以整合在一起，最终实现：</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image197.jpg" alt="img"></p>
+<p>在自定义的LocaleResolver中直接注入到spring容器中。<strong>注意需要指明**</strong>bean<strong><strong>的</strong></strong>id<strong><strong>是</strong></strong>localeResolver**</p>
+<p>3.通过链接实现</p>
+<p><a href="http://127.0.0.1:8080/login.html?i=en_US" target="_blank" rel="external">http://127.0.0.1:8080/login.html?i=en_US</a></p>
+<p><a href="http://127.0.0.1:8080/login.html?i=en_US" target="_blank" rel="external">http://127.0.0.1:8080/login.html?i=en_US</a></p>
+<h2 id="7-7-themleaf关闭缓存"><a href="#7-7-themleaf关闭缓存" class="headerlink" title="7.7 themleaf关闭缓存"></a>7.7 themleaf关闭缓存</h2><p>Thymeleaf会在第一次对模板解析之后进行缓存，极大的提高了并发处理能力，但是在开发期间模板引擎页面修改以后，要实时生效，所以我们开发阶段可以关掉缓存使用</p>
+<p>1）、禁用模板引擎的缓存</p>
+<p>​    # 禁用缓存</p>
+<p>​    spring.thymeleaf.cache=false </p>
+<p>2）、页面修改完成以后ctrl+f9：重新编译；</p>
+<h2 id="7-8-自定义拦截器"><a href="#7-8-自定义拦截器" class="headerlink" title="7.8 自定义拦截器"></a>7.8 自定义拦截器</h2><p><img src="/2019/01/30/springboot个人总结/clip_image199.jpg" alt="img"></p>
+<h3 id="1-第一种实现方式"><a href="#1-第一种实现方式" class="headerlink" title="1. 第一种实现方式"></a>1. 第一种实现方式</h3><p>继承WebMvcConfigurerAdapter</p>
+<p>1.定义一个拦截器实现HandlerInterceptor接口</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image201.jpg" alt="img"></p>
+<p>2.注册到容器中</p>
+<p>我们把扩展mvc的组件都放在自定义mvc扩展类中：MyMvcConfig</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image203.jpg" alt="img"></p>
+<h3 id="2-第二种方式（常见）"><a href="#2-第二种方式（常见）" class="headerlink" title="2. 第二种方式（常见）"></a>2. 第二种方式（常见）</h3><p>1.</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image205.jpg" alt="img"></p>
+<p>\2. 然后定义配置类，注册拦截器</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image207.jpg" alt="img"></p>
+<p>3.运行输出</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image208.png" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image209.png" alt="img"></p>
+<p>接下来运行并查看日志：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image211.jpg" alt="img"></p>
+<p>你会发现日志中只有这些打印信息，springMVC的日志信息都没有，因为springMVC记录的log级别是debug，springboot默认是显示info以上，我们需要进行配置。</p>
+<p>SpringBoot通过logging.level.<em>=debug来配置日志级别，</em>填写包名</p>
+<p># 设置org.springframework包的日志级别为debug</p>
+<p>logging.level.org.springframework=debug</p>
+<p>设置完后，访问请求，查看输出</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image213.jpg" alt="img"></p>
+<p>相比springmvc，springboot已经帮我们做好了静态资源的映射访问，所以不需要额外处理。</p>
+<h2 id="7-9-springmvc默认日期类型转化"><a href="#7-9-springmvc默认日期类型转化" class="headerlink" title="7.9 springmvc默认日期类型转化"></a>7.9 springmvc默认日期类型转化</h2><p>例如从前台传回一个时间字符串，后台通过date日期类型进行映射获取。那么如果前台日期格式是：2017/12/12 ，那么mvc会自动转化为date类型，因为他的默认时间转换器是以/ 进行分割的。</p>
+<p>   如果是2017-12-12、2017.12.12   这样的日期格式，那么就需要我们自己实现日期转换器</p>
+<p>  通过查看WebMvcAutoConfiguration的源码得知：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image215.jpg" alt="img"></p>
+<p>默认的日期格式是使用反斜杠来分割。</p>
+<p>–修改默认的日期格式化：</p>
+<p> 只需要在applicatio.proeprties文件中，覆盖默认的日期格式即可</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image216.png" alt="img"></p>
+<h2 id="7-10-post-get请求转化为put或其他"><a href="#7-10-post-get请求转化为put或其他" class="headerlink" title="7.10 post/get请求转化为put或其他"></a>7.10 post/get请求转化为put或其他</h2><p>我们知道html的form表单只支持get/post两种请求，那么我们使用restful url进行请求数据的时候，那么需要使用到put请求，那么怎么转化呢？</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image218.jpg" alt="img"></p>
+<h2 id="7-11错误处理机制"><a href="#7-11错误处理机制" class="headerlink" title="7.11错误处理机制"></a>7.11错误处理机制</h2><h3 id="1）、SpringBoot默认的错误处理机制"><a href="#1）、SpringBoot默认的错误处理机制" class="headerlink" title="1）、SpringBoot默认的错误处理机制"></a>1）、SpringBoot默认的错误处理机制</h3><p>当我们访问一个不存在的资源时，那么springboot默认帮我们跳转到一个错误界面</p>
+<p>1.使用pc浏览器访问</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image220.jpg" alt="img"></p>
+<p>2.使用其他工具访问（postman）</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image222.jpg" alt="img"></p>
+<p>我们不难发现，他返回错误的形式都是不一样的，前者返回一个html界面，后者返回的是一个json字符串。为什么会有两种错误请求返回方式呢？接下来看源码就知道了。</p>
+<p>原理：</p>
+<p>​       可以参照ErrorMvcAutoConfiguration；错误处理的自动配置；</p>
+<p>​     给容器中添加了以下四个组件</p>
+<p>​       1、DefaultErrorAttributes：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image224.jpg" alt="img"></p>
+<p>​       2、BasicErrorController：他是一个基本的错误控制类。处理默认/error请求</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image226.jpg" alt="img"></p>
+<p>是一个controller，处理/error请求</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image228.jpg" alt="img"></p>
+<p><strong>这里就解释了为什么会出现，两种错误请求响应方式（**</strong>html<strong><strong>和</strong></strong>josn<strong>**）</strong></p>
+<p><strong>那么会产生另一个问题，他是怎么知道客户端是**</strong>pc<strong><strong>还是其他访问工具呢？究竟怎么选择返回哪种格式的错误消息</strong></strong>??????????**</p>
+<p>  很明显是通过请求头进行区分的。</p>
+<p>1.通过postman发出的请求，请求头是：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image230.jpg" alt="img"></p>
+<p>2.通过浏览器发出的请求，请求头是：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image231.png" alt="img"></p>
+<p>3、ErrorPageCustomizer：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image233.jpg" alt="img"></p>
+<p>查看getpath()，</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image235.jpg" alt="img"></p>
+<p>总的来说：系统出现错误以后来到error请求进行处理；（类似我们在web.xml注册的错误页面规则-根据不同的错误码，响应不同的错误界面：使用<error-page>标签）</error-page></p>
+<p>4、DefaultErrorViewResolver：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image237.jpg" alt="img"></p>
+<p>主要解析代码：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image239.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image241.jpg" alt="img"></p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>​         步骤：</p>
+<p>​                 一但系统出现4xx或者5xx之类的错误；ErrorPageCustomizer就会生效（定制错误的响应规则）；就会来到/error请求；就会被BasicErrorController处理；</p>
+<p>​                 1）响应页面；去哪个页面是由DefaultErrorViewResolver解析得到的；</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image243.jpg" alt="img"></p>
+<h3 id="2）、如果定制错误响应："><a href="#2）、如果定制错误响应：" class="headerlink" title="2）、如果定制错误响应："></a>2）、如果定制错误响应：</h3><h4 id="1）、如何定制错误的页面；"><a href="#1）、如何定制错误的页面；" class="headerlink" title="1）、如何定制错误的页面；"></a>1）、如何定制错误的页面；</h4><p><strong>1**</strong>）、有模板引擎的情况下**；error/状态码; 【将错误页面命名为  错误状态码.html 放在模板引擎文件夹里面的 error文件夹下】，发生此状态码的错误就会来到对应的页面；</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image244.png" alt="img"></p>
+<p>那么就会存在一个缺点，那就是如果我想把所有4开头的错误码都定向到一个错误界面怎么办呢？</p>
+<p>我们回过头查看DefaultErrorViewResolver 源代码发现，他默认注册了两个规则4xx和5xx。</p>
+<p><strong>我们可以使用**</strong>4xx<strong><strong>和</strong></strong>5xx<strong><strong>作为错误页面的文件名来匹配这种类型的所有错误，精确优先（优先寻找精确的状态码</strong></strong>.html<strong>**）；</strong>        </p>
+<p>页面能获取的信息（我们可以在自定义的错误界面获取到这些信息，参见DefaultErrorAttributes源码）</p>
+<p>timestamp：时间戳</p>
+<p>status：状态码</p>
+<p>error：错误提示</p>
+<p>exception：异常对象</p>
+<p>message：异常消息</p>
+<p>errors：JSR303数据校验的错误都在这里</p>
+<p>2）、<strong>没有模板引擎</strong>（模板引擎找不到这个错误页面），静态资源文件夹（static）下找</p>
+<p>3）、<strong>以上都没有错误页面</strong>，就是默认来到SpringBoot默认的错误提示页面</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image246.jpg" alt="img"></p>
+<h4 id="2）、如何定制错误的json数据；"><a href="#2）、如何定制错误的json数据；" class="headerlink" title="2）、如何定制错误的json数据；"></a>2）、如何定制错误的json数据；</h4><p>1）、自定义异常处理&amp;返回定制json数据；</p>
+<p>实现一个异常处理controller</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image248.jpg" alt="img"></p>
+<p>只要是UserNotExistEception的异常都交由此方法处理，并返回自己自己定制json信息。</p>
+<p>   缺点: 永远返回json格式信息，没有html界面（7.11.1.1）。</p>
+<p>2）、转发到/error进行自适应响应效果处理</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image250.jpg" alt="img"></p>
+<p>缺点：自定义的map错误数据，没有携带过去。</p>
+<h4 id="3）、将我们的定制数据携带出去；"><a href="#3）、将我们的定制数据携带出去；" class="headerlink" title="3）、将我们的定制数据携带出去；"></a>3）、将我们的定制数据携带出去；</h4><p>出现错误以后，会来到/error请求，会被BasicErrorController处理，响应出去可以获取的数据是由getErrorAttributes得到的（是AbstractErrorController（ErrorController）规定的方法）；</p>
+<p>1、完全来编写一个ErrorController的实现类【或者是编写AbstractErrorController的子类】，放在容器中（<strong>这种方式太过麻烦不推荐</strong>）</p>
+<p>2、页面上能用的数据，或者是json返回能用的数据都是通过errorAttributes.getErrorAttributes得到（<strong>推荐这种方法</strong>）</p>
+<p>容器中DefaultErrorAttributes.getErrorAttributes()；默认进行数据处理的；</p>
+<p>自定义ErrorAttributes</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image252.jpg" alt="img"></p>
+<h1 id="八-默认嵌套的Servlet服务器"><a href="#八-默认嵌套的Servlet服务器" class="headerlink" title="八. 默认嵌套的Servlet服务器"></a>八. 默认嵌套的Servlet服务器</h1><p><img src="/2019/01/30/springboot个人总结/clip_image254.jpg" alt="img"></p>
+<p>打开springboot项目的pom文件，查看依赖。</p>
+<h2 id="8-1如何定制和修改Servlet容器的相关配置"><a href="#8-1如何定制和修改Servlet容器的相关配置" class="headerlink" title="8.1如何定制和修改Servlet容器的相关配置"></a>8.1如何定制和修改Servlet容器的相关配置</h2><p>1、修改和server有关的配置（ServerProperties也是EmbeddedServletContainerCustomizer的实现）-<strong>第一种方式</strong></p>
+<p>就是我们直接在application.properties文件中的修改操作</p>
+<p>   server.port=8081   server.context-path=/crud   server.tomcat.uri-encoding=UTF-8   </p>
+<p>2、编写一个EmbeddedServletContainerCustomizer：嵌入式的Servlet容器的定制器；来修改Servlet容器的配置 – <strong>第二种方式</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image256.jpg" alt="img"></p>
+<h2 id="8-2-替换为其他嵌入式Servlet容器"><a href="#8-2-替换为其他嵌入式Servlet容器" class="headerlink" title="8.2 替换为其他嵌入式Servlet容器"></a>8.2 替换为其他嵌入式Servlet容器</h2><p>Springboot 完美的集成了下面这三款servlet容器，只需要做一些小改动即可切换使用。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image258.jpg" alt="img"></p>
+<p>具体实现的容器工厂类。</p>
+<h3 id="1-默认使用tomcat"><a href="#1-默认使用tomcat" class="headerlink" title="1. 默认使用tomcat"></a>1. 默认使用tomcat</h3><p><img src="/2019/01/30/springboot个人总结/clip_image260.jpg" alt="img"></p>
+<h3 id="2-Jetty"><a href="#2-Jetty" class="headerlink" title="2. Jetty"></a>2. Jetty</h3><p><img src="/2019/01/30/springboot个人总结/clip_image262.jpg" alt="img"></p>
+<p>做法其实很简单，那就是一出web模块自动装配的tomcat 组件，然后引入jetty组件即可。Jetty适合在开发长连接的项目中使用（例如聊天类的项目）</p>
+<h3 id="3-Undertow"><a href="#3-Undertow" class="headerlink" title="3. Undertow"></a>3. Undertow</h3><p><img src="/2019/01/30/springboot个人总结/clip_image264.jpg" alt="img"></p>
+<p>Undertow不支持jsp界面</p>
+<h2 id="8-3-嵌入式Servlet容器自动配置原理"><a href="#8-3-嵌入式Servlet容器自动配置原理" class="headerlink" title="8.3 嵌入式Servlet容器自动配置原理"></a>8.3 嵌入式Servlet容器自动配置原理</h2><h3 id="1-源码分析"><a href="#1-源码分析" class="headerlink" title="1. 源码分析"></a>1. 源码分析</h3><p>EmbeddedServletContainerAutoConfiguration：嵌入式的Servlet容器自动配置</p>
+<p>  <img src="/2019/01/30/springboot个人总结/clip_image266.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image268.jpg" alt="img"></p>
+<p>可以看到容器的切换，是通过注解来进行控制。<strong>通过容器工厂进行创建相应的容器</strong></p>
+<p>1）、EmbeddedServletContainerFactory（嵌入式Servlet容器工厂）</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image270.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image272.jpg" alt="img"></p>
+<p>通过 getEmbeddedServletContainer()获得相应的servlet容器。</p>
+<p>2）、EmbeddedServletContainer：（嵌入式的Servlet容器）</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image274.jpg" alt="img"></p>
+<p>总的来说：通过servlet容器工厂类来创建相应的servlet容器</p>
+<h3 id="2-以tomcat容器工厂为例，分析流程"><a href="#2-以tomcat容器工厂为例，分析流程" class="headerlink" title="2.以tomcat容器工厂为例，分析流程"></a>2.以tomcat容器工厂为例，分析流程</h3><p> 1.查看<strong>TomcatEmbeddedServletContainerFactory</strong></p>
+<p>​     <strong>重点是：**</strong>getEmbeddedServletContainer<strong>**方法</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image276.jpg" alt="img"></p>
+<h3 id="3-ServerProperties、EmbeddedServletContainerCustomizer"><a href="#3-ServerProperties、EmbeddedServletContainerCustomizer" class="headerlink" title="3. ServerProperties、EmbeddedServletContainerCustomizer"></a>3. ServerProperties、EmbeddedServletContainerCustomizer</h3><p>我们知道我们修改application.properties都是映射成ServerProperties</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image278.jpg" alt="img"></p>
+<p>他实现了EmbeddedServletContainerCustomizer接口，所以衍生出了，第二种修改servlet容器的配置的方法：</p>
+<p>​      自定义实现EmbeddedServletContainerCustomizer：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image279.jpg" alt="img"></p>
+<p>那么这些改动是怎么样生效的呢?</p>
+<p>容器中导入了<strong>EmbeddedServletContainerCustomizerBeanPostProcessor</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image281.jpg" alt="img"></p>
+<p>步骤：</p>
+<p>1）、SpringBoot根据导入的依赖情况，给容器中添加相应的EmbeddedServletContainerFactory【TomcatEmbeddedServletContainerFactory】</p>
+<p>2）、容器中某个组件要创建对象就会惊动后置处理器；EmbeddedServletContainerCustomizerBeanPostProcessor；</p>
+<p>只要是嵌入式的Servlet容器工厂，后置处理器就工作；</p>
+<p>3）、后置处理器，从容器中获取所有的EmbeddedServletContainerCustomizer，调用定制器的定制方法</p>
+<h2 id="8-4-嵌入式Servlet容器启动原理"><a href="#8-4-嵌入式Servlet容器启动原理" class="headerlink" title="8.4 嵌入式Servlet容器启动原理"></a>8.4 嵌入式Servlet容器启动原理</h2><p>什么时候创建嵌入式的Servlet容器工厂？什么时候获取嵌入式的Servlet容器并启动Tomcat；</p>
+<p>获取嵌入式的Servlet容器工厂：</p>
+<p>1）、SpringBoot应用启动运行run方法</p>
+<p>2）、refreshContext(context);SpringBoot刷新IOC容器【创建IOC容器对象，并初始化容器，创建容器中的每一个组件】；如果是web应用创建<strong>AnnotationConfigEmbeddedWebApplicationContext</strong>，否则：<strong>AnnotationConfigApplicationContext</strong></p>
+<p>3）、refresh(context);<strong>刷新刚才创建好的**</strong>ioc<strong>**容器；</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image283.jpg" alt="img"></p>
+<p>4）、 onRefresh(); web的ioc容器重写了onRefresh方法</p>
+<p>5）、webioc容器会创建嵌入式的Servlet容器；<strong>createEmbeddedServletContainer</strong>();</p>
+<p><strong>6**</strong>）、获取嵌入式的<strong><strong>Servlet</strong></strong>容器工厂：**</p>
+<p>EmbeddedServletContainerFactory containerFactory = getEmbeddedServletContainerFactory();</p>
+<p> 从ioc容器中获取EmbeddedServletContainerFactory 组件；<strong>TomcatEmbeddedServletContainerFactory</strong>创建对象，后置处理器一看是这个对象，就获取所有的定制器来先定制Servlet容器的相关配置；</p>
+<p>7）、<strong>使用容器工厂获取嵌入式的**</strong>Servlet<strong>**容器</strong>：this.embeddedServletContainer = containerFactory .getEmbeddedServletContainer(getSelfInitializer());</p>
+<p>8）、嵌入式的Servlet容器创建对象并启动Servlet容器；</p>
+<p><strong>先启动嵌入式的**</strong>Servlet<strong><strong>容器，再将</strong></strong>ioc<strong>**容器中剩下没有创建出的对象获取出来；</strong></p>
+<p><strong>==IOC**</strong>容器启动创建嵌入式的<strong><strong>Servlet</strong></strong>容器<strong>**==</strong></p>
+<h1 id="九．-springboot注册三大组件"><a href="#九．-springboot注册三大组件" class="headerlink" title="九． springboot注册三大组件"></a>九． springboot注册三大组件</h1><p>三大组件：servlet、filter、listenner</p>
+<p>传统的web项目，我们可以在webroot/WEB_INFO/web.xml 中配置我们三大组件，但是springboot打包方式采用jar的方式，内嵌servlet容器，那么我们应该在哪里注册这三大组件呢？</p>
+<h2 id="9-1-注册servle"><a href="#9-1-注册servle" class="headerlink" title="9.1 注册servle"></a>9.1 注册servle</h2><p>1.首先自定义一个servler</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image285.jpg" alt="img"></p>
+<p>2.通过ServletRegistrationBean注册自定义servle</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image287.jpg" alt="img"></p>
+<p> 注意：<strong>如果存在一个**</strong>controller<strong><strong>同时映射了</strong></strong>/myServlet<strong> </strong>请求，那么就会失效（被自定义<strong><strong>servlet</strong></strong>所覆盖）。**</p>
+<h2 id="9-2-注册filter"><a href="#9-2-注册filter" class="headerlink" title="9.2 注册filter"></a>9.2 注册filter</h2><p>1.首先自定义一个filter</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image289.jpg" alt="img"></p>
+<p>2.FilterRegistrationBean</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image291.jpg" alt="img"></p>
+<h2 id="9-3-注册listenner"><a href="#9-3-注册listenner" class="headerlink" title="9.3 注册listenner"></a>9.3 注册listenner</h2><p>1.首先自定义一个listenner</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image293.jpg" alt="img"></p>
+<p>2.ServletListenerRegistrationBean</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image295.jpg" alt="img"></p>
+<h2 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h2><p>SpringBoot帮我们自动SpringMVC的时候，自动的注册SpringMVC的前端控制器；DIspatcherServlet；</p>
+<p>DispatcherServletAutoConfiguration中：</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image297.jpg" alt="img"></p>
+<h1 id="10-使用外置的Servlet容器"><a href="#10-使用外置的Servlet容器" class="headerlink" title="10 使用外置的Servlet容器"></a>10 使用外置的Servlet容器</h1><p>嵌入式Servlet容器：应用打成可执行的jar</p>
+<p>​              优点：简单、便携</p>
+<p>​              缺点：默认不支持JSP、优化定制比较复杂（虽然可以使用定制器【ServerProperties、自定义EmbeddedServletContainerCustomizer】，自己编写嵌入式Servlet容器的创建工厂【EmbeddedServletContainerFactory】等方式修改配置，但是还是在需要通读代码的情况下才能够修改）</p>
+<p>外置的Servlet容器：外面安装Tomcat—应用war包的方式打包</p>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>1）、必须创建一个项目打包类型为war的项目；（利用idea创建好目录结构，因为默认生成的springboot项目是没有webapp和web.xml等文件，需要手动创建）</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image299.jpg" alt="img"></p>
+<p>下一步</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image301.jpg" alt="img"></p>
+<p>完成</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image303.jpg" alt="img"></p>
+<p><strong>很明显没有生成相应的**</strong>webapp<strong><strong>目录，同时</strong></strong>tomcat<strong><strong>的作用域修改为了运行时使用，打包不使用，这个也就是为我们使用外置</strong></strong>servlet<strong>**容器打下基础。</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image305.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image307.jpg" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image309.jpg" alt="img"></p>
+<p><strong>项目最终目录结构</strong></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image311.jpg" alt="img"></p>
+<p>2）、将嵌入式的Tomcat指定为provided；</p>
+<p><strong>Springboot**</strong>默认已经帮我们完成**</p>
+<p>3）、必须编写一个SpringBootServletInitializer的子类，并调用configure方法</p>
+<p>​                     <strong>Springboot**</strong>默认已经帮我们完成**</p>
+<p>4）、启动服务器就可以使用</p>
+<p>   可以编写一个jsp界面，访问测试</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image312.png" alt="img"></p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image313.png" alt="img"></p>
+<h2 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h2><p>jar包：执行SpringBoot主类的main方法，启动ioc容器，创建嵌入式的Servlet容器</p>
+<p>war包：启动服务器，服务器启动SpringBoot应用【SpringBootServletInitializer】，启动ioc容器</p>
+<p>实现方式：Servlet3.0是一次Java EE规范</p>
+<p><a href="https://blog.csdn.net/f641385712/article/details/87474907" target="_blank" rel="external">https://blog.csdn.net/f641385712/article/details/87474907</a> 相关连接</p>
+<h3 id="规则："><a href="#规则：" class="headerlink" title="规则："></a>规则：</h3><p>​       1）、服务器启动（web应用启动）会创建当前web应用里面每一个jar包里面ServletContainerInitializer实例</p>
+<p>​       2）、ServletContainerInitializer的实现放在jar包的META-INF/services文件夹下，有一个名为javax.servlet.ServletContainerInitializer的文件，内容就是ServletContainerInitializer的实现类的全类名</p>
+<p>​       3）、还可以使用@HandlesTypes，在应用启动的时候加载我们感兴趣的类</p>
+<h3 id="流程："><a href="#流程：" class="headerlink" title="流程："></a>流程：</h3><p>1）、启动Tomcat</p>
+<p>2）、org\springframework\spring-web\4.3.14.RELEASE\spring-web-4.3.14.RELEASE.jar!\META-INF\services\javax.servlet.ServletContainerInitializer：</p>
+<p>Spring的web模块里面有这个文件：org.springframework.web.SpringServletContainerInitializer</p>
+<p>3）、SpringServletContainerInitializer将@HandlesTypes(WebApplicationInitializer.class)标注的所有这个类型的类都传入到onStartup方法的Set<class<?>&gt;；为这些WebApplicationInitializer类型的类创建实例；</class<?></p>
+<p>4）、每一个WebApplicationInitializer都调用自己的onStartup；</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image314.png" alt="img"></p>
+<p>5）、相当于我们的SpringBootServletInitializer的类会被创建对象，并执行onStartup方法</p>
+<p>6）、SpringBootServletInitializer实例执行onStartup的时候会createRootApplicationContext；创建容器</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image316.jpg" alt="img"></p>
+<p>7）、Spring的应用就启动并且创建IOC容器</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image318.jpg" alt="img"></p>
+<p><strong>==**</strong>启动<strong><strong>Servlet</strong></strong>容器，再启动<strong><strong>SpringBoot</strong></strong>应用<strong>**==</strong></p>
+<h1 id="十一、Springboot整合其他技术"><a href="#十一、Springboot整合其他技术" class="headerlink" title="十一、Springboot整合其他技术"></a>十一、Springboot整合其他技术</h1><h2 id="11-1-整合Mybatis"><a href="#11-1-整合Mybatis" class="headerlink" title="11.1 整合Mybatis"></a>11.1 整合Mybatis</h2><h3 id="1-Idea创建一个springboot项目并选择以下依赖"><a href="#1-Idea创建一个springboot项目并选择以下依赖" class="headerlink" title="1.Idea创建一个springboot项目并选择以下依赖"></a>1.Idea创建一个springboot项目并选择以下依赖</h3><p><img src="/2019/01/30/springboot个人总结/clip_image320.jpg" alt="img"></p>
+<p>点击下一步完成项目创建，查看项目的pom文件</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image322.jpg" alt="img"></p>
+<h3 id="2-完善项目的目录结构（MVC结构）"><a href="#2-完善项目的目录结构（MVC结构）" class="headerlink" title="2.完善项目的目录结构（MVC结构）"></a>2.完善项目的目录结构（MVC结构）</h3><p><img src="/2019/01/30/springboot个人总结/clip_image324.jpg" alt="img"></p>
+<p><strong>在资源文件夹中新建**</strong>application.yml<strong>**文件</strong></p>
+<h3 id="3-在application-yml文件中书写数据库配置"><a href="#3-在application-yml文件中书写数据库配置" class="headerlink" title="3.在application.yml文件中书写数据库配置"></a>3.在application.yml文件中书写数据库配置</h3><p><img src="/2019/01/30/springboot个人总结/clip_image326.jpg" alt="img"></p>
+<p>   spring:     profiles:       active: dev   mybatis:     type-aliases-package: com.kingge.entity     mapper-locations: classpath:mapper/*.xml           —   spring:     profiles: dev         datasource:       url:   jdbc:mysql://127.0.0.1:3306/test?serverTimezone=GMT       driver-class-name: com.mysql.cj.jdbc.Driver       username: root       password: 123   #com.mysql.jdbc.Driver 注意这个已经过时，推荐使用上面那个   </p>
+<h3 id="4-编写entity、dao、service、serviceimpl、xml、conrtoller"><a href="#4-编写entity、dao、service、serviceimpl、xml、conrtoller" class="headerlink" title="4.编写entity、dao、service、serviceimpl、xml、conrtoller"></a>4.编写entity、dao、service、serviceimpl、xml、conrtoller</h3><p>4.1 User</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image328.jpg" alt="img"></p>
+<p>4.2 dao</p>
+<p>需要注意，配置文件没有配置mapper接口扫描包，因此我们需要给每一个Mapper/dao接口添加@Mapper注解，才能被识别。</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image330.jpg" alt="img"></p>
+<p>4.3  service</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image332.jpg" alt="img"></p>
+<p>4.4 serviceimpl</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image334.jpg" alt="img"></p>
+<p>4.5 mapper.xml</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image336.jpg" alt="img"></p>
+<p>4.6 controller</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image338.jpg" alt="img"></p>
+<p>完整目录结构展示</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image340.jpg" alt="img"></p>
+<h3 id="5-运行项目访问请求"><a href="#5-运行项目访问请求" class="headerlink" title="5.     运行项目访问请求"></a>5.     运行项目访问请求</h3><p><img src="/2019/01/30/springboot个人总结/clip_image342.jpg" alt="img"></p>
+<p>访问成功！！！！！！</p>
+<h3 id="6-通过junit方式测试"><a href="#6-通过junit方式测试" class="headerlink" title="6.通过junit方式测试"></a>6.通过junit方式测试</h3><p><img src="/2019/01/30/springboot个人总结/clip_image344.jpg" alt="img"></p>
+<h2 id="11-2-整合Spring-Data-JPA"><a href="#11-2-整合Spring-Data-JPA" class="headerlink" title="11.2.整合Spring Data JPA"></a>11.2.整合Spring Data JPA</h2><h3 id="1-添加Spring-Data-JPA的起步依赖"><a href="#1-添加Spring-Data-JPA的起步依赖" class="headerlink" title="1 添加Spring Data JPA的起步依赖"></a>1 添加Spring Data JPA的起步依赖</h3><p>​       <!-- springBoot JPA的起步依赖 -->       <dependency>             <groupid>org.springframework.boot</groupid>             <artifactid>spring-boot-starter-data-jpa</artifactid>       </dependency>   </p>
+<h3 id="2-添加数据库驱动依赖"><a href="#2-添加数据库驱动依赖" class="headerlink" title="2 添加数据库驱动依赖"></a>2 添加数据库驱动依赖</h3><p>​    <!-- MySQL连接驱动 --></p>
+<p>​    <dependency></dependency></p>
+<p>​        <groupid>mysql</groupid></p>
+<p>​        <artifactid>mysql-connector-java</artifactid></p>
+<p>​    </p>
+<h3 id="3-在application-properties中配置数据库和jpa的相关属性"><a href="#3-在application-properties中配置数据库和jpa的相关属性" class="headerlink" title="3 在application.properties中配置数据库和jpa的相关属性"></a>3 在application.properties中配置数据库和jpa的相关属性</h3><p>   #DB   Configuration:   spring.datasource.driverClassName=com.mysql.jdbc.Driver   spring.datasource.url=jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&amp;characterEncoding=utf8   spring.datasource.username=root   spring.datasource.password=root       #JPA   Configuration:   spring.jpa.database=MySQL   spring.jpa.show-sql=true   spring.jpa.generate-ddl=true   spring.jpa.hibernate.ddl-auto=update   spring.jpa.hibernate.naming_strategy=org.hibernate.cfg.ImprovedNamingStrategy   </p>
+<h3 id="4-创建实体配置实体"><a href="#4-创建实体配置实体" class="headerlink" title="4 创建实体配置实体"></a>4 创建实体配置实体</h3><p>   @Entity   public   class User {       // 主键       @Id       @GeneratedValue(strategy =   GenerationType.IDENTITY)       private Long id;       // 用户名       private String username;       // 密码       private String password;       // 姓名       private String name;       //此处省略setter和getter方法… …   }   </p>
+<h3 id="5-编写UserRepository"><a href="#5-编写UserRepository" class="headerlink" title="5 编写UserRepository"></a>5 编写UserRepository</h3><p>​    public interface UserRepository extends JpaRepository<user,long>{</user,long></p>
+<p>​        public List<user> findAll();</user></p>
+<p>​    }</p>
+<h3 id="6-编写测试类"><a href="#6-编写测试类" class="headerlink" title="6 编写测试类"></a>6 编写测试类</h3><p>   @RunWith(SpringRunner.class)   @SpringBootTest(classes=MySpringBootApplication.class)   public class JpaTest {           @Autowired       private UserRepository userRepository;       @Test       public void test(){           List<user> users =   userRepository.findAll();           System.out.println(users);       }   }   </user></p>
+<h3 id="7-控制台打印信息"><a href="#7-控制台打印信息" class="headerlink" title="7 控制台打印信息"></a>7 控制台打印信息</h3><p><img src="/2019/01/30/springboot个人总结/clip_image346.jpg" alt="img"></p>
+<p>注意：如果是jdk9，执行报错如下：</p>
+<p>原因：jdk缺少相应的jar</p>
+<p>解决方案：手动导入对应的maven坐标，如下：</p>
+<p>​    <!--jdk9需要导入如下坐标--></p>
+<p>​    <dependency></dependency></p>
+<p>​        <groupid>javax.xml.bind</groupid></p>
+<p>​        <artifactid>jaxb-api</artifactid></p>
+<p>​        <version>2.3.0</version></p>
+<p>​    </p>
+<h1 id="11-3-整合redis"><a href="#11-3-整合redis" class="headerlink" title="11.3 整合redis"></a>11.3 整合redis</h1><h2 id="1-添加redis的起步依赖"><a href="#1-添加redis的起步依赖" class="headerlink" title="1 添加redis的起步依赖"></a>1 添加redis的起步依赖</h2><p>   <!-- 配置使用redis启动器 -->   <dependency>         <groupid>org.springframework.boot</groupid>         <artifactid>spring-boot-starter-data-redis</artifactid>   </dependency>   </p>
+<h2 id="2-配置redis的连接信息"><a href="#2-配置redis的连接信息" class="headerlink" title="2 配置redis的连接信息"></a>2 配置redis的连接信息</h2><p>#Redis</p>
+<p>spring.redis.host=127.0.0.1</p>
+<p>spring.redis.port=6379</p>
+<h2 id="3-注入RedisTemplate测试redis操作"><a href="#3-注入RedisTemplate测试redis操作" class="headerlink" title="3 注入RedisTemplate测试redis操作"></a>3 注入RedisTemplate测试redis操作</h2><p>   @RunWith(SpringRunner.class)   @SpringBootTest(classes = SpringbootJpaApplication.class)   public class RedisTest {           @Autowired       private UserRepository userRepository;       @Autowired       private RedisTemplate<string, string=""> redisTemplate;           @Test       public void test() throws   JsonProcessingException {             //从redis缓存中获得指定的数据           String userListData =   redisTemplate.boundValueOps(“user.findAll”).get();           //如果redis中没有数据的话           if(null==userListData){               //查询数据库获得数据               List<user> all =   userRepository.findAll();               //转换成json格式字符串               ObjectMapper om = new   ObjectMapper();               userListData =   om.writeValueAsString(all);               //将数据存储到redis中，下次在查询直接从redis中获得数据，不用在查询数据库                 redisTemplate.boundValueOps(“user.findAll”).set(userListData);                 System.out.println(“===============从数据库获得数据===============”);           }else{                 System.out.println(“===============从redis缓存中获得数据===============”);           }           System.out.println(userListData);       }   }   </user></string,></p>
+<h1 id="十二、springboot运行流程回顾"><a href="#十二、springboot运行流程回顾" class="headerlink" title="十二、springboot运行流程回顾"></a>十二、springboot运行流程回顾</h1><h2 id="1-启动柜springboot程序"><a href="#1-启动柜springboot程序" class="headerlink" title="1.启动柜springboot程序"></a>1.启动柜springboot程序</h2><p><img src="/2019/01/30/springboot个人总结/clip_image348.jpg" alt="img"></p>
+<p>断点进入-step into 发现</p>
+<p><img src="/2019/01/30/springboot个人总结/clip_image350.jpg" alt="img"></p>
+<p>停在了这里，也就是说他会首先创建SpringApplication对象</p>
+<h2 id="2-创建SpringApplication对象"><a href="#2-创建SpringApplication对象" class="headerlink" title="2. 创建SpringApplication对象"></a>2. 创建SpringApplication对象</h2><p>创建SpringApplication对象运行run方法</p>
+<p>继续进入方法</p>
+</html>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/分布式/" rel="tag"><i class="fa fa-tag"></i> 分布式</a>
+          
+            <a href="/tags/springboot/" rel="tag"><i class="fa fa-tag"></i> springboot</a>
+          
+            <a href="/tags/微服务/" rel="tag"><i class="fa fa-tag"></i> 微服务</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/05/dubbo分布式服务框架/" rel="next" title="dubbo分布式服务框架">
+                <i class="fa fa-chevron-left"></i> dubbo分布式服务框架
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/28/docker个人总结/" rel="prev" title="docker个人总结">
+                docker个人总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">61</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一．前言"><span class="nav-number">1.</span> <span class="nav-text">一．前言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-什么是微服务？"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 什么是微服务？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-微服务概念"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 微服务概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-spring的演化"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 spring的演化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring1-x-时代"><span class="nav-number">1.3.1.</span> <span class="nav-text">Spring1.x 时代</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring2-x时代"><span class="nav-number">1.3.2.</span> <span class="nav-text">Spring2.x时代</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring3-x到Spring4-x"><span class="nav-number">1.3.3.</span> <span class="nav-text">Spring3.x到Spring4.x</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4为什么要学习SpringBoot"><span class="nav-number">1.4.</span> <span class="nav-text">1.4为什么要学习SpringBoot</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二．-什么是springboot"><span class="nav-number">2.</span> <span class="nav-text">二． 什么是springboot</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三．Springboot使用"><span class="nav-number">3.</span> <span class="nav-text">三．Springboot使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-使用maven方式手动搭建sb项目"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 使用maven方式手动搭建sb项目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、创建一个maven工程"><span class="nav-number">3.1.1.</span> <span class="nav-text">1、创建一个maven工程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、导入spring-boot相关的依赖"><span class="nav-number">3.1.2.</span> <span class="nav-text">2、导入spring boot相关的依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、-编写一个主程序；启动Spring-Boot应用"><span class="nav-number">3.1.3.</span> <span class="nav-text">3、        编写一个主程序；启动Spring Boot应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、编写相关的Controller、Service"><span class="nav-number">3.1.4.</span> <span class="nav-text">4、编写相关的Controller、Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、运行主程序测试"><span class="nav-number">3.1.5.</span> <span class="nav-text">5、运行主程序测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、打包成嵌入式web的可执行jar包"><span class="nav-number">3.1.6.</span> <span class="nav-text">6、打包成嵌入式web的可执行jar包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-使用Spring-Initializer快速创建Spring-Boot项目-推荐"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 使用Spring Initializer快速创建Spring Boot项目-推荐</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-1-sts编译器方式"><span class="nav-number">3.2.1.</span> <span class="nav-text">3.2.1 sts编译器方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-主菜单：File→New→Spring-Starter-Project。"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">1.主菜单：File→New→Spring Starter Project。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-新建一个Controller"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">2.新建一个Controller</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-新建一个index-html"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">3.新建一个index.html</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-启动程序，访问。"><span class="nav-number">3.2.1.4.</span> <span class="nav-text">4.启动程序，访问。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-2-IDEA编译器方式"><span class="nav-number">3.2.2.</span> <span class="nav-text">3.2.2  IDEA编译器方式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四-Springboot核心"><span class="nav-number">4.</span> <span class="nav-text">四.  Springboot核心</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1、POM文件"><span class="nav-number">4.1.</span> <span class="nav-text">4.1、POM文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2、web启动器"><span class="nav-number">4.1.1.</span> <span class="nav-text">4.2、web启动器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2、主程序类，主入口类"><span class="nav-number">4.2.</span> <span class="nav-text">4.2、主程序类，主入口类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-注解分析-SpringBootApplication"><span class="nav-number">4.2.1.</span> <span class="nav-text">1 注解分析-@SpringBootApplication</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1．-SpringBootConfiguration"><span class="nav-number">4.2.1.1.</span> <span class="nav-text">1．@SpringBootConfiguration</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-EnableAutoConfiguration"><span class="nav-number">4.2.1.2.</span> <span class="nav-text">2. @EnableAutoConfiguration</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#AutoConfigurationPackage：自动配置包"><span class="nav-number">4.2.1.2.1.</span> <span class="nav-text">@AutoConfigurationPackage：自动配置包</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Import-AutoConfigurationImportSelector-class"><span class="nav-number">4.2.1.2.2.</span> <span class="nav-text">@Import(AutoConfigurationImportSelector.class)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-ComponentScan"><span class="nav-number">4.2.1.3.</span> <span class="nav-text">3. @ComponentScan</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-关闭自动配置"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 关闭自动配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-自定义Banner-了解即可-没什么用"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 自定义Banner-了解即可-没什么用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5全局配置文件"><span class="nav-number">4.5.</span> <span class="nav-text">4.5全局配置文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五-配置文件"><span class="nav-number">5.</span> <span class="nav-text">五. 配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-YAML"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 YAML</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2YAML语法"><span class="nav-number">5.2.</span> <span class="nav-text">5.2YAML语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3配置文件值注入"><span class="nav-number">5.3.</span> <span class="nav-text">5.3配置文件值注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-4-Value获取值和-ConfigurationProperties获取值比较"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 @Value获取值和@ConfigurationProperties获取值比较</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-5、配置文件注入值数据校验"><span class="nav-number">5.5.</span> <span class="nav-text">5.5、配置文件注入值数据校验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-6、-PropertySource-amp-ImportResource-amp-Bean"><span class="nav-number">5.6.</span> <span class="nav-text">5.6、@PropertySource&@ImportResource&@Bean</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-7比较application-properties和application-yml和自定义properti的优先级别"><span class="nav-number">5.7.</span> <span class="nav-text">5.7比较application.properties和application.yml和自定义properti的优先级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-8、配置文件占位符"><span class="nav-number">5.8.</span> <span class="nav-text">5.8、配置文件占位符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-9、Profile"><span class="nav-number">5.9.</span> <span class="nav-text">5.9、Profile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-10、配置文件加载位置-Important"><span class="nav-number">5.10.</span> <span class="nav-text">5.10、配置文件加载位置(Important)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-11、外部配置加载顺序"><span class="nav-number">5.11.</span> <span class="nav-text">5.11、外部配置加载顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-11-bookstrap-yml"><span class="nav-number">5.12.</span> <span class="nav-text">5.11 bookstrap.yml</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-12、自动配置原理"><span class="nav-number">5.13.</span> <span class="nav-text">5.12、自动配置原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、自动配置原理"><span class="nav-number">5.13.1.</span> <span class="nav-text">1、自动配置原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、细节"><span class="nav-number">5.13.2.</span> <span class="nav-text">2、细节</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、-Conditional派生注解（Spring注解版原生的-Conditional作用）"><span class="nav-number">5.13.2.1.</span> <span class="nav-text">1、@Conditional派生注解（Spring注解版原生的@Conditional作用）</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六．日志"><span class="nav-number">6.</span> <span class="nav-text">六．日志</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#七-springboot的web开发"><span class="nav-number">7.</span> <span class="nav-text">七 springboot的web开发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-引言"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2、SpringBoot对静态资源的映射规则"><span class="nav-number">7.2.</span> <span class="nav-text">7.2、SpringBoot对静态资源的映射规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-1-查看第一层映射关系"><span class="nav-number">7.2.1.</span> <span class="nav-text">7.2.1 查看第一层映射关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-2-第二层映射关系"><span class="nav-number">7.2.2.</span> <span class="nav-text">7.2.2 第二层映射关系</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-案例"><span class="nav-number">7.2.2.1.</span> <span class="nav-text">2.案例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-3-欢迎页配置"><span class="nav-number">7.2.3.</span> <span class="nav-text">7.2.3 欢迎页配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-4-网站图标"><span class="nav-number">7.2.4.</span> <span class="nav-text">7.2.4 网站图标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-5-修改静态资源文件夹路径"><span class="nav-number">7.2.5.</span> <span class="nav-text">7.2.5 修改静态资源文件夹路径</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3、模板引擎"><span class="nav-number">7.3.</span> <span class="nav-text">7.3、模板引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、引入thymeleaf"><span class="nav-number">7.3.1.</span> <span class="nav-text">1、引入thymeleaf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、Thymeleaf使用"><span class="nav-number">7.3.2.</span> <span class="nav-text">2、Thymeleaf使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-案例1（常规使用）"><span class="nav-number">7.3.2.1.</span> <span class="nav-text">2.1 案例1（常规使用）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-动态赋值"><span class="nav-number">7.3.2.2.</span> <span class="nav-text">2.2 动态赋值</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Thymeleaf语法"><span class="nav-number">7.3.3.</span> <span class="nav-text">4.     Thymeleaf语法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-4、SpringMVC自动配置"><span class="nav-number">7.4.</span> <span class="nav-text">7.4、SpringMVC自动配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Spring-MVC-auto-configuration"><span class="nav-number">7.4.1.</span> <span class="nav-text">1. Spring MVC auto-configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、扩展SpringMVC"><span class="nav-number">7.4.2.</span> <span class="nav-text">2、扩展SpringMVC</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-案例"><span class="nav-number">7.4.2.1.</span> <span class="nav-text">2.1 案例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重要总结"><span class="nav-number">7.4.2.2.</span> <span class="nav-text">重要总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-扩展mvc原理"><span class="nav-number">7.4.2.3.</span> <span class="nav-text">2.2 扩展mvc原理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、全面接管SpringMVC"><span class="nav-number">7.4.3.</span> <span class="nav-text">3、全面接管SpringMVC</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-原理"><span class="nav-number">7.4.3.1.</span> <span class="nav-text">3.1 原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#总结"><span class="nav-number">7.4.3.1.1.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-5-默认访问首页"><span class="nav-number">7.5.</span> <span class="nav-text">7.5 默认访问首页</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-实现方式1"><span class="nav-number">7.5.1.</span> <span class="nav-text">1.实现方式1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-实现方式2"><span class="nav-number">7.5.2.</span> <span class="nav-text">2.实现方式2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-6-国际化"><span class="nav-number">7.6.</span> <span class="nav-text">7.6 国际化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">7.6.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#点击链接切换国际化"><span class="nav-number">7.6.2.</span> <span class="nav-text">点击链接切换国际化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-7-themleaf关闭缓存"><span class="nav-number">7.7.</span> <span class="nav-text">7.7 themleaf关闭缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-8-自定义拦截器"><span class="nav-number">7.8.</span> <span class="nav-text">7.8 自定义拦截器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-第一种实现方式"><span class="nav-number">7.8.1.</span> <span class="nav-text">1. 第一种实现方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-第二种方式（常见）"><span class="nav-number">7.8.2.</span> <span class="nav-text">2. 第二种方式（常见）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-9-springmvc默认日期类型转化"><span class="nav-number">7.9.</span> <span class="nav-text">7.9 springmvc默认日期类型转化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-10-post-get请求转化为put或其他"><span class="nav-number">7.10.</span> <span class="nav-text">7.10 post/get请求转化为put或其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-11错误处理机制"><span class="nav-number">7.11.</span> <span class="nav-text">7.11错误处理机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）、SpringBoot默认的错误处理机制"><span class="nav-number">7.11.1.</span> <span class="nav-text">1）、SpringBoot默认的错误处理机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-1"><span class="nav-number">7.11.2.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）、如果定制错误响应："><span class="nav-number">7.11.3.</span> <span class="nav-text">2）、如果定制错误响应：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1）、如何定制错误的页面；"><span class="nav-number">7.11.3.1.</span> <span class="nav-text">1）、如何定制错误的页面；</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2）、如何定制错误的json数据；"><span class="nav-number">7.11.3.2.</span> <span class="nav-text">2）、如何定制错误的json数据；</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3）、将我们的定制数据携带出去；"><span class="nav-number">7.11.3.3.</span> <span class="nav-text">3）、将我们的定制数据携带出去；</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#八-默认嵌套的Servlet服务器"><span class="nav-number">8.</span> <span class="nav-text">八. 默认嵌套的Servlet服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#8-1如何定制和修改Servlet容器的相关配置"><span class="nav-number">8.1.</span> <span class="nav-text">8.1如何定制和修改Servlet容器的相关配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-2-替换为其他嵌入式Servlet容器"><span class="nav-number">8.2.</span> <span class="nav-text">8.2 替换为其他嵌入式Servlet容器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-默认使用tomcat"><span class="nav-number">8.2.1.</span> <span class="nav-text">1. 默认使用tomcat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Jetty"><span class="nav-number">8.2.2.</span> <span class="nav-text">2. Jetty</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Undertow"><span class="nav-number">8.2.3.</span> <span class="nav-text">3. Undertow</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-3-嵌入式Servlet容器自动配置原理"><span class="nav-number">8.3.</span> <span class="nav-text">8.3 嵌入式Servlet容器自动配置原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-源码分析"><span class="nav-number">8.3.1.</span> <span class="nav-text">1. 源码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-以tomcat容器工厂为例，分析流程"><span class="nav-number">8.3.2.</span> <span class="nav-text">2.以tomcat容器工厂为例，分析流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-ServerProperties、EmbeddedServletContainerCustomizer"><span class="nav-number">8.3.3.</span> <span class="nav-text">3. ServerProperties、EmbeddedServletContainerCustomizer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-4-嵌入式Servlet容器启动原理"><span class="nav-number">8.4.</span> <span class="nav-text">8.4 嵌入式Servlet容器启动原理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#九．-springboot注册三大组件"><span class="nav-number">9.</span> <span class="nav-text">九． springboot注册三大组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#9-1-注册servle"><span class="nav-number">9.1.</span> <span class="nav-text">9.1 注册servle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-2-注册filter"><span class="nav-number">9.2.</span> <span class="nav-text">9.2 注册filter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-3-注册listenner"><span class="nav-number">9.3.</span> <span class="nav-text">9.3 注册listenner</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结-2"><span class="nav-number">9.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-使用外置的Servlet容器"><span class="nav-number">10.</span> <span class="nav-text">10 使用外置的Servlet容器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤"><span class="nav-number">10.1.</span> <span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理-1"><span class="nav-number">10.2.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#规则："><span class="nav-number">10.2.1.</span> <span class="nav-text">规则：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流程："><span class="nav-number">10.2.2.</span> <span class="nav-text">流程：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十一、Springboot整合其他技术"><span class="nav-number">11.</span> <span class="nav-text">十一、Springboot整合其他技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#11-1-整合Mybatis"><span class="nav-number">11.1.</span> <span class="nav-text">11.1 整合Mybatis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Idea创建一个springboot项目并选择以下依赖"><span class="nav-number">11.1.1.</span> <span class="nav-text">1.Idea创建一个springboot项目并选择以下依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-完善项目的目录结构（MVC结构）"><span class="nav-number">11.1.2.</span> <span class="nav-text">2.完善项目的目录结构（MVC结构）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-在application-yml文件中书写数据库配置"><span class="nav-number">11.1.3.</span> <span class="nav-text">3.在application.yml文件中书写数据库配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-编写entity、dao、service、serviceimpl、xml、conrtoller"><span class="nav-number">11.1.4.</span> <span class="nav-text">4.编写entity、dao、service、serviceimpl、xml、conrtoller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-运行项目访问请求"><span class="nav-number">11.1.5.</span> <span class="nav-text">5.     运行项目访问请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-通过junit方式测试"><span class="nav-number">11.1.6.</span> <span class="nav-text">6.通过junit方式测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-2-整合Spring-Data-JPA"><span class="nav-number">11.2.</span> <span class="nav-text">11.2.整合Spring Data JPA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-添加Spring-Data-JPA的起步依赖"><span class="nav-number">11.2.1.</span> <span class="nav-text">1 添加Spring Data JPA的起步依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-添加数据库驱动依赖"><span class="nav-number">11.2.2.</span> <span class="nav-text">2 添加数据库驱动依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-在application-properties中配置数据库和jpa的相关属性"><span class="nav-number">11.2.3.</span> <span class="nav-text">3 在application.properties中配置数据库和jpa的相关属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-创建实体配置实体"><span class="nav-number">11.2.4.</span> <span class="nav-text">4 创建实体配置实体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-编写UserRepository"><span class="nav-number">11.2.5.</span> <span class="nav-text">5 编写UserRepository</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-编写测试类"><span class="nav-number">11.2.6.</span> <span class="nav-text">6 编写测试类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-控制台打印信息"><span class="nav-number">11.2.7.</span> <span class="nav-text">7 控制台打印信息</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-3-整合redis"><span class="nav-number">12.</span> <span class="nav-text">11.3 整合redis</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-添加redis的起步依赖"><span class="nav-number">12.1.</span> <span class="nav-text">1 添加redis的起步依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-配置redis的连接信息"><span class="nav-number">12.2.</span> <span class="nav-text">2 配置redis的连接信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-注入RedisTemplate测试redis操作"><span class="nav-number">12.3.</span> <span class="nav-text">3 注入RedisTemplate测试redis操作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十二、springboot运行流程回顾"><span class="nav-number">13.</span> <span class="nav-text">十二、springboot运行流程回顾</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-启动柜springboot程序"><span class="nav-number">13.1.</span> <span class="nav-text">1.启动柜springboot程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-创建SpringApplication对象"><span class="nav-number">13.2.</span> <span class="nav-text">2. 创建SpringApplication对象</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      176.1k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共176.1k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>
