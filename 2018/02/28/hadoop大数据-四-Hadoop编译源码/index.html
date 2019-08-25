@@ -162,7 +162,7 @@
 <meta property="og:description" content="五 Hadoop编译源码5.1 前期准备工作1）CentOS联网  配置CentOS能连接外网。Linux虚拟机ping www.baidu.com 是畅通的 注意：采用root角色编译，减少文件夹权限出现问题 2）jar包准备(hadoop源码、JDK7 、 maven、 ant 、protobuf) （1）hadoop-2.7.2-src.tar.gz （2）jdk-7u79-linux-x6">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://kingge.top/2018/02/28/hadoop大数据-四-Hadoop编译源码/clip_image002.jpg">
-<meta property="og:updated_time" content="2019-06-09T02:46:53.773Z">
+<meta property="og:updated_time" content="2019-08-25T04:43:10.303Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hadoop大数据(四)-Hadoop编译源码">
 <meta name="twitter:description" content="五 Hadoop编译源码5.1 前期准备工作1）CentOS联网  配置CentOS能连接外网。Linux虚拟机ping www.baidu.com 是畅通的 注意：采用root角色编译，减少文件夹权限出现问题 2）jar包准备(hadoop源码、JDK7 、 maven、 ant 、protobuf) （1）hadoop-2.7.2-src.tar.gz （2）jdk-7u79-linux-x6">
@@ -517,19 +517,19 @@
 <p>1）JDK解压、配置环境变量 JAVA_HOME和PATH，验证<a href="http://lib.csdn.net/base/javase" target="_blank" rel="external">java</a>-version(如下都需要验证是否配置成功)</p>
 <p>[root@hadoop101 software] # tar -zxf jdk-7u79-linux-x64.gz -C /opt/module/</p>
 <p>[root@hadoop101 software]# vi /etc/profile</p>
-<p>   #JAVA_HOME   export   JAVA_HOME=/opt/module/jdk1.8.0_144   export   PATH=$PATH:$JAVA_HOME/bin   </p>
+<p>JAVA_HOME   export   JAVA_HOME=/opt/module/jdk1.8.0_144   export   PATH=$PATH:$JAVA_HOME/bin   </p>
 <p>[root@hadoop101 software]#source /etc/profile</p>
 <p>验证命令：java -version</p>
 <p>2）Maven解压、配置  MAVEN_HOME和PATH。</p>
 <p>[root@hadoop101 software]# tar -zxvf apache-maven-3.0.5-bin.tar.gz -C /opt/module/</p>
 <p>[root@hadoop101 apache-maven-3.0.5]#  vi /etc/profile</p>
-<p>   #MAVEN_HOME   export   MAVEN_HOME=/opt/module/apache-maven-3.0.5   export   PATH=$PATH:$MAVEN_HOME/bin   </p>
+<p>MAVEN_HOME   export   MAVEN_HOME=/opt/module/apache-maven-3.0.5   export   PATH=$PATH:$MAVEN_HOME/bin   </p>
 <p>[root@hadoop101 software]#source /etc/profile</p>
 <p>验证命令：mvn -version</p>
 <p>3）ant解压、配置  ANT _HOME和PATH。</p>
 <p>[root@hadoop101 software]# tar -zxvf apache-ant-1.9.9-bin.tar.gz -C /opt/module/</p>
 <p>[root@hadoop101 apache-ant-1.9.9]# vi /etc/profile</p>
-<p>   #ANT_HOME   export   ANT_HOME=/opt/module/apache-ant-1.9.9   export   PATH=$PATH:$ANT_HOME/bin   </p>
+<p>ANT_HOME   export   ANT_HOME=/opt/module/apache-ant-1.9.9   export   PATH=$PATH:$ANT_HOME/bin   </p>
 <p>[root@hadoop101 software]#source /etc/profile</p>
 <p>验证命令：ant -version</p>
 <p>4）安装  glibc-headers 和  g++  命令如下: </p>
@@ -548,7 +548,7 @@
 <p>[root@hadoop101 protobuf-2.5.0]# make install </p>
 <p>[root@hadoop101 protobuf-2.5.0]# ldconfig </p>
 <p>[root@hadoop101 hadoop-dist]# vi /etc/profile</p>
-<p>   #LD_LIBRARY_PATH   export   LD_LIBRARY_PATH=/opt/module/protobuf-2.5.0   export PATH=$PATH:$LD_LIBRARY_PATH   </p>
+<p>LD_LIBRARY_PATH   export   LD_LIBRARY_PATH=/opt/module/protobuf-2.5.0   export PATH=$PATH:$LD_LIBRARY_PATH   </p>
 <p>[root@hadoop101 software]#source /etc/profile</p>
 <p>验证命令：protoc –version</p>
 <p>7）安装openssl库</p>
@@ -947,7 +947,7 @@ var jiathis_config={
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
     <span title="Site words total count">
-      183.6k
+      183.7k
     </span>
   
 </div>
@@ -970,7 +970,7 @@ var jiathis_config={
 <span class="post-meta-divider">|</span>
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共183.6k字</span>
+  <span class="post-count">博客全站共183.7k字</span>
 </div>
 
 

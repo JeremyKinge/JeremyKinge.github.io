@@ -43,11 +43,11 @@
   </entry>
   
   <entry>
-    <title>springcloud个人总结</title>
+    <title>SpringCloud个人总结</title>
     <link href="http://kingge.top/2019/05/01/SpringCloud%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93/"/>
     <id>http://kingge.top/2019/05/01/SpringCloud个人总结/</id>
     <published>2019-05-01T02:21:59.000Z</published>
-    <updated>2019-08-25T03:18:32.975Z</updated>
+    <updated>2019-08-25T04:44:06.310Z</updated>
     
     <content type="html"><![CDATA[<p>一下内容就是个人学习sc微服务架构中的学习总结，整个架构的东西很多，大家可以在需要某个组件时再去学习。</p>
 <p>一、为什么需要微服务</p>
@@ -69,10 +69,10 @@
 <p>  6、  <strong>集群只能是复制整个系统，即使只是其中一个模块压力大</strong>。（可能整个订单处理，仅仅是支付模块压力过大，按道理只需要升级支付模块，但是在单一场景里面是不能的）</p>
 </blockquote>
 <p>那么这个时候我么那肯定产生了想法，就是把所有功能模块切开，分而治之，那么就演变成了下面的架构。</p>
-<h3 id="1-1-2-垂直应用架构"><a href="#1-1-2-垂直应用架构" class="headerlink" title="1.1.2 垂直应用架构"></a>1.1.2 垂直应用架构</h3><p>​    当访问量逐渐增大，单一应用增加机器带来的加速度越来越小，将应用<strong>拆成互不相干</strong>的几个应用，以提升效率，<strong>这样就可以单独修改某个模块而不用重启或者影响其他模块，同时也可以给某个访问量剧增的模块，单独添加服务器部署集群</strong>。此时，用于加速前端页面开发的Web框架(MVC)是关键。</p>
-<p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-16_15-15-13.png" alt=""></p>
-<p>​    通过切分业务来实现各个模块独立部署，降低了维护和部署的难度，团队各司其职更易管理，性能扩展也更方便，更有针对性。</p>
-<p>缺点： </p>
+<h3 id="1-1-2-垂直应用架构"><a href="#1-1-2-垂直应用架构" class="headerlink" title="1.1.2 垂直应用架构"></a>1.1.2 垂直应用架构</h3><pre><code>当访问量逐渐增大，单一应用增加机器带来的加速度越来越小，将应用**拆成互不相干**的几个应用，以提升效率，**这样就可以单独修改某个模块而不用重启或者影响其他模块，同时也可以给某个访问量剧增的模块，单独添加服务器部署集群**。此时，用于加速前端页面开发的Web框架(MVC)是关键。
+</code></pre><p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-16_15-15-13.png" alt=""></p>
+<pre><code>通过切分业务来实现各个模块独立部署，降低了维护和部署的难度，团队各司其职更易管理，性能扩展也更方便，更有针对性。
+</code></pre><p>缺点： </p>
 <blockquote>
 <p>公用模块无法重复利用，开发性的浪费（存在重复开发的问题）</p>
 <p>面对突变的应用场景，可能某个模块对于web界面会频繁修改，但是模块业务功能没有变化，这样会造成单个应用频繁修改。所以需要<strong>界面+业务逻辑的实现分离。</strong></p>
@@ -83,8 +83,8 @@
 <p>例如我们常见的springcloud和dubbo就是属于分布式服务架构，但是严格上来讲dubbo并不是属于分布式架构，因为他并不具备分布式架构的某些特性，例如服务的分布式配置，服务网关，数据流，批量任务等等。一般认为Dubbo只是相当于SpringCloud中的Eureka模块（服务注册中心）</p>
 <p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-16_15-28-15.png" alt=""></p>
 <p><a href=""><strong>分布式服务框架很好的解决了垂直应用架构的缺点，实现界面和服务的分离，实现界面和服务，以及服务与服务之间的调度。</strong></a></p>
-<p>​    但是存在问题，那就是没有一个<strong>统一管理服务的机制和基于访问压力的调度中心(服务注册中心，负载均衡)</strong>，容易造成资源浪费，什么意思呢？假设用户服务部署了200台服务器，但是在某个时间段，他的访问压力很小，订单服务的访问压力剧增，服务器不够用。那么就会造成资源浪费和倾斜，存在服务器闲置或者请求量少的情况。</p>
-<h3 id="1-1-4-流动计算架构"><a href="#1-1-4-流动计算架构" class="headerlink" title="1.1.4 流动计算架构"></a>1.1.4 流动计算架构</h3><p>当服务越来越多，容量的评估，小服务资源的浪费等问题逐渐显现，此时需增加一个<strong>调度中心</strong>基于访问压力实时管理集群容量，提高集群利用率。此时，用于<strong>提高机器利用率的资源调度和治理中心</strong>(SOA)<a href="">Service Oriented Architecture]</a><strong>是关键</strong>。</p>
+<pre><code>但是存在问题，那就是没有一个**统一管理服务的机制和基于访问压力的调度中心(服务注册中心，负载均衡)**，容易造成资源浪费，什么意思呢？假设用户服务部署了200台服务器，但是在某个时间段，他的访问压力很小，订单服务的访问压力剧增，服务器不够用。那么就会造成资源浪费和倾斜，存在服务器闲置或者请求量少的情况。
+</code></pre><h3 id="1-1-4-流动计算架构"><a href="#1-1-4-流动计算架构" class="headerlink" title="1.1.4 流动计算架构"></a>1.1.4 流动计算架构</h3><p>当服务越来越多，容量的评估，小服务资源的浪费等问题逐渐显现，此时需增加一个<strong>调度中心</strong>基于访问压力实时管理集群容量，提高集群利用率。此时，用于<strong>提高机器利用率的资源调度和治理中心</strong>(SOA)<a href="">Service Oriented Architecture]</a><strong>是关键</strong>。</p>
 <p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-16_15-32-41.png" alt=""></p>
 <p><img src="/2019/05/01/SpringCloud个人总结/1525530804753.png" alt="1525530804753"></p>
 <p>以前出现了什么问题？</p>
@@ -491,7 +491,7 @@
 <li>Hystrix：容错管理组件，实现断路器模式，帮助服务依赖中出现的延迟和为故障提供强大的容错能力。(熔断、断路器，容错) </li>
 </ul>
 <p>架构图：</p>
-<p> <img src="/springcloud总结文档图片/1525575656796.png" alt="1525575656796"></p>
+<p> <img src="/SpringCloud个人总结/1525575656796.png" alt="1525575656796"></p>
 <p>以上只是其中一部分。</p>
 <blockquote>
 <p>SpringCloud,基于springboot提供了一套为服务解决方案,包括服务注册与发现,配置中心,全链路监控,服务网关,负载均衡,熔断器等组件,除了基于NetFlix的开源组件做高度抽象封装之外,还有一些选型中立的开源组件.</p>
@@ -725,11 +725,14 @@
 <li>服务如何实现统一配置</li>
 </ul>
 <p>以上的问题，我们都将在SpringCloud中得到答案。</p>
-<h1 id="六、Eureka注册中心"><a href="#六、Eureka注册中心" class="headerlink" title="六、Eureka注册中心"></a>六、Eureka注册中心</h1><p>​                  <strong>首先我们来解决第一问题，服务的管理 - 利用Eureka解决服务治理问题</strong></p>
-<h2 id="1-Eureka概念"><a href="#1-Eureka概念" class="headerlink" title="1.Eureka概念"></a>1.Eureka概念</h2><p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-17_11-15-12.png" alt=""></p>
-<p>​    Eureka是Netflix的一个子模块，也是核心模块之一。Eureka是一个基于REST的服务，用于定位服务，以实现云端中间层服务发现和故障转移。<strong>服务注册与发现对于微服务架构来说是非常重要的，有了服务发现与注册，只需要使用服务的标识符，就可以访问到服务(解决上诉案例在consumer中，我们把服务提供者的url地址硬编码到了代码中)</strong>，而不需要修改服务调用的配置文件了。功能类似于dubbo的注册中心，比如Zookeeper。</p>
-<p>​    Netflix在设计Eureka时遵守的就是CAP规则中的AP原则。</p>
-<blockquote>
+<h1 id="六、Eureka注册中心"><a href="#六、Eureka注册中心" class="headerlink" title="六、Eureka注册中心"></a>六、Eureka注册中心</h1><pre><code>**首先我们来解决第一问题，服务的管理 - 利用Eureka解决服务治理问题**
+</code></pre><h2 id="1-Eureka概念"><a href="#1-Eureka概念" class="headerlink" title="1.Eureka概念"></a>1.Eureka概念</h2><p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-17_11-15-12.png" alt=""></p>
+<pre><code>Eureka是Netflix的一个子模块，也是核心模块之一。Eureka是一个基于REST的服务，用于定位服务，以实现云端中间层服务发现和故障转移。**服务注册与发现对于微服务架构来说是非常重要的，有了服务发现与注册，只需要使用服务的标识符，就可以访问到服务(解决上诉案例在consumer中，我们把服务提供者的url地址硬编码到了代码中)**，而不需要修改服务调用的配置文件了。功能类似于dubbo的注册中心，比如Zookeeper。
+
+
+
+Netflix在设计Eureka时遵守的就是CAP规则中的AP原则。
+</code></pre><blockquote>
 <p>CAP原则又称CAP定理，指的是在一个分布式系统中，Consistency（一致性）、 Availability（可用性）、Partition tolerance（分区容错性），三者不可兼得</p>
 </blockquote>
 <p>特别提示：同样作为dubbo服务注册中心的zookeeper遵守的是CP原则。</p>
@@ -739,7 +742,7 @@
 <blockquote>
 <p>基本架构：</p>
 </blockquote>
-<p><img src="/springcloud总结文档图片/1525597885059.png" alt="1525597885059"></p>
+<p><img src="/SpringCloud个人总结/1525597885059.png" alt="1525597885059"></p>
 <p>Eureka包含两个组件：Eureka Server和Eureka Client</p>
 <blockquote>
 <p>Eureka Server提供服务注册服务<br>各个节点启动后，会在EurekaServer中进行注册，这样EurekaServer中的服务注册表中将会存储所有可用服务节点的信息，服务节点的信息可以在界面中直观的看到</p>
@@ -946,19 +949,21 @@
 <h2 id="8-Eureka和Zookeeper-服务注册中心比较"><a href="#8-Eureka和Zookeeper-服务注册中心比较" class="headerlink" title="8.Eureka和Zookeeper-服务注册中心比较"></a>8.<strong>Eureka和Zookeeper-服务注册中心比较</strong></h2><p>著名的CAP理论指出，一个分布式系统不可能同时满足C(一致性)、A(可用性)和P(分区容错性)。由于分区容错性P在是分布式系统中必须要保证的，因此我们只能在A和C之间进行权衡。</p>
 <p>那么分布式系统，必然要求分区容错性，也就是P原则，那么Zookeeper选择了C，Eureka选择了A</p>
 <p> 因此Zookeeper保证的是CP,Eureka则是AP。</p>
-<h3 id="8-1-Zookeeper保证CP"><a href="#8-1-Zookeeper保证CP" class="headerlink" title="8.1 Zookeeper保证CP"></a>8.1 Zookeeper保证CP</h3><p>​    当向注册中心查询服务列表时，我们可以容忍注册中心返回的是几分钟以前的注册信息，但不能接受服务直接down掉不可用。也就是说，服务注册功能对可用性的要求要高于一致性。但是zk会出现这样一种情况，当master节点因为网络故障与其他节点失去联系时，剩余节点会重新进行leader选举。问题在于，选举leader的时间太长，30 ~ 120s, 且选举期间整个zk集群都是不可用的，这就导致在选举期间注册服务瘫痪。在云部署的环境下，因网络问题使得zk集群失去master节点是较大概率会发生的事，虽然服务能够最终恢复，但是漫长的选举时间导致的注册长期不可用是不能容忍的。</p>
-<h3 id="8-2-Eureka保证AP"><a href="#8-2-Eureka保证AP" class="headerlink" title="8.2 Eureka保证AP"></a>8.2 Eureka保证AP</h3><p>​    Eureka看明白了这一点，因此在设计时就优先保证可用性。Eureka各个节点都是平等的 ，几个节点挂掉不会影响正常节点的工作，剩余的节点依然可以提供注册和查询服务。而Eureka的客户端在向某个Eureka注册或时如果发现连接失败，则会自动切换至其它节点，只要有一台Eureka还在，就能保证注册服务可用(保证可用性)，只不过查到的信息可能不是最新的(不保证强一致性)。除此之外，Eureka还有一种自我保护机制，如果在15分钟内超过85%的节点都没有正常的心跳，那么Eureka就认为客户端与注册中心出现了网络故障，此时会出现以下几种情况： </p>
-<blockquote>
-<p>​    Eureka不再从注册列表中移除因为长时间没收到心跳而应该过期的服务 </p>
-<p>​    Eureka仍然能够接受新服务的注册和查询请求，但是不会被同步到其它节点上(即保证当前节点依然可用)</p>
-<p>​    当网络稳定时，当前实例新的注册信息会被同步到其它节点中</p>
-<p>因此， Eureka可以很好的应对因网络故障导致部分节点失去联系的情况，而不会像zookeeper那样使整个注册服务瘫痪。</p>
+<h3 id="8-1-Zookeeper保证CP"><a href="#8-1-Zookeeper保证CP" class="headerlink" title="8.1 Zookeeper保证CP"></a>8.1 Zookeeper保证CP</h3><pre><code>当向注册中心查询服务列表时，我们可以容忍注册中心返回的是几分钟以前的注册信息，但不能接受服务直接down掉不可用。也就是说，服务注册功能对可用性的要求要高于一致性。但是zk会出现这样一种情况，当master节点因为网络故障与其他节点失去联系时，剩余节点会重新进行leader选举。问题在于，选举leader的时间太长，30 ~ 120s, 且选举期间整个zk集群都是不可用的，这就导致在选举期间注册服务瘫痪。在云部署的环境下，因网络问题使得zk集群失去master节点是较大概率会发生的事，虽然服务能够最终恢复，但是漫长的选举时间导致的注册长期不可用是不能容忍的。
+</code></pre><h3 id="8-2-Eureka保证AP"><a href="#8-2-Eureka保证AP" class="headerlink" title="8.2 Eureka保证AP"></a>8.2 Eureka保证AP</h3><pre><code>Eureka看明白了这一点，因此在设计时就优先保证可用性。Eureka各个节点都是平等的 ，几个节点挂掉不会影响正常节点的工作，剩余的节点依然可以提供注册和查询服务。而Eureka的客户端在向某个Eureka注册或时如果发现连接失败，则会自动切换至其它节点，只要有一台Eureka还在，就能保证注册服务可用(保证可用性)，只不过查到的信息可能不是最新的(不保证强一致性)。除此之外，Eureka还有一种自我保护机制，如果在15分钟内超过85%的节点都没有正常的心跳，那么Eureka就认为客户端与注册中心出现了网络故障，此时会出现以下几种情况： 
+</code></pre><blockquote>
+<pre><code>Eureka不再从注册列表中移除因为长时间没收到心跳而应该过期的服务 
+
+Eureka仍然能够接受新服务的注册和查询请求，但是不会被同步到其它节点上(即保证当前节点依然可用)
+
+当网络稳定时，当前实例新的注册信息会被同步到其它节点中
+</code></pre><p>因此， Eureka可以很好的应对因网络故障导致部分节点失去联系的情况，而不会像zookeeper那样使整个注册服务瘫痪。</p>
 </blockquote>
 <p> 那么既然保证了保证了可用性，那么数据的一致性肯定是不能够保证了，所以这个就是自我保护的机制。所以到底是AP还是CP，又或者是AC（数据库），要看业务场景来定。</p>
 <h1 id="七、Ribbon负载均衡"><a href="#七、Ribbon负载均衡" class="headerlink" title="七、Ribbon负载均衡"></a>七、<strong>Ribbon负载均衡</strong></h1><p><strong>接下来解决第二个问题，那就是假设在多个服务提供者提供服务的情况下，怎么做到负载均衡，解决需要把服务提供者url硬编码到消费者端的问题。</strong></p>
 <h2 id="7-1-Ribbon概念"><a href="#7-1-Ribbon概念" class="headerlink" title="7.1 Ribbon概念"></a>7.1 Ribbon概念</h2><p>Spring Cloud Ribbon是基于Netflix Ribbon实现的一套<strong>客户端 负载均衡的工具</strong> 。</p>
-<p>​    简单的说，Ribbon是Netflix发布的开源项目，主要功能是提供<strong>客户端</strong>的<strong>软件负载</strong>均衡算法，将Netflix的中间层服务连接在一起。Ribbon客户端组件提供一系列完善的配置项如连接超时，重试等。简单的说，就是在配置文件中列出Load Balancer（简称LB）后面所有的机器，Ribbon会自动的帮助你基于某种规则（如简单轮询，随机连接等）去连接这些机器。我们也很容易使用Ribbon<strong>实现自定义的负载均衡算法</strong>。</p>
-<h2 id="7-2-什么叫LB（负载均衡）"><a href="#7-2-什么叫LB（负载均衡）" class="headerlink" title="7.2 什么叫LB（负载均衡）"></a>7.2 什么叫<strong>LB（负载均衡）</strong></h2><p> LB，即负载均衡(Load Balance)，在微服务或分布式集群中经常用的一种应用。</p>
+<pre><code>简单的说，Ribbon是Netflix发布的开源项目，主要功能是提供**客户端**的**软件负载**均衡算法，将Netflix的中间层服务连接在一起。Ribbon客户端组件提供一系列完善的配置项如连接超时，重试等。简单的说，就是在配置文件中列出Load Balancer（简称LB）后面所有的机器，Ribbon会自动的帮助你基于某种规则（如简单轮询，随机连接等）去连接这些机器。我们也很容易使用Ribbon**实现自定义的负载均衡算法**。
+</code></pre><h2 id="7-2-什么叫LB（负载均衡）"><a href="#7-2-什么叫LB（负载均衡）" class="headerlink" title="7.2 什么叫LB（负载均衡）"></a>7.2 什么叫<strong>LB（负载均衡）</strong></h2><p> LB，即负载均衡(Load Balance)，在微服务或分布式集群中经常用的一种应用。</p>
 <p>负载均衡简单的说就是将用户的请求平摊的分配到多个服务上，从而达到系统的HA。</p>
 <p>常见的负载均衡有软件Nginx，LVS，硬件 F5等。</p>
 <p>相应的在中间件，例如：dubbo和SpringCloud中均给我们提供了负载均衡，SpringCloud的负载均衡算法可以自定义。 </p>
@@ -1059,7 +1064,7 @@
 <p><img src="/2019/05/01/SpringCloud个人总结/1566014122746.png" alt="1566014122746"></p>
 <h3 id="7-4-2-负载均衡策略"><a href="#7-4-2-负载均衡策略" class="headerlink" title="7.4.2.负载均衡策略"></a>7.4.2.负载均衡策略</h3><p>Ribbon默认的负载均衡策略是简单的轮询，我们可以测试一下：</p>
 <p>编写测试类，在刚才的源码中我们看到拦截中是使用RibbonLoadBalanceClient来进行负载均衡的，其中有一个choose方法，找到choose方法的接口方法，是这样介绍的：</p>
-<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622320277.png" alt="1525622320277"></p>
+<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622320277.png" alt="1525622320277"></p>
 <p>现在这个就是负载均衡获取实例的方法。</p>
 <p>我们注入这个类的对象，然后对其测试：</p>
 <p> <img src="/2019/05/01/SpringCloud个人总结/C1566014544201.png" alt="1566014544201"></p>
@@ -1070,17 +1075,17 @@
 <p>符合了我们的预期推测，确实是轮询方式。</p>
 <p>我们是否可以修改负载均衡的策略呢？</p>
 <p>继续跟踪源码，发现这么一段代码：</p>
-<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622652849.png" alt="1525622652849"></p>
+<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622652849.png" alt="1525622652849"></p>
 <p>我们看看这个rule是谁：</p>
-<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622699666.png" alt="1525622699666"></p>
+<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622699666.png" alt="1525622699666"></p>
 <p>这里的rule默认值是一个<code>RoundRobinRule</code>，看类的介绍：</p>
-<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622754316.png" alt="1525622754316"></p>
+<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622754316.png" alt="1525622754316"></p>
 <p>这不就是轮询的意思嘛。</p>
 <p>我们注意到，这个类其实是实现了接口IRule的，查看一下：</p>
-<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622817451.png" alt="1525622817451"></p>
+<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622817451.png" alt="1525622817451"></p>
 <p>定义负载均衡的规则接口。</p>
 <p>它有以下实现：</p>
-<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1528782624098.png" alt="1528782624098"></p>
+<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1528782624098.png" alt="1528782624098"></p>
 <h4 id="七大方法"><a href="#七大方法" class="headerlink" title="七大方法"></a>七大方法</h4><p>IRule是一个接口，七大方法是其实现类</p>
 <ul>
 <li>RoundRobinRule：轮询（默认方法）</li>
@@ -1216,8 +1221,8 @@
 <p>@FeignClient(value = “MICROSERVICECLOUD-PERSON” configuration = FeignLogConfiguration.class)<br> public interface UserFeignClient {<br>     @GetMapping(“/user/{id}”)<br>     User queryUserById(@PathVariable(“id”) Long id);<br> }</p>
 <p>4）重启项目，即可看到每次访问的日志：</p>
 <h2 id="8-6-Hystrix支持"><a href="#8-6-Hystrix支持" class="headerlink" title="8.6.Hystrix支持"></a>8.6.Hystrix支持</h2><p>参加下面服务降级的案例</p>
-<h1 id="九、Hystrix断路器"><a href="#九、Hystrix断路器" class="headerlink" title="九、Hystrix断路器"></a>九、Hystrix断路器</h1><p>​           <strong>首先我们来解决第三问题，服务的容灾处理</strong></p>
-<p><strong>跟Ribbon和Feign是客户端技术不同的是Hystrix是服务端的技术，也就是他是作用在服务提供端</strong></p>
+<h1 id="九、Hystrix断路器"><a href="#九、Hystrix断路器" class="headerlink" title="九、Hystrix断路器"></a>九、Hystrix断路器</h1><pre><code>**首先我们来解决第三问题，服务的容灾处理**
+</code></pre><p><strong>跟Ribbon和Feign是客户端技术不同的是Hystrix是服务端的技术，也就是他是作用在服务提供端</strong></p>
 <h2 id="1-分布式系统面临的问题"><a href="#1-分布式系统面临的问题" class="headerlink" title="1.分布式系统面临的问题"></a>1.<strong>分布式系统面临的问题</strong></h2><p><strong>复杂分布式体系结构中的应用程序有数十个依赖关系，每个依赖关系在某些时候将不可避免地失败</strong></p>
 <p><strong>1.雪崩问题</strong></p>
 <p>微服务中，服务间调用关系错综复杂，一个请求，可能需要调用多个微服务接口才能实现，会形成非常复杂的调用链路：</p>
@@ -1239,23 +1244,25 @@
 <p><strong>Hystix解决雪崩问题的手段有两个：</strong></p>
 <p><strong>•               线程隔离（降级）</strong></p>
 <p><strong>•               服务熔断</strong></p>
-<h2 id="2-Hystrix简介"><a href="#2-Hystrix简介" class="headerlink" title="2.Hystrix简介"></a>2.Hystrix简介</h2><p>​    Hystrix是一个用于处理分布式系统的延迟和容错的开源库，在分布式系统里，许多依赖不可避免的会调用失败，比如超时、异常等，Hystrix能够保证在一个依赖出问题的情况下，不会导致整体服务失败，避免级联故障，以提高分布式系统的弹性。</p>
-<pre><code>Hystix是Netflix开源的一个延迟和容错库，用于隔离访问远程服务、第三方库，防止出现级联失败。
-</code></pre><p>​    “断路器”本身是一种开关装置，当某个服务单元发生故障之后，<strong>通过断路器的故障监控（类似熔断保险丝），向调用方返回一个符合预期的、可处理的备选响应（FallBack）（解决思路）</strong> ，<strong>而不是长时间的等待或者抛出调用方无法处理的异常</strong> ，这样就保证了服务调用方的线程不会被长时间、不必要地占用，从而避免了故障在分布式系统中的蔓延，乃至雪崩。</p>
-<blockquote>
+<h2 id="2-Hystrix简介"><a href="#2-Hystrix简介" class="headerlink" title="2.Hystrix简介"></a>2.Hystrix简介</h2><pre><code>Hystrix是一个用于处理分布式系统的延迟和容错的开源库，在分布式系统里，许多依赖不可避免的会调用失败，比如超时、异常等，Hystrix能够保证在一个依赖出问题的情况下，不会导致整体服务失败，避免级联故障，以提高分布式系统的弹性。
+
+ Hystix是Netflix开源的一个延迟和容错库，用于隔离访问远程服务、第三方库，防止出现级联失败。
+
+“断路器”本身是一种开关装置，当某个服务单元发生故障之后，**通过断路器的故障监控（类似熔断保险丝），向调用方返回一个符合预期的、可处理的备选响应（FallBack）（解决思路）** ，**而不是长时间的等待或者抛出调用方无法处理的异常** ，这样就保证了服务调用方的线程不会被长时间、不必要地占用，从而避免了故障在分布式系统中的蔓延，乃至雪崩。
+</code></pre><blockquote>
 <p> 官网资料 </p>
 </blockquote>
 <p><a href="https://github.com/Netflix/Hystrix/wiki/How-To-Use" target="_blank" rel="external">https://github.com/Netflix/Hystrix/wiki/How-To-Use</a></p>
 <h2 id="3-服务端的服务熔断"><a href="#3-服务端的服务熔断" class="headerlink" title="3.服务端的服务熔断"></a>3.服务端的服务熔断</h2><p><strong>熔断机制是应对雪崩效应的一种微服务链路保护机制。他是在服务端实现。</strong></p>
-<p>​    <strong>当扇出链路的某个微服务不可用或者响应时间太长时，会进行服务的降级，进而熔断该节点微服务的调用，快速返回”错误”的响应信息</strong>。 当检测到该节点微服务调用响应正常后恢复调用链路。在SpringCloud框架里熔断机制通过Hystrix实现。Hystrix会监控微服务间调用的状况，当失败的调用到一定阈值，缺省是5秒内20次调用失败就会启动熔断机制。<strong>熔断机制的注解是@HystrixCommand。</strong></p>
-<h3 id="3-1-熔断原理"><a href="#3-1-熔断原理" class="headerlink" title="3.1 熔断原理"></a>3.1 熔断原理</h3><p>熔断器，也叫断路器，其英文单词为：Circuit Breaker </p>
+<pre><code>**当扇出链路的某个微服务不可用或者响应时间太长时，会进行服务的降级，进而熔断该节点微服务的调用，快速返回&quot;错误&quot;的响应信息**。 当检测到该节点微服务调用响应正常后恢复调用链路。在SpringCloud框架里熔断机制通过Hystrix实现。Hystrix会监控微服务间调用的状况，当失败的调用到一定阈值，缺省是5秒内20次调用失败就会启动熔断机制。**熔断机制的注解是@HystrixCommand。**
+</code></pre><h3 id="3-1-熔断原理"><a href="#3-1-熔断原理" class="headerlink" title="3.1 熔断原理"></a>3.1 熔断原理</h3><p>熔断器，也叫断路器，其英文单词为：Circuit Breaker </p>
 <p><img src="/2019/05/01/SpringCloud个人总结/6009599rrr956.png" alt="img"></p>
 <p>熔断状态机3个状态：</p>
 <p>•               Closed：关闭状态，所有请求都正常访问。</p>
 <p>•               Open：打开状态，所有请求都会被降级。Hystix会对请求情况计数，当一定时间内失败请求百分比达到阈值，则触发熔断，断路器会完全打开。默认失败比例的阈值是50%，请求次数最少不低于20次。</p>
 <p>•               Half Open：半开状态，open状态不是永久的，打开后会进入休眠时间（默认是5S）。随后断路器会自动进入半开状态。此时会释放部分请求通过，若这些请求都是健康的，则会完全关闭断路器，否则继续保持打开，再次进行休眠计时</p>
-<p>​    当扇出链路的某个微服务不可用或者响应时间太长时，会进行服务的降级，进而熔断该节点微服务的调用，快速返回”错误”的响应信息。 当检测到该节点微服务调用响应正常后恢复调用链路。在SpringCloud框架里熔断机制通过Hystrix实现。Hystrix会监控微服务间调用的状况，当失败的调用到一定阈值，缺省是5秒内20次调用失败就会启动熔断机制。熔断机制的注解是@HystrixCommand。</p>
-<h3 id="3-2-案例演示"><a href="#3-2-案例演示" class="headerlink" title="3.2 案例演示"></a>3.2 案例演示</h3><h4 id="3-2-1-参考microservicecloud-provider-person-8001-新建microservicecloud-provider-person-hystrix-8001"><a href="#3-2-1-参考microservicecloud-provider-person-8001-新建microservicecloud-provider-person-hystrix-8001" class="headerlink" title="3.2.1 参考microservicecloud-provider-person-8001 新建microservicecloud-provider-person-hystrix-8001"></a>3.2.1 参考microservicecloud-provider-person-8001 新建microservicecloud-provider-person-hystrix-8001</h4><p>赋值pom文件和代码已经application.yml文件</p>
+<pre><code>当扇出链路的某个微服务不可用或者响应时间太长时，会进行服务的降级，进而熔断该节点微服务的调用，快速返回&quot;错误&quot;的响应信息。 当检测到该节点微服务调用响应正常后恢复调用链路。在SpringCloud框架里熔断机制通过Hystrix实现。Hystrix会监控微服务间调用的状况，当失败的调用到一定阈值，缺省是5秒内20次调用失败就会启动熔断机制。熔断机制的注解是@HystrixCommand。
+</code></pre><h3 id="3-2-案例演示"><a href="#3-2-案例演示" class="headerlink" title="3.2 案例演示"></a>3.2 案例演示</h3><h4 id="3-2-1-参考microservicecloud-provider-person-8001-新建microservicecloud-provider-person-hystrix-8001"><a href="#3-2-1-参考microservicecloud-provider-person-8001-新建microservicecloud-provider-person-hystrix-8001" class="headerlink" title="3.2.1 参考microservicecloud-provider-person-8001 新建microservicecloud-provider-person-hystrix-8001"></a>3.2.1 参考microservicecloud-provider-person-8001 新建microservicecloud-provider-person-hystrix-8001</h4><p>赋值pom文件和代码已经application.yml文件</p>
 <h4 id="3-2-2-修改新建hystrix-8001模块的pom文件和启动类"><a href="#3-2-2-修改新建hystrix-8001模块的pom文件和启动类" class="headerlink" title="3.2.2 修改新建hystrix-8001模块的pom文件和启动类"></a>3.2.2 修改新建hystrix-8001模块的pom文件和启动类</h4><p>（1）pom文件添加hystrix依赖</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!--  hystrix --&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
 <p>（2）修改启动类名称并添加<strong>@EnableCircuitBreaker注解</strong>//对hystrixR熔断机制的支持</p>
@@ -1274,8 +1281,8 @@
 <p>我们假设获取某个不存在的用户</p>
 <p><a href="http://localhost/consumer/person/get/55" target="_blank" rel="external">http://localhost/consumer/person/get/55</a></p>
 <p>输出：{“deptno”:55,”dname”:”该ID：55没有没有对应的信息,null–@HystrixCommand”,”db_source”:”no this database in MySQL”}</p>
-<h2 id="4-客户端的服务降级"><a href="#4-客户端的服务降级" class="headerlink" title="4.客户端的服务降级"></a>4.客户端的服务降级</h2><p>​      既然有了服务熔断，为什么还需要服务降级？</p>
-<p>   <strong>服务降级处理是在客户端实现完成的,与服务端没有关系，客户端自带一个异常处理机制。上面的服务熔断是在服务端实现</strong></p>
+<h2 id="4-客户端的服务降级"><a href="#4-客户端的服务降级" class="headerlink" title="4.客户端的服务降级"></a>4.客户端的服务降级</h2><pre><code>既然有了服务熔断，为什么还需要服务降级？
+</code></pre><p>   <strong>服务降级处理是在客户端实现完成的,与服务端没有关系，客户端自带一个异常处理机制。上面的服务熔断是在服务端实现</strong></p>
 <p>  <strong>客户端的服务降级，能够快速的响应用户的请求，当服务不可达，那么立即返回定制的错误信息。</strong> </p>
 <p> 整体资源快不够了,忍痛将某些服务先关掉,待渡过难关,再开启回来</p>
 <p>优先保证核心服务，而非核心服务不可用或弱可用。</p>
@@ -1288,30 +1295,30 @@
 <h4 id="4-1-2-修改microservicecloud-api工程-PersonClientService接口在注解-FeignCLient中添加fallbackFactory属性值"><a href="#4-1-2-修改microservicecloud-api工程-PersonClientService接口在注解-FeignCLient中添加fallbackFactory属性值" class="headerlink" title="4.1.2  修改microservicecloud-api工程,PersonClientService接口在注解@FeignCLient中添加fallbackFactory属性值"></a>4.1.2  修改microservicecloud-api工程,PersonClientService接口在注解@FeignCLient中添加fallbackFactory属性值</h4><p>​    </p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@FeignClient(value = &quot;MICROSERVICECLOUD-PERSON&quot;,fallbackFactory = PersonClientServiceFallbackFactory.class)</div><div class="line">public interface PersonClientService</div><div class="line">&#123;</div><div class="line">	@RequestMapping(value = &quot;/person/get/&#123;id&#125;&quot;, method = RequestMethod.GET)</div><div class="line">	public Person get(@PathVariable(&quot;id&quot;) long id);</div><div class="line"></div><div class="line">	@RequestMapping(value = &quot;/person/list&quot;, method = RequestMethod.GET)</div><div class="line">	public List&lt;Person&gt; list();</div><div class="line"></div><div class="line">	@RequestMapping(value = &quot;/person/add&quot;, method = RequestMethod.POST)</div><div class="line">	public boolean add(Person person);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>​    </p>
-<h4 id="4-1-3-修改80-feign消费者端配置文件，开启服务熔断"><a href="#4-1-3-修改80-feign消费者端配置文件，开启服务熔断" class="headerlink" title="4.1.3 修改80-feign消费者端配置文件，开启服务熔断"></a>4.1.3 修改80-feign消费者端配置文件，开启服务熔断</h4><p>​        microservicecloud-consumer-person-80-feign工程修改YML </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">feign:</div><div class="line">  hystrix:</div><div class="line">    enabled: true</div></pre></td></tr></table></figure>
-<h4 id="4-1-4-测试"><a href="#4-1-4-测试" class="headerlink" title="4.1.4 测试"></a>4.1.4 测试</h4><p>​    启动3个eureka先启动和微服务microservicecloud-provider-person-8001启动                                    microservicecloud-consumer-person-80-feign启动      </p>
-<p> 正常访问测试      <a href="http://localhost/consumer/dept/get/5" target="_blank" rel="external">http://localhost/consumer/dept/get/5</a>        </p>
+<h4 id="4-1-3-修改80-feign消费者端配置文件，开启服务熔断"><a href="#4-1-3-修改80-feign消费者端配置文件，开启服务熔断" class="headerlink" title="4.1.3 修改80-feign消费者端配置文件，开启服务熔断"></a>4.1.3 修改80-feign消费者端配置文件，开启服务熔断</h4><pre><code>microservicecloud-consumer-person-80-feign工程修改YML 
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">feign:</div><div class="line">  hystrix:</div><div class="line">    enabled: true</div></pre></td></tr></table></figure>
+<h4 id="4-1-4-测试"><a href="#4-1-4-测试" class="headerlink" title="4.1.4 测试"></a>4.1.4 测试</h4><pre><code>启动3个eureka先启动和微服务microservicecloud-provider-person-8001启动                                    microservicecloud-consumer-person-80-feign启动      
+</code></pre><p> 正常访问测试      <a href="http://localhost/consumer/dept/get/5" target="_blank" rel="external">http://localhost/consumer/dept/get/5</a>        </p>
 <p>  输出：{“deptno”:5,”dname”:”hr”,”db_source”:”test”}</p>
 <p>​                  </p>
 <p> 故意关闭微服务microservicecloud-provider-person-8001                                   </p>
 <p> 访问测试     <a href="http://localhost/consumer/dept/get/5" target="_blank" rel="external">http://localhost/consumer/dept/get/5</a></p>
 <p>输出：”deptno”:5,”dname”:”该ID5没有对应的信息,Consumer客户端提供的降级信息,此服务Provider已经关闭”,”db_source”:”no this database in MySQL”}</p>
 <p>成功！！！</p>
-<p>​         <strong>此时服务端provider已经down了,但是我们做了服务降级处理,让客户端在服务端不可用时也会获得提示信息而不会挂起耗死服务器</strong></p>
-<p><strong>也就是说，如果服务端能够正常调用那么就返回值，如果不能够调用那么就返回由fallbackFactory定义的值</strong></p>
+<pre><code>**此时服务端provider已经down了,但是我们做了服务降级处理,让客户端在服务端不可用时也会获得提示信息而不会挂起耗死服务器**
+</code></pre><p><strong>也就是说，如果服务端能够正常调用那么就返回值，如果不能够调用那么就返回由fallbackFactory定义的值</strong></p>
 <h2 id="5-服务监控HystrixDashboard"><a href="#5-服务监控HystrixDashboard" class="headerlink" title="5. 服务监控HystrixDashboard"></a>5. 服务监控HystrixDashboard</h2><blockquote>
-<p>​         除了隔离依赖服务的调用以外,Hystrix还提供了准实时的调用监控(Hystrix      Dashboard),Hystrix      会持续地<strong>记录所有通过Hystrix发起的请求的执行信息</strong>,并以统计报表和图形的形式展示给用户,包括每秒执行多少请求多少成功,多少失败等.Netflix通过hystrix-metrics-event-stream项目实现了对以上指标的监控.Spring Cloud也提供了Hystrix Dashboard的整合.对监控内容转化成可视化界面.     </p>
-</blockquote>
+<pre><code>除了隔离依赖服务的调用以外,Hystrix还提供了准实时的调用监控(Hystrix      Dashboard),Hystrix      会持续地**记录所有通过Hystrix发起的请求的执行信息**,并以统计报表和图形的形式展示给用户,包括每秒执行多少请求多少成功,多少失败等.Netflix通过hystrix-metrics-event-stream项目实现了对以上指标的监控.Spring Cloud也提供了Hystrix Dashboard的整合.对监控内容转化成可视化界面.     
+</code></pre></blockquote>
 <p><strong>也就是说，服务端必须是集成了Hystrix组件，才能够被监控，也即是：启动类添加@EnableCircuitBreaker//对hystrixR熔断机制的支持。例如我们的服务8002和8003是监控不到的</strong></p>
-<p>​    记下来看案例实现</p>
-<h3 id="5-1-案例实现"><a href="#5-1-案例实现" class="headerlink" title="5.1   案例实现"></a>5.1   案例实现</h3><h4 id="5-1-1-新建-microservicecloud-consumer-hystrix-dashboard-9001-模块"><a href="#5-1-1-新建-microservicecloud-consumer-hystrix-dashboard-9001-模块" class="headerlink" title="5.1.1 新建    microservicecloud-consumer-hystrix-dashboard-9001    模块"></a>5.1.1 新建    microservicecloud-consumer-hystrix-dashboard-9001    模块</h4><p>根据父工程 microservicecloud新建服务监控模块（ 参考microservicecloud-consumer-person-80-feign ）          </p>
-<p>​    （1）复制80-feign模块pom文件并添加dashboard依赖</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- hystrix和 hystrix-dashboard相关--&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix-dashboard&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
-<p>​    （2）修改application.yml配置文件          </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">server:</div><div class="line">  port: 9001</div></pre></td></tr></table></figure>
-<p>​    （3）启动类ApplicationBootStart9001dashboard添加@EnableHystrixDashboard         </p>
-<p>​    </p>
+<pre><code>记下来看案例实现
+</code></pre><h3 id="5-1-案例实现"><a href="#5-1-案例实现" class="headerlink" title="5.1   案例实现"></a>5.1   案例实现</h3><h4 id="5-1-1-新建-microservicecloud-consumer-hystrix-dashboard-9001-模块"><a href="#5-1-1-新建-microservicecloud-consumer-hystrix-dashboard-9001-模块" class="headerlink" title="5.1.1 新建    microservicecloud-consumer-hystrix-dashboard-9001    模块"></a>5.1.1 新建    microservicecloud-consumer-hystrix-dashboard-9001    模块</h4><p>根据父工程 microservicecloud新建服务监控模块（ 参考microservicecloud-consumer-person-80-feign ）          </p>
+<pre><code>（1）复制80-feign模块pom文件并添加dashboard依赖
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- hystrix和 hystrix-dashboard相关--&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix-dashboard&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<pre><code>（2）修改application.yml配置文件          
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">server:</div><div class="line">  port: 9001</div></pre></td></tr></table></figure>
+<pre><code>（3）启动类ApplicationBootStart9001dashboard添加@EnableHystrixDashboard         
+</code></pre><p>​    </p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@SpringBootApplication</div><div class="line">@EnableHystrixDashboard</div><div class="line">public class ApplicationBootStart9001dashboard &#123;</div><div class="line">    public static void main(String[] args)</div><div class="line">    &#123;</div><div class="line"></div><div class="line">        SpringApplication.run(ApplicationBootStart9001dashboard.class, args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>​    </p>
 <p>  （4）所有Provider微服务提供类(8001/8002/8003)都需要监控依赖配置       </p>
@@ -1319,10 +1326,10 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- actuator监控信息完善 --&gt;</div><div class="line"> &lt;dependency&gt;</div><div class="line">   &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">   &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;</div><div class="line"> &lt;/dependency&gt;</div></pre></td></tr></table></figure>
 <p>​    </p>
 <p>   （5）完整工程                        </p>
-<p>​    <img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-34-32.png" alt=""></p>
-<p>​                            </p>
-<h4 id="5-1-2-启动dashboard-9001模块"><a href="#5-1-2-启动dashboard-9001模块" class="headerlink" title="5.1.2 启动dashboard-9001模块"></a>5.1.2 启动dashboard-9001模块</h4><p>​         <a href="http://localhost:9001/hystrix" target="_blank" rel="external">http://localhost:9001/hystrix</a> </p>
-<p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-36-15.png" alt=""></p>
+<pre><code>![](SpringCloud个人总结/Snipaste_2019-08-19_16-34-32.png)
+</code></pre><p>​                            </p>
+<h4 id="5-1-2-启动dashboard-9001模块"><a href="#5-1-2-启动dashboard-9001模块" class="headerlink" title="5.1.2 启动dashboard-9001模块"></a>5.1.2 启动dashboard-9001模块</h4><pre><code>http://localhost:9001/hystrix 
+</code></pre><p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-36-15.png" alt=""></p>
 <p>部署成功</p>
 <h4 id="5-1-3-启动3个eureka集群"><a href="#5-1-3-启动3个eureka集群" class="headerlink" title="5.1.3 启动3个eureka集群"></a>5.1.3 启动3个eureka集群</h4><h4 id="5-1-4启动microservicecloud-provider-person-hystrix-8001和microservicecloud-consumer-person-80-feign-服务端和消费者"><a href="#5-1-4启动microservicecloud-provider-person-hystrix-8001和microservicecloud-consumer-person-80-feign-服务端和消费者" class="headerlink" title="5.1.4启动microservicecloud-provider-person-hystrix-8001和microservicecloud-consumer-person-80-feign 服务端和消费者"></a>5.1.4启动microservicecloud-provider-person-hystrix-8001和microservicecloud-consumer-person-80-feign 服务端和消费者</h4><h4 id="5-1-4dashboard填写需要监控的服务地址"><a href="#5-1-4dashboard填写需要监控的服务地址" class="headerlink" title="5.1.4dashboard填写需要监控的服务地址"></a>5.1.4dashboard填写需要监控的服务地址</h4><p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-46-55.png" alt=""></p>
 <p>1：Delay：该参数用来控制服务器上轮询监控信息的延迟时间，默认为2000毫秒，可以通过配置该属性来降低客户端的网络和CPU消耗。</p>
@@ -1330,32 +1337,37 @@
 <p>点击Monitor Stream  开始监控</p>
 <p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-49-56.png" alt=""></p>
 <p><strong>怎么查看这张图：关键的部位我已经用红色方框，框住。核心就是：7色（服务的状态），1圈，1线。</strong>                           </p>
-<p>​       1圈                   </p>
-<p>​          实心圆:共有两种含义.它通过颜色的变化代表了 实例健康程度,它的健康度从绿色&lt;黄色&lt;橙色&lt;红色递减.该实心圆除了颜色的变化之外,它的大小也会根据实例的请求流量发生变化,流量越大该实心圆就越大.所以通过该实心圆的展示,就可以在大量的实例中快速的发现故障实例和高压力实例.              </p>
-<p>​    1线                   </p>
-<p>​         曲线:用来记录2分钟内流量的相对变化,可以通过它来观察到流量的上升和下降趋势.</p>
-<p><img src="/2019/05/01/SpringCloud个人总结/dashbnoars.png" alt=""></p>
+<pre><code>   1圈                   
+
+      实心圆:共有两种含义.它通过颜色的变化代表了 实例健康程度,它的健康度从绿色&lt;黄色&lt;橙色&lt;红色递减.该实心圆除了颜色的变化之外,它的大小也会根据实例的请求流量发生变化,流量越大该实心圆就越大.所以通过该实心圆的展示,就可以在大量的实例中快速的发现故障实例和高压力实例.              
+
+1线                   
+
+     曲线:用来记录2分钟内流量的相对变化,可以通过它来观察到流量的上升和下降趋势.
+</code></pre><p><img src="/2019/05/01/SpringCloud个人总结/dashbnoars.png" alt=""></p>
 <h4 id="5-1-5-多次刷新http-localhost-consumer-person-get-1"><a href="#5-1-5-多次刷新http-localhost-consumer-person-get-1" class="headerlink" title="5.1.5 多次刷新http://localhost/consumer/person/get/1"></a>5.1.5 多次刷新<a href="http://localhost/consumer/person/get/1" target="_blank" rel="external">http://localhost/consumer/person/get/1</a></h4><p>也即是多次请求8001服务，然后查看监控的状态</p>
 <p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-53-58.png" alt=""></p>
 <p>显示请求的get方法的情况。圆圈变大，曲线上升。（<strong>如果请求多个方法会增加图形说明</strong>）</p>
-<h1 id="十、-zuul路由网关"><a href="#十、-zuul路由网关" class="headerlink" title="十、 zuul路由网关"></a>十、 zuul路由网关</h1><p>​    通过前面的学习，使用Spring Cloud实现微服务的架构基本成型，大致是这样的：</p>
-<p><img src="/2019/05/01/SpringCloud个人总结/C1566221714611.png" alt="1566221714611"></p>
+<h1 id="十、-zuul路由网关"><a href="#十、-zuul路由网关" class="headerlink" title="十、 zuul路由网关"></a>十、 zuul路由网关</h1><pre><code>通过前面的学习，使用Spring Cloud实现微服务的架构基本成型，大致是这样的：
+</code></pre><p><img src="/2019/05/01/SpringCloud个人总结/C1566221714611.png" alt="1566221714611"></p>
 <p><strong>我们使用Spring Cloud Netflix中的Eureka实现了服务注册中心以及服务注册与发现；而服务间通过Ribbon或Feign实现服务的消费以及均衡负载。为了使得服务集群更为健壮，使用Hystrix的融断机制来避免在微服务架构中个别服务出现异常时引起的故障蔓延。</strong></p>
 <p> 在该架构中，我们的服务集群包含：内部服务Service A和Service B，他们都会注册与订阅服务至Eureka Server，而Open Service是一个对外的服务，通过均衡负载公开至服务调用方。我们把焦点聚集在对外服务这块，直接暴露我们的服务地址，这样的实现是否合理，或者是否有更好的实现方式呢？</p>
 <p>先来说说这样架构需要做的一些事儿以及存在的不足：</p>
 <p>•               破坏了服务无状态特点。</p>
-<p>​                   为了保证对外服务的安全性，我们需要实现对服务访问的权限控制，而开放服务的权限控制机制将会贯穿并污染整个开放服务的业务逻辑，这会带来的最直接问题是，破坏了服务集群中REST API无状态的特点。</p>
-<p>​                     从具体开发和测试的角度来说，在工作中除了要考虑实际的业务逻辑之外，还需要额外考虑对接口访问的控制处理。</p>
-<p>•               无法直接复用既有接口。</p>
-<p>​                   当我们需要对一个即有的集群内访问接口，实现外部服务访问时，我们不得不通过在原有接口上增加校验逻辑，或增加一个代理调用来实现权限控制，无法直接复用原有的接口。</p>
-<p>面对类似上面的问题，我们要如何解决呢？答案是：服务网关！</p>
+<pre><code>为了保证对外服务的安全性，我们需要实现对服务访问的权限控制，而开放服务的权限控制机制将会贯穿并污染整个开放服务的业务逻辑，这会带来的最直接问题是，破坏了服务集群中REST API无状态的特点。
+
+  从具体开发和测试的角度来说，在工作中除了要考虑实际的业务逻辑之外，还需要额外考虑对接口访问的控制处理。
+</code></pre><p>•               无法直接复用既有接口。</p>
+<pre><code>当我们需要对一个即有的集群内访问接口，实现外部服务访问时，我们不得不通过在原有接口上增加校验逻辑，或增加一个代理调用来实现权限控制，无法直接复用原有的接口。
+</code></pre><p>面对类似上面的问题，我们要如何解决呢？答案是：服务网关！</p>
 <p>为了解决上面这些问题，我们需要将权限控制这样的东西从我们的服务单元中抽离出去，而最适合这些逻辑的地方就是处于对外访问最前端的地方，我们需要一个更强大一些的均衡负载器的 服务网关。</p>
 <p>服务网关是微服务架构中一个不可或缺的部分。通过服务网关统一向外系统提供REST API的过程中，除了具备服务路由、均衡负载功能之外，它还具备了权限控制等功能。Spring Cloud Netflix中的Zuul就担任了这样的一个角色，为微服务架构提供了前门保护的作用，同时将权限控制这些较重的非业务逻辑内容迁移到服务路由层面，使得服务集群主体能够具备更高的可复用性和可测试性。</p>
 <p>Zuul包含了对请求的路由和过滤两个最主要的功能：</p>
 <p><strong>其中路由功能负责将外部请求转发到具体的微服务实例上，是实现外部访问统一入口的基础而过滤器功能则负责对请求的处理过程进行干预，是实现请求校验、服务聚合等功能的基础.Zuul和Eureka进行整合，将Zuul自身注册为Eureka服务治理下的应用，同时从Eureka中获得其他微服务的消息，也即以后的访问微服务都是通过Zuul跳转后获得。</strong></p>
-<p>​    <strong>注意：Zuul服务最终还是会注册进Eureka</strong></p>
-<p>​    提供=代理+路由+过滤三大功能</p>
-<h2 id="1-简介-1"><a href="#1-简介-1" class="headerlink" title="1.简介"></a>1.简介</h2><p>官网：<a href="https://github.com/Netflix/zuul" target="_blank" rel="external">https://github.com/Netflix/zuul</a></p>
+<pre><code>**注意：Zuul服务最终还是会注册进Eureka**
+
+提供=代理+路由+过滤三大功能
+</code></pre><h2 id="1-简介-1"><a href="#1-简介-1" class="headerlink" title="1.简介"></a>1.简介</h2><p>官网：<a href="https://github.com/Netflix/zuul" target="_blank" rel="external">https://github.com/Netflix/zuul</a></p>
 <p> <img src="/2019/05/01/SpringCloud个人总结/njl002.png" alt="标题: fig:"></p>
 <p>Zuul：维基百科</p>
 <p>电影《捉鬼敢死队》中的怪兽，Zuul，在纽约引发了巨大骚乱。</p>
@@ -1452,13 +1464,13 @@
 <p><img src="/2019/05/01/SpringCloud个人总结/1566226885002.png" alt="1566226885002"></p>
 <h2 id="8-负载均衡和熔断"><a href="#8-负载均衡和熔断" class="headerlink" title="8.负载均衡和熔断"></a>8.负载均衡和熔断</h2><p>Zuul中默认就已经集成了Ribbon负载均衡和Hystix熔断机制。但是所有的超时策略都是走的默认值，比如熔断超时时间只有1S，很容易就触发了。因此建议我们手动进行配置：</p>
 <p>hystrix:<br>   command:<br>     default:<br>       execution:<br>         isolation:<br>           thread:<br>             timeoutInMilliseconds: 2000 # 设置hystrix的超时时间为6000ms</p>
-<h1 id="十一、SpringCloud-Config-分布式配置中心"><a href="#十一、SpringCloud-Config-分布式配置中心" class="headerlink" title="十一、SpringCloud Config 分布式配置中心"></a>十一、<strong>SpringCloud Config 分布式配置中心</strong></h1><p>​                        <strong>解决第四个问题，统一配置的问题</strong></p>
-<h2 id="1-为什么需要配置中心"><a href="#1-为什么需要配置中心" class="headerlink" title="1.为什么需要配置中心"></a>1.为什么需要配置中心</h2><p>   举个简单的例子，我们想要修改8001模块的服务名称的值（spring.application.name），那么我们首先得找到8001模块，然后找到配置文件，然后再进去修改。如果修改修改8003模块的配置信息，重复之前的步骤。</p>
+<h1 id="十一、SpringCloud-Config-分布式配置中心"><a href="#十一、SpringCloud-Config-分布式配置中心" class="headerlink" title="十一、SpringCloud Config 分布式配置中心"></a>十一、<strong>SpringCloud Config 分布式配置中心</strong></h1><pre><code>**解决第四个问题，统一配置的问题**
+</code></pre><h2 id="1-为什么需要配置中心"><a href="#1-为什么需要配置中心" class="headerlink" title="1.为什么需要配置中心"></a>1.为什么需要配置中心</h2><p>   举个简单的例子，我们想要修改8001模块的服务名称的值（spring.application.name），那么我们首先得找到8001模块，然后找到配置文件，然后再进去修改。如果修改修改8003模块的配置信息，重复之前的步骤。</p>
 <p> 所以我们需要一个集中管理所有微服务配置信息的地方。</p>
-<p>​    微服务意味着要将单体应用中的业务拆分成一个个子服务,每个服务的粒度相对较小,因此系统中会出现大量的服务.由于每个服务都需要必要的配置信息才能运行（application.yml）,所以一套集中式的、动态的配置管理设施是必不可少的.SpringCloud提供了ConfigServer来解决这个问题(我们每一个微服务自己带着一个application.yml,上百个配置文件的管理的问题)</p>
-<p>​         </p>
-<p>​    <strong>总而言之：是为了更加方便的帮助我们集中式的管理微服务架构里面微服务的配置信息。</strong></p>
-<h2 id="2-config配置中心"><a href="#2-config配置中心" class="headerlink" title="2. config配置中心"></a>2. config配置中心</h2><p><strong>SpringCloud Config 为微服务架构中的微服务提供集中化的外部配置支持,配置服务器为各个不同微服务应用的所有环境提供了一个中心化的外部配置，方便我们集中式的修改微服务的配置</strong></p>
+<pre><code>微服务意味着要将单体应用中的业务拆分成一个个子服务,每个服务的粒度相对较小,因此系统中会出现大量的服务.由于每个服务都需要必要的配置信息才能运行（application.yml）,所以一套集中式的、动态的配置管理设施是必不可少的.SpringCloud提供了ConfigServer来解决这个问题(我们每一个微服务自己带着一个application.yml,上百个配置文件的管理的问题)
+</code></pre><p>​         </p>
+<pre><code>**总而言之：是为了更加方便的帮助我们集中式的管理微服务架构里面微服务的配置信息。**
+</code></pre><h2 id="2-config配置中心"><a href="#2-config配置中心" class="headerlink" title="2. config配置中心"></a>2. config配置中心</h2><p><strong>SpringCloud Config 为微服务架构中的微服务提供集中化的外部配置支持,配置服务器为各个不同微服务应用的所有环境提供了一个中心化的外部配置，方便我们集中式的修改微服务的配置</strong></p>
 <p><strong>SpringCloud Config分为服务端和客户端两部分.</strong></p>
 <p><strong>服务端也称为分布式配置中心,它是一个独立的微服务应用,用来连接配置服务器并为客户端提供获取配置信息,加密/解密信息等访问接口</strong></p>
 <p><strong>客户端则是通过制定的配置中心来管理应用资源,以及业务相关的配置内容,并在启动的时候从配置中心获取和加载配置信息配置服务器默认采用git来存储配置信息,这样就有助于对环境配置进行版本管理,并且可以通过git客户端工具来方便的管理和访问配置内容.（客户端可以是我们的8001,8003模块，也即是需要获取配置信息的微服务都是客户端）</strong></p>
@@ -1535,14 +1547,19 @@
 <h3 id="4-6-启动10000配置中心和8004服务"><a href="#4-6-启动10000配置中心和8004服务" class="headerlink" title="4.6 启动10000配置中心和8004服务"></a>4.6 启动10000配置中心和8004服务</h3><p> （1） 启动Config配置中心10000微服务并自测</p>
 <p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-20_11-05-27.png" alt=""></p>
 <p>（2）启动8004作为Client准备访问</p>
-<pre><code>bootstrap.yml里面的profile值是什么，决定从github上读取什么
-</code></pre><p>​    2.1 启动成功，说明配置文件获取成功</p>
-<p>​       2.2 额外验证</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">假如目前是 profile: dev</div><div class="line">  dev默认在github上对应的端口就是8004</div><div class="line">  http://localhost:8004/config</div><div class="line">  输出：applicationName: microservicecloud-person	eurekaServers:http://peer1:7001/eureka/,http://peer2:7002/eureka/,http://peer3:7003/eureka/	port: 8004	datasourceurl：jdbc:mysql://127.0.0.1:3306/test</div></pre></td></tr></table></figure>
+<pre><code>  bootstrap.yml里面的profile值是什么，决定从github上读取什么
+
+2.1 启动成功，说明配置文件获取成功
+
+
+
+   2.2 额外验证
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">假如目前是 profile: dev</div><div class="line">  dev默认在github上对应的端口就是8004</div><div class="line">  http://localhost:8004/config</div><div class="line">  输出：applicationName: microservicecloud-person	eurekaServers:http://peer1:7001/eureka/,http://peer2:7002/eureka/,http://peer3:7003/eureka/	port: 8004	datasourceurl：jdbc:mysql://127.0.0.1:3306/test</div></pre></td></tr></table></figure>
 <p>​<br>​    假如目前是 profile: test<br>​      test默认在github上对应的端口就是8005<br>​      <a href="http://localhost:8005/config" target="_blank" rel="external">http://localhost:8005/config</a><br>​      输出：applicationName: microservicecloud-person    eurekaServers:<a href="http://peer1:7001/eureka/,http://peer2:7002/eureka/,http://peer3:7003/eureka/" target="_blank" rel="external">http://peer1:7001/eureka/,http://peer2:7002/eureka/,http://peer3:7003/eureka/</a>    port: 8005    datasourceurl：jdbc:mysql://127.0.0.1:3306/test2</p>
-<h2 id="5-手动刷新配置"><a href="#5-手动刷新配置" class="headerlink" title="5.手动刷新配置"></a>5.手动刷新配置</h2><p>​    上面的案例，有个缺点，那就是我们修改了github上面的配置文件（例如修改了连接数据库的地址），对应的8004模块没有刷新，也就是，他获取的连接数据库的地址还是未修改前的。</p>
-<p>​    在真实的案例中，我们不可能手动关闭服务器，然后重启。所以就需要8004它能够自动刷新</p>
-<p><img src="/2019/05/01/SpringCloud个人总结/1566377247710.png" alt="1566377247710"></p>
+<h2 id="5-手动刷新配置"><a href="#5-手动刷新配置" class="headerlink" title="5.手动刷新配置"></a>5.手动刷新配置</h2><pre><code>上面的案例，有个缺点，那就是我们修改了github上面的配置文件（例如修改了连接数据库的地址），对应的8004模块没有刷新，也就是，他获取的连接数据库的地址还是未修改前的。
+
+在真实的案例中，我们不可能手动关闭服务器，然后重启。所以就需要8004它能够自动刷新
+</code></pre><p><img src="/2019/05/01/SpringCloud个人总结/1566377247710.png" alt="1566377247710"></p>
 <p><img src="/2019/05/01/SpringCloud个人总结/1566377271635.png" alt="1566377271635"></p>
 <p> 需要依赖actuator组件和通过psot方式访问请求配置变动的服务器（也即是@RefreshScope注解所在的bean）</p>
 <p>（1）8004模块引入actuator依赖</p>
@@ -1779,11 +1796,11 @@
   </entry>
   
   <entry>
-    <title>持续集成技术</title>
-    <link href="http://kingge.top/2019/03/08/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E6%8A%80%E6%9C%AF%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93/"/>
-    <id>http://kingge.top/2019/03/08/持续集成技术个人总结/</id>
+    <title>持续集成技术总结</title>
+    <link href="http://kingge.top/2019/03/08/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93/"/>
+    <id>http://kingge.top/2019/03/08/持续集成技术总结/</id>
     <published>2019-03-08T15:59:59.000Z</published>
-    <updated>2019-08-25T03:42:34.618Z</updated>
+    <updated>2019-08-25T04:37:53.613Z</updated>
     
     <content type="html"><![CDATA[<h1 id="一、DockerMaven插件的使用"><a href="#一、DockerMaven插件的使用" class="headerlink" title="一、DockerMaven插件的使用"></a>一、DockerMaven插件的使用</h1><p>这个插件的目的就是，能够把本地项目远程打包到docker，并生成相应的镜像。</p>
 <p>微服务部署有两种方法：</p>
@@ -1797,7 +1814,7 @@
 <p>其中ExecStart=后添加配置</p>
 <p> ‐H tcp://0.0.0.0:2375 ‐H unix:///var/run/docker.sock</p>
 <p>修改后如下：</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image002.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image002.jpg" alt="img"></p>
 <p>（2）刷新配置，重启服务</p>
 <p>systemctl daemon‐reload </p>
 <p> systemctl restart docker </p>
@@ -1816,26 +1833,26 @@
 <p>mvn install</p>
 <p>mvn docker:build  ‐DpushImage</p>
 <p>执行后，会有如下输出，代码正在上传</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image004.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image004.jpg" alt="img"></p>
 <p>（6）进入宿主机 , 查看镜像</p>
-<p>​      Docker images</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image006.jpg" alt="img"></p>
+<pre><code>Docker images
+</code></pre><p><img src="/2019/03/08/持续集成技术总结/clip_image006.jpg" alt="img"></p>
 <p>（7）启动容器</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image008.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image009.png" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image008.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image009.png" alt="img"></p>
 <p>访问成功！！！</p>
 <h1 id="二、持续集成工具Jenkins"><a href="#二、持续集成工具Jenkins" class="headerlink" title="二、持续集成工具Jenkins"></a>二、持续集成工具Jenkins</h1><p>官网：<a href="https://jenkins.io/zh/doc/tutorials/build-a-java-app-with-maven/" target="_blank" rel="external">https://jenkins.io/zh/doc/tutorials/build-a-java-app-with-maven/</a></p>
 <p>主要是解决自动化构建项目，发布项目等等问题。</p>
 <p>微服务架构下，带来了运维上的额外复杂性，尤其是在服务部署和服务监控上。单体应用是集中式的，就一个单体跑在一起，部署和管理的时候非常简单。而微服务是一个网状分布的，有很多服务需要维护和管理，对它进行部署和维护的时候则比较复杂，所以就需要一个工具能够自动化的完成自动编译、发布和测试，从而尽快地发现集成错误，让团队能够更快的开发内聚的软件。</p>
-<p>​       <strong>持续集成具有的特点：</strong></p>
-<p>它是一个自动化的周期性的集成测试过程，从检出代码、编译构建、运行测试、结果 记录、测试统计等都是自动完成的，无需人工干预； </p>
+<pre><code>**持续集成具有的特点：**
+</code></pre><p>它是一个自动化的周期性的集成测试过程，从检出代码、编译构建、运行测试、结果 记录、测试统计等都是自动完成的，无需人工干预； </p>
 <p>需要有专门的集成服务器来执行集成构建； </p>
 <p>需要有代码托管工具支持，我们下一小节将介绍Git以及可视化界面Gogs的使用</p>
 <p><strong>持续集成的作用：</strong></p>
 <p>保证团队开发人员提交代码的质量，减轻了软件发布时的压力； </p>
 <p>持续集成中的任何一个环节都是自动完成的，无需太多的人工干预，有利于减少重复 过程以节省时间、费用和工作量；</p>
 <p><strong>基本思路：</strong></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image011.jpg" alt="https://www.centos.bz/wp-content/uploads/2017/11/1-17.jpg"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image011.jpg" alt="https://www.centos.bz/wp-content/uploads/2017/11/1-17.jpg"></p>
 <h2 id="1-Jenkins简介"><a href="#1-Jenkins简介" class="headerlink" title="1.Jenkins简介"></a>1.Jenkins简介</h2><p> Jenkins，原名Hudson，2011年改为现在的名字，它 是一个开源的实现持续集成的 软件工具。官方网站：<a href="http://jenkins-ci.org/。" target="_blank" rel="external">http://jenkins-ci.org/。</a></p>
 <p> Jenkins 能实施监控集成中存在的错误，提供详细的日志文件和提醒功能，还能用图 表的形式形象地展示项目构建的趋势和稳定性。</p>
 <p> <strong>特点：</strong> </p>
@@ -1849,18 +1866,18 @@
 <p><strong>文件指纹信息：</strong>Jenkins会保存哪次集成构建产生了哪些jars文件，哪一次集成构建使 用了哪个版本的jars文件等构建记录； </p>
 <p><strong>支持第三方插件：</strong>使得 Jenkins 变得越来越强大</p>
 <h2 id="2-Jenkins安装"><a href="#2-Jenkins安装" class="headerlink" title="2. Jenkins安装"></a>2. Jenkins安装</h2><p>资源准备</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image013.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image013.jpg" alt="img"></p>
 <p>当然你可以通过wget命令进行下载相应的rpm包</p>
 <h3 id="2-1-JDK安装"><a href="#2-1-JDK安装" class="headerlink" title="2.1 JDK安装"></a>2.1 JDK安装</h3><p>（1）将jdk-8u171-linux-x64.rpm上传至服务器（虚拟机）</p>
 <p>（2）执行安装命令</p>
 <p>rpm ‐ivh jdk‐8u171‐linux‐x64.rpm</p>
 <p>（3）查看是否安装成功</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image014.png" alt="img"></p>
-<p>​       因为rpm包已经自动为我们做了相关的环境变量配置，所以不需要额外配置（相关的命令在 /usr/bin）</p>
-<h3 id="2-2-maven安装"><a href="#2-2-maven安装" class="headerlink" title="2.2 maven安装"></a>2.2 maven安装</h3><p>（1）将 apache‐maven‐3.5.4‐bin.tar.gz上传至服务器（虚拟机）</p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image014.png" alt="img"></p>
+<pre><code>因为rpm包已经自动为我们做了相关的环境变量配置，所以不需要额外配置（相关的命令在 /usr/bin）
+</code></pre><h3 id="2-2-maven安装"><a href="#2-2-maven安装" class="headerlink" title="2.2 maven安装"></a>2.2 maven安装</h3><p>（1）将 apache‐maven‐3.5.4‐bin.tar.gz上传至服务器（虚拟机）</p>
 <p>（2）解压</p>
 <p>tar zxvf apache‐maven‐3.5.4‐bin.tar.gz</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image016.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image016.jpg" alt="img"></p>
 <p>（3））编辑setting.xml配置文件</p>
 <p>vi /opt/software/apache-maven-3.5.4/conf/settings.xml</p>
 <p>   增加如下配置</p>
@@ -1890,34 +1907,34 @@
 <p>systemctl start Jenkins</p>
 <p>（5）访问链接 <a href="http://49.234.188.74:8888" target="_blank" rel="external">http://49.234.188.74:8888</a></p>
 <p>从/var/lib/jenkins/secrets/initialAdminPassword中获取初始密码串</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image018.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image018.jpg" alt="img"></p>
 <p>（6）安装插件</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image020.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image020.jpg" alt="img"></p>
 <p>选择推荐安装，避免漏掉一些jenkins必须依赖的插件，后面有额外需要的插件我们还可以手动安装</p>
 <p>安装插件中</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image022.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image022.jpg" alt="img"></p>
 <p><strong>需要注意的是，在安装插件的可能会失败，一般是因为当前jenkins版本太低的原因，可以先忽略错误，进去后更新jenkins为新的版本，插件自己会自动安装成功。</strong></p>
 <p>（7）新建用户</p>
 <p>完成安装进入主界面</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image024.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image024.jpg" alt="img"></p>
 <h2 id="3-Jenkins插件安装"><a href="#3-Jenkins插件安装" class="headerlink" title="3. Jenkins插件安装"></a>3. Jenkins插件安装</h2><p>我们以安装maven插件为例，演示插件的安装</p>
 <p>（1）点击左侧的“系统管理”菜单 ,然后点点击</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image026.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image028.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image030.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image026.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image028.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image030.jpg" alt="img"></p>
 <h2 id="4-全局工具配置"><a href="#4-全局工具配置" class="headerlink" title="4.全局工具配置"></a>4.全局工具配置</h2><p>选择系统管理，全局工具配置</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image032.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image032.jpg" alt="img"></p>
 <p>（1）JDK配置</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image034.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image034.jpg" alt="img"></p>
 <p>设置javahome为 /usr/java/jdk1.8.0_171-amd64</p>
 <p>（2）Git配置   （本地已经安装了Git软件）</p>
 <p>   如果linux 没有安装过git。那么可以参考 《额外补充》第三章节进行安装。</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image036.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image036.jpg" alt="img"></p>
 <p>如果不知道本地git的地址可以使用命令：whereis git 获取地址。</p>
 <p>  默认在启动jenkins时，应安装好了git插件</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image038.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image038.jpg" alt="img"></p>
 <p>（3）Maven配置</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image040.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image040.jpg" alt="img"></p>
 <p>然后保存即可，接下来上传代码到git，然后创建任务。</p>
 <h2 id="5-代码上传至Git服务器"><a href="#5-代码上传至Git服务器" class="headerlink" title="5 代码上传至Git服务器"></a>5 代码上传至Git服务器</h2><h3 id="5-1-Gogs搭建与配置"><a href="#5-1-Gogs搭建与配置" class="headerlink" title="5.1 Gogs搭建与配置"></a>5.1 Gogs搭建与配置</h3><p>Gogs 是一款极易搭建的自助 Git 服务。</p>
 <p>Gogs 的目标是打造一个最简单、最快速和最轻松的方式搭建自助 Git 服务。使用 Go 语 言开发使得 Gogs 能够通过独立的二进制分发，并且支持 Go 语言支持的 所有平台，包 括 Linux、Mac OS X、Windows 以及 ARM 平台</p>
@@ -1931,42 +1948,42 @@
 <p>gogs/gogs</p>
 <p>（3）安装gogs</p>
 <p>在地址栏输入 <a href="http://49.234.188.74:3000/" target="_blank" rel="external">http://49.234.188.74: 10080/</a>，会进入首次运行安装程序页面，我们可以选择一种数据 库作为gogs数据的存储，最简单的是选择SQLite3。如果对于规模较大的公司，可以选择 MySQL  </p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image042.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image042.jpg" alt="img"></p>
 <p>点击“立即安装”</p>
 <p>这里的域名要设置为centos的IP地址,安装后显示主界面</p>
 <p>（4）注册</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image044.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image044.jpg" alt="img"></p>
 <p>（5）登录</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image046.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image046.jpg" alt="img"></p>
 <p>登陆后</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image048.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image048.jpg" alt="img"></p>
 <p>（6）创建仓库 </p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image050.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image052.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image050.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image052.jpg" alt="img"></p>
 <h3 id="5-2-提交代码到git"><a href="#5-2-提交代码到git" class="headerlink" title="5.2 提交代码到git"></a>5.2 提交代码到git</h3><p>步骤：</p>
 <p>（1）在本地安装git(Windows版本)</p>
 <p>（2）在IDEA中选择菜单 :  File – settings ,  在窗口中选择Version Control –  Gi</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image054.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image054.jpg" alt="img"></p>
 <p>（3）选择菜单VCS  –&gt; Enable Version Control Integration</p>
 <p>（4）设置远程地址:  右键点击工程选择菜单    Git –&gt; Repository   –&gt;Remotes…</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image056.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image057.png" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image056.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image057.png" alt="img"></p>
 <p>url填写我们之前用gogs创建的git仓库：<a href="http://49.234.188.74:10080/root/kingge.git" target="_blank" rel="external">http://49.234.188.74:10080/root/kingge.git</a></p>
 <p>（5）右键点击工程选择菜单    Git –&gt; Add </p>
 <p>（6）右键点击工程选择菜单    Git –&gt; Commit Directory…</p>
 <p>（7）右键点击工程选择菜单    Git –&gt; Repository   –&gt; Push …</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image059.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image059.jpg" alt="img"></p>
 <h2 id="6-jenkins任务的创建与执行"><a href="#6-jenkins任务的创建与执行" class="headerlink" title="6 jenkins任务的创建与执行"></a>6 jenkins任务的创建与执行</h2><p>（1）回到首页，点击新建按钮 .如下图，输入名称，选择创建一个Maven项目，点击OK</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image061.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image061.jpg" alt="img"></p>
 <p>（2）源码管理，选择Git</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image063.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image063.jpg" alt="img"></p>
 <p>（3）填写构建语句</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image065.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image065.jpg" alt="img"></p>
 <p>clean package docker:build ‐DpushImage</p>
 <p>（4）查看项目</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image067.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image067.jpg" alt="img"></p>
 <p>我们点击执行后，可以看到左下角出现这个任务进度</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image068.png" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image068.png" alt="img"></p>
 <p>这样就能够上传成功了</p>
 <h2 id="7-总结"><a href="#7-总结" class="headerlink" title="7.总结"></a>7.总结</h2><p>通过jenkins，我们可以很好的集成、部署了我们开发的项目，自动构建项目的镜像，这样为我们节省了很多的时间。</p>
 <h1 id="三、容器管理工具Rancher"><a href="#三、容器管理工具Rancher" class="headerlink" title="三、容器管理工具Rancher"></a>三、容器管理工具Rancher</h1><p>管理docker和Kubernetes容器，通过可视化界面的方式，管理，部署，启动docker容器，同时支持分布式集群部署docekr容器。</p>
@@ -1977,93 +1994,93 @@
 <p>（2）创建Rancher容器</p>
 <p>docker run ‐di ‐‐name=rancher ‐p 9090:8080 rancher/server</p>
 <p>（3）在浏览器输入地址： <a href="http://192.168.184.136:9090" target="_blank" rel="external">http://192.168.184.136:9090</a>  </p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image070.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image070.jpg" alt="img"></p>
 <h2 id="2-初始化Rancher"><a href="#2-初始化Rancher" class="headerlink" title="2.初始化Rancher"></a>2.初始化Rancher</h2><h3 id="2-1-添加环境"><a href="#2-1-添加环境" class="headerlink" title="2.1 添加环境"></a>2.1 添加环境</h3><p>Rancher 支持将资源分组归属到多个环境。 每个环境具有自己独立的基础架构资源及服 务，并由一个或多个用户、团队或组织所管理。</p>
 <p>例如，您可以创建独立的“开发”、“测试”及“生产”环境以确保环境之间的安全隔离，将“开 发”环境的访问权限赋予全部人员，但限制“生产”环境的访问权限给一个小的团队。</p>
 <p>（1）     选择“Default –&gt;环境管理” 菜单</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image071.png" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image071.png" alt="img"></p>
 <p>（2）填写名称，点击“创建”按钮</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image073.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image075.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image073.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image075.jpg" alt="img"></p>
 <p>可以添加多个环境，分别给区分不同用户使用场景</p>
 <p>（4））你可以通过点击logo右侧的菜单在各种环境下切换</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image076.png" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image076.png" alt="img"></p>
 <h3 id="2-2-添加主机"><a href="#2-2-添加主机" class="headerlink" title="2.2 添加主机"></a>2.2 添加主机</h3><p>（1）选择基础架构–&gt;主机 菜单，点击添加主机</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image078.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image080.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image078.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image080.jpg" alt="img"></p>
 <p>直接保存，当然你也可以选择其他主机（管理非当前服务器）</p>
 <p>（2）拷贝脚本，主机和rancher服务建立连接</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image082.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image082.jpg" alt="img"></p>
 <p>（3）在主机上运行脚本</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image084.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image084.jpg" alt="img"></p>
 <p>（4）点击关闭按钮后，会看到界面中显示此主机。我们可以很方便地管理主机的每个容 器的开启和关闭</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image085.png" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image085.png" alt="img"></p>
 <p>在这里可以看到当前主机下，已经创建好的容器</p>
 <h3 id="2-3-添加应用"><a href="#2-3-添加应用" class="headerlink" title="2.3 添加应用"></a>2.3 添加应用</h3><p>（1）点击应用–&gt;全部(或用户)  ，点击“添加应用”按钮</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image086.png" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image088.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image090.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image086.png" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image088.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image090.jpg" alt="img"></p>
 <p>应用是多个服务的载体。例如一个mysql容器就是一个服务，它提供数据库服务。例如redis也是一个服务等等。</p>
 <h3 id="2-4-添加服务"><a href="#2-4-添加服务" class="headerlink" title="2.4 添加服务"></a>2.4 添加服务</h3><p><strong>相对于docker而言，添加一个服务就等同于创建一个容器</strong></p>
 <h4 id="2-4-1-添加mysql服务"><a href="#2-4-1-添加mysql服务" class="headerlink" title="2.4.1 添加mysql服务"></a>2.4.1 添加mysql服务</h4><p>镜像：mysql:latest   增加mysql数据库服务</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image092.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image092.jpg" alt="img"></p>
 <p>打开我们在2.3节创建的应用，然后点击创建服务</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image094.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image096.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image094.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image096.jpg" alt="img"></p>
 <p>点击创建按钮，完成创建。上述操作相当于以下docker命令</p>
 <p>docker run ‐di ‐‐name mysql ‐p 3306:3306 ‐e MYSQL_ROOT_PASSWORD=123456  mysql:latest</p>
 <p>创建中</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image098.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image098.jpg" alt="img"></p>
 <p>创建完毕</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image100.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image100.jpg" alt="img"></p>
 <h4 id="2-4-2-添加RabbitMQ服务"><a href="#2-4-2-添加RabbitMQ服务" class="headerlink" title="2.4.2 添加RabbitMQ服务"></a>2.4.2 添加RabbitMQ服务</h4><p>镜像：rabbitmq:management     端口映射5671   5672  4369    15671  15672  25672</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image102.jpg" alt="img"></p>
-<h4 id="2-4-3-Redis服务"><a href="#2-4-3-Redis服务" class="headerlink" title="2.4.3 Redis服务"></a>2.4.3 Redis服务</h4><p><img src="/2019/03/08/持续集成技术个人总结/clip_image104.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image106.jpg" alt="img"></p>
-<h4 id="2-5-部署我们在第一章节dockermaven构建的app容器"><a href="#2-5-部署我们在第一章节dockermaven构建的app容器" class="headerlink" title="2.5 部署我们在第一章节dockermaven构建的app容器"></a>2.5 部署我们在第一章节dockermaven构建的app容器</h4><p><img src="/2019/03/08/持续集成技术个人总结/clip_image108.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image102.jpg" alt="img"></p>
+<h4 id="2-4-3-Redis服务"><a href="#2-4-3-Redis服务" class="headerlink" title="2.4.3 Redis服务"></a>2.4.3 Redis服务</h4><p><img src="/2019/03/08/持续集成技术总结/clip_image104.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image106.jpg" alt="img"></p>
+<h4 id="2-5-部署我们在第一章节dockermaven构建的app容器"><a href="#2-5-部署我们在第一章节dockermaven构建的app容器" class="headerlink" title="2.5 部署我们在第一章节dockermaven构建的app容器"></a>2.5 部署我们在第一章节dockermaven构建的app容器</h4><p><img src="/2019/03/08/持续集成技术总结/clip_image108.jpg" alt="img"></p>
 <p>开始部署服务</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image110.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image110.jpg" alt="img"></p>
 <p>点击创建部署中</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image112.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image112.jpg" alt="img"></p>
 <p>创建成功</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image114.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image114.jpg" alt="img"></p>
 <p>访问</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image115.png" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image115.png" alt="img"></p>
 <h2 id="3-rancher的扩容与缩容"><a href="#3-rancher的扩容与缩容" class="headerlink" title="3. rancher的扩容与缩容"></a>3. rancher的扩容与缩容</h2><p>就是对某个服务（容器）进行数量的增加或者减少，因为我们知道大型的项目一个服务是部署到多台服务器的，构建成一个服务集群，是为了应变访问量的高低。所以rancher也是提供了这种功能。</p>
 <p> 一下例子，以我们在上面构建的app服务为例子。</p>
 <p>（1）部署app服务，不指定端口</p>
 <p>  这里为什么不指定端口，因为假设我们把服务扩容到两台，那么端口号就会冲突，所以这里让docker为我们默认分配端口。</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image117.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image119.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image117.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image119.jpg" alt="img"></p>
 <p>（2）在选择菜单API  –&gt;WebHooks  ，点击“添加接收器”按钮</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image121.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image121.jpg" alt="img"></p>
 <p>（3）填写名称等信息，选择要扩容的服务，点击创建按钮</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image123.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image123.jpg" alt="img"></p>
 <p>创建成功</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image125.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image125.jpg" alt="img"></p>
 <p>提供了一个触发扩容操作的url</p>
 <p><a href="http://192.168.1.105:9090/v1-webhooks/endpoint?key=ctm3rFpH6oAsbOA5mXMHvZyW7BoCkz1QQgpw00ay&amp;projectId=1a5" target="_blank" rel="external">http://192.168.1.105:9090/v1-webhooks/endpoint?key=ctm3rFpH6oAsbOA5mXMHvZyW7BoCkz1QQgpw00ay&amp;projectId=1a5</a></p>
 <p>（4）测试扩容服务</p>
 <p>必须使用post的方式，触发上面提供的url</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image127.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image127.jpg" alt="img"></p>
 <p>在触发之前，我们先查看一下app服务的数量</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image129.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image129.jpg" alt="img"></p>
 <p>是一个</p>
 <p>开始触发</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image131.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image133.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image131.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image133.jpg" alt="img"></p>
 <p>扩容成功，数量变成了3</p>
 <p>那么这个时候，我么你会有个疑问，我们怎么访问这些服务呢？这些服务并没有提供对外暴露的端口？</p>
 <p> 答案是：采用创建负载均衡服务的方式访问</p>
 <h2 id="4-负载均衡"><a href="#4-负载均衡" class="headerlink" title="4.负载均衡"></a>4.负载均衡</h2><p>（1）创建负载均衡服务  </p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image135.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image137.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image135.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image137.jpg" alt="img"></p>
 <p>创建负载均衡服务中</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image139.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image139.jpg" alt="img"></p>
 <p>创建成功</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image141.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image141.jpg" alt="img"></p>
 <p>尝试访问</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image143.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image143.jpg" alt="img"></p>
 <p>访问成功，他会通过轮询的方式访问这三台容器。</p>
 <h1 id="四、时间序列数据库influxDB"><a href="#四、时间序列数据库influxDB" class="headerlink" title="四、时间序列数据库influxDB"></a>四、时间序列数据库influxDB</h1><p>他主要是用来存储一些实时的数据，例如下面我们将会学习的cAdvisor，监控容器的内存相关的信息，就是存储在influDB中。记住他并不是用来存储大量数据的，不是mysql这样类型的数据库。</p>
 <h2 id="1-什么是influxDB"><a href="#1-什么是influxDB" class="headerlink" title="1. 什么是influxDB"></a>1. 什么是influxDB</h2><p> influxDB是一个分布式时间序列数据库。cAdvisor仅仅显示实时信息，但是不存储 监视数据。因此，我们需要提供时序数据库用于存储cAdvisor组件所提供的监控信息， 以便显示除实时信息之外的时序数据。 </p>
@@ -2080,20 +2097,20 @@
 <p>端口概述：  8083端口:web访问端口     8086:数据写入端口 （<strong>后面启动adviosr的时候会用到</strong>）</p>
 <p>docker run -di -p 8083:8083 -p 8086:8086 –expose 8090 –expose 8099 –name influxsrv tutum/influxdb</p>
 <p>打开浏览器   <a href="http://192.168.1.105:8083/" target="_blank" rel="external">http://192.168.1.105:8083/</a></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image145.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image145.jpg" alt="img"></p>
 <h2 id="3-influxDB常用操作"><a href="#3-influxDB常用操作" class="headerlink" title="3 influxDB常用操作"></a>3 influxDB常用操作</h2><p>3.1 创建数据库 </p>
 <p>CREATE DATABASE “cadvisor”</p>
 <p>回车创建数据库</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image147.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image147.jpg" alt="img"></p>
 <p>查看数据库 </p>
 <p>SHOW DATABASES</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image149.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image149.jpg" alt="img"></p>
 <p>3.2 创建用户并授权 </p>
 <p>创建用户</p>
 <p>CREATE USER “cadvisor” WITH PASSWORD ‘cadvisor’ WITH ALL PRIVILEGES</p>
 <p>查看用户</p>
 <p>SHOW USRES</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image151.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image151.jpg" alt="img"></p>
 <p>用户授权</p>
 <p>grant all privileges on cadvisor to cadvisor  （on后面跟的是数据库名，to后面跟的是 用户名）</p>
 <p>grant WRITE on cadvisor to cadvisor  </p>
@@ -2107,14 +2124,14 @@
 <h3 id="（2）创建容器"><a href="#（2）创建容器" class="headerlink" title="（2）创建容器"></a>（2）创建容器</h3><p>   docker run –volume=/:/rootfs:ro –volume=/var/run:/var/run:rw    –volume=/sys:/sys:ro –volume=/var/lib/docker/:/var/lib/docker:ro    –publish=8080:8080 –detach=true –link influxsrv:influxsrv    –name=cadvisor google/cadvisor    -storage_driver=influxdb    -storage_driver_db=cadvisor    -storage_driver_host=influxsrv:8086   </p>
 <p>我们可以看到启动cadvisor容器时，可以看到storage_driver 指定了存储的用的数据库，storage_driver_db指定了用的数据库名称，storage_driver_host指定写入数据库地址，–link 表示连接到我们在上面创建的influxsrv容器</p>
 <h3 id="（3）查看容器"><a href="#（3）查看容器" class="headerlink" title="（3）查看容器"></a>（3）查看容器</h3><p>WEB前端访问地址 <a href="http://192.168.1.105:8080/containers/" target="_blank" rel="external">http://192.168.1.105:8080/containers/</a></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image153.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image155.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image153.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image155.jpg" alt="img"></p>
 <p>性能指标含义参照如下地址</p>
 <p><a href="https://blog.csdn.net/ZHANG_H_A/article/details/53097084" target="_blank" rel="external">https://blog.csdn.net/ZHANG_H_A/article/details/53097084</a></p>
 <h3 id="（4）查看influxsrv容器"><a href="#（4）查看influxsrv容器" class="headerlink" title="（4）查看influxsrv容器"></a>（4）查看influxsrv容器</h3><p>再次查看influxDB，发现已经有很多数据被采集进去了</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image157.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image157.jpg" alt="img"></p>
 <p>可以使用select语句查询某张表的数据</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image159.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image159.jpg" alt="img"></p>
 <h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h2><p>经过上面的学习，cadvisor和influxsrv 的使用我们可以检测采集，以及采集数据保存到influxdb中，但是有个缺点，那就是采集到infludb的数据，通过select语句查询，不是那么直观，那么下面我们将使用grafana图表工具展示influx的数据。</p>
 <h1 id="六、图表工具Grafana"><a href="#六、图表工具Grafana" class="headerlink" title="六、图表工具Grafana"></a>六、图表工具Grafana</h1><h2 id="1-什么是Grafana"><a href="#1-什么是Grafana" class="headerlink" title="1 什么是Grafana"></a>1 什么是Grafana</h2><p> Grafana是一个可视化面板（Dashboard），有着非常漂亮的图表和布局展示，功能齐全的度量仪表盘和图形编辑器。支持Graphite、zabbix、InfluxDB、Prometheus和 OpenTSDB作为数据源。 Grafana主要特性：灵活丰富的图形化选项；可以混合多种风格；支持白天和夜间模式，多个数据源。 </p>
 <h2 id="2-Grafana安装"><a href="#2-Grafana安装" class="headerlink" title="2 Grafana安装"></a>2 Grafana安装</h2><h3 id="（1）下载镜像-1"><a href="#（1）下载镜像-1" class="headerlink" title="（1）下载镜像"></a>（1）下载镜像</h3><p>docker pull grafana/grafana</p>
@@ -2122,30 +2139,30 @@
 <p>   docker run -d -p 3001:3000 -e INFLUXDB_HOST=influxsrv -e   INFLUXDB_PORT=8086 -e INFLUXDB_NAME=cadvisor -e INFLUXDB_USER=root -e   INFLUXDB_PASS=itcast –link influxsrv:influxsrv –name=grafana   grafana/grafana   </p>
 <h3 id="（3）访问"><a href="#（3）访问" class="headerlink" title="（3）访问"></a>（3）访问</h3><p><a href="http://192.168.1.105:3001" target="_blank" rel="external">http://192.168.1.105:3001</a></p>
 <p>用户名密码均为admin</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image161.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image161.jpg" alt="img"></p>
 <p>登录后需要修改密码，密码修改为：123456</p>
-<h3 id="（4）之后进入主页面"><a href="#（4）之后进入主页面" class="headerlink" title="（4）之后进入主页面"></a>（4）之后进入主页面</h3><p><img src="/2019/03/08/持续集成技术个人总结/clip_image163.jpg" alt="img"></p>
+<h3 id="（4）之后进入主页面"><a href="#（4）之后进入主页面" class="headerlink" title="（4）之后进入主页面"></a>（4）之后进入主页面</h3><p><img src="/2019/03/08/持续集成技术总结/clip_image163.jpg" alt="img"></p>
 <p>（5）添加数据源</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image165.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image167.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image165.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image167.jpg" alt="img"></p>
 <p>选择InfluxDB</p>
 <p>（5）填写数据源信息</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image169.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image169.jpg" alt="img"></p>
 <p>点击save</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image171.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image171.jpg" alt="img"></p>
 <p>连接成功</p>
 <h3 id="（5）添加仪表盘"><a href="#（5）添加仪表盘" class="headerlink" title="（5）添加仪表盘"></a>（5）添加仪表盘</h3><p>选择Dashboards –Manager</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image173.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image175.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image173.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image175.jpg" alt="img"></p>
 <p>然后选择展示数据的图表样式</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image177.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image177.jpg" alt="img"></p>
 <p>这里我们选择第一个，柱状图</p>
 <p>（6）设置图表数据源</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image179.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image179.jpg" alt="img"></p>
 <p>进入下个界面</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image181.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image181.jpg" alt="img"></p>
 <p>点击edit</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image183.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image183.jpg" alt="img"></p>
 <p>然后点击右上角保存即可</p>
 <p>（6）预警通知设置</p>
 <p>（1）选择菜单  alerting–&gt; Notification channels</p>
@@ -2161,12 +2178,12 @@
 <p>（9）选择通知</p>
 <p>保存更改</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Influxdb和cadvisor、grafana，这三者一般都是一起使用，cadvisor负责往influxdb里面写入监控的数据，grafana负责从infuxdb中读取数据，并做可视化显示。</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image185.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image185.jpg" alt="img"></p>
 <h1 id="额外补充"><a href="#额外补充" class="headerlink" title="额外补充"></a>额外补充</h1><h2 id="1-使用docker安装jenkins"><a href="#1-使用docker安装jenkins" class="headerlink" title="1 使用docker安装jenkins"></a>1 使用docker安装jenkins</h2><p>在第二章节中我们是使用rpm的方式安装jenkins，其实我们也是可以使用docker镜像的方式安装jenkins。<strong>但是这种方式创建数据卷会存在权限问题，所以一般也不常用</strong></p>
 <p><a href="https://hub.docker.com/_/jenkins/" target="_blank" rel="external">https://hub.docker.com/_/jenkins/</a> 官网。注意查看jenkins容器启动后配置文件在容器中的位置，方便我们设置容器卷链接到本地虚拟机</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image187.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image187.jpg" alt="img"></p>
 <h3 id="1-1-下载jenkins镜像"><a href="#1-1-下载jenkins镜像" class="headerlink" title="1.1 下载jenkins镜像"></a>1.1 下载jenkins镜像</h3><p>docker pull jenkins</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image189.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image189.jpg" alt="img"></p>
 <h3 id="1-2-启动jenkins容器"><a href="#1-2-启动jenkins容器" class="headerlink" title="1.2 启动jenkins容器"></a>1.2 启动jenkins容器</h3><p>在镜像文档里，我们知道Jenkins访问的端口号是8080，另外还需要暴露一个tcp的端口号50000。我们使用如下命令启动Jenkins镜像</p>
 <p>1.首先创建本地挂载目录并修改权限</p>
 <p>创建目录赋权限</p>
@@ -2175,22 +2192,22 @@
 <p>chown -R 1000:1000 jenkins/ （设置权限）</p>
 <p>为什么需要修改本地数据卷文件的权限呢？</p>
 <p>我们首先查看一下jenkins容器数据卷的权限信息</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image191.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image191.jpg" alt="img"></p>
 <p>如果不把全权限修改一致，那么当本地数据卷信息同步到容器数据卷目录的时候，就会出现没有权限的问题。</p>
 <p><a href="https://www.cnblogs.com/jackluo/p/5783116.html" target="_blank" rel="external">https://www.cnblogs.com/jackluo/p/5783116.html</a> 可以查看这篇文章。</p>
 <p>\2. docker run -itd -p 6666:8080 -p 6660:50000 –name jenkins –privileged=true -v /home/jenkins:/var/jenkins_home jenkins</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image193.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image193.jpg" alt="img"></p>
 <h3 id="1-3-开始安装"><a href="#1-3-开始安装" class="headerlink" title="1.3 开始安装"></a>1.3 开始安装</h3><p>访问</p>
 <p><a href="http://192.168.1.105:6666" target="_blank" rel="external">http://192.168.1.105:6666</a></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image195.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image195.jpg" alt="img"></p>
 <p>查看初始化密码</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image197.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image197.jpg" alt="img"></p>
 <p>位置在我们关联的本地数据卷目录中</p>
 <p>如果安装过程中出现下面这个错误</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image199.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image199.jpg" alt="img"></p>
 <p>说明需要更换jenkin安装插件地址</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image201.jpg" alt="img"></p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image203.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image201.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image203.jpg" alt="img"></p>
 <h2 id="2-Docker-Volume-之权限管理"><a href="#2-Docker-Volume-之权限管理" class="headerlink" title="2. Docker Volume 之权限管理"></a>2. Docker Volume 之权限管理</h2><p><a href="https://www.cnblogs.com/jackluo/p/5783116.html" target="_blank" rel="external">https://www.cnblogs.com/jackluo/p/5783116.html</a></p>
 <p>1.启动Jenkins官方镜像，并检查日志</p>
 <p>docker run -d -p 8080:8080 -p 50000:50000 –name jenkins jenkin</p>
@@ -2264,13 +2281,13 @@
 <h2 id="3-linux安装git"><a href="#3-linux安装git" class="headerlink" title="3.linux安装git"></a>3.linux安装git</h2><h3 id="3-1-使用yum命令进行安装"><a href="#3-1-使用yum命令进行安装" class="headerlink" title="3.1 使用yum命令进行安装"></a>3.1 使用yum命令进行安装</h3><p>yum install git</p>
 <p>安装简单，但是安装的git版本太老，而且版本不好控制，推荐使用下面的方式进行安装</p>
 <h3 id="3-2-源码编译安装Git"><a href="#3-2-源码编译安装Git" class="headerlink" title="3.2 源码编译安装Git"></a>3.2 源码编译安装Git</h3><p>①、获取github最新的Git安装包下载链接，进入Linux服务器，执行下载，命令为： wget <a href="https://github.com/git/git/archive/v2.22.0.tar.gz" target="_blank" rel="external">https://github.com/git/git/archive/v2.22.0.tar.gz</a> ；</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image205.jpg" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image205.jpg" alt="img"></p>
 <p>②、压缩包解压，命令为： tar -zxvf v2.22.0.tar.gz ；</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image206.png" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image206.png" alt="img"></p>
 <p>③、安装编译源码所需依赖，命令为： yum install curl-devel expat-devel gettext-devel openssl-devel zlib-devel gcc perl-ExtUtils-MakeMaker </p>
 <p>耐心等待安装，出现提示输入y即可；</p>
 <p>④、安装依赖时，yum自动安装了Git，需要卸载旧版本Git，命令为： yum remove git 出现提示输入y即可；</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image207.png" alt="img">很明显自己安装了一个1.8.3.1版本的git，卸载。</p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image207.png" alt="img">很明显自己安装了一个1.8.3.1版本的git，卸载。</p>
 <p>⑤、进入解压后的文件夹，命令 cd git-2.22.0 ，然后执行编译，命令为 make prefix=/usr/local/git all 耐心等待编译即可；</p>
 <p>⑥、安装Git至/usr/local/git路径，命令为 make prefix=/usr/local/git install ；</p>
 <p>⑦、打开环境变量配置文件，命令 vim /etc/profile ，在底部加上Git相关配置信息：</p>
@@ -2279,7 +2296,7 @@
 <p>然后保存，退出！</p>
 <p>⑧、输入命令 git –version ，查看安装的git版本，校验通过，安装成功。</p>
 <p>source /etc/profile</p>
-<p><img src="/2019/03/08/持续集成技术个人总结/clip_image208.png" alt="img"></p>
+<p><img src="/2019/03/08/持续集成技术总结/clip_image208.png" alt="img"></p>
 ]]></content>
     
     <summary type="html">
@@ -2304,16 +2321,16 @@
     <link href="http://kingge.top/2019/02/28/docker%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93/"/>
     <id>http://kingge.top/2019/02/28/docker个人总结/</id>
     <published>2019-02-28T13:59:59.000Z</published>
-    <updated>2019-08-25T03:05:04.155Z</updated>
+    <updated>2019-08-25T04:35:01.597Z</updated>
     
     <content type="html"><![CDATA[<p>之前学习过docker，但是很浅显的使用，概念和流程各个方面总结的不够到位，下面根据旧版本的文档，重新的梳理。</p>
 <h1 id="一、docker出现的契机"><a href="#一、docker出现的契机" class="headerlink" title="一、docker出现的契机"></a>一、docker出现的契机</h1><p>作为开发人员，我们经常会遇到一个问题，那就是环境不统一的问题。什么意思呢？自己在本地测试的项目是运行正常的，但是打包给测试或者运维人员部署使用时，经常会出现，部署报错，运行不起来，等等问题。就算是再详细的部署文档也还是会出错。</p>
 <p>这个时候就产生了大量沟通的成本，通常产生这些问题的原因是部署的环境并不是开发人员的那一份环境，可能是jdk版本或者tomcat版本，数据库等等环境产生的问题。所以就需要我们开发人员打包一份连同环境和配置以及项目，交付给测试或者运维。这样就能够保证项目运行环境的一致性，也容易排查问题。<strong>这个就是docker的雏形</strong></p>
-<p>​       就好比我们在迁移一棵树的时候，尾部，总是会保留着一些原先的土，就是为了解决生长环境的不同额度适配问题。</p>
-<p><strong>Docker之所以发展如此迅速，也是因为它对此给出了一个标准化的解决方案。</strong></p>
+<pre><code>就好比我们在迁移一棵树的时候，尾部，总是会保留着一些原先的土，就是为了解决生长环境的不同额度适配问题。
+</code></pre><p><strong>Docker之所以发展如此迅速，也是因为它对此给出了一个标准化的解决方案。</strong></p>
 <p>环境配置如此麻烦，换一台机器，就要重来一次，费力费时。很多人想到，能不能从根本上解决问题，软件可以带环境安装？也就是说，安装的时候，把原始环境一模一样地复制过来。开发人员利用 Docker 可以消除协作编码时“在我的机器上可正常工作”的问题。</p>
-<p>​       <em>总的来说，以前我们是通过提交<strong>war</strong>包的方式，那么现在是连同<strong>war</strong></em>运行的环境<em>**一起打包给测试或者运维。</em></p>
-<p><img src="/2019/02/28/docker个人总结/clip_image002.jpg" alt="graphic"></p>
+<pre><code>*总的来说，以前我们是通过提交**war**包的方式，那么现在是连同**war***运行的环境***一起打包给测试或者运维。*
+</code></pre><p><img src="/2019/02/28/docker个人总结/clip_image002.jpg" alt="graphic"></p>
 <p>传统上认为，软件编码开发/测试结束后，所产出的成果即是程序或是能够编译执行的二进制字节码等(java为例)。而为了让这些程序可以顺利执行，开发团队也得准备完整的部署文件，让维运团队得以部署应用程式，开发需要清楚的告诉运维部署团队，用的全部配置文件+所有软件环境。不过，即便如此，仍然常常发生部署失败的状况。Docker镜像的设计，使得Docker得以打破过去「程序即应用」的观念。<strong>透过镜像(images)将作业系统核心除外，运作应用程式所需要的系统环境，由下而上打包，达到应用程式跨平台间（类似于jvm的理念）的无缝接轨运作</strong>。</p>
 <h2 id="1-1-理念"><a href="#1-1-理念" class="headerlink" title="1.1 理念"></a>1.1 理念</h2><p>Docker是基于Go语言实现的云开源项目。</p>
 <p>Docker的主要目标是“Build，Ship and Run Any App,Anywhere”，也就是通过对应用组件的封装、分发、部署、运行等生命周期的管理，使用户的APP（可以是一个WEB应用或数据库应用等等）及其运行环境能够做到“<strong>一次封装，到处运行</strong>”。</p>
@@ -2322,8 +2339,8 @@
 <p><strong>也就是说，我们可以把项目运行成功所需要的环境（redis，nginx，mysql）等等组件，通过编译打包的形式，打包成一个个的货仓。</strong></p>
 <p><strong>项目部署到其他环境时（windowsàlinux）只需要运行这些货仓就可以安装这些环境，做到一次封装到处运行，解决了因为环境不同导致app部署或运行失败的问题</strong></p>
 <p><img src="/2019/02/28/docker个人总结/clip_image006.jpg" alt="img">docker的logo就阐述了这一理念，部署项目的时候直接搬运已经测试成功的app运行环境。</p>
-<p>​       <strong>特别是在多集群的环境下，docker的作用更显而易见（避免多次安装环境）</strong></p>
-<p>总的来说：<strong>解决了运行环境和配置问题软件容器（每个容器对应着一个集装箱，每个集装箱对应着项目运行所需的软件或者配置），方便做持续集成并有助于整体发布的容器虚拟化技术</strong>。</p>
+<pre><code>**特别是在多集群的环境下，docker的作用更显而易见（避免多次安装环境）**
+</code></pre><p>总的来说：<strong>解决了运行环境和配置问题软件容器（每个容器对应着一个集装箱，每个集装箱对应着项目运行所需的软件或者配置），方便做持续集成并有助于整体发布的容器虚拟化技术</strong>。</p>
 <h1 id="二、docker的演化"><a href="#二、docker的演化" class="headerlink" title="二、docker的演化"></a>二、docker的演化</h1><h2 id="2-1-虚拟机技术"><a href="#2-1-虚拟机技术" class="headerlink" title="2.1 虚拟机技术"></a>2.1 虚拟机技术</h2><p><img src="/2019/02/28/docker个人总结/clip_image007.png" alt="img">一个虚拟机的结构图</p>
 <p>虚拟机（virtual machine）就是<strong>带环境安装</strong>的一种解决方案。</p>
 <p>带环境安装的意思是：它里面模拟了一个正常的操作系统所具备的各种环境和配置（内存、处理器、硬盘。。。。）</p>
@@ -2394,30 +2411,34 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ sudo yum remove docker \</div><div class="line">                  docker-client \</div><div class="line">                  docker-client-latest \</div><div class="line">                  docker-common \</div><div class="line">                  docker-latest \</div><div class="line">                  docker-latest-logrotate \</div><div class="line">                  docker-logrotate \</div><div class="line">                  docker-engine</div></pre></td></tr></table></figure>
 <p>   $ sudo yum remove docker \                     docker-client   \                       docker-client-latest \                     docker-common   \                     docker-latest   \                       docker-latest-logrotate \                       docker-logrotate \                     docker-engine   </p>
 <p>\4. 安装需要的软件包</p>
-<p>​       yum install -y yum-utils device-mapper-persistent-data lvm2</p>
-<p>\5. 设置stable镜像仓库</p>
+<pre><code>yum install -y yum-utils device-mapper-persistent-data lvm2
+</code></pre><p>\5. 设置stable镜像仓库</p>
 <p>执行命令：</p>
-<p>​         yum-config-manager –add-repo <a href="http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo" target="_blank" rel="external">http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</a></p>
-<p>​                注意这里使用的是阿里的镜像仓库，不要使用官网推荐的仓库</p>
-<p>​          </p>
+<pre><code>yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+       注意这里使用的是阿里的镜像仓库，不要使用官网推荐的仓库
+</code></pre><p>​          </p>
 <p>   yum-config-manager –add-repo   <a href="https://download.docker.com/linux/centos/docker-ce.repo" target="_blank" rel="external">https://download.docker.com/linux/centos/docker-ce.repo</a>               不能使用这条命令   </p>
 <p>\6. 更新yum软件包索引</p>
-<p>​       yum makecache fast</p>
-<p>\7. 安装DOCKER CE</p>
-<p>​       yum -y install docker-ce</p>
-<p>\8. 启动docker</p>
-<p>​       systemctl start docker</p>
-<p>\9. 测试</p>
+<pre><code>yum makecache fast
+</code></pre><p>\7. 安装DOCKER CE</p>
+<pre><code>yum -y install docker-ce
+</code></pre><p>\8. 启动docker</p>
+<pre><code>systemctl start docker
+</code></pre><p>\9. 测试</p>
 <p>docker version  :查看docker版本</p>
 <p>docker pull hello-world（从阿里云仓库中获取hello-world镜像）</p>
-<p>​       docker run hello-world （要先下载hello-world镜像后才能够运行）</p>
-<p><img src="/2019/02/28/docker个人总结/clip_image032.jpg" alt="img"></p>
+<pre><code>docker run hello-world （要先下载hello-world镜像后才能够运行）
+</code></pre><p><img src="/2019/02/28/docker个人总结/clip_image032.jpg" alt="img"></p>
 <p>10.卸载</p>
-<p>​       执行以下三条命令：</p>
-<p>​       systemctl stop docker </p>
-<p>​       yum -y remove docker-ce</p>
-<p>​       rm -rf /var/lib/docker</p>
-<h2 id="4-3阿里云镜像加速"><a href="#4-3阿里云镜像加速" class="headerlink" title="4.3阿里云镜像加速"></a>4.3阿里云镜像加速</h2><p>因为docker官网提供的获取镜像地址（hub.docker），访问速度太过缓慢，这里改换成阿里云的镜像服务。</p>
+<pre><code>执行以下三条命令：
+
+systemctl stop docker 
+
+yum -y remove docker-ce
+
+rm -rf /var/lib/docker
+</code></pre><h2 id="4-3阿里云镜像加速"><a href="#4-3阿里云镜像加速" class="headerlink" title="4.3阿里云镜像加速"></a>4.3阿里云镜像加速</h2><p>因为docker官网提供的获取镜像地址（hub.docker），访问速度太过缓慢，这里改换成阿里云的镜像服务。</p>
 <p>\1.     登录阿里云</p>
 <p><a href="https://www.aliyun.com/" target="_blank" rel="external">https://www.aliyun.com/</a> 进入管理中心</p>
 <p>\2.     搜索容器镜像服务</p>
@@ -2437,8 +2458,8 @@
 <p>Centos7以上的配置文件时：/etc/docker/daemon.json</p>
 <p>4．检查配置是否生效</p>
 <p>  Centos6.8 检查命令：</p>
-<p>​      启动docker，执行命令 ps –ef| grep docker</p>
-<p>Centos7.6检查命令：</p>
+<pre><code>启动docker，执行命令 ps –ef| grep docker
+</code></pre><p>Centos7.6检查命令：</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image041.jpg" alt="img"></p>
 <h2 id="4-4-设置docker开机启动"><a href="#4-4-设置docker开机启动" class="headerlink" title="4.4    设置docker开机启动"></a>4.4    设置docker开机启动</h2><p>systemctl enable docker</p>
 <h1 id="五、docker组成和分析"><a href="#五、docker组成和分析" class="headerlink" title="五、docker组成和分析"></a>五、docker组成和分析</h1><h2 id="5-1-Docker组成"><a href="#5-1-Docker组成" class="headerlink" title="5.1 Docker组成"></a>5.1 Docker组成</h2><h3 id="镜像（image）"><a href="#镜像（image）" class="headerlink" title="镜像（image）"></a>镜像（image）</h3><p>Docker 镜像（Image）就是一个<strong>只读</strong>的模板。镜像可以用来创建 Docker 容器，一个镜像可以创建很多容器。</p>
@@ -2526,11 +2547,14 @@
 <p>-t：为容器重新分配一个伪输入终端，通常与 -i 同时使用；</p>
 <p>-P: 随机端口映射；</p>
 <p>-p: 指定端口映射，有以下四种格式</p>
-<p>​      ip:hostPort:containerPort</p>
-<p>​      ip::containerPort</p>
-<p>​      hostPort:containerPort</p>
-<p>​      containerPort</p>
-<p>下面运行6.3.1中下载的centos</p>
+<pre><code>ip:hostPort:containerPort
+
+ip::containerPort
+
+hostPort:containerPort
+
+containerPort
+</code></pre><p>下面运行6.3.1中下载的centos</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image064.jpg" alt="img"></p>
 <p><strong>启动交互式容器（跟下面我们所说的启动守护式容器有区别）</strong></p>
 <p><img src="/2019/02/28/docker个人总结/clip_image066.jpg" alt="graphic"></p>
@@ -2598,8 +2622,8 @@
 <p><img src="/2019/02/28/docker个人总结/clip_image093.jpg" alt="img"></p>
 <p><strong>打印后台启动的centos容器的根目录的消息，我们发现，他并没有进入后台的容器，只是把容器执行的指令的结果输出到宿主。所以他的功能是比docker attach指令还要强大的</strong></p>
 <p>第二种方式：</p>
-<p>​       docker attach 容器ID</p>
-<p>两种方式的区别：</p>
+<pre><code>docker attach 容器ID
+</code></pre><p>两种方式的区别：</p>
 <p>attach 直接进入容器启动命令的终端，不会启动新的进程</p>
 <p>exec 是在容器中打开新的终端，并且可以启动新的进程</p>
 <h4 id="从容器内拷贝文件到主机上"><a href="#从容器内拷贝文件到主机上" class="headerlink" title="从容器内拷贝文件到主机上"></a>从容器内拷贝文件到主机上</h4><p><strong>宿主机上执行</strong></p>
@@ -2638,8 +2662,8 @@
 <p>\1.     <strong>数据卷（Data Volumes）</strong>：容器内数据<strong>直接映射</strong>到本地主机环境，如何在容器内创建数据卷，并且把本地的目录或文件挂载到容器内的数据卷中。</p>
 <p>\2.     <strong>数据卷容器（Data Volume Containers）</strong>：使用特定容器维护数据卷。如何使用数据卷容器在容器和主机、容器和容器之间共享数据，并实现数据的备份和恢复。</p>
 <h2 id="7-1-创建数据卷"><a href="#7-1-创建数据卷" class="headerlink" title="7.1 创建数据卷"></a>7.1 创建数据卷</h2><h3 id="7-1-1-第一种方式：使用命令直接添加"><a href="#7-1-1-第一种方式：使用命令直接添加" class="headerlink" title="7.1.1 第一种方式：使用命令直接添加"></a>7.1.1 第一种方式：使用命令直接添加</h3><p>命令： docker run -it -v /宿主机绝对路径目录:/容器内目录 镜像名</p>
-<p>​       就是把宿主机的某个目录关联到容器中，两者数据共通（文件夹不存在时，自动创建）</p>
-<p>1.使用命令创建数据卷</p>
+<pre><code>就是把宿主机的某个目录关联到容器中，两者数据共通（文件夹不存在时，自动创建）
+</code></pre><p>1.使用命令创建数据卷</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image115.png" alt="img"></p>
 <p>宿主机也创建了myHostVal目录</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image116.png" alt="img"></p>
@@ -2682,8 +2706,8 @@
 <p>\1.     宿主机创建dockerfile文件，依赖已经存在的centos镜像。</p>
 <p>也就是说我们以现有的centos为某一层创建一个新的镜像（符合UnionFS）</p>
 <p> 在宿主机创建一个文件夹，存放创建的dockerfile文件</p>
-<p>​       <img src="/2019/02/28/docker个人总结/clip_image129.png" alt="img"></p>
-<p> 新建的dockerfile文件dc。内容</p>
+<pre><code>![img](docker个人总结\clip_image129.png)
+</code></pre><p> 新建的dockerfile文件dc。内容</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image130.png" alt="img"></p>
 <p>\2.     根据dockerfile文件dc，构建新镜像</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image132.jpg" alt="img"></p>
@@ -2733,24 +2757,24 @@
 <p>2 Docker镜像，在用Dockerfile定义一个文件之后，docker build时会产生一个Docker镜像，当运行 Docker镜像时，会真正开始提供服务;</p>
 <p>3 Docker容器，容器是直接提供服务的。</p>
 <p><strong>尖叫提示</strong>：Docker Hub 中 99% 的镜像都是通过在 base 镜像中安装和配置需要的软件构建出来的<img src="/2019/02/28/docker个人总结/clip_image152.png" alt="img"></p>
-<h2 id="8-2-dockerfile指令（保留字指令）"><a href="#8-2-dockerfile指令（保留字指令）" class="headerlink" title="8.2 dockerfile指令（保留字指令）"></a>8.2 dockerfile指令（保留字指令）</h2><h3 id="FROM"><a href="#FROM" class="headerlink" title="FROM"></a>FROM</h3><p>​    基础镜像，当前新镜像是基于哪个镜像的</p>
-<h3 id="MAINTAINER"><a href="#MAINTAINER" class="headerlink" title="MAINTAINER"></a>MAINTAINER</h3><p>​    镜像维护者的姓名和邮箱地址</p>
-<h3 id="RUN"><a href="#RUN" class="headerlink" title="RUN"></a>RUN</h3><p>​    容器构建时需要运行的命令</p>
-<h3 id="EXPOSE"><a href="#EXPOSE" class="headerlink" title="EXPOSE"></a>EXPOSE</h3><p>​    当前容器对外暴露出的端口</p>
-<h3 id="WORKDIR"><a href="#WORKDIR" class="headerlink" title="WORKDIR"></a>WORKDIR</h3><p>指定在创建容器后，终端默认登陆的进来工作目录，一个落脚点</p>
+<h2 id="8-2-dockerfile指令（保留字指令）"><a href="#8-2-dockerfile指令（保留字指令）" class="headerlink" title="8.2 dockerfile指令（保留字指令）"></a>8.2 dockerfile指令（保留字指令）</h2><h3 id="FROM"><a href="#FROM" class="headerlink" title="FROM"></a>FROM</h3><pre><code>基础镜像，当前新镜像是基于哪个镜像的
+</code></pre><h3 id="MAINTAINER"><a href="#MAINTAINER" class="headerlink" title="MAINTAINER"></a>MAINTAINER</h3><pre><code>镜像维护者的姓名和邮箱地址
+</code></pre><h3 id="RUN"><a href="#RUN" class="headerlink" title="RUN"></a>RUN</h3><pre><code>容器构建时需要运行的命令
+</code></pre><h3 id="EXPOSE"><a href="#EXPOSE" class="headerlink" title="EXPOSE"></a>EXPOSE</h3><pre><code>当前容器对外暴露出的端口
+</code></pre><h3 id="WORKDIR"><a href="#WORKDIR" class="headerlink" title="WORKDIR"></a>WORKDIR</h3><p>指定在创建容器后，终端默认登陆的进来工作目录，一个落脚点</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image154.jpg" alt="img"></p>
-<h3 id="ENV"><a href="#ENV" class="headerlink" title="ENV"></a>ENV</h3><p>​    用来在构建镜像过程中设置环境变量</p>
-<h3 id="ADD"><a href="#ADD" class="headerlink" title="ADD"></a>ADD</h3><p>​    将宿主机目录下的文件拷贝进镜像且ADD命令会自动处理URL和<strong>解压tar压缩包</strong></p>
-<h3 id="COPY"><a href="#COPY" class="headerlink" title="COPY"></a>COPY</h3><p>类似ADD，拷贝文件和目录到镜像中。 将从构建上下文目录中 &lt;源路径&gt; 的文件/目录复制到新的一层的镜像内的 &lt;目标路径&gt; 位置，<strong>没有解压功能</strong></p>
+<h3 id="ENV"><a href="#ENV" class="headerlink" title="ENV"></a>ENV</h3><pre><code>用来在构建镜像过程中设置环境变量
+</code></pre><h3 id="ADD"><a href="#ADD" class="headerlink" title="ADD"></a>ADD</h3><pre><code>将宿主机目录下的文件拷贝进镜像且ADD命令会自动处理URL和**解压tar压缩包**
+</code></pre><h3 id="COPY"><a href="#COPY" class="headerlink" title="COPY"></a>COPY</h3><p>类似ADD，拷贝文件和目录到镜像中。 将从构建上下文目录中 &lt;源路径&gt; 的文件/目录复制到新的一层的镜像内的 &lt;目标路径&gt; 位置，<strong>没有解压功能</strong></p>
 <p>COPY src dest</p>
 <p>COPY [“src”, “dest”]</p>
-<h3 id="VOLUME"><a href="#VOLUME" class="headerlink" title="VOLUME"></a>VOLUME</h3><p>​    容器数据卷，用于数据保存和持久化工作</p>
-<h3 id="CMD"><a href="#CMD" class="headerlink" title="CMD"></a>CMD</h3><p>​    指定一个容器启动时要运行的命令</p>
-<p><strong>Dockerfile</strong> <strong>中可以有多个</strong> <strong>CMD</strong> <strong>指令，但只有最后一个生效，CMD</strong> <strong>会被</strong> <strong>docker run</strong> <strong>之后的参数替换（跟</strong>ENTRYPOINT指令的区别）</p>
+<h3 id="VOLUME"><a href="#VOLUME" class="headerlink" title="VOLUME"></a>VOLUME</h3><pre><code>容器数据卷，用于数据保存和持久化工作
+</code></pre><h3 id="CMD"><a href="#CMD" class="headerlink" title="CMD"></a>CMD</h3><pre><code>指定一个容器启动时要运行的命令
+</code></pre><p><strong>Dockerfile</strong> <strong>中可以有多个</strong> <strong>CMD</strong> <strong>指令，但只有最后一个生效，CMD</strong> <strong>会被</strong> <strong>docker run</strong> <strong>之后的参数替换（跟</strong>ENTRYPOINT指令的区别）</p>
 <p>举个例子，查看tomcat 的dockerfile文件，我们可以发现最后是通过cmd命令启动了tomcat<img src="/2019/02/28/docker个人总结/clip_image155.png" alt="img">。那么为了证明CMD会不会被docker run后面的参数替换，请看下面例子。</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image157.jpg" alt="img"></p>
-<h3 id="ENTRYPOINT"><a href="#ENTRYPOINT" class="headerlink" title="ENTRYPOINT"></a>ENTRYPOINT</h3><p>​    指定一个容器启动时要运行的命令</p>
-<p>ENTRYPOINT 的目的和 CMD 一样，都是在指定容器启动程序及参数，但是他是以追加的形式而不是覆盖</p>
+<h3 id="ENTRYPOINT"><a href="#ENTRYPOINT" class="headerlink" title="ENTRYPOINT"></a>ENTRYPOINT</h3><pre><code>指定一个容器启动时要运行的命令
+</code></pre><p>ENTRYPOINT 的目的和 CMD 一样，都是在指定容器启动程序及参数，但是他是以追加的形式而不是覆盖</p>
 <p>docker run 之后的参数会被当做参数传递给 ENTRYPOINT，之后形成新的命令组合</p>
 <h3 id="ONBUILD"><a href="#ONBUILD" class="headerlink" title="ONBUILD"></a>ONBUILD</h3><p>当构建一个被继承的Dockerfile时运行命令，父镜像在被子继承后父镜像的onbuild被触发</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image158.png" alt="img"></p>
@@ -2762,7 +2786,7 @@
 <p><img src="/2019/02/28/docker个人总结/clip_image163.png" alt="img"></p>
 <p>内容是</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image165.jpg" alt="img"></p>
-<p>   FROM centos   MAINTAINER kingge<a href="&#x6d;&#97;&#105;&#108;&#116;&#x6f;&#58;&#51;&#x39;&#51;&#50;&#49;&#x35;&#54;&#54;&#49;&#64;&#x71;&#113;&#x2e;&#x63;&#111;&#x6d;">&#51;&#x39;&#51;&#50;&#49;&#x35;&#54;&#54;&#49;&#64;&#x71;&#113;&#x2e;&#x63;&#111;&#x6d;</a>       ENV MYPATH /usr/local   WORKDIR $MYPATH       RUN yum -y install vim   RUN yum -y install net-tools       EXPOSE 80       CMD echo $MYPATH   CMD echo “success————–ok”   CMD /bin/bash   </p>
+<p>   FROM centos   MAINTAINER kingge<a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#111;&#x3a;&#x33;&#57;&#x33;&#x32;&#x31;&#53;&#x36;&#x36;&#x31;&#64;&#x71;&#113;&#46;&#x63;&#111;&#x6d;">&#x33;&#57;&#x33;&#x32;&#x31;&#53;&#x36;&#x36;&#x31;&#64;&#x71;&#113;&#46;&#x63;&#111;&#x6d;</a>       ENV MYPATH /usr/local   WORKDIR $MYPATH       RUN yum -y install vim   RUN yum -y install net-tools       EXPOSE 80       CMD echo $MYPATH   CMD echo “success————–ok”   CMD /bin/bash   </p>
 <p>\2. 根据创建的Dockerfile构建镜像</p>
 <p>docker build -t 新镜像名字:TAG . （注意这里还有一个点，表示当前文件夹）</p>
 <p>默认去找当前目录下名字为Dockerfile的文件构建镜像。</p>
@@ -2772,8 +2796,8 @@
 <p><img src="/2019/02/28/docker个人总结/clip_image168.jpg" alt="img"></p>
 <p>很明显跟原先从docker hub上拉取下来的centos多个两百多M，因为我们安装了vim和net-tools指令。</p>
 <p>\3. 列出镜像的变更历史</p>
-<p>​       docker history 镜像名（imagesid）</p>
-<p><img src="/2019/02/28/docker个人总结/clip_image170.jpg" alt="img"></p>
+<pre><code>docker history 镜像名（imagesid）
+</code></pre><p><img src="/2019/02/28/docker个人总结/clip_image170.jpg" alt="img"></p>
 <p>可以看到构建这个镜像的每一层相关的操作。</p>
 <p>4.运行构建的镜像</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image171.png" alt="img"></p>
@@ -2784,7 +2808,7 @@
 <p>存放待传输到容器中的压缩包（测试ADD命令专用）和一个文本文件（测试COPY指令专用）</p>
 <h4 id="2-2-根据原版centos新建Dockerfile文件"><a href="#2-2-根据原版centos新建Dockerfile文件" class="headerlink" title="2.2 根据原版centos新建Dockerfile文件"></a>2.2 根据原版centos新建Dockerfile文件</h4><p><img src="/2019/02/28/docker个人总结/clip_image175.png" alt="img"></p>
 <p>内容是：</p>
-<p>   FROM         centos   MAINTAINER      kingge<a href="&#x6d;&#97;&#105;&#108;&#x74;&#111;&#x3a;&#x33;&#x39;&#x33;&#x32;&#x31;&#x35;&#54;&#54;&#x31;&#x40;&#113;&#113;&#x2e;&#99;&#x6f;&#109;">&#x33;&#x39;&#x33;&#x32;&#x31;&#x35;&#54;&#54;&#x31;&#x40;&#113;&#113;&#x2e;&#99;&#x6f;&#109;</a>   #把宿主机当前上下文的hello.txt拷贝到容器/usr/local/路径下   #并重命名为helloNewName.txt   COPY hello.txt /usr/local/helloNewName.txt   #把java与tomcat添加到容器中   ADD jdk-8u144-linux-x64.tar.gz /usr/local/   ADD apache-tomcat-9.0.21.tar.gz /usr/local/   #安装vim编辑器   RUN yum -y install vim   #设置工作访问时候的WORKDIR路径，登录落脚点   ENV MYPATH /usr/local   WORKDIR $MYPATH   #配置java与tomcat环境变量   ENV JAVA_HOME /usr/local/jdk1.8.0_144   ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar   ENV CATALINA_HOME /usr/local/apache-tomcat-9.0.21   ENV CATALINA_BASE /usr/local/apache-tomcat-9.0.21   ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/lib:$CATALINA_HOME/bin   #容器运行时监听的端口   EXPOSE  8080   #启动时运行tomcat   # ENTRYPOINT   [“/usr/local/apache-tomcat-9.0.21/bin/startup.sh” ]   # CMD   [“/usr/local/apache-tomcat-9.0.21/bin/catalina.sh”,”run”]   CMD /usr/local/apache-tomcat-9.0.21/bin/startup.sh &amp;&amp; tail -F   /usr/local/apache-tomcat-9.0.21/bin/logs/catalina.out   </p>
+<p>   FROM         centos   MAINTAINER      kingge<a href="&#109;&#97;&#x69;&#108;&#x74;&#x6f;&#58;&#51;&#x39;&#x33;&#50;&#x31;&#x35;&#54;&#54;&#x31;&#64;&#113;&#x71;&#46;&#99;&#111;&#109;">&#51;&#x39;&#x33;&#50;&#x31;&#x35;&#54;&#54;&#x31;&#64;&#113;&#x71;&#46;&#99;&#111;&#109;</a>   #把宿主机当前上下文的hello.txt拷贝到容器/usr/local/路径下   #并重命名为helloNewName.txt   COPY hello.txt /usr/local/helloNewName.txt   #把java与tomcat添加到容器中   ADD jdk-8u144-linux-x64.tar.gz /usr/local/   ADD apache-tomcat-9.0.21.tar.gz /usr/local/   #安装vim编辑器   RUN yum -y install vim   #设置工作访问时候的WORKDIR路径，登录落脚点   ENV MYPATH /usr/local   WORKDIR $MYPATH   #配置java与tomcat环境变量   ENV JAVA_HOME /usr/local/jdk1.8.0_144   ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar   ENV CATALINA_HOME /usr/local/apache-tomcat-9.0.21   ENV CATALINA_BASE /usr/local/apache-tomcat-9.0.21   ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/lib:$CATALINA_HOME/bin   #容器运行时监听的端口   EXPOSE  8080   #启动时运行tomcat   # ENTRYPOINT   [“/usr/local/apache-tomcat-9.0.21/bin/startup.sh” ]   # CMD   [“/usr/local/apache-tomcat-9.0.21/bin/catalina.sh”,”run”]   CMD /usr/local/apache-tomcat-9.0.21/bin/startup.sh &amp;&amp; tail -F   /usr/local/apache-tomcat-9.0.21/bin/logs/catalina.out   </p>
 <h4 id="2-3-构建"><a href="#2-3-构建" class="headerlink" title="2.3 构建"></a>2.3 构建</h4><p><img src="/2019/02/28/docker个人总结/clip_image177.jpg" alt="img"></p>
 <p><img src="/2019/02/28/docker个人总结/clip_image179.jpg" alt="img"></p>
 <p>构建完成</p>
@@ -2826,11 +2850,14 @@
 <h3 id="9-2-3-docker-images查看是否有拉取到的tomcat"><a href="#9-2-3-docker-images查看是否有拉取到的tomcat" class="headerlink" title="9.2.3 docker images查看是否有拉取到的tomcat"></a>9.2.3 docker images查看是否有拉取到的tomcat</h3><p><img src="/2019/02/28/docker个人总结/clip_image200.jpg" alt="img"></p>
 <p>为什么拉取下来的tomcat有五百多M?上面文章已经做了解释（因为里面包含了jdk等等，这个也就是为什么我们可以直接运行tomcat镜像而不用配置jdk环境的原因）</p>
 <h3 id="9-2-4-使用tomcat镜像创建容器-也叫运行镜像"><a href="#9-2-4-使用tomcat镜像创建容器-也叫运行镜像" class="headerlink" title="9.2.4 使用tomcat镜像创建容器(也叫运行镜像)"></a>9.2.4 使用tomcat镜像创建容器(也叫运行镜像)</h3><p>  docker run -it -p 8080:8080 tomcat</p>
-<p>​    -p 主机端口:docker容器端口</p>
-<p>​    -P 随机分配端口</p>
-<p>​    i:交互</p>
-<p>​    t:终端</p>
-<h2 id="9-3安装mysql"><a href="#9-3安装mysql" class="headerlink" title="9.3安装mysql"></a>9.3安装mysql</h2><p><a href="https://hub.docker.com/_/mysql" target="_blank" rel="external">https://hub.docker.com/_/mysql</a>  官网文档</p>
+<pre><code>-p 主机端口:docker容器端口
+
+-P 随机分配端口
+
+i:交互
+
+t:终端
+</code></pre><h2 id="9-3安装mysql"><a href="#9-3安装mysql" class="headerlink" title="9.3安装mysql"></a>9.3安装mysql</h2><p><a href="https://hub.docker.com/_/mysql" target="_blank" rel="external">https://hub.docker.com/_/mysql</a>  官网文档</p>
 <h3 id="9-3-1-docker-hub上面查找mysql镜像"><a href="#9-3-1-docker-hub上面查找mysql镜像" class="headerlink" title="9.3.1 docker hub上面查找mysql镜像"></a>9.3.1 docker hub上面查找mysql镜像</h3><h3 id="9-3-2-从docker-hub上-阿里云加速器-拉取mysql镜像到本地标签为5-6"><a href="#9-3-2-从docker-hub上-阿里云加速器-拉取mysql镜像到本地标签为5-6" class="headerlink" title="9.3.2 从docker hub上(阿里云加速器)拉取mysql镜像到本地标签为5.6"></a>9.3.2 从docker hub上(阿里云加速器)拉取mysql镜像到本地标签为5.6</h3><p><img src="/2019/02/28/docker个人总结/clip_image202.jpg" alt="img"></p>
 <h3 id="9-3-3-使用mysql5-6镜像创建容器-也叫运行镜像"><a href="#9-3-3-使用mysql5-6镜像创建容器-也叫运行镜像" class="headerlink" title="9.3.3 使用mysql5.6镜像创建容器(也叫运行镜像)"></a>9.3.3 使用mysql5.6镜像创建容器(也叫运行镜像)</h3><p>   docker run -p 12345:3306 –name mysql    -v  /kingge/mysql/conf:/etc/mysql/conf.d      -v / kingge /mysql/logs:/logs    -v / kingge /mysql/data:/var/lib/mysql    -e MYSQL_ROOT_PASSWORD=123456   -d mysql:5.6   </p>
 <p>   命令说明：   -p 12345:3306：将主机的12345端口映射到docker容器的3306端口。   –name mysql：运行服务名字   -v / kingge /mysql/conf:/etc/mysql/conf.d ：将主机/ kingge /mysql录下的conf/my.cnf 挂载到容器的   /etc/mysql/conf.d   -v / kingge /mysql/logs:/logs：将主机/ kingge /mysql目录下的 logs 目录挂载到容器的 /logs。   -v / kingge /mysql/data:/var/lib/mysql ：将主机/ kingge /mysql目录下的data目录挂载到容器的 /var/lib/mysql      -e MYSQL_ROOT_PASSWORD=123456：初始化 root 用户的密码。   -d mysql:5.6 : 后台程序运行mysql5.6   </p>
@@ -2849,7 +2876,8 @@
 <p><img src="/2019/02/28/docker个人总结/clip_image212.png" alt="img"></p>
 <p><strong>设置redis配置文件：</strong></p>
 <p>  在主机/kingge/myredis/conf/redis.conf目录下新建redis.conf文件 vim / kingge /myredis/conf/redis.conf/redis.conf</p>
-<h1 id="Accept-connections-on-the-specified-port-default-is-6379-IANA-815344-If-port-0-is-specified-Redis-will-not-listen-on-a-TCP-socket-port-6379-。。。。省略"><a href="#Accept-connections-on-the-specified-port-default-is-6379-IANA-815344-If-port-0-is-specified-Redis-will-not-listen-on-a-TCP-socket-port-6379-。。。。省略" class="headerlink" title="Accept connections on the specified port, default is 6379 (IANA   #815344).   # If port 0 is specified Redis will not listen on a TCP socket.   port 6379   。。。。省略"></a>Accept connections on the specified port, default is 6379 (IANA   #815344).   # If port 0 is specified Redis will not listen on a TCP socket.   port 6379   。。。。省略</h1><p><strong>测试持久化文件生成</strong></p>
+<p>Accept connections on the specified port, default is 6379 (IANA   #815344).   # If port 0 is specified Redis will not listen on a TCP socket.   port 6379   。。。。省略   </p>
+<p><strong>测试持久化文件生成</strong></p>
 <p><img src="/2019/02/28/docker个人总结/clip_image214.jpg" alt="img"></p>
 <h1 id="十、本地镜像发布到阿里云"><a href="#十、本地镜像发布到阿里云" class="headerlink" title="十、本地镜像发布到阿里云"></a>十、本地镜像发布到阿里云</h1><p><img src="/2019/02/28/docker个人总结/clip_image216.jpg" alt="graphic"></p>
 <h2 id="1-镜像生成方式"><a href="#1-镜像生成方式" class="headerlink" title="1.镜像生成方式"></a>1.镜像生成方式</h2><p>（1）使用DockerFile的方式创建镜像</p>
@@ -2878,34 +2906,34 @@
 <p><img src="/2019/02/28/docker个人总结/clip_image245.jpg" alt="img"></p>
 <h1 id="十一、新建本地仓库"><a href="#十一、新建本地仓库" class="headerlink" title="十一、新建本地仓库"></a>十一、新建本地仓库</h1><p>   本质就是通过一个名字为registry的镜像，构建仓库</p>
 <p>（1）拉取私有仓库镜像 </p>
-<p>​    docker pull registry</p>
-<p>（2）启动私有仓库容器</p>
-<p>​    docker run -di –name=registry -p 5000:5000 registry</p>
-<p>（3）打开浏览器 输入地址<a href="http://49.234.188.74:5000/v2/_catalog看到{&quot;repositories&quot;:[]}" target="_blank" rel="external">http://49.234.188.74:5000/v2/_catalog看到{&quot;repositories&quot;:[]}</a> 表示私有仓库搭建成功并且内容为空</p>
+<pre><code>docker pull registry
+</code></pre><p>（2）启动私有仓库容器</p>
+<pre><code>docker run -di --name=registry -p 5000:5000 registry
+</code></pre><p>（3）打开浏览器 输入地址<a href="http://49.234.188.74:5000/v2/_catalog看到{&quot;repositories&quot;:[]}" target="_blank" rel="external">http://49.234.188.74:5000/v2/_catalog看到{&quot;repositories&quot;:[]}</a> 表示私有仓库搭建成功并且内容为空</p>
 <p>或者使用crul 命令查看也可以</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image247.jpg" alt="img"></p>
 <p>这里有个hello-world镜像，是本人之前上传的。如果没有上传过，那么这个应该返回的是{“repositories”:[]}</p>
 <p>（4）修改daemon.json</p>
-<p>​    vi /etc/docker/daemon.json</p>
-<p>添加以下内容，保存退出。</p>
+<pre><code>vi /etc/docker/daemon.json
+</code></pre><p>添加以下内容，保存退出。</p>
 <p>{“insecure-registries”:[“49.234.188.74:5000”]} </p>
 <p>例如</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image249.jpg" alt="img"></p>
 <p>此步用于让 docker信任私有仓库地址</p>
 <p>（5）重启docker 服务</p>
-<p>​    systemctl restart docker</p>
-<h2 id="上传镜像到本地仓库"><a href="#上传镜像到本地仓库" class="headerlink" title="上传镜像到本地仓库"></a>上传镜像到本地仓库</h2><p>（1）标记此镜像为私有仓库的镜像</p>
-<p>​    docker tag hello-world 49.234.188.74:5000/ hello-world （本质就是创建一个关于hello-world的引用，镜像名字更改为hello-world 49.234.188.74:5000/hello-world ）</p>
-<p>（2）再次启动私服容器</p>
-<p>​    docker start registry</p>
-<p>（3）上传标记的镜像</p>
-<p>​    docker push 49.234.188.74:5000/ hello-world</p>
-<p> (4)查看是否上传成功</p>
+<pre><code>systemctl restart docker
+</code></pre><h2 id="上传镜像到本地仓库"><a href="#上传镜像到本地仓库" class="headerlink" title="上传镜像到本地仓库"></a>上传镜像到本地仓库</h2><p>（1）标记此镜像为私有仓库的镜像</p>
+<pre><code>docker tag hello-world 49.234.188.74:5000/ hello-world （本质就是创建一个关于hello-world的引用，镜像名字更改为hello-world 49.234.188.74:5000/hello-world ）
+</code></pre><p>（2）再次启动私服容器</p>
+<pre><code>docker start registry
+</code></pre><p>（3）上传标记的镜像</p>
+<pre><code>docker push 49.234.188.74:5000/ hello-world
+</code></pre><p> (4)查看是否上传成功</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image247.jpg" alt="img"></p>
 <h2 id="其他服务器获取上传的容器"><a href="#其他服务器获取上传的容器" class="headerlink" title="其他服务器获取上传的容器"></a>其他服务器获取上传的容器</h2><p>需求：192.168.1.105 服务器需要从 49.234.188.74 服务器创建的本地仓库获取上床的hello-world镜像</p>
 <p>\1.     192.168.1.105设置可信任仓库站点</p>
-<p>​    vi /etc/docker/daemon.json</p>
-<p>添加以下内容，保存退出。</p>
+<pre><code>vi /etc/docker/daemon.json
+</code></pre><p>添加以下内容，保存退出。</p>
 <p>{“insecure-registries”:[“49.234.188.74:5000”]} </p>
 <p><img src="/2019/02/28/docker个人总结/clip_image251.jpg" alt="img"></p>
 <p><strong>如果不设置这一步，那么在从49.234.188.74服务器pull镜像的时候会报以下错误</strong></p>
@@ -6536,7 +6564,7 @@ spring.thymeleaf.cache=false
     <link href="http://kingge.top/2018/02/28/hadoop%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%9B%9B-Hadoop%E7%BC%96%E8%AF%91%E6%BA%90%E7%A0%81/"/>
     <id>http://kingge.top/2018/02/28/hadoop大数据-四-Hadoop编译源码/</id>
     <published>2018-02-28T11:31:59.000Z</published>
-    <updated>2019-06-09T02:46:53.773Z</updated>
+    <updated>2019-08-25T04:43:10.303Z</updated>
     
     <content type="html"><![CDATA[<h1 id="五-Hadoop编译源码"><a href="#五-Hadoop编译源码" class="headerlink" title="五 Hadoop编译源码"></a>五 Hadoop编译源码</h1><h2 id="5-1-前期准备工作"><a href="#5-1-前期准备工作" class="headerlink" title="5.1 前期准备工作"></a>5.1 前期准备工作</h2><p>1）CentOS联网 </p>
 <p>配置CentOS能连接外网。Linux虚拟机ping <a href="http://www.baidu.com" target="_blank" rel="external">www.baidu.com</a> 是畅通的</p>
@@ -6551,19 +6579,19 @@ spring.thymeleaf.cache=false
 <p>1）JDK解压、配置环境变量 JAVA_HOME和PATH，验证<a href="http://lib.csdn.net/base/javase" target="_blank" rel="external">java</a>-version(如下都需要验证是否配置成功)</p>
 <p>[root@hadoop101 software] # tar -zxf jdk-7u79-linux-x64.gz -C /opt/module/</p>
 <p>[root@hadoop101 software]# vi /etc/profile</p>
-<p>   #JAVA_HOME   export   JAVA_HOME=/opt/module/jdk1.8.0_144   export   PATH=$PATH:$JAVA_HOME/bin   </p>
+<p>JAVA_HOME   export   JAVA_HOME=/opt/module/jdk1.8.0_144   export   PATH=$PATH:$JAVA_HOME/bin   </p>
 <p>[root@hadoop101 software]#source /etc/profile</p>
 <p>验证命令：java -version</p>
 <p>2）Maven解压、配置  MAVEN_HOME和PATH。</p>
 <p>[root@hadoop101 software]# tar -zxvf apache-maven-3.0.5-bin.tar.gz -C /opt/module/</p>
 <p>[root@hadoop101 apache-maven-3.0.5]#  vi /etc/profile</p>
-<p>   #MAVEN_HOME   export   MAVEN_HOME=/opt/module/apache-maven-3.0.5   export   PATH=$PATH:$MAVEN_HOME/bin   </p>
+<p>MAVEN_HOME   export   MAVEN_HOME=/opt/module/apache-maven-3.0.5   export   PATH=$PATH:$MAVEN_HOME/bin   </p>
 <p>[root@hadoop101 software]#source /etc/profile</p>
 <p>验证命令：mvn -version</p>
 <p>3）ant解压、配置  ANT _HOME和PATH。</p>
 <p>[root@hadoop101 software]# tar -zxvf apache-ant-1.9.9-bin.tar.gz -C /opt/module/</p>
 <p>[root@hadoop101 apache-ant-1.9.9]# vi /etc/profile</p>
-<p>   #ANT_HOME   export   ANT_HOME=/opt/module/apache-ant-1.9.9   export   PATH=$PATH:$ANT_HOME/bin   </p>
+<p>ANT_HOME   export   ANT_HOME=/opt/module/apache-ant-1.9.9   export   PATH=$PATH:$ANT_HOME/bin   </p>
 <p>[root@hadoop101 software]#source /etc/profile</p>
 <p>验证命令：ant -version</p>
 <p>4）安装  glibc-headers 和  g++  命令如下: </p>
@@ -6582,7 +6610,7 @@ spring.thymeleaf.cache=false
 <p>[root@hadoop101 protobuf-2.5.0]# make install </p>
 <p>[root@hadoop101 protobuf-2.5.0]# ldconfig </p>
 <p>[root@hadoop101 hadoop-dist]# vi /etc/profile</p>
-<p>   #LD_LIBRARY_PATH   export   LD_LIBRARY_PATH=/opt/module/protobuf-2.5.0   export PATH=$PATH:$LD_LIBRARY_PATH   </p>
+<p>LD_LIBRARY_PATH   export   LD_LIBRARY_PATH=/opt/module/protobuf-2.5.0   export PATH=$PATH:$LD_LIBRARY_PATH   </p>
 <p>[root@hadoop101 software]#source /etc/profile</p>
 <p>验证命令：protoc –version</p>
 <p>7）安装openssl库</p>

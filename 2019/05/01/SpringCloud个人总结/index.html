@@ -156,7 +156,7 @@
 <meta name="description" content="一下内容就是个人学习sc微服务架构中的学习总结，整个架构的东西很多，大家可以在需要某个组件时再去学习。 一、为什么需要微服务 我么那首先思考下面这些问题，为什么需要微服务，微服务能够解决什么痛点，它有什么优缺点？微服务和微服务架构是什么关系？什么是分布式？什么是集群？为了解决这些问题我们得从实现一个系统的架构的到底发生了那些演变说起。 1.1分布式的演化 1.1.1单一应用架构当网站流量很小时，只">
 <meta name="keywords" content="分布式,springcloud,微服务架构">
 <meta property="og:type" content="article">
-<meta property="og:title" content="springcloud个人总结">
+<meta property="og:title" content="SpringCloud个人总结">
 <meta property="og:url" content="http://kingge.top/2019/05/01/SpringCloud个人总结/index.html">
 <meta property="og:site_name" content="King哥">
 <meta property="og:description" content="一下内容就是个人学习sc微服务架构中的学习总结，整个架构的东西很多，大家可以在需要某个组件时再去学习。 一、为什么需要微服务 我么那首先思考下面这些问题，为什么需要微服务，微服务能够解决什么痛点，它有什么优缺点？微服务和微服务架构是什么关系？什么是分布式？什么是集群？为了解决这些问题我们得从实现一个系统的架构的到底发生了那些演变说起。 1.1分布式的演化 1.1.1单一应用架构当网站流量很小时，只">
@@ -173,7 +173,7 @@
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/1525573702492.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-16_16-08-43.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-16_16-09-14.png">
-<meta property="og:image" content="http://kingge.top/springcloud总结文档图片/1525575656796.png">
+<meta property="og:image" content="http://kingge.top/SpringCloud个人总结/1525575656796.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/1528263985902.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/1528263942152.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-16_16-24-07.png">
@@ -202,7 +202,7 @@
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/clip_image036.jpg">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/clip_image038.jpg">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-17_11-15-12.png">
-<meta property="og:image" content="http://kingge.top/springcloud总结文档图片/1525597885059.png">
+<meta property="og:image" content="http://kingge.top/SpringCloud个人总结/1525597885059.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/5C1565961802586.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-17_11-16-35.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/65963220408.png">
@@ -247,14 +247,14 @@
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/66013476262.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/566013958604.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/1566014122746.png">
-<meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622320277.png">
+<meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622320277.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/C1566014544201.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/C1566015460435.png">
-<meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622652849.png">
-<meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622699666.png">
-<meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622754316.png">
-<meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622817451.png">
-<meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1528782624098.png">
+<meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622652849.png">
+<meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622699666.png">
+<meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622754316.png">
+<meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622817451.png">
+<meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1528782624098.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/5C1566022083352.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/19186732.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/5C1566019594262.png">
@@ -277,7 +277,6 @@
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/6009599rrr956.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/5C1566145616539.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/5C1566146282120.png">
-<meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-34-32.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-36-15.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-46-55.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-49-56.png">
@@ -314,9 +313,9 @@
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/1566379561052.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/1566379675277.png">
 <meta property="og:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/asdfafd.png">
-<meta property="og:updated_time" content="2019-08-25T03:18:32.975Z">
+<meta property="og:updated_time" content="2019-08-25T04:44:06.310Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="springcloud个人总结">
+<meta name="twitter:title" content="SpringCloud个人总结">
 <meta name="twitter:description" content="一下内容就是个人学习sc微服务架构中的学习总结，整个架构的东西很多，大家可以在需要某个组件时再去学习。 一、为什么需要微服务 我么那首先思考下面这些问题，为什么需要微服务，微服务能够解决什么痛点，它有什么优缺点？微服务和微服务架构是什么关系？什么是分布式？什么是集群？为了解决这些问题我们得从实现一个系统的架构的到底发生了那些演变说起。 1.1分布式的演化 1.1.1单一应用架构当网站流量很小时，只">
 <meta name="twitter:image" content="http://kingge.top/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-16_15-07-20.png">
 
@@ -353,7 +352,7 @@
 
 
 
-  <title>springcloud个人总结 | King哥</title>
+  <title>SpringCloud个人总结 | King哥</title>
   
 
 
@@ -551,7 +550,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">springcloud个人总结</h1>
+          <h1 class="post-title" itemprop="name headline">SpringCloud个人总结</h1>
         
 
         <div class="post-meta">
@@ -617,7 +616,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  31,193
+                  31,204
                 </span>
               
 
@@ -676,10 +675,10 @@
 <p>  6、  <strong>集群只能是复制整个系统，即使只是其中一个模块压力大</strong>。（可能整个订单处理，仅仅是支付模块压力过大，按道理只需要升级支付模块，但是在单一场景里面是不能的）</p>
 </blockquote>
 <p>那么这个时候我么那肯定产生了想法，就是把所有功能模块切开，分而治之，那么就演变成了下面的架构。</p>
-<h3 id="1-1-2-垂直应用架构"><a href="#1-1-2-垂直应用架构" class="headerlink" title="1.1.2 垂直应用架构"></a>1.1.2 垂直应用架构</h3><p>​    当访问量逐渐增大，单一应用增加机器带来的加速度越来越小，将应用<strong>拆成互不相干</strong>的几个应用，以提升效率，<strong>这样就可以单独修改某个模块而不用重启或者影响其他模块，同时也可以给某个访问量剧增的模块，单独添加服务器部署集群</strong>。此时，用于加速前端页面开发的Web框架(MVC)是关键。</p>
-<p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-16_15-15-13.png" alt=""></p>
-<p>​    通过切分业务来实现各个模块独立部署，降低了维护和部署的难度，团队各司其职更易管理，性能扩展也更方便，更有针对性。</p>
-<p>缺点： </p>
+<h3 id="1-1-2-垂直应用架构"><a href="#1-1-2-垂直应用架构" class="headerlink" title="1.1.2 垂直应用架构"></a>1.1.2 垂直应用架构</h3><pre><code>当访问量逐渐增大，单一应用增加机器带来的加速度越来越小，将应用**拆成互不相干**的几个应用，以提升效率，**这样就可以单独修改某个模块而不用重启或者影响其他模块，同时也可以给某个访问量剧增的模块，单独添加服务器部署集群**。此时，用于加速前端页面开发的Web框架(MVC)是关键。
+</code></pre><p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-16_15-15-13.png" alt=""></p>
+<pre><code>通过切分业务来实现各个模块独立部署，降低了维护和部署的难度，团队各司其职更易管理，性能扩展也更方便，更有针对性。
+</code></pre><p>缺点： </p>
 <blockquote>
 <p>公用模块无法重复利用，开发性的浪费（存在重复开发的问题）</p>
 <p>面对突变的应用场景，可能某个模块对于web界面会频繁修改，但是模块业务功能没有变化，这样会造成单个应用频繁修改。所以需要<strong>界面+业务逻辑的实现分离。</strong></p>
@@ -690,8 +689,8 @@
 <p>例如我们常见的springcloud和dubbo就是属于分布式服务架构，但是严格上来讲dubbo并不是属于分布式架构，因为他并不具备分布式架构的某些特性，例如服务的分布式配置，服务网关，数据流，批量任务等等。一般认为Dubbo只是相当于SpringCloud中的Eureka模块（服务注册中心）</p>
 <p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-16_15-28-15.png" alt=""></p>
 <p><a href=""><strong>分布式服务框架很好的解决了垂直应用架构的缺点，实现界面和服务的分离，实现界面和服务，以及服务与服务之间的调度。</strong></a></p>
-<p>​    但是存在问题，那就是没有一个<strong>统一管理服务的机制和基于访问压力的调度中心(服务注册中心，负载均衡)</strong>，容易造成资源浪费，什么意思呢？假设用户服务部署了200台服务器，但是在某个时间段，他的访问压力很小，订单服务的访问压力剧增，服务器不够用。那么就会造成资源浪费和倾斜，存在服务器闲置或者请求量少的情况。</p>
-<h3 id="1-1-4-流动计算架构"><a href="#1-1-4-流动计算架构" class="headerlink" title="1.1.4 流动计算架构"></a>1.1.4 流动计算架构</h3><p>当服务越来越多，容量的评估，小服务资源的浪费等问题逐渐显现，此时需增加一个<strong>调度中心</strong>基于访问压力实时管理集群容量，提高集群利用率。此时，用于<strong>提高机器利用率的资源调度和治理中心</strong>(SOA)<a href="">Service Oriented Architecture]</a><strong>是关键</strong>。</p>
+<pre><code>但是存在问题，那就是没有一个**统一管理服务的机制和基于访问压力的调度中心(服务注册中心，负载均衡)**，容易造成资源浪费，什么意思呢？假设用户服务部署了200台服务器，但是在某个时间段，他的访问压力很小，订单服务的访问压力剧增，服务器不够用。那么就会造成资源浪费和倾斜，存在服务器闲置或者请求量少的情况。
+</code></pre><h3 id="1-1-4-流动计算架构"><a href="#1-1-4-流动计算架构" class="headerlink" title="1.1.4 流动计算架构"></a>1.1.4 流动计算架构</h3><p>当服务越来越多，容量的评估，小服务资源的浪费等问题逐渐显现，此时需增加一个<strong>调度中心</strong>基于访问压力实时管理集群容量，提高集群利用率。此时，用于<strong>提高机器利用率的资源调度和治理中心</strong>(SOA)<a href="">Service Oriented Architecture]</a><strong>是关键</strong>。</p>
 <p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-16_15-32-41.png" alt=""></p>
 <p><img src="/2019/05/01/SpringCloud个人总结/1525530804753.png" alt="1525530804753"></p>
 <p>以前出现了什么问题？</p>
@@ -1098,7 +1097,7 @@
 <li>Hystrix：容错管理组件，实现断路器模式，帮助服务依赖中出现的延迟和为故障提供强大的容错能力。(熔断、断路器，容错) </li>
 </ul>
 <p>架构图：</p>
-<p> <img src="/springcloud总结文档图片/1525575656796.png" alt="1525575656796"></p>
+<p> <img src="/SpringCloud个人总结/1525575656796.png" alt="1525575656796"></p>
 <p>以上只是其中一部分。</p>
 <blockquote>
 <p>SpringCloud,基于springboot提供了一套为服务解决方案,包括服务注册与发现,配置中心,全链路监控,服务网关,负载均衡,熔断器等组件,除了基于NetFlix的开源组件做高度抽象封装之外,还有一些选型中立的开源组件.</p>
@@ -1332,11 +1331,14 @@
 <li>服务如何实现统一配置</li>
 </ul>
 <p>以上的问题，我们都将在SpringCloud中得到答案。</p>
-<h1 id="六、Eureka注册中心"><a href="#六、Eureka注册中心" class="headerlink" title="六、Eureka注册中心"></a>六、Eureka注册中心</h1><p>​                  <strong>首先我们来解决第一问题，服务的管理 - 利用Eureka解决服务治理问题</strong></p>
-<h2 id="1-Eureka概念"><a href="#1-Eureka概念" class="headerlink" title="1.Eureka概念"></a>1.Eureka概念</h2><p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-17_11-15-12.png" alt=""></p>
-<p>​    Eureka是Netflix的一个子模块，也是核心模块之一。Eureka是一个基于REST的服务，用于定位服务，以实现云端中间层服务发现和故障转移。<strong>服务注册与发现对于微服务架构来说是非常重要的，有了服务发现与注册，只需要使用服务的标识符，就可以访问到服务(解决上诉案例在consumer中，我们把服务提供者的url地址硬编码到了代码中)</strong>，而不需要修改服务调用的配置文件了。功能类似于dubbo的注册中心，比如Zookeeper。</p>
-<p>​    Netflix在设计Eureka时遵守的就是CAP规则中的AP原则。</p>
-<blockquote>
+<h1 id="六、Eureka注册中心"><a href="#六、Eureka注册中心" class="headerlink" title="六、Eureka注册中心"></a>六、Eureka注册中心</h1><pre><code>**首先我们来解决第一问题，服务的管理 - 利用Eureka解决服务治理问题**
+</code></pre><h2 id="1-Eureka概念"><a href="#1-Eureka概念" class="headerlink" title="1.Eureka概念"></a>1.Eureka概念</h2><p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-17_11-15-12.png" alt=""></p>
+<pre><code>Eureka是Netflix的一个子模块，也是核心模块之一。Eureka是一个基于REST的服务，用于定位服务，以实现云端中间层服务发现和故障转移。**服务注册与发现对于微服务架构来说是非常重要的，有了服务发现与注册，只需要使用服务的标识符，就可以访问到服务(解决上诉案例在consumer中，我们把服务提供者的url地址硬编码到了代码中)**，而不需要修改服务调用的配置文件了。功能类似于dubbo的注册中心，比如Zookeeper。
+
+
+
+Netflix在设计Eureka时遵守的就是CAP规则中的AP原则。
+</code></pre><blockquote>
 <p>CAP原则又称CAP定理，指的是在一个分布式系统中，Consistency（一致性）、 Availability（可用性）、Partition tolerance（分区容错性），三者不可兼得</p>
 </blockquote>
 <p>特别提示：同样作为dubbo服务注册中心的zookeeper遵守的是CP原则。</p>
@@ -1346,7 +1348,7 @@
 <blockquote>
 <p>基本架构：</p>
 </blockquote>
-<p><img src="/springcloud总结文档图片/1525597885059.png" alt="1525597885059"></p>
+<p><img src="/SpringCloud个人总结/1525597885059.png" alt="1525597885059"></p>
 <p>Eureka包含两个组件：Eureka Server和Eureka Client</p>
 <blockquote>
 <p>Eureka Server提供服务注册服务<br>各个节点启动后，会在EurekaServer中进行注册，这样EurekaServer中的服务注册表中将会存储所有可用服务节点的信息，服务节点的信息可以在界面中直观的看到</p>
@@ -1553,19 +1555,21 @@
 <h2 id="8-Eureka和Zookeeper-服务注册中心比较"><a href="#8-Eureka和Zookeeper-服务注册中心比较" class="headerlink" title="8.Eureka和Zookeeper-服务注册中心比较"></a>8.<strong>Eureka和Zookeeper-服务注册中心比较</strong></h2><p>著名的CAP理论指出，一个分布式系统不可能同时满足C(一致性)、A(可用性)和P(分区容错性)。由于分区容错性P在是分布式系统中必须要保证的，因此我们只能在A和C之间进行权衡。</p>
 <p>那么分布式系统，必然要求分区容错性，也就是P原则，那么Zookeeper选择了C，Eureka选择了A</p>
 <p> 因此Zookeeper保证的是CP,Eureka则是AP。</p>
-<h3 id="8-1-Zookeeper保证CP"><a href="#8-1-Zookeeper保证CP" class="headerlink" title="8.1 Zookeeper保证CP"></a>8.1 Zookeeper保证CP</h3><p>​    当向注册中心查询服务列表时，我们可以容忍注册中心返回的是几分钟以前的注册信息，但不能接受服务直接down掉不可用。也就是说，服务注册功能对可用性的要求要高于一致性。但是zk会出现这样一种情况，当master节点因为网络故障与其他节点失去联系时，剩余节点会重新进行leader选举。问题在于，选举leader的时间太长，30 ~ 120s, 且选举期间整个zk集群都是不可用的，这就导致在选举期间注册服务瘫痪。在云部署的环境下，因网络问题使得zk集群失去master节点是较大概率会发生的事，虽然服务能够最终恢复，但是漫长的选举时间导致的注册长期不可用是不能容忍的。</p>
-<h3 id="8-2-Eureka保证AP"><a href="#8-2-Eureka保证AP" class="headerlink" title="8.2 Eureka保证AP"></a>8.2 Eureka保证AP</h3><p>​    Eureka看明白了这一点，因此在设计时就优先保证可用性。Eureka各个节点都是平等的 ，几个节点挂掉不会影响正常节点的工作，剩余的节点依然可以提供注册和查询服务。而Eureka的客户端在向某个Eureka注册或时如果发现连接失败，则会自动切换至其它节点，只要有一台Eureka还在，就能保证注册服务可用(保证可用性)，只不过查到的信息可能不是最新的(不保证强一致性)。除此之外，Eureka还有一种自我保护机制，如果在15分钟内超过85%的节点都没有正常的心跳，那么Eureka就认为客户端与注册中心出现了网络故障，此时会出现以下几种情况： </p>
-<blockquote>
-<p>​    Eureka不再从注册列表中移除因为长时间没收到心跳而应该过期的服务 </p>
-<p>​    Eureka仍然能够接受新服务的注册和查询请求，但是不会被同步到其它节点上(即保证当前节点依然可用)</p>
-<p>​    当网络稳定时，当前实例新的注册信息会被同步到其它节点中</p>
-<p>因此， Eureka可以很好的应对因网络故障导致部分节点失去联系的情况，而不会像zookeeper那样使整个注册服务瘫痪。</p>
+<h3 id="8-1-Zookeeper保证CP"><a href="#8-1-Zookeeper保证CP" class="headerlink" title="8.1 Zookeeper保证CP"></a>8.1 Zookeeper保证CP</h3><pre><code>当向注册中心查询服务列表时，我们可以容忍注册中心返回的是几分钟以前的注册信息，但不能接受服务直接down掉不可用。也就是说，服务注册功能对可用性的要求要高于一致性。但是zk会出现这样一种情况，当master节点因为网络故障与其他节点失去联系时，剩余节点会重新进行leader选举。问题在于，选举leader的时间太长，30 ~ 120s, 且选举期间整个zk集群都是不可用的，这就导致在选举期间注册服务瘫痪。在云部署的环境下，因网络问题使得zk集群失去master节点是较大概率会发生的事，虽然服务能够最终恢复，但是漫长的选举时间导致的注册长期不可用是不能容忍的。
+</code></pre><h3 id="8-2-Eureka保证AP"><a href="#8-2-Eureka保证AP" class="headerlink" title="8.2 Eureka保证AP"></a>8.2 Eureka保证AP</h3><pre><code>Eureka看明白了这一点，因此在设计时就优先保证可用性。Eureka各个节点都是平等的 ，几个节点挂掉不会影响正常节点的工作，剩余的节点依然可以提供注册和查询服务。而Eureka的客户端在向某个Eureka注册或时如果发现连接失败，则会自动切换至其它节点，只要有一台Eureka还在，就能保证注册服务可用(保证可用性)，只不过查到的信息可能不是最新的(不保证强一致性)。除此之外，Eureka还有一种自我保护机制，如果在15分钟内超过85%的节点都没有正常的心跳，那么Eureka就认为客户端与注册中心出现了网络故障，此时会出现以下几种情况： 
+</code></pre><blockquote>
+<pre><code>Eureka不再从注册列表中移除因为长时间没收到心跳而应该过期的服务 
+
+Eureka仍然能够接受新服务的注册和查询请求，但是不会被同步到其它节点上(即保证当前节点依然可用)
+
+当网络稳定时，当前实例新的注册信息会被同步到其它节点中
+</code></pre><p>因此， Eureka可以很好的应对因网络故障导致部分节点失去联系的情况，而不会像zookeeper那样使整个注册服务瘫痪。</p>
 </blockquote>
 <p> 那么既然保证了保证了可用性，那么数据的一致性肯定是不能够保证了，所以这个就是自我保护的机制。所以到底是AP还是CP，又或者是AC（数据库），要看业务场景来定。</p>
 <h1 id="七、Ribbon负载均衡"><a href="#七、Ribbon负载均衡" class="headerlink" title="七、Ribbon负载均衡"></a>七、<strong>Ribbon负载均衡</strong></h1><p><strong>接下来解决第二个问题，那就是假设在多个服务提供者提供服务的情况下，怎么做到负载均衡，解决需要把服务提供者url硬编码到消费者端的问题。</strong></p>
 <h2 id="7-1-Ribbon概念"><a href="#7-1-Ribbon概念" class="headerlink" title="7.1 Ribbon概念"></a>7.1 Ribbon概念</h2><p>Spring Cloud Ribbon是基于Netflix Ribbon实现的一套<strong>客户端 负载均衡的工具</strong> 。</p>
-<p>​    简单的说，Ribbon是Netflix发布的开源项目，主要功能是提供<strong>客户端</strong>的<strong>软件负载</strong>均衡算法，将Netflix的中间层服务连接在一起。Ribbon客户端组件提供一系列完善的配置项如连接超时，重试等。简单的说，就是在配置文件中列出Load Balancer（简称LB）后面所有的机器，Ribbon会自动的帮助你基于某种规则（如简单轮询，随机连接等）去连接这些机器。我们也很容易使用Ribbon<strong>实现自定义的负载均衡算法</strong>。</p>
-<h2 id="7-2-什么叫LB（负载均衡）"><a href="#7-2-什么叫LB（负载均衡）" class="headerlink" title="7.2 什么叫LB（负载均衡）"></a>7.2 什么叫<strong>LB（负载均衡）</strong></h2><p> LB，即负载均衡(Load Balance)，在微服务或分布式集群中经常用的一种应用。</p>
+<pre><code>简单的说，Ribbon是Netflix发布的开源项目，主要功能是提供**客户端**的**软件负载**均衡算法，将Netflix的中间层服务连接在一起。Ribbon客户端组件提供一系列完善的配置项如连接超时，重试等。简单的说，就是在配置文件中列出Load Balancer（简称LB）后面所有的机器，Ribbon会自动的帮助你基于某种规则（如简单轮询，随机连接等）去连接这些机器。我们也很容易使用Ribbon**实现自定义的负载均衡算法**。
+</code></pre><h2 id="7-2-什么叫LB（负载均衡）"><a href="#7-2-什么叫LB（负载均衡）" class="headerlink" title="7.2 什么叫LB（负载均衡）"></a>7.2 什么叫<strong>LB（负载均衡）</strong></h2><p> LB，即负载均衡(Load Balance)，在微服务或分布式集群中经常用的一种应用。</p>
 <p>负载均衡简单的说就是将用户的请求平摊的分配到多个服务上，从而达到系统的HA。</p>
 <p>常见的负载均衡有软件Nginx，LVS，硬件 F5等。</p>
 <p>相应的在中间件，例如：dubbo和SpringCloud中均给我们提供了负载均衡，SpringCloud的负载均衡算法可以自定义。 </p>
@@ -1666,7 +1670,7 @@
 <p><img src="/2019/05/01/SpringCloud个人总结/1566014122746.png" alt="1566014122746"></p>
 <h3 id="7-4-2-负载均衡策略"><a href="#7-4-2-负载均衡策略" class="headerlink" title="7.4.2.负载均衡策略"></a>7.4.2.负载均衡策略</h3><p>Ribbon默认的负载均衡策略是简单的轮询，我们可以测试一下：</p>
 <p>编写测试类，在刚才的源码中我们看到拦截中是使用RibbonLoadBalanceClient来进行负载均衡的，其中有一个choose方法，找到choose方法的接口方法，是这样介绍的：</p>
-<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622320277.png" alt="1525622320277"></p>
+<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622320277.png" alt="1525622320277"></p>
 <p>现在这个就是负载均衡获取实例的方法。</p>
 <p>我们注入这个类的对象，然后对其测试：</p>
 <p> <img src="/2019/05/01/SpringCloud个人总结/C1566014544201.png" alt="1566014544201"></p>
@@ -1677,17 +1681,17 @@
 <p>符合了我们的预期推测，确实是轮询方式。</p>
 <p>我们是否可以修改负载均衡的策略呢？</p>
 <p>继续跟踪源码，发现这么一段代码：</p>
-<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622652849.png" alt="1525622652849"></p>
+<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622652849.png" alt="1525622652849"></p>
 <p>我们看看这个rule是谁：</p>
-<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622699666.png" alt="1525622699666"></p>
+<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622699666.png" alt="1525622699666"></p>
 <p>这里的rule默认值是一个<code>RoundRobinRule</code>，看类的介绍：</p>
-<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622754316.png" alt="1525622754316"></p>
+<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622754316.png" alt="1525622754316"></p>
 <p>这不就是轮询的意思嘛。</p>
 <p>我们注意到，这个类其实是实现了接口IRule的，查看一下：</p>
-<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1525622817451.png" alt="1525622817451"></p>
+<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1525622817451.png" alt="1525622817451"></p>
 <p>定义负载均衡的规则接口。</p>
 <p>它有以下实现：</p>
-<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/springcloud总结文档图片/1528782624098.png" alt="1528782624098"></p>
+<p> <img src="/2019/05/01/SpringCloud个人总结/%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91/Spring%E5%AE%B6%E6%97%8F%E8%A7%86%E9%A2%91/%E5%B0%9A%E7%A1%85%E8%B0%B7SpringCloud%E8%A7%86%E9%A2%91/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/SpringCloud个人总结/1528782624098.png" alt="1528782624098"></p>
 <h4 id="七大方法"><a href="#七大方法" class="headerlink" title="七大方法"></a>七大方法</h4><p>IRule是一个接口，七大方法是其实现类</p>
 <ul>
 <li>RoundRobinRule：轮询（默认方法）</li>
@@ -1823,8 +1827,8 @@
 <p>@FeignClient(value = “MICROSERVICECLOUD-PERSON” configuration = FeignLogConfiguration.class)<br> public interface UserFeignClient {<br>     @GetMapping(“/user/{id}”)<br>     User queryUserById(@PathVariable(“id”) Long id);<br> }</p>
 <p>4）重启项目，即可看到每次访问的日志：</p>
 <h2 id="8-6-Hystrix支持"><a href="#8-6-Hystrix支持" class="headerlink" title="8.6.Hystrix支持"></a>8.6.Hystrix支持</h2><p>参加下面服务降级的案例</p>
-<h1 id="九、Hystrix断路器"><a href="#九、Hystrix断路器" class="headerlink" title="九、Hystrix断路器"></a>九、Hystrix断路器</h1><p>​           <strong>首先我们来解决第三问题，服务的容灾处理</strong></p>
-<p><strong>跟Ribbon和Feign是客户端技术不同的是Hystrix是服务端的技术，也就是他是作用在服务提供端</strong></p>
+<h1 id="九、Hystrix断路器"><a href="#九、Hystrix断路器" class="headerlink" title="九、Hystrix断路器"></a>九、Hystrix断路器</h1><pre><code>**首先我们来解决第三问题，服务的容灾处理**
+</code></pre><p><strong>跟Ribbon和Feign是客户端技术不同的是Hystrix是服务端的技术，也就是他是作用在服务提供端</strong></p>
 <h2 id="1-分布式系统面临的问题"><a href="#1-分布式系统面临的问题" class="headerlink" title="1.分布式系统面临的问题"></a>1.<strong>分布式系统面临的问题</strong></h2><p><strong>复杂分布式体系结构中的应用程序有数十个依赖关系，每个依赖关系在某些时候将不可避免地失败</strong></p>
 <p><strong>1.雪崩问题</strong></p>
 <p>微服务中，服务间调用关系错综复杂，一个请求，可能需要调用多个微服务接口才能实现，会形成非常复杂的调用链路：</p>
@@ -1846,23 +1850,25 @@
 <p><strong>Hystix解决雪崩问题的手段有两个：</strong></p>
 <p><strong>•               线程隔离（降级）</strong></p>
 <p><strong>•               服务熔断</strong></p>
-<h2 id="2-Hystrix简介"><a href="#2-Hystrix简介" class="headerlink" title="2.Hystrix简介"></a>2.Hystrix简介</h2><p>​    Hystrix是一个用于处理分布式系统的延迟和容错的开源库，在分布式系统里，许多依赖不可避免的会调用失败，比如超时、异常等，Hystrix能够保证在一个依赖出问题的情况下，不会导致整体服务失败，避免级联故障，以提高分布式系统的弹性。</p>
-<pre><code>Hystix是Netflix开源的一个延迟和容错库，用于隔离访问远程服务、第三方库，防止出现级联失败。
-</code></pre><p>​    “断路器”本身是一种开关装置，当某个服务单元发生故障之后，<strong>通过断路器的故障监控（类似熔断保险丝），向调用方返回一个符合预期的、可处理的备选响应（FallBack）（解决思路）</strong> ，<strong>而不是长时间的等待或者抛出调用方无法处理的异常</strong> ，这样就保证了服务调用方的线程不会被长时间、不必要地占用，从而避免了故障在分布式系统中的蔓延，乃至雪崩。</p>
-<blockquote>
+<h2 id="2-Hystrix简介"><a href="#2-Hystrix简介" class="headerlink" title="2.Hystrix简介"></a>2.Hystrix简介</h2><pre><code>Hystrix是一个用于处理分布式系统的延迟和容错的开源库，在分布式系统里，许多依赖不可避免的会调用失败，比如超时、异常等，Hystrix能够保证在一个依赖出问题的情况下，不会导致整体服务失败，避免级联故障，以提高分布式系统的弹性。
+
+ Hystix是Netflix开源的一个延迟和容错库，用于隔离访问远程服务、第三方库，防止出现级联失败。
+
+“断路器”本身是一种开关装置，当某个服务单元发生故障之后，**通过断路器的故障监控（类似熔断保险丝），向调用方返回一个符合预期的、可处理的备选响应（FallBack）（解决思路）** ，**而不是长时间的等待或者抛出调用方无法处理的异常** ，这样就保证了服务调用方的线程不会被长时间、不必要地占用，从而避免了故障在分布式系统中的蔓延，乃至雪崩。
+</code></pre><blockquote>
 <p> 官网资料 </p>
 </blockquote>
 <p><a href="https://github.com/Netflix/Hystrix/wiki/How-To-Use" target="_blank" rel="external">https://github.com/Netflix/Hystrix/wiki/How-To-Use</a></p>
 <h2 id="3-服务端的服务熔断"><a href="#3-服务端的服务熔断" class="headerlink" title="3.服务端的服务熔断"></a>3.服务端的服务熔断</h2><p><strong>熔断机制是应对雪崩效应的一种微服务链路保护机制。他是在服务端实现。</strong></p>
-<p>​    <strong>当扇出链路的某个微服务不可用或者响应时间太长时，会进行服务的降级，进而熔断该节点微服务的调用，快速返回”错误”的响应信息</strong>。 当检测到该节点微服务调用响应正常后恢复调用链路。在SpringCloud框架里熔断机制通过Hystrix实现。Hystrix会监控微服务间调用的状况，当失败的调用到一定阈值，缺省是5秒内20次调用失败就会启动熔断机制。<strong>熔断机制的注解是@HystrixCommand。</strong></p>
-<h3 id="3-1-熔断原理"><a href="#3-1-熔断原理" class="headerlink" title="3.1 熔断原理"></a>3.1 熔断原理</h3><p>熔断器，也叫断路器，其英文单词为：Circuit Breaker </p>
+<pre><code>**当扇出链路的某个微服务不可用或者响应时间太长时，会进行服务的降级，进而熔断该节点微服务的调用，快速返回&quot;错误&quot;的响应信息**。 当检测到该节点微服务调用响应正常后恢复调用链路。在SpringCloud框架里熔断机制通过Hystrix实现。Hystrix会监控微服务间调用的状况，当失败的调用到一定阈值，缺省是5秒内20次调用失败就会启动熔断机制。**熔断机制的注解是@HystrixCommand。**
+</code></pre><h3 id="3-1-熔断原理"><a href="#3-1-熔断原理" class="headerlink" title="3.1 熔断原理"></a>3.1 熔断原理</h3><p>熔断器，也叫断路器，其英文单词为：Circuit Breaker </p>
 <p><img src="/2019/05/01/SpringCloud个人总结/6009599rrr956.png" alt="img"></p>
 <p>熔断状态机3个状态：</p>
 <p>•               Closed：关闭状态，所有请求都正常访问。</p>
 <p>•               Open：打开状态，所有请求都会被降级。Hystix会对请求情况计数，当一定时间内失败请求百分比达到阈值，则触发熔断，断路器会完全打开。默认失败比例的阈值是50%，请求次数最少不低于20次。</p>
 <p>•               Half Open：半开状态，open状态不是永久的，打开后会进入休眠时间（默认是5S）。随后断路器会自动进入半开状态。此时会释放部分请求通过，若这些请求都是健康的，则会完全关闭断路器，否则继续保持打开，再次进行休眠计时</p>
-<p>​    当扇出链路的某个微服务不可用或者响应时间太长时，会进行服务的降级，进而熔断该节点微服务的调用，快速返回”错误”的响应信息。 当检测到该节点微服务调用响应正常后恢复调用链路。在SpringCloud框架里熔断机制通过Hystrix实现。Hystrix会监控微服务间调用的状况，当失败的调用到一定阈值，缺省是5秒内20次调用失败就会启动熔断机制。熔断机制的注解是@HystrixCommand。</p>
-<h3 id="3-2-案例演示"><a href="#3-2-案例演示" class="headerlink" title="3.2 案例演示"></a>3.2 案例演示</h3><h4 id="3-2-1-参考microservicecloud-provider-person-8001-新建microservicecloud-provider-person-hystrix-8001"><a href="#3-2-1-参考microservicecloud-provider-person-8001-新建microservicecloud-provider-person-hystrix-8001" class="headerlink" title="3.2.1 参考microservicecloud-provider-person-8001 新建microservicecloud-provider-person-hystrix-8001"></a>3.2.1 参考microservicecloud-provider-person-8001 新建microservicecloud-provider-person-hystrix-8001</h4><p>赋值pom文件和代码已经application.yml文件</p>
+<pre><code>当扇出链路的某个微服务不可用或者响应时间太长时，会进行服务的降级，进而熔断该节点微服务的调用，快速返回&quot;错误&quot;的响应信息。 当检测到该节点微服务调用响应正常后恢复调用链路。在SpringCloud框架里熔断机制通过Hystrix实现。Hystrix会监控微服务间调用的状况，当失败的调用到一定阈值，缺省是5秒内20次调用失败就会启动熔断机制。熔断机制的注解是@HystrixCommand。
+</code></pre><h3 id="3-2-案例演示"><a href="#3-2-案例演示" class="headerlink" title="3.2 案例演示"></a>3.2 案例演示</h3><h4 id="3-2-1-参考microservicecloud-provider-person-8001-新建microservicecloud-provider-person-hystrix-8001"><a href="#3-2-1-参考microservicecloud-provider-person-8001-新建microservicecloud-provider-person-hystrix-8001" class="headerlink" title="3.2.1 参考microservicecloud-provider-person-8001 新建microservicecloud-provider-person-hystrix-8001"></a>3.2.1 参考microservicecloud-provider-person-8001 新建microservicecloud-provider-person-hystrix-8001</h4><p>赋值pom文件和代码已经application.yml文件</p>
 <h4 id="3-2-2-修改新建hystrix-8001模块的pom文件和启动类"><a href="#3-2-2-修改新建hystrix-8001模块的pom文件和启动类" class="headerlink" title="3.2.2 修改新建hystrix-8001模块的pom文件和启动类"></a>3.2.2 修改新建hystrix-8001模块的pom文件和启动类</h4><p>（1）pom文件添加hystrix依赖</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!--  hystrix --&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
 <p>（2）修改启动类名称并添加<strong>@EnableCircuitBreaker注解</strong>//对hystrixR熔断机制的支持</p>
@@ -1881,8 +1887,8 @@
 <p>我们假设获取某个不存在的用户</p>
 <p><a href="http://localhost/consumer/person/get/55" target="_blank" rel="external">http://localhost/consumer/person/get/55</a></p>
 <p>输出：{“deptno”:55,”dname”:”该ID：55没有没有对应的信息,null–@HystrixCommand”,”db_source”:”no this database in MySQL”}</p>
-<h2 id="4-客户端的服务降级"><a href="#4-客户端的服务降级" class="headerlink" title="4.客户端的服务降级"></a>4.客户端的服务降级</h2><p>​      既然有了服务熔断，为什么还需要服务降级？</p>
-<p>   <strong>服务降级处理是在客户端实现完成的,与服务端没有关系，客户端自带一个异常处理机制。上面的服务熔断是在服务端实现</strong></p>
+<h2 id="4-客户端的服务降级"><a href="#4-客户端的服务降级" class="headerlink" title="4.客户端的服务降级"></a>4.客户端的服务降级</h2><pre><code>既然有了服务熔断，为什么还需要服务降级？
+</code></pre><p>   <strong>服务降级处理是在客户端实现完成的,与服务端没有关系，客户端自带一个异常处理机制。上面的服务熔断是在服务端实现</strong></p>
 <p>  <strong>客户端的服务降级，能够快速的响应用户的请求，当服务不可达，那么立即返回定制的错误信息。</strong> </p>
 <p> 整体资源快不够了,忍痛将某些服务先关掉,待渡过难关,再开启回来</p>
 <p>优先保证核心服务，而非核心服务不可用或弱可用。</p>
@@ -1895,30 +1901,30 @@
 <h4 id="4-1-2-修改microservicecloud-api工程-PersonClientService接口在注解-FeignCLient中添加fallbackFactory属性值"><a href="#4-1-2-修改microservicecloud-api工程-PersonClientService接口在注解-FeignCLient中添加fallbackFactory属性值" class="headerlink" title="4.1.2  修改microservicecloud-api工程,PersonClientService接口在注解@FeignCLient中添加fallbackFactory属性值"></a>4.1.2  修改microservicecloud-api工程,PersonClientService接口在注解@FeignCLient中添加fallbackFactory属性值</h4><p>​    </p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@FeignClient(value = &quot;MICROSERVICECLOUD-PERSON&quot;,fallbackFactory = PersonClientServiceFallbackFactory.class)</div><div class="line">public interface PersonClientService</div><div class="line">&#123;</div><div class="line">	@RequestMapping(value = &quot;/person/get/&#123;id&#125;&quot;, method = RequestMethod.GET)</div><div class="line">	public Person get(@PathVariable(&quot;id&quot;) long id);</div><div class="line"></div><div class="line">	@RequestMapping(value = &quot;/person/list&quot;, method = RequestMethod.GET)</div><div class="line">	public List&lt;Person&gt; list();</div><div class="line"></div><div class="line">	@RequestMapping(value = &quot;/person/add&quot;, method = RequestMethod.POST)</div><div class="line">	public boolean add(Person person);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>​    </p>
-<h4 id="4-1-3-修改80-feign消费者端配置文件，开启服务熔断"><a href="#4-1-3-修改80-feign消费者端配置文件，开启服务熔断" class="headerlink" title="4.1.3 修改80-feign消费者端配置文件，开启服务熔断"></a>4.1.3 修改80-feign消费者端配置文件，开启服务熔断</h4><p>​        microservicecloud-consumer-person-80-feign工程修改YML </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">feign:</div><div class="line">  hystrix:</div><div class="line">    enabled: true</div></pre></td></tr></table></figure>
-<h4 id="4-1-4-测试"><a href="#4-1-4-测试" class="headerlink" title="4.1.4 测试"></a>4.1.4 测试</h4><p>​    启动3个eureka先启动和微服务microservicecloud-provider-person-8001启动                                    microservicecloud-consumer-person-80-feign启动      </p>
-<p> 正常访问测试      <a href="http://localhost/consumer/dept/get/5" target="_blank" rel="external">http://localhost/consumer/dept/get/5</a>        </p>
+<h4 id="4-1-3-修改80-feign消费者端配置文件，开启服务熔断"><a href="#4-1-3-修改80-feign消费者端配置文件，开启服务熔断" class="headerlink" title="4.1.3 修改80-feign消费者端配置文件，开启服务熔断"></a>4.1.3 修改80-feign消费者端配置文件，开启服务熔断</h4><pre><code>microservicecloud-consumer-person-80-feign工程修改YML 
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">feign:</div><div class="line">  hystrix:</div><div class="line">    enabled: true</div></pre></td></tr></table></figure>
+<h4 id="4-1-4-测试"><a href="#4-1-4-测试" class="headerlink" title="4.1.4 测试"></a>4.1.4 测试</h4><pre><code>启动3个eureka先启动和微服务microservicecloud-provider-person-8001启动                                    microservicecloud-consumer-person-80-feign启动      
+</code></pre><p> 正常访问测试      <a href="http://localhost/consumer/dept/get/5" target="_blank" rel="external">http://localhost/consumer/dept/get/5</a>        </p>
 <p>  输出：{“deptno”:5,”dname”:”hr”,”db_source”:”test”}</p>
 <p>​                  </p>
 <p> 故意关闭微服务microservicecloud-provider-person-8001                                   </p>
 <p> 访问测试     <a href="http://localhost/consumer/dept/get/5" target="_blank" rel="external">http://localhost/consumer/dept/get/5</a></p>
 <p>输出：”deptno”:5,”dname”:”该ID5没有对应的信息,Consumer客户端提供的降级信息,此服务Provider已经关闭”,”db_source”:”no this database in MySQL”}</p>
 <p>成功！！！</p>
-<p>​         <strong>此时服务端provider已经down了,但是我们做了服务降级处理,让客户端在服务端不可用时也会获得提示信息而不会挂起耗死服务器</strong></p>
-<p><strong>也就是说，如果服务端能够正常调用那么就返回值，如果不能够调用那么就返回由fallbackFactory定义的值</strong></p>
+<pre><code>**此时服务端provider已经down了,但是我们做了服务降级处理,让客户端在服务端不可用时也会获得提示信息而不会挂起耗死服务器**
+</code></pre><p><strong>也就是说，如果服务端能够正常调用那么就返回值，如果不能够调用那么就返回由fallbackFactory定义的值</strong></p>
 <h2 id="5-服务监控HystrixDashboard"><a href="#5-服务监控HystrixDashboard" class="headerlink" title="5. 服务监控HystrixDashboard"></a>5. 服务监控HystrixDashboard</h2><blockquote>
-<p>​         除了隔离依赖服务的调用以外,Hystrix还提供了准实时的调用监控(Hystrix      Dashboard),Hystrix      会持续地<strong>记录所有通过Hystrix发起的请求的执行信息</strong>,并以统计报表和图形的形式展示给用户,包括每秒执行多少请求多少成功,多少失败等.Netflix通过hystrix-metrics-event-stream项目实现了对以上指标的监控.Spring Cloud也提供了Hystrix Dashboard的整合.对监控内容转化成可视化界面.     </p>
-</blockquote>
+<pre><code>除了隔离依赖服务的调用以外,Hystrix还提供了准实时的调用监控(Hystrix      Dashboard),Hystrix      会持续地**记录所有通过Hystrix发起的请求的执行信息**,并以统计报表和图形的形式展示给用户,包括每秒执行多少请求多少成功,多少失败等.Netflix通过hystrix-metrics-event-stream项目实现了对以上指标的监控.Spring Cloud也提供了Hystrix Dashboard的整合.对监控内容转化成可视化界面.     
+</code></pre></blockquote>
 <p><strong>也就是说，服务端必须是集成了Hystrix组件，才能够被监控，也即是：启动类添加@EnableCircuitBreaker//对hystrixR熔断机制的支持。例如我们的服务8002和8003是监控不到的</strong></p>
-<p>​    记下来看案例实现</p>
-<h3 id="5-1-案例实现"><a href="#5-1-案例实现" class="headerlink" title="5.1   案例实现"></a>5.1   案例实现</h3><h4 id="5-1-1-新建-microservicecloud-consumer-hystrix-dashboard-9001-模块"><a href="#5-1-1-新建-microservicecloud-consumer-hystrix-dashboard-9001-模块" class="headerlink" title="5.1.1 新建    microservicecloud-consumer-hystrix-dashboard-9001    模块"></a>5.1.1 新建    microservicecloud-consumer-hystrix-dashboard-9001    模块</h4><p>根据父工程 microservicecloud新建服务监控模块（ 参考microservicecloud-consumer-person-80-feign ）          </p>
-<p>​    （1）复制80-feign模块pom文件并添加dashboard依赖</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- hystrix和 hystrix-dashboard相关--&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix-dashboard&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
-<p>​    （2）修改application.yml配置文件          </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">server:</div><div class="line">  port: 9001</div></pre></td></tr></table></figure>
-<p>​    （3）启动类ApplicationBootStart9001dashboard添加@EnableHystrixDashboard         </p>
-<p>​    </p>
+<pre><code>记下来看案例实现
+</code></pre><h3 id="5-1-案例实现"><a href="#5-1-案例实现" class="headerlink" title="5.1   案例实现"></a>5.1   案例实现</h3><h4 id="5-1-1-新建-microservicecloud-consumer-hystrix-dashboard-9001-模块"><a href="#5-1-1-新建-microservicecloud-consumer-hystrix-dashboard-9001-模块" class="headerlink" title="5.1.1 新建    microservicecloud-consumer-hystrix-dashboard-9001    模块"></a>5.1.1 新建    microservicecloud-consumer-hystrix-dashboard-9001    模块</h4><p>根据父工程 microservicecloud新建服务监控模块（ 参考microservicecloud-consumer-person-80-feign ）          </p>
+<pre><code>（1）复制80-feign模块pom文件并添加dashboard依赖
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- hystrix和 hystrix-dashboard相关--&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-cloud-starter-hystrix-dashboard&lt;/artifactId&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<pre><code>（2）修改application.yml配置文件          
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">server:</div><div class="line">  port: 9001</div></pre></td></tr></table></figure>
+<pre><code>（3）启动类ApplicationBootStart9001dashboard添加@EnableHystrixDashboard         
+</code></pre><p>​    </p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@SpringBootApplication</div><div class="line">@EnableHystrixDashboard</div><div class="line">public class ApplicationBootStart9001dashboard &#123;</div><div class="line">    public static void main(String[] args)</div><div class="line">    &#123;</div><div class="line"></div><div class="line">        SpringApplication.run(ApplicationBootStart9001dashboard.class, args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>​    </p>
 <p>  （4）所有Provider微服务提供类(8001/8002/8003)都需要监控依赖配置       </p>
@@ -1926,10 +1932,10 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- actuator监控信息完善 --&gt;</div><div class="line"> &lt;dependency&gt;</div><div class="line">   &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">   &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;</div><div class="line"> &lt;/dependency&gt;</div></pre></td></tr></table></figure>
 <p>​    </p>
 <p>   （5）完整工程                        </p>
-<p>​    <img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-34-32.png" alt=""></p>
-<p>​                            </p>
-<h4 id="5-1-2-启动dashboard-9001模块"><a href="#5-1-2-启动dashboard-9001模块" class="headerlink" title="5.1.2 启动dashboard-9001模块"></a>5.1.2 启动dashboard-9001模块</h4><p>​         <a href="http://localhost:9001/hystrix" target="_blank" rel="external">http://localhost:9001/hystrix</a> </p>
-<p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-36-15.png" alt=""></p>
+<pre><code>![](SpringCloud个人总结/Snipaste_2019-08-19_16-34-32.png)
+</code></pre><p>​                            </p>
+<h4 id="5-1-2-启动dashboard-9001模块"><a href="#5-1-2-启动dashboard-9001模块" class="headerlink" title="5.1.2 启动dashboard-9001模块"></a>5.1.2 启动dashboard-9001模块</h4><pre><code>http://localhost:9001/hystrix 
+</code></pre><p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-36-15.png" alt=""></p>
 <p>部署成功</p>
 <h4 id="5-1-3-启动3个eureka集群"><a href="#5-1-3-启动3个eureka集群" class="headerlink" title="5.1.3 启动3个eureka集群"></a>5.1.3 启动3个eureka集群</h4><h4 id="5-1-4启动microservicecloud-provider-person-hystrix-8001和microservicecloud-consumer-person-80-feign-服务端和消费者"><a href="#5-1-4启动microservicecloud-provider-person-hystrix-8001和microservicecloud-consumer-person-80-feign-服务端和消费者" class="headerlink" title="5.1.4启动microservicecloud-provider-person-hystrix-8001和microservicecloud-consumer-person-80-feign 服务端和消费者"></a>5.1.4启动microservicecloud-provider-person-hystrix-8001和microservicecloud-consumer-person-80-feign 服务端和消费者</h4><h4 id="5-1-4dashboard填写需要监控的服务地址"><a href="#5-1-4dashboard填写需要监控的服务地址" class="headerlink" title="5.1.4dashboard填写需要监控的服务地址"></a>5.1.4dashboard填写需要监控的服务地址</h4><p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-46-55.png" alt=""></p>
 <p>1：Delay：该参数用来控制服务器上轮询监控信息的延迟时间，默认为2000毫秒，可以通过配置该属性来降低客户端的网络和CPU消耗。</p>
@@ -1937,32 +1943,37 @@
 <p>点击Monitor Stream  开始监控</p>
 <p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-49-56.png" alt=""></p>
 <p><strong>怎么查看这张图：关键的部位我已经用红色方框，框住。核心就是：7色（服务的状态），1圈，1线。</strong>                           </p>
-<p>​       1圈                   </p>
-<p>​          实心圆:共有两种含义.它通过颜色的变化代表了 实例健康程度,它的健康度从绿色&lt;黄色&lt;橙色&lt;红色递减.该实心圆除了颜色的变化之外,它的大小也会根据实例的请求流量发生变化,流量越大该实心圆就越大.所以通过该实心圆的展示,就可以在大量的实例中快速的发现故障实例和高压力实例.              </p>
-<p>​    1线                   </p>
-<p>​         曲线:用来记录2分钟内流量的相对变化,可以通过它来观察到流量的上升和下降趋势.</p>
-<p><img src="/2019/05/01/SpringCloud个人总结/dashbnoars.png" alt=""></p>
+<pre><code>   1圈                   
+
+      实心圆:共有两种含义.它通过颜色的变化代表了 实例健康程度,它的健康度从绿色&lt;黄色&lt;橙色&lt;红色递减.该实心圆除了颜色的变化之外,它的大小也会根据实例的请求流量发生变化,流量越大该实心圆就越大.所以通过该实心圆的展示,就可以在大量的实例中快速的发现故障实例和高压力实例.              
+
+1线                   
+
+     曲线:用来记录2分钟内流量的相对变化,可以通过它来观察到流量的上升和下降趋势.
+</code></pre><p><img src="/2019/05/01/SpringCloud个人总结/dashbnoars.png" alt=""></p>
 <h4 id="5-1-5-多次刷新http-localhost-consumer-person-get-1"><a href="#5-1-5-多次刷新http-localhost-consumer-person-get-1" class="headerlink" title="5.1.5 多次刷新http://localhost/consumer/person/get/1"></a>5.1.5 多次刷新<a href="http://localhost/consumer/person/get/1" target="_blank" rel="external">http://localhost/consumer/person/get/1</a></h4><p>也即是多次请求8001服务，然后查看监控的状态</p>
 <p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-19_16-53-58.png" alt=""></p>
 <p>显示请求的get方法的情况。圆圈变大，曲线上升。（<strong>如果请求多个方法会增加图形说明</strong>）</p>
-<h1 id="十、-zuul路由网关"><a href="#十、-zuul路由网关" class="headerlink" title="十、 zuul路由网关"></a>十、 zuul路由网关</h1><p>​    通过前面的学习，使用Spring Cloud实现微服务的架构基本成型，大致是这样的：</p>
-<p><img src="/2019/05/01/SpringCloud个人总结/C1566221714611.png" alt="1566221714611"></p>
+<h1 id="十、-zuul路由网关"><a href="#十、-zuul路由网关" class="headerlink" title="十、 zuul路由网关"></a>十、 zuul路由网关</h1><pre><code>通过前面的学习，使用Spring Cloud实现微服务的架构基本成型，大致是这样的：
+</code></pre><p><img src="/2019/05/01/SpringCloud个人总结/C1566221714611.png" alt="1566221714611"></p>
 <p><strong>我们使用Spring Cloud Netflix中的Eureka实现了服务注册中心以及服务注册与发现；而服务间通过Ribbon或Feign实现服务的消费以及均衡负载。为了使得服务集群更为健壮，使用Hystrix的融断机制来避免在微服务架构中个别服务出现异常时引起的故障蔓延。</strong></p>
 <p> 在该架构中，我们的服务集群包含：内部服务Service A和Service B，他们都会注册与订阅服务至Eureka Server，而Open Service是一个对外的服务，通过均衡负载公开至服务调用方。我们把焦点聚集在对外服务这块，直接暴露我们的服务地址，这样的实现是否合理，或者是否有更好的实现方式呢？</p>
 <p>先来说说这样架构需要做的一些事儿以及存在的不足：</p>
 <p>•               破坏了服务无状态特点。</p>
-<p>​                   为了保证对外服务的安全性，我们需要实现对服务访问的权限控制，而开放服务的权限控制机制将会贯穿并污染整个开放服务的业务逻辑，这会带来的最直接问题是，破坏了服务集群中REST API无状态的特点。</p>
-<p>​                     从具体开发和测试的角度来说，在工作中除了要考虑实际的业务逻辑之外，还需要额外考虑对接口访问的控制处理。</p>
-<p>•               无法直接复用既有接口。</p>
-<p>​                   当我们需要对一个即有的集群内访问接口，实现外部服务访问时，我们不得不通过在原有接口上增加校验逻辑，或增加一个代理调用来实现权限控制，无法直接复用原有的接口。</p>
-<p>面对类似上面的问题，我们要如何解决呢？答案是：服务网关！</p>
+<pre><code>为了保证对外服务的安全性，我们需要实现对服务访问的权限控制，而开放服务的权限控制机制将会贯穿并污染整个开放服务的业务逻辑，这会带来的最直接问题是，破坏了服务集群中REST API无状态的特点。
+
+  从具体开发和测试的角度来说，在工作中除了要考虑实际的业务逻辑之外，还需要额外考虑对接口访问的控制处理。
+</code></pre><p>•               无法直接复用既有接口。</p>
+<pre><code>当我们需要对一个即有的集群内访问接口，实现外部服务访问时，我们不得不通过在原有接口上增加校验逻辑，或增加一个代理调用来实现权限控制，无法直接复用原有的接口。
+</code></pre><p>面对类似上面的问题，我们要如何解决呢？答案是：服务网关！</p>
 <p>为了解决上面这些问题，我们需要将权限控制这样的东西从我们的服务单元中抽离出去，而最适合这些逻辑的地方就是处于对外访问最前端的地方，我们需要一个更强大一些的均衡负载器的 服务网关。</p>
 <p>服务网关是微服务架构中一个不可或缺的部分。通过服务网关统一向外系统提供REST API的过程中，除了具备服务路由、均衡负载功能之外，它还具备了权限控制等功能。Spring Cloud Netflix中的Zuul就担任了这样的一个角色，为微服务架构提供了前门保护的作用，同时将权限控制这些较重的非业务逻辑内容迁移到服务路由层面，使得服务集群主体能够具备更高的可复用性和可测试性。</p>
 <p>Zuul包含了对请求的路由和过滤两个最主要的功能：</p>
 <p><strong>其中路由功能负责将外部请求转发到具体的微服务实例上，是实现外部访问统一入口的基础而过滤器功能则负责对请求的处理过程进行干预，是实现请求校验、服务聚合等功能的基础.Zuul和Eureka进行整合，将Zuul自身注册为Eureka服务治理下的应用，同时从Eureka中获得其他微服务的消息，也即以后的访问微服务都是通过Zuul跳转后获得。</strong></p>
-<p>​    <strong>注意：Zuul服务最终还是会注册进Eureka</strong></p>
-<p>​    提供=代理+路由+过滤三大功能</p>
-<h2 id="1-简介-1"><a href="#1-简介-1" class="headerlink" title="1.简介"></a>1.简介</h2><p>官网：<a href="https://github.com/Netflix/zuul" target="_blank" rel="external">https://github.com/Netflix/zuul</a></p>
+<pre><code>**注意：Zuul服务最终还是会注册进Eureka**
+
+提供=代理+路由+过滤三大功能
+</code></pre><h2 id="1-简介-1"><a href="#1-简介-1" class="headerlink" title="1.简介"></a>1.简介</h2><p>官网：<a href="https://github.com/Netflix/zuul" target="_blank" rel="external">https://github.com/Netflix/zuul</a></p>
 <p> <img src="/2019/05/01/SpringCloud个人总结/njl002.png" alt="标题: fig:"></p>
 <p>Zuul：维基百科</p>
 <p>电影《捉鬼敢死队》中的怪兽，Zuul，在纽约引发了巨大骚乱。</p>
@@ -2059,13 +2070,13 @@
 <p><img src="/2019/05/01/SpringCloud个人总结/1566226885002.png" alt="1566226885002"></p>
 <h2 id="8-负载均衡和熔断"><a href="#8-负载均衡和熔断" class="headerlink" title="8.负载均衡和熔断"></a>8.负载均衡和熔断</h2><p>Zuul中默认就已经集成了Ribbon负载均衡和Hystix熔断机制。但是所有的超时策略都是走的默认值，比如熔断超时时间只有1S，很容易就触发了。因此建议我们手动进行配置：</p>
 <p>hystrix:<br>   command:<br>     default:<br>       execution:<br>         isolation:<br>           thread:<br>             timeoutInMilliseconds: 2000 # 设置hystrix的超时时间为6000ms</p>
-<h1 id="十一、SpringCloud-Config-分布式配置中心"><a href="#十一、SpringCloud-Config-分布式配置中心" class="headerlink" title="十一、SpringCloud Config 分布式配置中心"></a>十一、<strong>SpringCloud Config 分布式配置中心</strong></h1><p>​                        <strong>解决第四个问题，统一配置的问题</strong></p>
-<h2 id="1-为什么需要配置中心"><a href="#1-为什么需要配置中心" class="headerlink" title="1.为什么需要配置中心"></a>1.为什么需要配置中心</h2><p>   举个简单的例子，我们想要修改8001模块的服务名称的值（spring.application.name），那么我们首先得找到8001模块，然后找到配置文件，然后再进去修改。如果修改修改8003模块的配置信息，重复之前的步骤。</p>
+<h1 id="十一、SpringCloud-Config-分布式配置中心"><a href="#十一、SpringCloud-Config-分布式配置中心" class="headerlink" title="十一、SpringCloud Config 分布式配置中心"></a>十一、<strong>SpringCloud Config 分布式配置中心</strong></h1><pre><code>**解决第四个问题，统一配置的问题**
+</code></pre><h2 id="1-为什么需要配置中心"><a href="#1-为什么需要配置中心" class="headerlink" title="1.为什么需要配置中心"></a>1.为什么需要配置中心</h2><p>   举个简单的例子，我们想要修改8001模块的服务名称的值（spring.application.name），那么我们首先得找到8001模块，然后找到配置文件，然后再进去修改。如果修改修改8003模块的配置信息，重复之前的步骤。</p>
 <p> 所以我们需要一个集中管理所有微服务配置信息的地方。</p>
-<p>​    微服务意味着要将单体应用中的业务拆分成一个个子服务,每个服务的粒度相对较小,因此系统中会出现大量的服务.由于每个服务都需要必要的配置信息才能运行（application.yml）,所以一套集中式的、动态的配置管理设施是必不可少的.SpringCloud提供了ConfigServer来解决这个问题(我们每一个微服务自己带着一个application.yml,上百个配置文件的管理的问题)</p>
-<p>​         </p>
-<p>​    <strong>总而言之：是为了更加方便的帮助我们集中式的管理微服务架构里面微服务的配置信息。</strong></p>
-<h2 id="2-config配置中心"><a href="#2-config配置中心" class="headerlink" title="2. config配置中心"></a>2. config配置中心</h2><p><strong>SpringCloud Config 为微服务架构中的微服务提供集中化的外部配置支持,配置服务器为各个不同微服务应用的所有环境提供了一个中心化的外部配置，方便我们集中式的修改微服务的配置</strong></p>
+<pre><code>微服务意味着要将单体应用中的业务拆分成一个个子服务,每个服务的粒度相对较小,因此系统中会出现大量的服务.由于每个服务都需要必要的配置信息才能运行（application.yml）,所以一套集中式的、动态的配置管理设施是必不可少的.SpringCloud提供了ConfigServer来解决这个问题(我们每一个微服务自己带着一个application.yml,上百个配置文件的管理的问题)
+</code></pre><p>​         </p>
+<pre><code>**总而言之：是为了更加方便的帮助我们集中式的管理微服务架构里面微服务的配置信息。**
+</code></pre><h2 id="2-config配置中心"><a href="#2-config配置中心" class="headerlink" title="2. config配置中心"></a>2. config配置中心</h2><p><strong>SpringCloud Config 为微服务架构中的微服务提供集中化的外部配置支持,配置服务器为各个不同微服务应用的所有环境提供了一个中心化的外部配置，方便我们集中式的修改微服务的配置</strong></p>
 <p><strong>SpringCloud Config分为服务端和客户端两部分.</strong></p>
 <p><strong>服务端也称为分布式配置中心,它是一个独立的微服务应用,用来连接配置服务器并为客户端提供获取配置信息,加密/解密信息等访问接口</strong></p>
 <p><strong>客户端则是通过制定的配置中心来管理应用资源,以及业务相关的配置内容,并在启动的时候从配置中心获取和加载配置信息配置服务器默认采用git来存储配置信息,这样就有助于对环境配置进行版本管理,并且可以通过git客户端工具来方便的管理和访问配置内容.（客户端可以是我们的8001,8003模块，也即是需要获取配置信息的微服务都是客户端）</strong></p>
@@ -2142,14 +2153,19 @@
 <h3 id="4-6-启动10000配置中心和8004服务"><a href="#4-6-启动10000配置中心和8004服务" class="headerlink" title="4.6 启动10000配置中心和8004服务"></a>4.6 启动10000配置中心和8004服务</h3><p> （1） 启动Config配置中心10000微服务并自测</p>
 <p><img src="/2019/05/01/SpringCloud个人总结/Snipaste_2019-08-20_11-05-27.png" alt=""></p>
 <p>（2）启动8004作为Client准备访问</p>
-<pre><code>bootstrap.yml里面的profile值是什么，决定从github上读取什么
-</code></pre><p>​    2.1 启动成功，说明配置文件获取成功</p>
-<p>​       2.2 额外验证</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">假如目前是 profile: dev</div><div class="line">  dev默认在github上对应的端口就是8004</div><div class="line">  http://localhost:8004/config</div><div class="line">  输出：applicationName: microservicecloud-person	eurekaServers:http://peer1:7001/eureka/,http://peer2:7002/eureka/,http://peer3:7003/eureka/	port: 8004	datasourceurl：jdbc:mysql://127.0.0.1:3306/test</div></pre></td></tr></table></figure>
+<pre><code>  bootstrap.yml里面的profile值是什么，决定从github上读取什么
+
+2.1 启动成功，说明配置文件获取成功
+
+
+
+   2.2 额外验证
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">假如目前是 profile: dev</div><div class="line">  dev默认在github上对应的端口就是8004</div><div class="line">  http://localhost:8004/config</div><div class="line">  输出：applicationName: microservicecloud-person	eurekaServers:http://peer1:7001/eureka/,http://peer2:7002/eureka/,http://peer3:7003/eureka/	port: 8004	datasourceurl：jdbc:mysql://127.0.0.1:3306/test</div></pre></td></tr></table></figure>
 <p>​<br>​    假如目前是 profile: test<br>​      test默认在github上对应的端口就是8005<br>​      <a href="http://localhost:8005/config" target="_blank" rel="external">http://localhost:8005/config</a><br>​      输出：applicationName: microservicecloud-person    eurekaServers:<a href="http://peer1:7001/eureka/,http://peer2:7002/eureka/,http://peer3:7003/eureka/" target="_blank" rel="external">http://peer1:7001/eureka/,http://peer2:7002/eureka/,http://peer3:7003/eureka/</a>    port: 8005    datasourceurl：jdbc:mysql://127.0.0.1:3306/test2</p>
-<h2 id="5-手动刷新配置"><a href="#5-手动刷新配置" class="headerlink" title="5.手动刷新配置"></a>5.手动刷新配置</h2><p>​    上面的案例，有个缺点，那就是我们修改了github上面的配置文件（例如修改了连接数据库的地址），对应的8004模块没有刷新，也就是，他获取的连接数据库的地址还是未修改前的。</p>
-<p>​    在真实的案例中，我们不可能手动关闭服务器，然后重启。所以就需要8004它能够自动刷新</p>
-<p><img src="/2019/05/01/SpringCloud个人总结/1566377247710.png" alt="1566377247710"></p>
+<h2 id="5-手动刷新配置"><a href="#5-手动刷新配置" class="headerlink" title="5.手动刷新配置"></a>5.手动刷新配置</h2><pre><code>上面的案例，有个缺点，那就是我们修改了github上面的配置文件（例如修改了连接数据库的地址），对应的8004模块没有刷新，也就是，他获取的连接数据库的地址还是未修改前的。
+
+在真实的案例中，我们不可能手动关闭服务器，然后重启。所以就需要8004它能够自动刷新
+</code></pre><p><img src="/2019/05/01/SpringCloud个人总结/1566377247710.png" alt="1566377247710"></p>
 <p><img src="/2019/05/01/SpringCloud个人总结/1566377271635.png" alt="1566377271635"></p>
 <p> 需要依赖actuator组件和通过psot方式访问请求配置变动的服务器（也即是@RefreshScope注解所在的bean）</p>
 <p>（1）8004模块引入actuator依赖</p>
@@ -2584,7 +2600,7 @@ var jiathis_config={
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
     <span title="Site words total count">
-      183.6k
+      183.7k
     </span>
   
 </div>
@@ -2607,7 +2623,7 @@ var jiathis_config={
 <span class="post-meta-divider">|</span>
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共183.6k字</span>
+  <span class="post-count">博客全站共183.7k字</span>
 </div>
 
 
