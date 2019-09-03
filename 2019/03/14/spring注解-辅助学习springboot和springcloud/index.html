@@ -1,0 +1,2128 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spring注解,aop,spring生命周期," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="1. 前言 因为后面要学习sb（springboot）和sc（springcloud），所以需要学习一些相关的注解和了解他们底层代码实现，例如@import注解，Aware接口，生命周期。 ​    通过前面几个章节的学习，你会发现无论springboot还是springcloud的很多知识都是来源于spring相关的知识，章节还有一些内容没有补充完整，后续如果有时间会逐步更新完成！！！ 2.组件">
+<meta name="keywords" content="spring注解,aop,spring生命周期">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring注解-辅助学习springboot和springcloud">
+<meta property="og:url" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="1. 前言 因为后面要学习sb（springboot）和sc（springcloud），所以需要学习一些相关的注解和了解他们底层代码实现，例如@import注解，Aware接口，生命周期。 ​    通过前面几个章节的学习，你会发现无论springboot还是springcloud的很多知识都是来源于spring相关的知识，章节还有一些内容没有补充完整，后续如果有时间会逐步更新完成！！！ 2.组件">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414688035.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414725611.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414770812.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414786811.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414821714.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414886849.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414894134.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414906119.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414919145.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414938745.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414956045.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414983170.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414996062.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415050284.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415143194.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415194264.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415212225.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415217769.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415246906.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415321043.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415342468.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415368545.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415379844.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415399146.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415407178.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415418134.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415430330.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415449102.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415496868.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415510372.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415521934.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415535174.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415551953.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415565829.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415579392.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415589497.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415621835.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415637061.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415657803.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415670181.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415683803.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415696308.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415714441.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415726984.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415756903.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415769824.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415788706.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415816993.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415830634.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415842983.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415854254.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415865773.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415958501.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415979268.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415990937.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415998217.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416012675.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416024604.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416034091.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416054016.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416082833.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416100346.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416118482.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416129315.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416137640.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416163330.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416175448.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416191108.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416209944.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416222017.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416237939.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416255764.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416280606.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416311128.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416341585.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416364626.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416382230.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416398530.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416431574.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416442452.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416469689.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416483129.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416501945.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416524867.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416538029.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416547870.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416562220.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416620035.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416633367.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416638886.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416668422.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416682517.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416709158.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416721160.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416731721.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416742609.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416769528.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416783886.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416793969.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416807398.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416820306.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417097750.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416934645.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416950884.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416959675.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417123219.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417130983.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417138775.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417160484.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417175481.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417185951.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417197152.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417205766.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417215346.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417225715.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417260280.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417265681.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417277299.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417283634.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417290770.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417301282.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417315217.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417323109.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417358798.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417366098.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417382674.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417392347.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417433281.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417443301.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417460772.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417474653.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417484555.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417501646.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417520813.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417527878.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417566591.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417580291.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417588458.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417616396.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417625690.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417638837.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417653302.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417713757.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417746703.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417764521.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567472449448.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417773670.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417705277.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417786810.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417799676.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567438805334.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439298675.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439441240.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439674687.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439733523.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439796941.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439888919.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/C1567439971239.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/C1567440444983.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567440624426.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417823342.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417832614.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417847101.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417852548.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417897324.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417910208.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417923873.png">
+<meta property="og:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417943208.png">
+<meta property="og:updated_time" content="2019-09-03T12:48:30.441Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spring注解-辅助学习springboot和springcloud">
+<meta name="twitter:description" content="1. 前言 因为后面要学习sb（springboot）和sc（springcloud），所以需要学习一些相关的注解和了解他们底层代码实现，例如@import注解，Aware接口，生命周期。 ​    通过前面几个章节的学习，你会发现无论springboot还是springcloud的很多知识都是来源于spring相关的知识，章节还有一些内容没有补充完整，后续如果有时间会逐步更新完成！！！ 2.组件">
+<meta name="twitter:image" content="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414688035.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/"/>
+
+
+
+
+
+  <title>spring注解-辅助学习springboot和springcloud | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">spring注解-辅助学习springboot和springcloud</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-14T22:59:59+08:00">
+                2019-03-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spring注解和生命周期/" itemprop="url" rel="index">
+                    <span itemprop="name">spring注解和生命周期</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  8,914
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  33
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h1><p> 因为后面要学习sb（springboot）和sc（springcloud），所以需要学习一些相关的注解和了解他们底层代码实现，例如@import注解，Aware接口，生命周期。</p>
+<p>​    通过前面几个章节的学习，你会发现无论springboot还是springcloud的很多知识都是来源于spring相关的知识，章节还有一些内容没有补充完整，后续如果有时间会逐步更新完成！！！</p>
+<h1 id="2-组件注册"><a href="#2-组件注册" class="headerlink" title="2.组件注册"></a>2.组件注册</h1><p>我们知道spring得IOC容器中存储了很多类的实例化对象，那么下面介绍几种往IOC容器中注册实体类的方式</p>
+<h2 id="2-1-xml配置文件实例化实体类（方式一）"><a href="#2-1-xml配置文件实例化实体类（方式一）" class="headerlink" title="2.1 xml配置文件实例化实体类（方式一）"></a>2.1 xml配置文件实例化实体类（方式一）</h2><ol>
+<li><p>首先新建spring.xml 文件，通过bean 标签实例化实体类</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414688035.png" alt="1567414688035"></p>
+</li>
+</ol>
+<p>2.通过ClassPathXmlApplicationContext获取实体类</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414725611.png" alt="1567414725611"></p>
+<p>缺点：大型项目的实体类会非常多，那么配置文件会变得非常的臃肿，而且也不易于维护。</p>
+<h2 id="2-2-使用-Configuration和-bean（方式二）"><a href="#2-2-使用-Configuration和-bean（方式二）" class="headerlink" title="2.2 使用@ Configuration和@bean（方式二）"></a>2.2 使用@ Configuration和@bean（方式二）</h2><p>Spring提供了配置实体类的第二种方式，就是不用通过书写xml文件，通过两个注解就可以达到2.1 的功能。</p>
+<ol>
+<li>编写配置类，配置bean</li>
+</ol>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414770812.png" alt="1567414770812"></p>
+<ol>
+<li><p>通过AnnotationConfigApplicationContext获取实体类</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414786811.png" alt="1567414786811"></p>
+</li>
+</ol>
+<p>这里是new了一个AnnotationConfigApplicationContext对象，以前new的ClassPathXmlApplicationContext对象，的构造函数里面传的是配置文件的位置，而现在AnnotationConfigApplicationContext对象的构造函数里面传的是配置类的类型</p>
+<h2 id="2-3-ComponentScan-自动扫描组件-amp-指定扫描规则（方式三）"><a href="#2-3-ComponentScan-自动扫描组件-amp-指定扫描规则（方式三）" class="headerlink" title="2.3 @ComponentScan-自动扫描组件&amp;指定扫描规则（方式三）"></a>2.3 @ComponentScan-自动扫描组件&amp;指定扫描规则（方式三）</h2><pre><code>**实际上这个注解跟前面两种方式是配合使用的，避免书写ClassPathXmlApplicationContext或者AnnotationConfigApplicationContext** **获取IOC容器。**
+</code></pre><p>我们知道，在实际开发中我们是不会通过ClassPathXmlApplicationContext这样的代码方式获取对象，而是通过包扫描的方式进行实例化对象并注入IOC容器中</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414821714.png" alt="1567414821714"></p>
+<p>他的扫描规则是：以下这几个注解都是继承自@Component</p>
+<p>@controller(给web层的注解)</p>
+<p>@service(给serivce层加的注解)</p>
+<p>@repository(给dao层加的注解) </p>
+<p>@component(给java类加注解,老版本spring只有这一个注解)</p>
+<p>只要书写了上面四个注解的类，那么会自动装配到ioc容器中。<strong>Id默认是类名首字母小写</strong></p>
+<h3 id="1-ComponentScan注解的结构"><a href="#1-ComponentScan注解的结构" class="headerlink" title="1. @ComponentScan注解的结构"></a>1. @ComponentScan注解的结构</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414886849.png" alt="1567414886849"></p>
+<p>1.这个注解上，也是可以指定要排除哪些包或者是只包含哪些包来进行管理：里面传是一个Filter[]数组。</p>
+<p>2.Value ：就相当于spring的xml配置文件-</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414894134.png" alt="1567414894134"></p>
+<h3 id="2-用例"><a href="#2-用例" class="headerlink" title="2.用例"></a>2.用例</h3><p>–那么我们使用配置类的方式实现component-sacn同样的功能</p>
+<p>1.首先在配置文件类，添加扫描的范围</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414906119.png" alt="1567414906119"></p>
+<p>2.添加几个注解类-</p>
+<p>@controller（UserController）</p>
+<p>@service（UserService）</p>
+<p>@repository （UserDao）</p>
+<p>@component（ComponentTest）</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414919145.png" alt="1567414919145"></p>
+<p>3.书写IOC</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414938745.png" alt="1567414938745"></p>
+<p>输出：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414956045.png" alt="1567414956045"></p>
+<p><strong>发现-扫描进入IOC容器的bean的id默认是：类名首字母小写</strong></p>
+<p>4.使用Filter去除某些注解类</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414983170.png" alt="1567414983170"></p>
+<p>根据注解的方式排除，排除使用@Controller注解注解的类</p>
+<p>–注意在使用includeFilters 扫描只包含那些组件的时候，要禁用spring默认全局扫描（跟配置文件一样，也是需要禁用的）</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414996062.png" alt="1567414996062"></p>
+<p>例子4</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415050284.png" alt="1567415050284"></p>
+<h3 id="3-扩展"><a href="#3-扩展" class="headerlink" title="3.    扩展"></a>3.    扩展</h3><p>我们打开Component注解的源码，发现他是：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415143194.png" alt="1567415143194"></p>
+<p>多了Repeatable注解，也就是说明，这个Component注解是可以多次重复用的</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415194264.png" alt="1567415194264"></p>
+<p>那么你可能会问，如果不是jdk1.8,那么怎么书写多个扫描策略呢？</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415212225.png" alt="1567415212225"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415217769.png" alt="1567415217769"></p>
+<p>也就是说，我们可以在配置类，使用ComponentScans注解，配置多个扫描策略</p>
+<p>例子：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415246906.png" alt="1567415246906"></p>
+<p>跟 { 例子4 } 效果一样</p>
+<h4 id="4-1-FilterType-过滤规则"><a href="#4-1-FilterType-过滤规则" class="headerlink" title="4.1 FilterType 过滤规则"></a>4.1 FilterType 过滤规则</h4><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415321043.png" alt="1567415321043"></p>
+<p>下面我们注重讲解一下，CUSTOM 自定义实现类</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415342468.png" alt="1567415342468"></p>
+<p>需要先实现 TypeFilter</p>
+<p>1.首先定义一个扫描规则类</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415368545.png" alt="1567415368545"></p>
+<ol>
+<li>配置类，实现自定义过滤规则</li>
+</ol>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415379844.png" alt="1567415379844"></p>
+<p> 表示 – 扫描的类中如果包含er那么就会被过滤掉（注意：他是会取扫描com.kingge下面的所有类-<strong>包括哪些没有被注解，注解的类也会被扫描</strong>）</p>
+<h2 id="2-4-Import注解"><a href="#2-4-Import注解" class="headerlink" title="2.4      @Import注解"></a>2.4      @Import注解</h2><p><strong>有三种使用方式</strong></p>
+<p><strong>第一种写法</strong>：直接在import注解中配置需要导入的类</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415399146.png" alt="1567415399146"></p>
+<p>他在IOC容器中的id是：（全类名）</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415407178.png" alt="1567415407178"></p>
+<p>缺点：如果有多个类需要注入IOC，那么代码量就很长</p>
+<p><strong>第二种实现方式</strong>：自定义导入逻辑，批量导入，只需要返回需要导入的全类名数组</p>
+<p>  实现ImportSelector 类</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415418134.png" alt="1567415418134"></p>
+<p>配置类上使用</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415430330.png" alt="1567415430330"></p>
+<p>这样 pp就注入到了IOC 容器中</p>
+<p><strong>第三种方式</strong>：ImportBeanDefinitionRegistrar 实现这个类。</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415449102.png" alt="1567415449102"></p>
+<p>例子：</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415496868.png" alt="1567415496868"></p>
+<p>配置类引用</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415510372.png" alt="1567415510372"></p>
+<p>调用：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415521934.png" alt="1567415521934"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415535174.png" alt="1567415535174"></p>
+<h3 id="2-4-1-总结"><a href="#2-4-1-总结" class="headerlink" title="2.4.1 总结"></a>2.4.1 总结</h3><p>@Import[快速的给容器中导入一个组件]</p>
+<p>（1）、 @Import(要导入容器中的组件);容器中就会自动的注册这个组件，id默认是全类名</p>
+<p>（2）、 ImportSelector ：返回需要的组件的全类名的数组；</p>
+<p>（3）、 ImportBeanDefinitionRegistrar : 手动注册bean到容器中</p>
+<p> <strong>前面学习的springboot中，用到了该注解的次数很多。</strong></p>
+<h2 id="2-5-Factorybean-工厂bean"><a href="#2-5-Factorybean-工厂bean" class="headerlink" title="2.5 Factorybean 工厂bean"></a>2.5 Factorybean 工厂bean</h2><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415551953.png" alt="1567415551953"></p>
+<p>例子：</p>
+<p>1.实现这个工厂bean</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415565829.png" alt="1567415565829"></p>
+<p>getObject 方法：当调用bean时候，调用这个方法获取bean实例。</p>
+<p>getObjectType：返回对象类型</p>
+<p>isSIngleton: 是否是单例。False-表示是多例。True-表示是单例。（如果配置类中配置<strong>@Scope注解，企图改变UserDao的单实例，无效，以isDingleto方法设置为准</strong>）</p>
+<p>2.配置类配置</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415579392.png" alt="1567415579392"></p>
+<p>输出：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415589497.png" alt="1567415589497"></p>
+<blockquote>
+<p>输出：</p>
+<p>class com.kingge.dao.UserDao</p>
+<p>false</p>
+</blockquote>
+<p>、</p>
+<p>第二个输出肯定是false</p>
+<p>不过为什么第一个输出的是 Userdao的全类名而不是UserDaoFactoryBean的全类名呢？因为在构造的时候spring默认返回的就是getObjectType的值。</p>
+<p>那么怎么获取这个工厂bean呢？spring提供了一个方式：加上&amp;</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415621835.png" alt="1567415621835"></p>
+<p>输出：class com.kingge.utils.UserDaoFactoryBean</p>
+<h2 id="2-6-总结-组件注册"><a href="#2-6-总结-组件注册" class="headerlink" title="2.6 总结-组件注册"></a>2.6 总结-组件注册</h2><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415637061.png" alt="1567415637061"></p>
+<pre><code>/**
+
+ \* 给容器中注册组件：
+
+ \* 1）、扫描+组件标注注解（@Controller/@Service/@Repository/@Component）
+
+ \* 【局限于要求是自己写的类，如果导入的第三方没有添加这些注解，那么就注册不上了】
+
+ *
+
+ \* 2）、@Bean[导入的第三方包里面的组件]
+
+ \* 3）、@Import[快速的给容器中导入一个组件]
+
+ \*      （1）、 @Import(要导入容器中的组件);容器中就会自动的注册这个组件，id默认是全类名
+
+ \*      （2）、 ImportSelector ：返回需要的组件的全类名的数组；
+
+ \*      （3）、 ImportBeanDefinitionRegistrar : 手动注册bean到容器中
+
+ *
+
+ \* 4）、使用Spring提供的FactoryBean（工厂bean）
+
+ \*      （1）、默认获取到的是工厂bean调用getObject创建的对象
+
+ \*      （2）、要获取工厂bean本身，我们需要给id前面加上一个“&amp;”符号：&amp;userDaoFactoryBean
+</code></pre><p>第一种方式：一般用于自己定义的类，但是如果我们是通过导入第三方jar的方式导入了很多组件（类），但是我想把这些类注册到IOC容器中怎么办呢？这个时候就需要使用bean注解的方式注册组件。</p>
+<p>第二种方式：可以实现自定义类或者第三方类的注入到IOC容器。缺点，那就是每实例化一个bean就得写个方法。这样代码量太多。</p>
+<p>第三种方式：import标签（作用在配置类）</p>
+<h1 id="3-修饰Bean的相关注解"><a href="#3-修饰Bean的相关注解" class="headerlink" title="3.修饰Bean的相关注解"></a>3.修饰Bean的相关注解</h1><h2 id="3-1-Scope注解"><a href="#3-1-Scope注解" class="headerlink" title="3.1 @Scope注解"></a>3.1 @Scope注解</h2><p>他一般是<strong>和@Bean注解配套使用</strong>，标识实体类的作用范围。我们知道IOC容器中的实体类，默认是单实例的。</p>
+<p>证明：</p>
+<ol>
+<li>自定义IOC容器-实现配置类</li>
+</ol>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415657803.png" alt="1567415657803"></p>
+<p>2.获取 Person实体类</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415670181.png" alt="1567415670181"></p>
+<p>我们不难发现-这里输出的是true，所以spring扫描bean策略默认是单实例。</p>
+<p>那么怎么修改这种作用域呢？</p>
+<p>查看Scope注解源码，发现可以指定这四种类型的作用范围</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415683803.png" alt="1567415683803"></p>
+<p>第一个是多实例，第二个是：单实例（<strong>默认值</strong>）</p>
+<p>第三个是：web环境下，用一个请求创建一次实例</p>
+<p>第四个是：web环境下，同一个session创建一次实例</p>
+<p>那么上诉代码只需要修改为</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415696308.png" alt="1567415696308"></p>
+<p>这样就是多实例。</p>
+<p><strong>总结：</strong></p>
+<p>   单实例：在IOC容器启动的时候就已经实例化好Person（调用getPerson实例化），那么每次获取的时候直接从IOC容器中拿。</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415714441.png" alt="1567415714441"></p>
+<p>这段代码运行时候会去调用getPerson方法完成实例</p>
+<p>多实例：IOC容器启动时，不会去实例化Person，而是每次获取的时候才会去调用getPerson获取对象。</p>
+<h2 id="3-2-Lazy注解"><a href="#3-2-Lazy注解" class="headerlink" title="3.2 @Lazy注解"></a>3.2 @Lazy注解</h2><p><strong>和@Bean注解配套使用，解决单实例bean在IOC容器启动就马上创建实例的问题。</strong></p>
+<p><strong>懒加载bean，这个只对于单实例的情况下才有用</strong></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415726984.png" alt="1567415726984"></p>
+<p>也就是IOC容器初始化的时候，不会去调用getPerson，实例化Person。<strong>第一次获取的时候才会去创建，以后再使用该实例化，会使用以前获取的</strong></p>
+<h2 id="3-3-Conditional"><a href="#3-3-Conditional" class="headerlink" title="3.3 @Conditional"></a>3.3 @Conditional</h2><p>根据满足某个特定的条件创建一个特定的Bean。</p>
+<p>因为我们可能存在一个需求那就是，根据不同的业务场景我们会有选择性的实例化某些bean，那么就可以使用这个注解。</p>
+<h3 id="1-例子"><a href="#1-例子" class="headerlink" title="1.例子"></a>1.例子</h3><p> 需求：根据不同的系统实例化不同的bean。</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415756903.png" alt="1567415756903"></p>
+<p>输出：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415769824.png" alt="1567415769824"></p>
+<p>l  <strong>增加需求</strong> <strong>–</strong> <strong>当使用windows系统时，在IOC容器中创建windows实体类，反之创建linux</strong> <strong>实体类</strong></p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415788706.png" alt="1567415788706"></p>
+<p>\1.      实现两个 条件类</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415816993.png" alt="1567415816993"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415830634.png" alt="1567415830634"></p>
+<p>2.配置类</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415842983.png" alt="1567415842983"></p>
+<p>\2.      实例化IOC 容器</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415854254.png" alt="1567415854254"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415865773.png" alt="1567415865773"></p>
+<p>你会发现仅仅只是实例化了windows，linux实体类已经不见了，那么说明是条件生效了。</p>
+<p>备注：</p>
+<p>   @Conditional注解是可以作用在配置类上面的，那么他的作用就是全局的条件，只有满足了这个条件，配置类里面的bean才能够实例化。（局部方法配置Conditional注解会失效）</p>
+<h1 id="4-生命周期"><a href="#4-生命周期" class="headerlink" title="4.生命周期"></a>4.生命周期</h1><pre><code>我们知道，Bean的生命周期是由IOC容器来管理的，那么我们也是可以自定义初始化方法和销毁方法。
+</code></pre><p>Bean生命周期：<strong>bean创建-初始化-销毁</strong>，那么下面我们将来介绍，能够控制Bean生命周期的几种方式。</p>
+<h2 id="4-1-init-method、destory-method-管理bean生命周期"><a href="#4-1-init-method、destory-method-管理bean生命周期" class="headerlink" title="4.1. init-method、destory-method 管理bean生命周期"></a>4.1. init-method、destory-method 管理bean生命周期</h2><p>需要注意的是，单实例和多实例的情况下，bean生命周期是不一样的。<strong>单实例bean的生命周期全部托管给IOC容器，多实例部分托管</strong>。</p>
+<h3 id="1-在配置文件XML中："><a href="#1-在配置文件XML中：" class="headerlink" title="1.在配置文件XML中："></a>1.在配置文件XML中：</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415958501.png" alt="1567415958501"></p>
+<p>这两个方法是来控制初始化和销毁的</p>
+<h3 id="2-代码控制初始化和销毁"><a href="#2-代码控制初始化和销毁" class="headerlink" title="2.代码控制初始化和销毁"></a>2.代码控制初始化和销毁</h3><h4 id="单实例情况下"><a href="#单实例情况下" class="headerlink" title="单实例情况下"></a>单实例情况下</h4><p>其实也就是在Bean注解，上填充init-method和destory-method方法</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415979268.png" alt="1567415979268"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415990937.png" alt="1567415990937"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415998217.png" alt="1567415998217"></p>
+<p>输出：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416012675.png" alt="1567416012675"></p>
+<p><strong>因为是单实例的原因</strong>-所以容器启动的时候就开始调用了无参构造器创建对象，然后调用init初始化方法，容器关闭时，调用销毁方法.</p>
+<h4 id="多实例情况下"><a href="#多实例情况下" class="headerlink" title="多实例情况下"></a>多实例情况下</h4><p>我们把配置类获取Car对象的方法改为多实例的形式，观察输出。</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416024604.png" alt="1567416024604"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416034091.png" alt="1567416034091"></p>
+<p>输出</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416054016.png" alt="1567416054016"></p>
+<p>我们发现我们在关闭容器的时候，<strong>他并没有调用destory销毁实例</strong>，因为多实例的bean他是不归于容器管辖，需要我们自己手动销毁</p>
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h3><p>总的来说，bean在IOC容器的生命周期如下：</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416082833.png" alt="1567416082833"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">* 我们可以自定义初始化和销毁方法；容器在bean进行到当前生命周期的时候来调用我们自定义的初始化和销毁方法</div><div class="line">* </div><div class="line">* 构造（对象创建）</div><div class="line">* 		单实例：在容器启动的时候创建对象</div><div class="line">* 		多实例：在每次获取的时候创建对象</div><div class="line">* </div><div class="line">* BeanPostProcessor.postProcessBeforeInitialization</div><div class="line">* 初始化：</div><div class="line">* 		对象创建完成，并赋值好，调用初始化方法。。。</div><div class="line">* BeanPostProcessor.postProcessAfterInitialization</div><div class="line">* 销毁：</div><div class="line">* 		单实例：容器关闭的时候</div><div class="line">* 		多实例：容器不会管理这个bean；容器不会调用销毁方法；</div></pre></td></tr></table></figure>
+<h2 id="4-2-InitializingBean和DisposableBean-控制bean生命周期"><a href="#4-2-InitializingBean和DisposableBean-控制bean生命周期" class="headerlink" title="4.2 InitializingBean和DisposableBean 控制bean生命周期"></a>4.2 InitializingBean和DisposableBean 控制bean生命周期</h2><h3 id="1单实例情况下"><a href="#1单实例情况下" class="headerlink" title="1单实例情况下"></a>1单实例情况下</h3><p>1.新建Food类实现这两个接口</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416100346.png" alt="1567416100346"></p>
+<p>配置类扫描</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416118482.png" alt="1567416118482"></p>
+<p>测试</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416129315.png" alt="1567416129315"></p>
+<p>输出：</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416137640.png" alt="1567416137640"></p>
+<p>很明显单实例情况下，bean的生命周期是全部托管到IOC容器中。</p>
+<h3 id="2-多实例情况下"><a href="#2-多实例情况下" class="headerlink" title="2.多实例情况下"></a>2.多实例情况下</h3><p>如果Food注入IOC容器时，选择多实例的方式的话，那么上面的案例在启动IOC容器时，不会有任何输出，因为多实例的情况下只有获取对象才会去做相关的初始化工作。</p>
+<p>验证1：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416163330.png" alt="1567416163330"></p>
+<p>没有任何输出。</p>
+<p>验证2：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416175448.png" alt="1567416175448"></p>
+<p>输出：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416191108.png" alt="1567416191108"></p>
+<h3 id="3-总结-1"><a href="#3-总结-1" class="headerlink" title="3.总结"></a>3.总结</h3><blockquote>
+<p><strong>很明显没有调用DisposableBean接口的destory方法和自定义的destory方法。</strong></p>
+<p><strong>也就是说在多实例的情况下IOC容器只帮我们做创建和初始化bean的工作，但是销毁bean的工作他没有帮我们做，需要自己去实现。</strong></p>
+</blockquote>
+<h2 id="4-3-PostConstruct和-PreDestroy注解"><a href="#4-3-PostConstruct和-PreDestroy注解" class="headerlink" title="4.3 @PostConstruct和@PreDestroy注解"></a>4.3 @PostConstruct和@PreDestroy注解</h2><p>这两个注解是作用在方法上面的。</p>
+<p>可以使用JSR250规范里面定义的两个注解：</p>
+<p>@PostConstruct :在bean创建完成并且属性赋值完成，来执行初始化方法</p>
+<p>@PreDestroy ：在容器销毁bean之前通知我们来进行清理工作</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416209944.png" alt="1567416209944"></p>
+<p>初始化容器</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416222017.png" alt="1567416222017"></p>
+<p>输出：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416237939.png" alt="1567416237939"></p>
+<p>很明显-这两个注解的作用比4.2章节的两个接口的重载方法的调用更早，注意看官方的 注释说明</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416255764.png" alt="1567416255764"></p>
+<p><strong>注意：这两个注解注解的方法，无返回值（void）</strong></p>
+<h2 id="4-4-BeanPostProcessor-后置处理接口（重要）"><a href="#4-4-BeanPostProcessor-后置处理接口（重要）" class="headerlink" title="4.4 BeanPostProcessor 后置处理接口（重要）"></a>4.4 BeanPostProcessor 后置处理接口（重要）</h2><p>我们发现上面三种管理bean生命周期的方式，他们的方法是没有入参和出参的。，下面这种方式提供了</p>
+<p>BeanPostProcessor接口：bean的后置处理器，在bean初始化前后做一些处理工作，这个接口有两个方法：</p>
+<p>postProcessBeforeInitialization：在初始化之前工作</p>
+<p>postProcessAfterInitialization：在初始化之后工作</p>
+<p>（1）. 实现Food实体类</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416280606.png" alt="1567416280606"></p>
+<p>（2）.配置类</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416311128.png" alt="1567416311128"></p>
+<p>（3）.  启动容器查看输出</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416341585.png" alt="1567416341585"></p>
+<p>（4）输出</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416364626.png" alt="1567416364626"></p>
+<p><strong>他没有销毁方法。</strong></p>
+<h2 id="4-1-4-4总结"><a href="#4-1-4-4总结" class="headerlink" title="4.1-4.4总结"></a>4.1-4.4总结</h2><p>上面这四种方式调用顺序</p>
+<p>对象构造器 –&gt;&gt; PostConstruct -&gt;&gt; afterPropertiesSet -&gt;&gt; init-method -&gt;&gt; <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416382230.png" alt="1567416382230"> -&gt;&gt;   <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416398530.png" alt="1567416398530">-&gt;&gt;PreDestroy注解 自定义实现的destory方法-&gt;&gt; DisposableBean的destroy方法 -&gt;&gt;Food 自定义实现的destoryMethod方法</p>
+<p>销毁：</p>
+<p>  @PreDestroy注解的 PreDestroy —》DisposableBean接口的destory —》 destroy-method</p>
+<h2 id="4-5BeanPostProcessor-原理"><a href="#4-5BeanPostProcessor-原理" class="headerlink" title="4.5BeanPostProcessor 原理"></a>4.5BeanPostProcessor 原理</h2><h3 id="1-两个方法打上断点"><a href="#1-两个方法打上断点" class="headerlink" title="1.两个方法打上断点"></a>1.两个方法打上断点</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416431574.png" alt="1567416431574"></p>
+<p>Dubug方式启动IOC容器</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416442452.png" alt="1567416442452"></p>
+<p>2.查看方法栈调用</p>
+<p>创建容器构造器</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416469689.png" alt="1567416469689"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416483129.png" alt="1567416483129"></p>
+<pre><code>前置处理器调用的方法：调用getBeanPostProcessors()方法找到容器里面的所有的BeanPostProcessor，挨个遍历，调用BeanPostProcessor的postProcessBeforeInitialization方法，一旦调用postProcessBeforeInitialization方法的返回值为null的时候，就直接跳出遍历 ，后面的BeanPostProcessor 的postProcessBeforeInitialization也就不会执行了：
+</code></pre><p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416501945.png" alt="1567416501945"></p>
+<p>后置处理器调用的方法：调用getBeanPostProcessors()方法找到容器里面的所有的BeanPostProcessor，挨个遍历，调用BeanPostProcessor的postProcessAfterInitialization方法，一旦调用postProcessAfterInitialization方法的返回值为null的时候，就直接跳出遍历 ，后面的BeanPostProcessor 的postProcessAfterInitialization也就不会执行了：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416524867.png" alt="1567416524867"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416538029.png" alt="1567416538029"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416547870.png" alt="1567416547870"></p>
+<h3 id="2-BeanPostProcessor在springboot中的使用"><a href="#2-BeanPostProcessor在springboot中的使用" class="headerlink" title="2.BeanPostProcessor在springboot中的使用"></a>2.BeanPostProcessor在springboot中的使用</h3><p>查看该接口的实现类</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416562220.png" alt="1567416562220"></p>
+<p>这个接口，其实在spring的IOC容器中使用的频率是很多的，而且spring提供了很多实现类，例如如果我们想在bean中使用IOC容器的话，那么就可以使用</p>
+<h3 id="1-ApplicationContextAwareProcessor"><a href="#1-ApplicationContextAwareProcessor" class="headerlink" title="1.ApplicationContextAwareProcessor"></a>1.ApplicationContextAwareProcessor</h3><p>给实体类，注入IOC容器。</p>
+<p>ApplicationContextAware 接口，注入IOC容器</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416620035.png" alt="1567416620035"></p>
+<p>例如：Dog实体类需要使用到IOC容器，那么就可以实现这个接口</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416633367.png" alt="1567416633367"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416638886.png" alt="1567416638886"></p>
+<p>然后 他实际上是去 调用这个ApplicationContextAwareProcessor，方法，在创建Dog 对象他会去调用 postProcessBeforeInitialization 方法，判断实例化</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416668422.png" alt="1567416668422"></p>
+<p>然后判断当前Dog实体类是否实现了ApplicationContextAware，如果是，那么调用invokeAwareInterface注入，IOC容器。</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416682517.png" alt="1567416682517"></p>
+<p>最终去调用 Dog的 setApplicationContext 方法，赋值。</p>
+<h3 id="1-BeanValidationPostProcessor"><a href="#1-BeanValidationPostProcessor" class="headerlink" title="1.    BeanValidationPostProcessor"></a>1.    BeanValidationPostProcessor</h3><p>实体类校验，后置处理器</p>
+<h3 id="2-InitDestroyAnnotationBeanPostProcessor"><a href="#2-InitDestroyAnnotationBeanPostProcessor" class="headerlink" title="2.InitDestroyAnnotationBeanPostProcessor"></a>2.InitDestroyAnnotationBeanPostProcessor</h3><p>这个处理类，就是处理，我们3.3章节的两个注解。</p>
+<h3 id="3-AutowiredAnnotationBeanPostProcessor"><a href="#3-AutowiredAnnotationBeanPostProcessor" class="headerlink" title="3.AutowiredAnnotationBeanPostProcessor"></a>3.AutowiredAnnotationBeanPostProcessor</h3><p>这个类就是处理我们的Autoware注解的</p>
+<h3 id="4-BeanFactoryPostProcessor"><a href="#4-BeanFactoryPostProcessor" class="headerlink" title="4. BeanFactoryPostProcessor"></a>4. BeanFactoryPostProcessor</h3><p>BeanFactory的后置处理器，在BeanFactory的标准初始化之后调用</p>
+<p>所有bean的定义已经保存加载到BeanFactory，但是bean的实例还未创建</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416709158.png" alt="1567416709158"></p>
+<p>运行IOC容器</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416721160.png" alt="1567416721160"></p>
+<p>查看输出：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416731721.png" alt="1567416731721"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416742609.png" alt="1567416742609"></p>
+<p><strong>很明显他是在bean实例创建之前执行的。</strong></p>
+<p>  BeanFactoryPostProcessor原理:</p>
+<p>  1)、ioc容器创建对象</p>
+<p>  2)、invokeBeanFactoryPostProcessors(beanFactory);</p>
+<pre><code>如何找到所有的BeanFactoryPostProcessor并执行他们的方法；
+
+          1）、直接在BeanFactory中找到所有类型是BeanFactoryPostProcessor的组件，并执行他们的方法
+
+          2）、在初始化创建其他组件前面执行
+</code></pre><h3 id="5-BeanDefinitionRegistryPostProcessor"><a href="#5-BeanDefinitionRegistryPostProcessor" class="headerlink" title="5.BeanDefinitionRegistryPostProcessor"></a>5.BeanDefinitionRegistryPostProcessor</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416769528.png" alt="1567416769528"></p>
+<p>启动ioc容器查看输出</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416783886.png" alt="1567416783886"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416793969.png" alt="1567416793969"></p>
+<h3 id="6-ApplicationListener"><a href="#6-ApplicationListener" class="headerlink" title="6. ApplicationListener"></a>6. ApplicationListener</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416807398.png" alt="1567416807398"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416820306.png" alt="1567416820306"></p>
+<h1 id="5-属性赋值"><a href="#5-属性赋值" class="headerlink" title="5.属性赋值"></a>5.属性赋值</h1><h2 id="5-1-Value注解"><a href="#5-1-Value注解" class="headerlink" title="5.1 @Value注解"></a>5.1 @Value注解</h2><p>这个注解一般是作用在类的属性上面，他的作用等同于</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417097750.png" alt="1567417097750"></p>
+<p>那么他可以书写那些值呢？</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416934645.png" alt="1567416934645"></p>
+<p>第三种是取配置文件的数据</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416950884.png" alt="1567416950884"></p>
+<p>那么怎么使用 第三种方式赋值呢？下面讲解</p>
+<h2 id="5-2-PropertySource-注解"><a href="#5-2-PropertySource-注解" class="headerlink" title="5.2 @ PropertySource 注解"></a>5.2 @ PropertySource 注解</h2><p>他的作用相当于XML的：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416959675.png" alt="1567416959675"></p>
+<p>1.配置类添加配置注解</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417123219.png" alt="1567417123219"></p>
+<p>2.Person实体类</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417130983.png" alt="1567417130983"></p>
+<p>输出：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417138775.png" alt="1567417138775"></p>
+<p>我们也可以通过IOC容器手动的去获取配置的信息</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417160484.png" alt="1567417160484"></p>
+<h2 id="3-3-通过实现-EmbeddedValueResolverAware-获取属性值"><a href="#3-3-通过实现-EmbeddedValueResolverAware-获取属性值" class="headerlink" title="3.3   通过实现 EmbeddedValueResolverAware 获取属性值"></a>3.3   通过实现 EmbeddedValueResolverAware 获取属性值</h2><p>l  <strong>见6.5</strong> <strong>章节</strong></p>
+<h1 id="6-自动装配"><a href="#6-自动装配" class="headerlink" title="6.自动装配"></a>6.自动装配</h1><h2 id="6-1-Autowire、-Qualifier、-Primary（spring规范的注解）"><a href="#6-1-Autowire、-Qualifier、-Primary（spring规范的注解）" class="headerlink" title="6.1 @Autowire、@Qualifier、@Primary（spring规范的注解）"></a>6.1 @Autowire、@Qualifier、@Primary（spring规范的注解）</h2><p>在spring的项目中我们是经常这个Autowire来进行实体类之间的依赖注入，他的注入规则是：</p>
+<p>\1.      默认按照类型去IOC容器中查找需要的实体类（例如UserDao.class）</p>
+<p>\2.      如果找到多个同类型的实体类，那么他会根据属性名作为组件ID去进一步匹配。</p>
+<p>例如：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417175481.png" alt="1567417175481"></p>
+<p>然后IOC容器中有两个UserDao实例，一个是ID为userDao，一个ID为userDao1.</p>
+<p>那么上面service注入的是哪一个呢？</p>
+<p>  答案：注入的是ID为userDao的实体类。如果想要注入userDao1，那么应该把属性名改为userDao1</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417185951.png" alt="1567417185951"></p>
+<p>@Qualifier，指定需要装配的ID，取消默认根据属性名去匹配。</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417197152.png" alt="1567417197152"> 默认是必须找到需要的依赖实体类，然后注入Service，否则就会报错，我们可以使用required属性来控制</p>
+<p>@Primary ： <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417205766.png" alt="1567417205766"></p>
+<p>这个注解是作用在被依赖的实体类（UserDao）上面，明确指定，当某个类（UserService）依赖这个实体类的时候，假设IOC容器中存在多个相同类型的被依赖类（UserDao）那么首选呗Primary注解的被依赖类。（</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417215346.png" alt="1567417215346"></p>
+<p>如果UserService同时使用了@Qualifier<strong>注解</strong> ，那么@Primary的效果将会失效，以Qualifier注解需要的ID为主</p>
+<h3 id="Autowire注解扩展"><a href="#Autowire注解扩展" class="headerlink" title="@Autowire注解扩展"></a>@Autowire注解扩展</h3><p>他可以标在构造器上，方法上</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417225715.png" alt="1567417225715"></p>
+<h2 id="6-2-Resource、-Inject（java规范的注解）"><a href="#6-2-Resource、-Inject（java规范的注解）" class="headerlink" title="6.2 @Resource、@Inject（java规范的注解）"></a>6.2 @Resource、@Inject（java规范的注解）</h2><pre><code>![1567417242591](spring注解-辅助学习springboot和springcloud\1567417242591.png)
+</code></pre><p><strong>@Resource注解</strong></p>
+<p>他的作用跟@Autowire注解的作用是一样的，默认根据属性名进行装配。Name属性可以更改装配的id</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417260280.png" alt="1567417260280"></p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417265681.png" alt="1567417265681"></p>
+<p><strong>@Inject</strong> <strong>的使用，需要添加依赖</strong></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417277299.png" alt="1567417277299"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417283634.png" alt="1567417283634"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417290770.png" alt="1567417290770"></p>
+<p>支持@Primary功能，但是他没有属性</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417301282.png" alt="1567417301282"></p>
+<h2 id="6-3-Aware接口-（重要）"><a href="#6-3-Aware接口-（重要）" class="headerlink" title="6.3 Aware接口 （重要）"></a>6.3 Aware接口 （重要）</h2><p>自定义组件想要使用Spring容器底层的一些组件（ApplicationContext、BeanFactory…）</p>
+<p>自定义组件实现xxxAware接口就可以实现，在创建对象的时候，会调用接口规定的方法注入相关的组件，把Spring底层的一些组件注入到自定义的bean中。 xxxAware等这些都是</p>
+<p>利用<strong>后置处理器的机制</strong>，比如ApplicationContextAware 是通过ApplicationContextAwareProcessor来进行处理的。</p>
+<p>如果我们想在自定义实体类中，使用IOC容器的context怎么办呢？</p>
+<p>例子：我有在第四章节中 BeanPostProcessor中讲过。</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417315217.png" alt="1567417315217"></p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417323109.png" alt="1567417323109"></p>
+<p>例子：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417358798.png" alt="1567417358798"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417366098.png" alt="1567417366098"></p>
+<h3 id="1-下面我们就是用一个例子来详细讲解一下Aware接口的工作流程。"><a href="#1-下面我们就是用一个例子来详细讲解一下Aware接口的工作流程。" class="headerlink" title="1.下面我们就是用一个例子来详细讲解一下Aware接口的工作流程。"></a>1.下面我们就是用一个例子来详细讲解一下Aware接口的工作流程。</h3><p>（1）.实现一个entity，实现<strong>ApplicationContextAware</strong> 接口</p>
+<p>实现该接口的setApplicationContext方法。</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417382674.png" alt="1567417382674"></p>
+<p>（2）. 配置类，配置Blue实体类，实例化到IOC容器中</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417392347.png" alt="1567417392347"></p>
+<p>（3）.获取IOC容器</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417433281.png" alt="1567417433281"></p>
+<p>（4）输出</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417443301.png" alt="1567417443301"></p>
+<h3 id="2-源码分析"><a href="#2-源码分析" class="headerlink" title="2.源码分析"></a>2.源码分析</h3><p>在setApplicationContext 打个断点。</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417460772.png" alt="1567417460772"></p>
+<p>发现他是去调用 ApplicationContextAwareProcessor 实体类，这个实体类实现了BeanPostProcessor 后置处理器。</p>
+<p>2.执行postProcessBeforeInitialization 前置方法，判断当前的实体类是否继承了某些接口。做一些权限判断</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417474653.png" alt="1567417474653"></p>
+<p>3.然后调用 invokeAwareInterfaces ，紧接着调用实体类实现的 <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417484555.png" alt="1567417484555"> 方法，注入IOC容器</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417501646.png" alt="1567417501646"></p>
+<h2 id="6-4-Profile注解"><a href="#6-4-Profile注解" class="headerlink" title="6.4 @Profile注解"></a>6.4 @Profile注解</h2><pre><code>和Springboot的profile是一致的。
+</code></pre><p>@profile注解是spring提供的一个用来标明当前运行环境的注解。我们正常开发的过程中经常遇到的问题是，开发环境是一套环境，qa测试是一套环境，线上部署又是一套环境。这样从开发到测试再到部署，会对程序中的配置修改多次，尤其是从qa到上线这个环节，让qa的也不敢保证改了哪个配置之后能不能在线上运行。</p>
+<p>为了解决上面的问题，我们一般会使用一种方法，就是配置文件，然后通过不同的环境读取不同的配置文件，从而在不同的场景中跑我们的程序。</p>
+<p>那么，spring中的@profile注解的作用就体现在这里。在spring使用DI来依赖注入的时候，能够根据当前制定的运行环境来注入相应的bean。最常见的就是使用不同的DataSource了。</p>
+<p><strong>下面-结合</strong> <strong>properties配置文件的三种注入方式来讲解一下@Profile注解的用法</strong></p>
+<p>—-以作用在方法上，表示只要在当前设置的环境下才会往IOC容器中注册当前bean。</p>
+<p>—-作用在类上面 </p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417520813.png" alt="1567417520813"></p>
+<p>类里面的所有bean，能够被注册到IOC容器中的条件是：只要开发环境满足了当前配置类上面的Prifile注解标识的环境。 </p>
+<p>例如：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417527878.png" alt="1567417527878"></p>
+<p>主要开发环境是test 里面的bean才能够被注册。</p>
+<p>-</p>
+<h2 id="6-5-profile的使用"><a href="#6-5-profile的使用" class="headerlink" title="6.5 @profile的使用"></a>6.5 @profile的使用</h2><p>我们知道，如果在组件上标识了这个注解，那么如果没有激活，那么就不会被注册到IOC容器中。通过这个特性来过滤一些组件的注册。</p>
+<p>@Profile(“default”) 是默认注册某个bean</p>
+<p>1.配置类</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417566591.png" alt="1567417566591"></p>
+<p>2.测试</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417580291.png" alt="1567417580291"></p>
+<p>输出：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417588458.png" alt="1567417588458"></p>
+<p>很明显，三个配置都没有被注册在IOC容器中，因为没有指定运行环境。</p>
+<p>\3.      制定运行环境（第一种方式：虚拟机参数位置添加-Dspring.profiles.active=test）</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417616396.png" alt="1567417616396"></p>
+<p>这样</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417625690.png" alt="1567417625690"> 就会输出了。</p>
+<p>\4.      制定运行环境（第二种方式-代码方式）</p>
+<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417638837.png" alt="1567417638837"></p>
+<p>可以指定多个配置环境</p>
+<p>输出：</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417653302.png" alt="1567417653302"></p>
+<h1 id="7-AOP"><a href="#7-AOP" class="headerlink" title="7.AOP"></a>7.AOP</h1><blockquote>
+<p> 什么叫AOP和他的作用</p>
+</blockquote>
+<p>在程序运行期间，动态的将某段代码切入到指定方法运行时的指定时机运行，其实就是动态代理。</p>
+<blockquote>
+<p>作用场景</p>
+</blockquote>
+<pre><code>可以在某个业务实现的过程前后，或者出现异常，进行一些额外业务的操作。例如当你调用add()方法进行加法运算的时候，我们可以在调用方法前，得到结果后，或者出现异常时，记录一些日志。以前我们传统的做法是，在方法里面打印日志（System.out.println）,但是这样会造成耦合，而且我们也想把打印日志抽离成一个统一的模块。
+</code></pre><h2 id="1-例子-1"><a href="#1-例子-1" class="headerlink" title="1.  例子"></a>1.  例子</h2><p> Maven依赖：spring提供了对AOP的支持</p>
+<h3 id="（1）导入aop依赖"><a href="#（1）导入aop依赖" class="headerlink" title="（1）导入aop依赖"></a>（1）导入aop依赖</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects --&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-aspects&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;4.3.14.RELEASE&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<h3 id="（2）MathCalculator-java"><a href="#（2）MathCalculator-java" class="headerlink" title="（2）MathCalculator.java"></a>（2）MathCalculator.java</h3><pre><code>业务逻辑类：要求在业务方法运行时打印日志
+</code></pre><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417713757.png" alt="1567417713757"></p>
+<h3 id="（3）：日志切面类：LogAspects-java"><a href="#（3）：日志切面类：LogAspects-java" class="headerlink" title="（3）：日志切面类：LogAspects.java"></a>（3）：日志切面类：LogAspects.java</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package com.kingge.aop;</div><div class="line"></div><div class="line">import java.util.Arrays;</div><div class="line"></div><div class="line">import org.aspectj.lang.JoinPoint;</div><div class="line">import org.aspectj.lang.annotation.After;</div><div class="line">import org.aspectj.lang.annotation.AfterReturning;</div><div class="line">import org.aspectj.lang.annotation.AfterThrowing;</div><div class="line">import org.aspectj.lang.annotation.Aspect;</div><div class="line">import org.aspectj.lang.annotation.Before;</div><div class="line">import org.aspectj.lang.annotation.Pointcut;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 切面类</div><div class="line"> * @Aspect： 告诉Spring当前类是一个切面类</div><div class="line"> *</div><div class="line"> */</div><div class="line">@Aspect</div><div class="line">public class LogAspects &#123;</div><div class="line"></div><div class="line">	//抽取公共的切入点表达式</div><div class="line">	//1、本类引用</div><div class="line">	//2、其他的切面引用</div><div class="line">	@Pointcut(&quot;execution(public int com.kingge.aop.MathCalculator.*(..))&quot;)</div><div class="line">	public void pointCut()&#123;&#125;;</div><div class="line"></div><div class="line">	//@Before在目标方法之前切入；切入点表达式（指定在哪个方法切入）</div><div class="line">	@Before(&quot;pointCut()&quot;)</div><div class="line">	public void logStart(JoinPoint joinPoint)&#123;</div><div class="line">		Object[] args = joinPoint.getArgs();</div><div class="line">		System.out.println(&quot;&quot;+joinPoint.getSignature().getName()+&quot;运行。。。@Before:参数列表是：&#123;&quot;+Arrays.asList(args)+&quot;&#125;&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@After(&quot;com.kingge.aop.LogAspects.pointCut()&quot;)</div><div class="line">	public void logEnd(JoinPoint joinPoint)&#123;</div><div class="line">		System.out.println(&quot;&quot;+joinPoint.getSignature().getName()+&quot;结束。。。@After&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	//JoinPoint一定要出现在参数表的第一位</div><div class="line">	@AfterReturning(value=&quot;pointCut()&quot;,returning=&quot;result&quot;)</div><div class="line">	public void logReturn(JoinPoint joinPoint,Object result)&#123;</div><div class="line">		System.out.println(&quot;&quot;+joinPoint.getSignature().getName()+&quot;正常返回。。。@AfterReturning:运行结果：&#123;&quot;+result+&quot;&#125;&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@AfterThrowing(value=&quot;pointCut()&quot;,throwing=&quot;exception&quot;)</div><div class="line">	public void logException(JoinPoint joinPoint,Exception exception)&#123;</div><div class="line">		System.out.println(&quot;&quot;+joinPoint.getSignature().getName()+&quot;异常。。。异常信息：&#123;&quot;+exception+&quot;&#125;&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code>这四个方法，都是作用在MathCalculator的add方法，那么他们的切入点表达式都是一样的，为了避免重复书写，我们一般采用抽取公共切入点的方式，抽取出来，复用。---- 使用@PoinCut注解
+</code></pre><blockquote>
+<p> 切面类中的方法也称为通知方法：</p>
+<p>  前置通知(@Before)：在目标方法运行之前运行</p>
+<p>  后置通知(@After)：在目标方法运行之后运行，即使出现异常也会运行</p>
+<p>  返回通知(@AfterReturning)：在目标方法正常返回之后运行</p>
+<p>  异常通知(@AfterThrowing)：在目标方法运行出现异常之后运行</p>
+<p>  环绕通知(@Around)：动态代理，手动推进目标方法的运行</p>
+</blockquote>
+<h3 id="（4）开启spring切面自动代理"><a href="#（4）开启spring切面自动代理" class="headerlink" title="（4）开启spring切面自动代理"></a>（4）开启spring切面自动代理</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417746703.png" alt="1567417746703"></p>
+<pre><code>**使用Spring的切面需要开启Spring的切面自动代理，只需要在配置类中加注解@EnableAspectJAutoProxy，Spring中有很多@EnableXxx（关于这点我们在springcloud中使用的最多，自动配置）注解，用来开启一些功能**
+</code></pre><blockquote>
+<pre><code>配置bean怎么区分哪个bean是切面类呢，它会看哪个类上有@Aspect注解，另外切面方法的执行仅对Spring容器中的bean起作用，对于我们自己new出来的对象是不起作用的，原因也很简单，我们自己创建的bean并没有被spring管理，也就没有为其设置切面方法等。
+
+    通过JoinPoint对象获取调用目标方法时的信息，比如方法名、参数等，使用returning指定用通知方法的哪个入参接收返回值，使用throwing指定用哪个入参接收异常，另外如果使用JoinPoint，则必须将其放在切面方法入参的第一个位置，否则会报错
+</code></pre></blockquote>
+<h3 id="（5）测试"><a href="#（5）测试" class="headerlink" title="（5）测试"></a>（5）测试</h3><blockquote>
+<p> 正常计算</p>
+</blockquote>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417764521.png" alt="1567417764521"></p>
+<blockquote>
+<p>错误计算</p>
+</blockquote>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567472449448.png" alt="1567472449448"></p>
+<p>给一个出现异常的 1 /0 运算处理，查看日志。</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417773670.png" alt="1567417773670"></p>
+<p>你会发现，无论是否出现异常 logStart 和 logEnd 都会正常输出，如果正常返回那么<code>@AfterReturning标识的方法</code>会被调用，如果运算发生异常那么<code>@AfterReturning标识的方法</code>不会被调用，而<code>@AfterThrowing标识的异常处理方法会被调用</code></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417705277.png" alt="1567417705277"></p>
+<h2 id="2-AOP原理"><a href="#2-AOP原理" class="headerlink" title="2.  AOP原理"></a>2.  AOP原理</h2><p>通过上面的例子我们知道，实现AOP的关键点在于我么能使用@EnableAspectJAutoProxy注解，那么接下来我们查看一下这个注解到底做了什么工作</p>
+<h3 id="1-查看-EnableAspectJAutoProxy注解"><a href="#1-查看-EnableAspectJAutoProxy注解" class="headerlink" title="1.查看@EnableAspectJAutoProxy注解"></a>1.查看@EnableAspectJAutoProxy注解</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417786810.png" alt="1567417786810"></p>
+<p>两个属性的含义：</p>
+<blockquote>
+<pre><code>英文注解已经很详细了,这里简单介绍一下两个参数,一个是控制aop的具体实现方式,为true 的话使用cglib,为false的话使用java的Proxy,默认为false,第二个参数控制代理的暴露方式,解决内部调用不能使用代理的场景，默认为false
+</code></pre></blockquote>
+<h3 id="2-查看一下-AspectJAutoProxyRegistrar-java-到底导入了哪些类"><a href="#2-查看一下-AspectJAutoProxyRegistrar-java-到底导入了哪些类" class="headerlink" title="2.查看一下 AspectJAutoProxyRegistrar.java 到底导入了哪些类"></a>2.查看一下 AspectJAutoProxyRegistrar.java 到底导入了哪些类</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417799676.png" alt="1567417799676"></p>
+<p>很明显这个类是采用了ImportBeanDefinitionRegistrar的方式注册了某些类大oIOC容器中，那么我们看一下他到底注入了什么类。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">核心是这里： AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry);</div></pre></td></tr></table></figure>
+<pre><code>一个AOP的工具类,这个工具类的主要作用是把AnnotationAwareAspectJAutoProxyCreator这个类定义为BeanDefinition放到spring容器中,这是通过实现ImportBeanDefinitionRegistrar接口来装载的,具体装载过程不是本篇的重点,这里就不赘述,我们重点看AnnotationAwareAspectJAutoProxyCreator这个类.
+</code></pre><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567438805334.png" alt="1567438805334"></p>
+<pre><code>从类图是可以大致了解AnnotationAwareAspectJAutoProxyCreator这个类的功能.它实现了一系列Aware的接口,在Bean装载的时候获取BeanFactory(Bean容器),Bean的ClassLoader,还实现了order接口,继承了PorxyConfig,ProxyConfig中主要封装了代理的通用处理逻辑,比如设置目标类,设置使用cglib还是java proxy等一些基础配置.
+
+而能够让这个类参与到bean初始化功能,并为bean添加代理功能的还是因为它实现了BeanPostProcessor这个接口.这个接口的postProcessAfterInitialization方法会在bean初始化结束后(赋值完成)被调用。
+</code></pre><h3 id="3-最顶部的抽象类-AbstractAutoProxyCreator"><a href="#3-最顶部的抽象类-AbstractAutoProxyCreator" class="headerlink" title="3.最顶部的抽象类:AbstractAutoProxyCreator"></a>3.最顶部的抽象类:AbstractAutoProxyCreator</h3><p>注意看bean初始化的方法</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439298675.png" alt="1567439298675"></p>
+<pre><code>当我们开启了EbableAspectJAutoProxy后,每次Bean的装配时,都会执行这段逻辑.前面主要是校验是否需要对bean进行代理(特殊的类,和已经被代理),核心逻辑在后面几行.getAdvicesAndAdvisorsForBean方法来获取所有符合条件的切面,具体的实现在子类,这里是抽象方法,获取切面后就是创建代理:
+</code></pre><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439441240.png" alt="1567439441240"></p>
+<p>TargetSource中存放被代理的对象,这段代码主要是为了构建ProxyFactory,将配置信息(是否使用java proxy,是否threadlocal等),目标类,切面,传入ProxyFactory中,而在ProxyFactory中,会通过createAopProxy()方法创建代理工厂DefaultAopProxyFactory,由代理厂生成具体的代理对目标类进行代理:</p>
+<p>进入<code>proxyFactory.getProxy(getProxyClassLoader());</code> 的<code>getProxy()</code>方法 </p>
+<p>跳到</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439674687.png" alt="1567439674687"></p>
+<p>进入<code>createAopProxy()</code>，跳转到</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439733523.png" alt="1567439733523"></p>
+<p>我们可以查看AopProxy的都有哪些 ，在AOpProxy上按键：ctrl t，</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439796941.png" alt="1567439796941"></p>
+<p>很明显有我们熟悉的cglib和jdk、默认的实现</p>
+<p>紧接着进入<code>createAopProxy(this)</code></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439888919.png" alt="1567439888919"></p>
+<p>是个接口，查看他的默认实现类。</p>
+<h3 id="4-DefaultAopProxyFactory-aop代理获取类"><a href="#4-DefaultAopProxyFactory-aop代理获取类" class="headerlink" title="4. DefaultAopProxyFactory aop代理获取类"></a>4. DefaultAopProxyFactory aop代理获取类</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/C1567439971239.png" alt="1567439971239"></p>
+<p>可以看到,在这里有我们在注解中设置的参数的判断逻辑,是创建java代理,还是cglib代理，有关cglib的讲解请看<a href="http://www.cnblogs.com/foreveravalon/p/8489907.html" target="_blank" rel="external">cglib的使用</a>.</p>
+<p>我们主要看一下JdkDynamicAopProxy的实现，因为我们没有设置<code>@EnableAspectJAutoProxy(proxyTargetClass=true)</code> 所以我们默认使用jdk自带实现。cglib其实差不多。</p>
+<h3 id="5-JdkDynamicAopProxy-默认切面代理类"><a href="#5-JdkDynamicAopProxy-默认切面代理类" class="headerlink" title="5. JdkDynamicAopProxy 默认切面代理类"></a>5. JdkDynamicAopProxy 默认切面代理类</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">    public Object getProxy() &#123;</div><div class="line">        return getProxy(ClassUtils.getDefaultClassLoader());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public Object getProxy(@Nullable ClassLoader classLoader) &#123;</div><div class="line">        if (logger.isDebugEnabled()) &#123;</div><div class="line">            logger.debug(&quot;Creating JDK dynamic proxy: target source is &quot; + this.advised.getTargetSource());</div><div class="line">        &#125;</div><div class="line">        Class&lt;?&gt;[] proxiedInterfaces = AopProxyUtils.completeProxiedInterfaces(this.advised, true);</div><div class="line">        findDefinedEqualsAndHashCodeMethods(proxiedInterfaces);</div><div class="line">        return Proxy.newProxyInstance(classLoader, proxiedInterfaces, this);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>findDefinedEqualsAndHashCodeMethods方法是为了查询被代理的接口是否包括equals和hashcode方法，这会影响到下面的调用。</p>
+<p>可以看到InvocationHandler的实现就是this。我们看一下invoke方法的实现：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">  @Nullable</div><div class="line">  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;</div></pre></td></tr></table></figure>
+<p>关键代码</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// Get the interception chain for this method.</div><div class="line">            List&lt;Object&gt; chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);</div></pre></td></tr></table></figure>
+<p>构建代理链，因为一个方法可能有多个切点匹配上，这个时候就需要构建一个链式的执行结构。</p>
+<p>进入<code>getInterceptorsAndDynamicInterceptionAdvice（）</code>方法</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/C1567440444983.png" alt="1567440444983"></p>
+<p>这里做了一个缓存，虽然new了一个对象作为key，但是对象的equals和hashcode方法都被重写了，所以没有问题，我们主要来看一下它是如何组装这个链式处理结构的：</p>
+<p>进入<code>getInterceptorsAndDynamicInterceptionAdvice（）</code>方法，紧接着发现是一个接口，那么查看他的实现类</p>
+<h3 id="6-DefaultAdvisorChainFactory-处理链式切点"><a href="#6-DefaultAdvisorChainFactory-处理链式切点" class="headerlink" title="6.DefaultAdvisorChainFactory 处理链式切点"></a>6.DefaultAdvisorChainFactory 处理链式切点</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567440624426.png" alt="1567440624426"></p>
+<p>可以看到，它会遍历自己的所有切点，那这些advisor是从哪里来的呢：</p>
+<p> 还记得最开始,我们说过,AbstractAutoProxyCreator中通过getAdvicesAndAdvisorsForBean方法来装载切面,而这个是一个抽象方法,现在来看它的实现,在AbstractAdvisorAutoProxyCreator中:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">    @Nullable</div><div class="line">    protected Object[] getAdvicesAndAdvisorsForBean(Class&lt;?&gt; beanClass, String beanName, @Nullable TargetSource targetSource) &#123;</div><div class="line">        List&lt;Advisor&gt; advisors = findEligibleAdvisors(beanClass, beanName);</div><div class="line">        if (advisors.isEmpty()) &#123;</div><div class="line">            return DO_NOT_PROXY;</div><div class="line">        &#125;</div><div class="line">        return advisors.toArray();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">protected List&lt;Advisor&gt; findEligibleAdvisors(Class&lt;?&gt; beanClass, String beanName) &#123;</div><div class="line">        List&lt;Advisor&gt; candidateAdvisors = findCandidateAdvisors();</div><div class="line">        List&lt;Advisor&gt; eligibleAdvisors = findAdvisorsThatCanApply(candidateAdvisors, beanClass, beanName);</div><div class="line">        extendAdvisors(eligibleAdvisors);</div><div class="line">        if (!eligibleAdvisors.isEmpty()) &#123;</div><div class="line">            eligibleAdvisors = sortAdvisors(eligibleAdvisors);</div><div class="line">        &#125;</div><div class="line">        return eligibleAdvisors;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">findCandidateAdvisors又是一个抽象方法,主要功能就是找到候选的切面,为什么是候选的,因为它是加载了所有的切面,有些切面并不需要,在最底层AnnotationAwareAspectJAutoProxyCreator的实现类中也有:</div><div class="line"></div><div class="line">protected List&lt;Advisor&gt; findCandidateAdvisors() &#123;</div><div class="line">        // Add all the Spring advisors found according to superclass rules.</div><div class="line">        List&lt;Advisor&gt; advisors = super.findCandidateAdvisors();</div><div class="line">        // Build Advisors for all AspectJ aspects in the bean factory.</div><div class="line">        if (this.aspectJAdvisorsBuilder != null) &#123;</div><div class="line">            advisors.addAll(this.aspectJAdvisorsBuilder.buildAspectJAdvisors());</div><div class="line">        &#125;</div><div class="line">        return advisors;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>可以看到,通过aspectJAdvisorsBuilder来将该类关心的所有的切面装载进来,并添加到父类的集合里面.aspectJAdvisorsBuilder里缓存了advisor的信息,拿到切面后,通过findAdvisorsThatCanApply方法来筛选合适的切面,之后对切面进行排序(如果实现了Order接口),然后返回切面的链表.</p>
+<h1 id="8-声明式事务-Transactional注解"><a href="#8-声明式事务-Transactional注解" class="headerlink" title="8.声明式事务@Transactional注解"></a>8.声明式事务@Transactional注解</h1><h2 id="1-前言-1"><a href="#1-前言-1" class="headerlink" title="1.前言"></a>1.前言</h2><pre><code>我们知道spring的事务管理分为两大部分：声明式和编程式，两种方式均为我们提供便捷的事务管理方法，各自优劣。
+</code></pre><blockquote>
+<p>声明式事务</p>
+</blockquote>
+<pre><code>声明式的事务管理对业务代码基本0入侵，能够很好的把事务管理和业务代码剥离开来，提高代码扩展性和可读性但是控制的粒度只能是方法级别而且必须是public，同时还不能在一个类中调用等。
+</code></pre><blockquote>
+<p>编程式事务</p>
+</blockquote>
+<pre><code>编程式事务则需要通过编写具体的事务代码来获得事务的管理能力，TransactionTemplate，或者直接使用PlatformTransactionManager，好处是控制粒度小，没有太多限制，坏处就是对业务代码有入侵，如果事务需要嵌套或者事务本身很繁琐，使用编程式则会十分麻烦。
+</code></pre><p>这里讲述的是声明式事务，因为他比较常用。而且两种方式的源码其实是一样的。</p>
+<h2 id="2-环境搭建"><a href="#2-环境搭建" class="headerlink" title="2. 环境搭建"></a>2. 环境搭建</h2><h3 id="1-1导入相关依赖：数据源、数据库驱动、Spring-jdbc模块"><a href="#1-1导入相关依赖：数据源、数据库驱动、Spring-jdbc模块" class="headerlink" title="1.1导入相关依赖：数据源、数据库驱动、Spring-jdbc模块"></a>1.1导入相关依赖：数据源、数据库驱动、Spring-jdbc模块</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417823342.png" alt="1567417823342"></p>
+<h3 id="1-2配置数据源、JdbcTemplate（Spring提供简化数据库操作的工具）操作数据"><a href="#1-2配置数据源、JdbcTemplate（Spring提供简化数据库操作的工具）操作数据" class="headerlink" title="1.2配置数据源、JdbcTemplate（Spring提供简化数据库操作的工具）操作数据"></a>1.2配置数据源、JdbcTemplate（Spring提供简化数据库操作的工具）操作数据</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417832614.png" alt="1567417832614"></p>
+<h3 id="1-3新建PersonDao、PersonService"><a href="#1-3新建PersonDao、PersonService" class="headerlink" title="1.3新建PersonDao、PersonService"></a>1.3新建PersonDao、PersonService</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417847101.png" alt="1567417847101"></p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417852548.png" alt="1567417852548"></p>
+<h3 id="1-4-测试"><a href="#1-4-测试" class="headerlink" title="1.4 测试"></a>1.4 测试</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417897324.png" alt="1567417897324"></p>
+<p>插入成功</p>
+<h3 id="1-5-测试事务"><a href="#1-5-测试事务" class="headerlink" title="1.5 测试事务"></a>1.5 测试事务</h3><p>修改Service方法，故意暴露一个异常</p>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417910208.png" alt="1567417910208"></p>
+<p>我们运行测试，发现还是插入成功，那么怎么阻止这种行为呢？添加事务</p>
+<h3 id="1-6-添加事务"><a href="#1-6-添加事务" class="headerlink" title="1.6 添加事务"></a>1.6 添加事务</h3><ol>
+<li>给insertUser方法添加注解- @Transactional</li>
+</ol>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417923873.png" alt="1567417923873"></p>
+<ol>
+<li><p>@EnableTransactionManagement 开启基于注解的事务管理功能</p>
+</li>
+<li><p>配置事务管理器来控制事务</p>
+</li>
+</ol>
+<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417943208.png" alt="1567417943208"></p>
+<p>事务添加成功</p>
+<h3 id="1-8-再次运行测试"><a href="#1-8-再次运行测试" class="headerlink" title="1.8 再次运行测试"></a>1.8 再次运行测试</h3><p>发现插入失败，满足事务的原子性。</p>
+<h3 id="1-7-源码分析"><a href="#1-7-源码分析" class="headerlink" title="1.7 源码分析"></a>1.7 源码分析</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">声明式事务：</div><div class="line"> </div><div class="line">环境搭建：</div><div class="line">1、导入相关依赖</div><div class="line">		数据源、数据库驱动、Spring-jdbc模块</div><div class="line">2、配置数据源、JdbcTemplate（Spring提供的简化数据库操作的工具）操作数据</div><div class="line">3、给方法上标注 @Transactional 表示当前方法是一个事务方法；</div><div class="line">4、 @EnableTransactionManagement 开启基于注解的事务管理功能；</div><div class="line">		@EnableXXX</div><div class="line">5、配置事务管理器来控制事务;</div><div class="line">		@Bean</div><div class="line">		public PlatformTransactionManager transactionManager()</div><div class="line"> </div><div class="line"> </div><div class="line">原理：</div><div class="line">1）、@EnableTransactionManagement</div><div class="line">			利用TransactionManagementConfigurationSelector给容器中会导入组件</div><div class="line">			导入两个组件</div><div class="line">			AutoProxyRegistrar</div><div class="line">			ProxyTransactionManagementConfiguration</div><div class="line">2）、AutoProxyRegistrar：</div><div class="line">			给容器中注册一个 InfrastructureAdvisorAutoProxyCreator 组件；</div><div class="line">			InfrastructureAdvisorAutoProxyCreator：？</div><div class="line">			利用后置处理器机制在对象创建以后，包装对象，返回一个代理对象（增强器），代理对象执行方法利用拦截器链进行调用；</div><div class="line"> </div><div class="line">3）、ProxyTransactionManagementConfiguration 做了什么？</div><div class="line">			1、给容器中注册事务增强器；</div><div class="line">				1）、事务增强器要用事务注解的信息，AnnotationTransactionAttributeSource解析事务注解</div><div class="line">				2）、事务拦截器：</div><div class="line">					TransactionInterceptor；保存了事务属性信息，事务管理器；</div><div class="line">					他是一个 MethodInterceptor；</div><div class="line">					在目标方法执行的时候；</div><div class="line">						执行拦截器链；</div><div class="line">						事务拦截器：</div><div class="line">							1）、先获取事务相关的属性</div><div class="line">							2）、再获取PlatformTransactionManager，如果事先没有添加指定任何transactionmanger</div><div class="line">								最终会从容器中按照类型获取一个PlatformTransactionManager；</div><div class="line">							3）、执行目标方法</div><div class="line">								如果异常，获取到事务管理器，利用事务管理回滚操作；</div><div class="line">								如果正常，利用事务管理器，提交事务</div></pre></td></tr></table></figure>
+<h2 id="3-源码深入分析"><a href="#3-源码深入分析" class="headerlink" title="3.源码深入分析"></a>3.源码深入分析</h2><p>未完待续</p>
+<h1 id="9-总结"><a href="#9-总结" class="headerlink" title="9 总结"></a>9 总结</h1><p>通过使用AOP和声明式事务，我们知道了一个套路，如果我们想使用某项功能，例如上面的aop和声明式事务、或者以后的springcloud的eureka、zull、feign等等功能，都遵循一下三点：</p>
+<blockquote>
+<p>1.导入功能组件相关的依赖</p>
+<p>2.在配置类开启组件（@EnableXXXX）</p>
+<p>3.在关键位置标示使用的地方（例如@Aspect、@Transactional）</p>
+</blockquote>
+<p>所以以后需要在spring中使用某个组件，一般都是遵循这样的思路</p>
+<p># </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spring注解/" rel="tag"><i class="fa fa-tag"></i> spring注解</a>
+          
+            <a href="/tags/aop/" rel="tag"><i class="fa fa-tag"></i> aop</a>
+          
+            <a href="/tags/spring生命周期/" rel="tag"><i class="fa fa-tag"></i> spring生命周期</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/08/持续集成技术总结/" rel="next" title="持续集成技术总结">
+                <i class="fa fa-chevron-left"></i> 持续集成技术总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/27/浅谈dubbo和springcloud/" rel="prev" title="浅谈dubbo和springcloud">
+                浅谈dubbo和springcloud <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">70</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-前言"><span class="nav-number">1.</span> <span class="nav-text">1. 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-组件注册"><span class="nav-number">2.</span> <span class="nav-text">2.组件注册</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-xml配置文件实例化实体类（方式一）"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 xml配置文件实例化实体类（方式一）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-使用-Configuration和-bean（方式二）"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 使用@ Configuration和@bean（方式二）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-ComponentScan-自动扫描组件-amp-指定扫描规则（方式三）"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 @ComponentScan-自动扫描组件&指定扫描规则（方式三）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-ComponentScan注解的结构"><span class="nav-number">2.3.1.</span> <span class="nav-text">1. @ComponentScan注解的结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-用例"><span class="nav-number">2.3.2.</span> <span class="nav-text">2.用例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-扩展"><span class="nav-number">2.3.3.</span> <span class="nav-text">3.    扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-FilterType-过滤规则"><span class="nav-number">2.3.3.1.</span> <span class="nav-text">4.1 FilterType 过滤规则</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-Import注解"><span class="nav-number">2.4.</span> <span class="nav-text">2.4      @Import注解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-1-总结"><span class="nav-number">2.4.1.</span> <span class="nav-text">2.4.1 总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-Factorybean-工厂bean"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 Factorybean 工厂bean</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-总结-组件注册"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 总结-组件注册</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-修饰Bean的相关注解"><span class="nav-number">3.</span> <span class="nav-text">3.修饰Bean的相关注解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-Scope注解"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 @Scope注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-Lazy注解"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 @Lazy注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-Conditional"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 @Conditional</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-例子"><span class="nav-number">3.3.1.</span> <span class="nav-text">1.例子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-生命周期"><span class="nav-number">4.</span> <span class="nav-text">4.生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-init-method、destory-method-管理bean生命周期"><span class="nav-number">4.1.</span> <span class="nav-text">4.1. init-method、destory-method 管理bean生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-在配置文件XML中："><span class="nav-number">4.1.1.</span> <span class="nav-text">1.在配置文件XML中：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-代码控制初始化和销毁"><span class="nav-number">4.1.2.</span> <span class="nav-text">2.代码控制初始化和销毁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单实例情况下"><span class="nav-number">4.1.2.1.</span> <span class="nav-text">单实例情况下</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多实例情况下"><span class="nav-number">4.1.2.2.</span> <span class="nav-text">多实例情况下</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-总结"><span class="nav-number">4.1.3.</span> <span class="nav-text">3.总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-InitializingBean和DisposableBean-控制bean生命周期"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 InitializingBean和DisposableBean 控制bean生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1单实例情况下"><span class="nav-number">4.2.1.</span> <span class="nav-text">1单实例情况下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-多实例情况下"><span class="nav-number">4.2.2.</span> <span class="nav-text">2.多实例情况下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-总结-1"><span class="nav-number">4.2.3.</span> <span class="nav-text">3.总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-PostConstruct和-PreDestroy注解"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 @PostConstruct和@PreDestroy注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-BeanPostProcessor-后置处理接口（重要）"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 BeanPostProcessor 后置处理接口（重要）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-4-4总结"><span class="nav-number">4.5.</span> <span class="nav-text">4.1-4.4总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5BeanPostProcessor-原理"><span class="nav-number">4.6.</span> <span class="nav-text">4.5BeanPostProcessor 原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-两个方法打上断点"><span class="nav-number">4.6.1.</span> <span class="nav-text">1.两个方法打上断点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-BeanPostProcessor在springboot中的使用"><span class="nav-number">4.6.2.</span> <span class="nav-text">2.BeanPostProcessor在springboot中的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-ApplicationContextAwareProcessor"><span class="nav-number">4.6.3.</span> <span class="nav-text">1.ApplicationContextAwareProcessor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-BeanValidationPostProcessor"><span class="nav-number">4.6.4.</span> <span class="nav-text">1.    BeanValidationPostProcessor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-InitDestroyAnnotationBeanPostProcessor"><span class="nav-number">4.6.5.</span> <span class="nav-text">2.InitDestroyAnnotationBeanPostProcessor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-AutowiredAnnotationBeanPostProcessor"><span class="nav-number">4.6.6.</span> <span class="nav-text">3.AutowiredAnnotationBeanPostProcessor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-BeanFactoryPostProcessor"><span class="nav-number">4.6.7.</span> <span class="nav-text">4. BeanFactoryPostProcessor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-BeanDefinitionRegistryPostProcessor"><span class="nav-number">4.6.8.</span> <span class="nav-text">5.BeanDefinitionRegistryPostProcessor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-ApplicationListener"><span class="nav-number">4.6.9.</span> <span class="nav-text">6. ApplicationListener</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-属性赋值"><span class="nav-number">5.</span> <span class="nav-text">5.属性赋值</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-Value注解"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 @Value注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-PropertySource-注解"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 @ PropertySource 注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-通过实现-EmbeddedValueResolverAware-获取属性值"><span class="nav-number">5.3.</span> <span class="nav-text">3.3   通过实现 EmbeddedValueResolverAware 获取属性值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-自动装配"><span class="nav-number">6.</span> <span class="nav-text">6.自动装配</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-Autowire、-Qualifier、-Primary（spring规范的注解）"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 @Autowire、@Qualifier、@Primary（spring规范的注解）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Autowire注解扩展"><span class="nav-number">6.1.1.</span> <span class="nav-text">@Autowire注解扩展</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-Resource、-Inject（java规范的注解）"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 @Resource、@Inject（java规范的注解）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3-Aware接口-（重要）"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 Aware接口 （重要）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-下面我们就是用一个例子来详细讲解一下Aware接口的工作流程。"><span class="nav-number">6.3.1.</span> <span class="nav-text">1.下面我们就是用一个例子来详细讲解一下Aware接口的工作流程。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-源码分析"><span class="nav-number">6.3.2.</span> <span class="nav-text">2.源码分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4-Profile注解"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 @Profile注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-5-profile的使用"><span class="nav-number">6.5.</span> <span class="nav-text">6.5 @profile的使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-AOP"><span class="nav-number">7.</span> <span class="nav-text">7.AOP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-例子-1"><span class="nav-number">7.1.</span> <span class="nav-text">1.  例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）导入aop依赖"><span class="nav-number">7.1.1.</span> <span class="nav-text">（1）导入aop依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）MathCalculator-java"><span class="nav-number">7.1.2.</span> <span class="nav-text">（2）MathCalculator.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（3）：日志切面类：LogAspects-java"><span class="nav-number">7.1.3.</span> <span class="nav-text">（3）：日志切面类：LogAspects.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（4）开启spring切面自动代理"><span class="nav-number">7.1.4.</span> <span class="nav-text">（4）开启spring切面自动代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（5）测试"><span class="nav-number">7.1.5.</span> <span class="nav-text">（5）测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">7.1.6.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-AOP原理"><span class="nav-number">7.2.</span> <span class="nav-text">2.  AOP原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-查看-EnableAspectJAutoProxy注解"><span class="nav-number">7.2.1.</span> <span class="nav-text">1.查看@EnableAspectJAutoProxy注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-查看一下-AspectJAutoProxyRegistrar-java-到底导入了哪些类"><span class="nav-number">7.2.2.</span> <span class="nav-text">2.查看一下 AspectJAutoProxyRegistrar.java 到底导入了哪些类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-最顶部的抽象类-AbstractAutoProxyCreator"><span class="nav-number">7.2.3.</span> <span class="nav-text">3.最顶部的抽象类:AbstractAutoProxyCreator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-DefaultAopProxyFactory-aop代理获取类"><span class="nav-number">7.2.4.</span> <span class="nav-text">4. DefaultAopProxyFactory aop代理获取类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-JdkDynamicAopProxy-默认切面代理类"><span class="nav-number">7.2.5.</span> <span class="nav-text">5. JdkDynamicAopProxy 默认切面代理类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-DefaultAdvisorChainFactory-处理链式切点"><span class="nav-number">7.2.6.</span> <span class="nav-text">6.DefaultAdvisorChainFactory 处理链式切点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-声明式事务-Transactional注解"><span class="nav-number">8.</span> <span class="nav-text">8.声明式事务@Transactional注解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-前言-1"><span class="nav-number">8.1.</span> <span class="nav-text">1.前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-环境搭建"><span class="nav-number">8.2.</span> <span class="nav-text">2. 环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1导入相关依赖：数据源、数据库驱动、Spring-jdbc模块"><span class="nav-number">8.2.1.</span> <span class="nav-text">1.1导入相关依赖：数据源、数据库驱动、Spring-jdbc模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2配置数据源、JdbcTemplate（Spring提供简化数据库操作的工具）操作数据"><span class="nav-number">8.2.2.</span> <span class="nav-text">1.2配置数据源、JdbcTemplate（Spring提供简化数据库操作的工具）操作数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3新建PersonDao、PersonService"><span class="nav-number">8.2.3.</span> <span class="nav-text">1.3新建PersonDao、PersonService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-测试"><span class="nav-number">8.2.4.</span> <span class="nav-text">1.4 测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-测试事务"><span class="nav-number">8.2.5.</span> <span class="nav-text">1.5 测试事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6-添加事务"><span class="nav-number">8.2.6.</span> <span class="nav-text">1.6 添加事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-8-再次运行测试"><span class="nav-number">8.2.7.</span> <span class="nav-text">1.8 再次运行测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7-源码分析"><span class="nav-number">8.2.8.</span> <span class="nav-text">1.7 源码分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-源码深入分析"><span class="nav-number">8.3.</span> <span class="nav-text">3.源码深入分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-总结"><span class="nav-number">9.</span> <span class="nav-text">9 总结</span></a></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      204.9k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共204.9k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>
