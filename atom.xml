@@ -43,6 +43,83 @@
   </entry>
   
   <entry>
+    <title>项目全局异常处理</title>
+    <link href="http://kingge.top/2019/05/11/%E9%A1%B9%E7%9B%AE%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/"/>
+    <id>http://kingge.top/2019/05/11/项目全局异常处理/</id>
+    <published>2019-05-11T02:21:59.000Z</published>
+    <updated>2019-09-03T13:24:12.946Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h1><p><img src="/2019/05/11/项目全局异常处理/1567479454980.png" alt="1567479454980"></p>
+<p>这是service层的一个业务方法，业务功能是：查询某些二维码数据。可以看到我们在这个方法里面除了<code>主要的业务逻辑</code>，还有数据非空判断，以及异常处理等等。</p>
+<p>如果我们不仅仅是在service层添加try catch异常处理，在controller层调用service方法的地方也添加了try catch这样的异常处理代码，<strong>那么代码冗余严重且不易维护</strong></p>
+<blockquote>
+<p>总结-上诉代码存在两个问题</p>
+</blockquote>
+<p>1、上边的代码只要操作不成功仅向用户返回“错误代码：-1，失败信息：操作失败”，无法区别具体的错误信<br>息。–参见第三处代码<br>2、service方法在执行过程出现异常在哪捕获？在service中需要都加try/catch，如果在controller也需要添加<br>try/catch，代码冗余严重且不易维护。</p>
+<blockquote>
+<p><strong>以下项目是 springboot2.0.1 下开发</strong></p>
+</blockquote>
+<h1 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h1><p>1、在Service方法中的编码顺序是先校验判断，有问题则抛出具体的异常信息，最后执行具体的业务操作，返回成<br>功信息。</p>
+<p>2、在统一异常处理类中去捕获异常，无需controller捕获异常，向用户返回统一规范的响应信息。</p>
+<h2 id="异常处理流程"><a href="#异常处理流程" class="headerlink" title="异常处理流程"></a>异常处理流程</h2><blockquote>
+<p>系统对异常的处理使用统一的异常处理流程：</p>
+</blockquote>
+<p>1、自定义异常类型。</p>
+<p>2、自定义错误代码及错误信息。</p>
+<p>3、对于可预知的异常由程序员在代码中主动抛出，由SpringMVC统一捕获。可预知异常是程序员在代码中手动抛出本系统定义的特定异常类型，由于是程序员抛出的异常，通常异常信息比较齐全，程序员在抛出时会指定错误代码及错误信息，获取异常信息也比较方便。</p>
+<p>4、对于不可预知的异常（运行时异常）由SpringMVC统一捕获Exception类型的异常。不可预知异常通常是由于系统出现bug、或一些不要抗拒的错误（比如网络中断、服务器宕机等），异常类型为<br>RuntimeException类型（运行时异常）。</p>
+<p>5、可预知的异常及不可预知的运行时异常最终会采用统一的信息格式（错误代码+错误信息）来表示，最终也会随请求响应给客户端。</p>
+<p><img src="/2019/05/11/项目全局异常处理/1567479831709.png" alt="1567479831709"></p>
+<p>1、在controller、service、dao中程序员抛出自定义异常；springMVC框架抛出框架异常类型<br>2、统一由异常捕获类捕获异常，并进行处理<br>3、捕获到自定义异常则直接取出错误代码及错误信息，响应给用户。</p>
+<p>4、捕获到非自定义异常类型首先从Map中找该异常类型是否对应具体的错误代码，如果有则取出错误代码和错误<br>信息并响应给用户，如果从Map中找不到异常类型所对应的错误代码则统一为99999错误代码并响应给用户。</p>
+<p>5、将错误代码及错误信息以Json格式响应给用户。</p>
+<blockquote>
+<p>特别解释</p>
+</blockquote>
+<p>不可知异常我们在上图中有两个分支，左边的分支表示的是有些不可知异常我们是知道的（这个可能比较拗口），例如SQLException，HttpMessageNotReadableException（消息转化异常），这些异常我们是可以特别处理的，可以给其标注响应的错误信息，而不用走右边的99999默认消息异常处理分支。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="定义常用错误代码接口-错误信息格式"><a href="#定义常用错误代码接口-错误信息格式" class="headerlink" title="定义常用错误代码接口-错误信息格式"></a>定义常用错误代码接口-错误信息格式</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public interface ResultCode &#123;</div><div class="line">    //操作是否成功,true为成功，false操作失败</div><div class="line">    boolean success();</div><div class="line">    //操作代码</div><div class="line">    int code();</div><div class="line">    //提示信息</div><div class="line">    String message();</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>根据这个信息格式我们可以自定义我们的错误实现。例如通用的消息模块CommonCode里面包含了常用的错误消息例子、文件上传消息模块FileSystemCode、认证消息模块AuthCode等等。满足我们自己业务的相关提示和异常提示。</p>
+<h3 id="定义通用的消息模块CommonCode"><a href="#定义通用的消息模块CommonCode" class="headerlink" title="定义通用的消息模块CommonCode"></a>定义通用的消息模块CommonCode</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public enum CommonCode implements ResultCode&#123;</div><div class="line">    INVALID_PARAM(false,10003,&quot;非法参数！&quot;),</div><div class="line">    SUCCESS(true,10000,&quot;操作成功！&quot;),</div><div class="line">    FAIL(false,11111,&quot;操作失败！&quot;),</div><div class="line">    UNAUTHENTICATED(false,10001,&quot;此操作需要登陆系统！&quot;),</div><div class="line">    UNAUTHORISE(false,10002,&quot;权限不足，无权操作！&quot;),</div><div class="line">    SERVER_ERROR(false,99999,&quot;抱歉，系统繁忙，请稍后重试！&quot;);</div><div class="line">    //操作是否成功</div><div class="line">    boolean success;</div><div class="line">    //操作代码</div><div class="line">    int code;</div><div class="line">    //提示信息</div><div class="line">    String message;</div><div class="line">    private CommonCode(boolean success,int code, String message)&#123;</div><div class="line">        this.success = success;</div><div class="line">        this.code = code;</div><div class="line">        this.message = message;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public boolean success() &#123;</div><div class="line">        return success;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public int code() &#123;</div><div class="line">        return code;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public String message() &#123;</div><div class="line">        return message;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="文件上传消息模块FileSystemCode-可选"><a href="#文件上传消息模块FileSystemCode-可选" class="headerlink" title="文件上传消息模块FileSystemCode-可选"></a>文件上传消息模块FileSystemCode-可选</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public enum FileSystemCode implements ResultCode &#123;</div><div class="line">    FS_UPLOADFILE_FILEISNULL(false,25001,&quot;上传文件为空！&quot;),</div><div class="line">    FS_UPLOADFILE_BUSINESSISNULL(false,25002,&quot;业务Id为空！&quot;),</div><div class="line">    FS_UPLOADFILE_SERVERFAIL(false,25003,&quot;上传文件服务器失败！&quot;),</div><div class="line">    FS_DELETEFILE_NOTEXISTS(false,25004,&quot;删除的文件不存在！&quot;),</div><div class="line">    FS_DELETEFILE_DBFAIL(false,25005,&quot;删除文件信息失败！&quot;),</div><div class="line">    FS_DELETEFILE_SERVERFAIL(false,25006,&quot;删除文件失败！&quot;),</div><div class="line">    FS_UPLOADFILE_METAERROR(false,25007,&quot;上传文件的元信息请使用json格式！&quot;),</div><div class="line">    FS_UPLOADFILE_USERISNULL(false,25008,&quot;上传文件用户为空！&quot;);</div><div class="line"></div><div class="line">    //操作代码</div><div class="line">    boolean success;</div><div class="line"></div><div class="line">    //操作代码</div><div class="line">    int code;</div><div class="line">    //提示信息</div><div class="line">    String message;</div><div class="line">    private FileSystemCode(boolean success, int code, String message)&#123;</div><div class="line">        this.success = success;</div><div class="line">        this.code = code;</div><div class="line">        this.message = message;</div><div class="line">    &#125;</div><div class="line">   </div><div class="line">    @Override</div><div class="line">    public boolean success() &#123;</div><div class="line">        return success;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public int code() &#123;</div><div class="line">        return code;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public String message() &#123;</div><div class="line">        return message;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>基础的消息格式我们已经做完了，那么接下来就是定义我们的异常</p>
+<h3 id="可预知异常和不可预知异常处理"><a href="#可预知异常和不可预知异常处理" class="headerlink" title="可预知异常和不可预知异常处理"></a><strong>可预知异常和不可预知异常处理</strong></h3><p>（1）<strong>自定义异常类</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/**</div><div class="line"> * 自定义异常类型</div><div class="line"> **/</div><div class="line">public class CustomException extends RuntimeException &#123;</div><div class="line"></div><div class="line">    //错误代码</div><div class="line">    ResultCode resultCode;</div><div class="line"></div><div class="line">    public CustomException(ResultCode resultCode)&#123;</div><div class="line">        this.resultCode = resultCode;</div><div class="line">    &#125;</div><div class="line">    public ResultCode getResultCode()&#123;</div><div class="line">        return resultCode;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>（2）<strong>异常抛出类</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/**</div><div class="line"> * 异常抛出类，业务端代码直接调用即可</div><div class="line"> * 避免在service或者controller端书写throw new CustomException(resultCode);这样的重复性代码</div><div class="line"> *可以直接使用ExceptionCast.cast（）的方式直接抛出异常</div><div class="line"> **/</div><div class="line">public class ExceptionCast &#123;</div><div class="line"></div><div class="line">    public static void cast(ResultCode resultCode)&#123;</div><div class="line">        throw new CustomException(resultCode);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>（3）<strong>异常捕获类</strong></p>
+<p>使用 @ControllerAdvice和@ExceptionHandler注解来捕获指定类型的异常</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/**</div><div class="line"> * 统一异常捕获类</div><div class="line"> **/</div><div class="line">@ControllerAdvice//控制器增强</div><div class="line">public class ExceptionCatch &#123;</div><div class="line"></div><div class="line">    private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionCatch.class);</div><div class="line"></div><div class="line">    //定义map，配置异常类型所对应的错误代码 - 这个就是存储我们在不可预知异常的左边分支的异常</div><div class="line">    private static ImmutableMap&lt;Class&lt;? extends Throwable&gt;,ResultCode&gt; EXCEPTIONS;</div><div class="line">    //定义map的builder对象，去构建ImmutableMap</div><div class="line">    protected static ImmutableMap.Builder&lt;Class&lt;? extends Throwable&gt;,ResultCode&gt; builder = ImmutableMap.builder();</div><div class="line"></div><div class="line">    //捕获CustomException此类异常 -处理可预知异常关键方法（1）</div><div class="line">    @ExceptionHandler(CustomException.class)</div><div class="line">    @ResponseBody//返回给controller的json串格式的异常消息格式</div><div class="line">    public ResponseResult customException(CustomException customException)&#123;</div><div class="line">        customException.printStackTrace();</div><div class="line">        //记录日志</div><div class="line">        LOGGER.error(&quot;catch exception:&#123;&#125;&quot;,customException.getMessage());</div><div class="line">        ResultCode resultCode = customException.getResultCode();</div><div class="line">        return new ResponseResult(resultCode);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //捕获Exception此类异常 - 处理不可预知异常关键方法（2）</div><div class="line">    //里面包含我们在异常处理流程中&lt;处理不可预知异常&gt;的左右两个分支</div><div class="line">    //根据异常的全类名在我们自定义的异常map中查找是否存在已经自定义的不可预知异常，存在直接返回，不存在则当做99999全局异常处理</div><div class="line">    @ExceptionHandler(Exception.class)</div><div class="line">    @ResponseBody</div><div class="line">    public ResponseResult exception(Exception exception)&#123;</div><div class="line">        exception.printStackTrace();</div><div class="line">        //记录日志</div><div class="line">        LOGGER.error(&quot;catch exception:&#123;&#125;&quot;,exception.getMessage());</div><div class="line">        if(EXCEPTIONS == null)&#123;</div><div class="line">            EXCEPTIONS = builder.build();//EXCEPTIONS构建成功</div><div class="line">        &#125;</div><div class="line">        //从EXCEPTIONS中找异常类型所对应的错误代码，如果找到了将错误代码响应给用户，如果找不到给用户响应99999异常</div><div class="line">        ResultCode resultCode = EXCEPTIONS.get(exception.getClass());</div><div class="line">        if(resultCode !=null)&#123;</div><div class="line">            return new ResponseResult(resultCode);</div><div class="line">        &#125;else&#123;</div><div class="line">            //返回99999异常</div><div class="line">            return new ResponseResult(CommonCode.SERVER_ERROR);</div><div class="line">        &#125;</div><div class="line"></div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    static &#123;</div><div class="line">        //定义异常类型所对应的错误代码</div><div class="line">        builder.put(HttpMessageNotReadableException.class,CommonCode.INVALID_PARAM);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="测试使用"><a href="#测试使用" class="headerlink" title="测试使用"></a>测试使用</h3><p>改造上诉代码，try catch语句可以去掉，而且可以返回我们精准自定义的错误信息</p>
+<p><img src="/2019/05/11/项目全局异常处理/1567481359314.png" alt="1567481359314"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>实现的关键点在于，<code>使用 @ControllerAdvice和@ExceptionHandler注解来捕获指定类型的异常</code></p>
+<blockquote>
+<p><strong>@ExceptionHandler</strong></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//该注解作用对象为方法</div><div class="line">@Target(&#123;ElementType.METHOD&#125;)</div><div class="line">//在运行时有效</div><div class="line">@Retention(RetentionPolicy.RUNTIME)</div><div class="line">@Documented</div><div class="line">public @interface ExceptionHandler &#123;</div><div class="line">	//value()可以指定异常类</div><div class="line">    Class&lt;? extends Throwable&gt;[] value() default &#123;&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>@ControllerAdvice</strong> 增强版控制器</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Target(&#123;ElementType.TYPE&#125;)</div><div class="line">@Retention(RetentionPolicy.RUNTIME)</div><div class="line">@Documented</div><div class="line">@Component</div><div class="line">public @interface ControllerAdvice &#123;</div><div class="line">    @AliasFor(&quot;basePackages&quot;)</div><div class="line">    String[] value() default &#123;&#125;;</div><div class="line"></div><div class="line">    @AliasFor(&quot;value&quot;)</div><div class="line">    String[] basePackages() default &#123;&#125;;</div><div class="line"></div><div class="line">    Class&lt;?&gt;[] basePackageClasses() default &#123;&#125;;</div><div class="line"></div><div class="line">    Class&lt;?&gt;[] assignableTypes() default &#123;&#125;;</div><div class="line"></div><div class="line">    Class&lt;? extends Annotation&gt;[] annotations() default &#123;&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;起因&quot;&gt;&lt;a href=&quot;#起因&quot; class=&quot;headerlink&quot; title=&quot;起因&quot;&gt;&lt;/a&gt;起因&lt;/h1&gt;&lt;p&gt;&lt;img src=&quot;/2019/05/11/项目全局异常处理/1567479454980.png&quot; alt=&quot;1567479454980&quot;&gt;
+    
+    </summary>
+    
+      <category term="springboot项目常用技术实现" scheme="http://kingge.top/categories/springboot%E9%A1%B9%E7%9B%AE%E5%B8%B8%E7%94%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/"/>
+    
+    
+      <category term="异常处理" scheme="http://kingge.top/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/"/>
+    
+      <category term="ControllerAdvice注解" scheme="http://kingge.top/tags/ControllerAdvice%E6%B3%A8%E8%A7%A3/"/>
+    
+      <category term="ExceptionHandler注解" scheme="http://kingge.top/tags/ExceptionHandler%E6%B3%A8%E8%A7%A3/"/>
+    
+  </entry>
+  
+  <entry>
     <title>SpringCloud个人总结</title>
     <link href="http://kingge.top/2019/05/01/SpringCloud%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93/"/>
     <id>http://kingge.top/2019/05/01/SpringCloud个人总结/</id>
@@ -3375,7 +3452,7 @@ containerPort
 <p><img src="/2019/02/28/docker个人总结/clip_image163.png" alt="img"></p>
 <p>内容是</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image165.jpg" alt="img"></p>
-<p>   FROM centos   MAINTAINER kingge<a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#58;&#x33;&#x39;&#51;&#50;&#x31;&#53;&#x36;&#x36;&#x31;&#64;&#x71;&#x71;&#46;&#99;&#111;&#109;">&#x33;&#x39;&#51;&#50;&#x31;&#53;&#x36;&#x36;&#x31;&#64;&#x71;&#x71;&#46;&#99;&#111;&#109;</a>       ENV MYPATH /usr/local   WORKDIR $MYPATH       RUN yum -y install vim   RUN yum -y install net-tools       EXPOSE 80       CMD echo $MYPATH   CMD echo “success————–ok”   CMD /bin/bash   </p>
+<p>   FROM centos   MAINTAINER kingge<a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#x3a;&#51;&#57;&#51;&#x32;&#49;&#x35;&#x36;&#54;&#x31;&#64;&#113;&#113;&#46;&#x63;&#x6f;&#109;">&#51;&#57;&#51;&#x32;&#49;&#x35;&#x36;&#54;&#x31;&#64;&#113;&#113;&#46;&#x63;&#x6f;&#109;</a>       ENV MYPATH /usr/local   WORKDIR $MYPATH       RUN yum -y install vim   RUN yum -y install net-tools       EXPOSE 80       CMD echo $MYPATH   CMD echo “success————–ok”   CMD /bin/bash   </p>
 <p>\2. 根据创建的Dockerfile构建镜像</p>
 <p>docker build -t 新镜像名字:TAG . （注意这里还有一个点，表示当前文件夹）</p>
 <p>默认去找当前目录下名字为Dockerfile的文件构建镜像。</p>
@@ -3397,7 +3474,7 @@ containerPort
 <p>存放待传输到容器中的压缩包（测试ADD命令专用）和一个文本文件（测试COPY指令专用）</p>
 <h4 id="2-2-根据原版centos新建Dockerfile文件"><a href="#2-2-根据原版centos新建Dockerfile文件" class="headerlink" title="2.2 根据原版centos新建Dockerfile文件"></a>2.2 根据原版centos新建Dockerfile文件</h4><p><img src="/2019/02/28/docker个人总结/clip_image175.png" alt="img"></p>
 <p>内容是：</p>
-<p>   FROM         centos   MAINTAINER      kingge<a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#111;&#58;&#51;&#x39;&#51;&#50;&#49;&#x35;&#x36;&#54;&#49;&#x40;&#113;&#113;&#x2e;&#x63;&#x6f;&#x6d;">&#51;&#x39;&#51;&#50;&#49;&#x35;&#x36;&#54;&#49;&#x40;&#113;&#113;&#x2e;&#x63;&#x6f;&#x6d;</a>   #把宿主机当前上下文的hello.txt拷贝到容器/usr/local/路径下   #并重命名为helloNewName.txt   COPY hello.txt /usr/local/helloNewName.txt   #把java与tomcat添加到容器中   ADD jdk-8u144-linux-x64.tar.gz /usr/local/   ADD apache-tomcat-9.0.21.tar.gz /usr/local/   #安装vim编辑器   RUN yum -y install vim   #设置工作访问时候的WORKDIR路径，登录落脚点   ENV MYPATH /usr/local   WORKDIR $MYPATH   #配置java与tomcat环境变量   ENV JAVA_HOME /usr/local/jdk1.8.0_144   ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar   ENV CATALINA_HOME /usr/local/apache-tomcat-9.0.21   ENV CATALINA_BASE /usr/local/apache-tomcat-9.0.21   ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/lib:$CATALINA_HOME/bin   #容器运行时监听的端口   EXPOSE  8080   #启动时运行tomcat   # ENTRYPOINT   [“/usr/local/apache-tomcat-9.0.21/bin/startup.sh” ]   # CMD   [“/usr/local/apache-tomcat-9.0.21/bin/catalina.sh”,”run”]   CMD /usr/local/apache-tomcat-9.0.21/bin/startup.sh &amp;&amp; tail -F   /usr/local/apache-tomcat-9.0.21/bin/logs/catalina.out   </p>
+<p>   FROM         centos   MAINTAINER      kingge<a href="&#109;&#x61;&#x69;&#108;&#x74;&#111;&#58;&#51;&#x39;&#51;&#x32;&#x31;&#53;&#x36;&#x36;&#49;&#64;&#x71;&#x71;&#x2e;&#x63;&#111;&#109;">&#51;&#x39;&#51;&#x32;&#x31;&#53;&#x36;&#x36;&#49;&#64;&#x71;&#x71;&#x2e;&#x63;&#111;&#109;</a>   #把宿主机当前上下文的hello.txt拷贝到容器/usr/local/路径下   #并重命名为helloNewName.txt   COPY hello.txt /usr/local/helloNewName.txt   #把java与tomcat添加到容器中   ADD jdk-8u144-linux-x64.tar.gz /usr/local/   ADD apache-tomcat-9.0.21.tar.gz /usr/local/   #安装vim编辑器   RUN yum -y install vim   #设置工作访问时候的WORKDIR路径，登录落脚点   ENV MYPATH /usr/local   WORKDIR $MYPATH   #配置java与tomcat环境变量   ENV JAVA_HOME /usr/local/jdk1.8.0_144   ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar   ENV CATALINA_HOME /usr/local/apache-tomcat-9.0.21   ENV CATALINA_BASE /usr/local/apache-tomcat-9.0.21   ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/lib:$CATALINA_HOME/bin   #容器运行时监听的端口   EXPOSE  8080   #启动时运行tomcat   # ENTRYPOINT   [“/usr/local/apache-tomcat-9.0.21/bin/startup.sh” ]   # CMD   [“/usr/local/apache-tomcat-9.0.21/bin/catalina.sh”,”run”]   CMD /usr/local/apache-tomcat-9.0.21/bin/startup.sh &amp;&amp; tail -F   /usr/local/apache-tomcat-9.0.21/bin/logs/catalina.out   </p>
 <h4 id="2-3-构建"><a href="#2-3-构建" class="headerlink" title="2.3 构建"></a>2.3 构建</h4><p><img src="/2019/02/28/docker个人总结/clip_image177.jpg" alt="img"></p>
 <p><img src="/2019/02/28/docker个人总结/clip_image179.jpg" alt="img"></p>
 <p>构建完成</p>
@@ -7492,572 +7569,6 @@ spring.thymeleaf.cache=false
     <summary type="html">
     
       &lt;h1 id=&quot;五-Hadoop编译源码&quot;&gt;&lt;a href=&quot;#五-Hadoop编译源码&quot; class=&quot;headerlink&quot; title=&quot;五 Hadoop编译源码&quot;&gt;&lt;/a&gt;五 Hadoop编译源码&lt;/h1&gt;&lt;h2 id=&quot;5-1-前期准备工作&quot;&gt;&lt;a href=&quot;#5-1
-    
-    </summary>
-    
-      <category term="hadoop" scheme="http://kingge.top/categories/hadoop/"/>
-    
-    
-      <category term="hadoop" scheme="http://kingge.top/tags/hadoop/"/>
-    
-      <category term="大数据" scheme="http://kingge.top/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>hadoop大数据(三)-Hadoop三种部署和运行方式</title>
-    <link href="http://kingge.top/2018/02/26/hadoop%E5%A4%A7%E6%95%B0%E6%8D%AE-%E4%B8%89-Hadoop%E4%B8%89%E7%A7%8D%E9%83%A8%E7%BD%B2%E5%92%8C%E8%BF%90%E8%A1%8C%E6%96%B9%E5%BC%8F/"/>
-    <id>http://kingge.top/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/</id>
-    <published>2018-02-26T15:21:59.000Z</published>
-    <updated>2019-06-09T02:46:10.040Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="四-Hadoop运行模式"><a href="#四-Hadoop运行模式" class="headerlink" title="四 Hadoop运行模式"></a>四 Hadoop运行模式</h1><p><strong>1）官方网址</strong></p>
-<p>（1）官方网站：</p>
-<p><a href="http://hadoop.apache.org/" target="_blank" rel="external">http://hadoop.apache.org/</a></p>
-<p>（2）各个版本归档库地址   </p>
-<p><a href="https://archive.apache.org/dist/hadoop/common/hadoop-2.7.2/" target="_blank" rel="external">https://archive.apache.org/dist/hadoop/common/hadoop-2.7.2/</a></p>
-<p>（3）hadoop2.7.2版本详情介绍</p>
-<p><a href="http://hadoop.apache.org/docs/r2.7.2/" target="_blank" rel="external">http://hadoop.apache.org/docs/r2.7.2/</a></p>
-<p><strong>2）Hadoop运行模式</strong></p>
-<p>（1）本地模式（默认模式）：</p>
-<p>不需要启用单独进程，直接可以运行，测试和开发时使用。</p>
-<p>（2）伪分布式模式：</p>
-<p>等同于完全分布式，只有一个节点。</p>
-<p>（3）完全分布式模式：</p>
-<p>多个节点一起运行。</p>
-<h2 id="4-1-本地运行Hadoop-案例"><a href="#4-1-本地运行Hadoop-案例" class="headerlink" title="4.1 本地运行Hadoop 案例"></a>4.1 本地运行Hadoop 案例</h2><h3 id="4-1-1-官方grep案例"><a href="#4-1-1-官方grep案例" class="headerlink" title="4.1.1 官方grep案例"></a>4.1.1 官方grep案例</h3><p>1）创建在hadoop-2.7.2文件下面创建一个input文件夹</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$mkdir input</p>
-<p>2）将hadoop的xml配置文件复制到input</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$cp etc/hadoop/*.xml input</p>
-<p>3）执行share目录下的mapreduce程序</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hadoop jar</p>
-<p>share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar grep input output ‘dfs[a-z.]+’</p>
-<p>4）查看输出结果</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ cat output/*</p>
-<h3 id="4-1-2-官方wordcount案例"><a href="#4-1-2-官方wordcount案例" class="headerlink" title="4.1.2 官方wordcount案例"></a>4.1.2 官方wordcount案例</h3><p>1）创建在hadoop-2.7.2文件下面创建一个wcinput文件夹</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$mkdir wcinput</p>
-<p>2）在wcinput文件下创建一个wc.input文件</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$cd wcinput</p>
-<p>[kingge@hadoop101 wcinput]$touch wc.input</p>
-<p>3）编辑wc.input文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[kingge@hadoop101 wcinput]$vim wc.input</div><div class="line">在文件中输入如下内容</div><div class="line">hadoop yarn</div><div class="line">hadoop mapreduce </div><div class="line">kingge</div><div class="line">kingge</div><div class="line">保存退出：：wq</div></pre></td></tr></table></figure>
-<p>4）回到hadoop目录/opt/module/hadoop-2.7.2</p>
-<p>5）执行程序：</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar wordcount wcinput wcoutput</p>
-<p>6）查看结果：</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$cat wcoutput/part-r-00000</p>
-<p>kingge 2</p>
-<p>hadoop  2</p>
-<p>mapreduce       1</p>
-<p>yarn    1</p>
-<h3 id="4-1-3-总结"><a href="#4-1-3-总结" class="headerlink" title="4.1.3 总结"></a>4.1.3 总结</h3><p>第一个案例：统计input文件里面的文件，文件内容包含’dfs[a-z.]+’ 规则的文字，筛选出来。</p>
-<p>第二个案例：统计wc.input 文件中单词出现的个数，<strong>特别注意，第二次运行之前必须删除已有的结果输出目录（wcoutput</strong>）（rm -rf wcoutput/），否则执行wordcount指令就会报错，提示文件已经存在</p>
-<p>—-  操作设计的文件都是存储在linux 的文件系统中。本地操作，不支持联网操作</p>
-<h2 id="4-2-伪分布式运行Hadoop案例"><a href="#4-2-伪分布式运行Hadoop案例" class="headerlink" title="4.2 伪分布式运行Hadoop案例"></a>4.2 伪分布式运行Hadoop案例</h2><h3 id="4-2-1-启动HDFS并运行MapReduce程序"><a href="#4-2-1-启动HDFS并运行MapReduce程序" class="headerlink" title="4.2.1 启动HDFS并运行MapReduce程序"></a>4.2.1 启动HDFS并运行MapReduce程序</h3><p>1）分析：</p>
-<p>​         （1）准备1台客户机</p>
-<p>​         （2）安装jdk</p>
-<p>​         （3）配置环境变量</p>
-<p>​         （4）安装hadoop</p>
-<p>​         （5）配置环境变量</p>
-<p>​         （6）配置集群</p>
-<p>​         （7）启动、测试集群增、删、查</p>
-<p>​         （8）执行wordcount案例</p>
-<p>2）执行步骤</p>
-<p>需要配置hadoop文件如下</p>
-<h4 id="（1）配置集群"><a href="#（1）配置集群" class="headerlink" title="（1）配置集群"></a>（1）配置集群</h4><p>  （a）配置：hadoop-env.sh</p>
-<p>​                          1.Linux系统中获取jdk的安装路径：</p>
-<p>[kingge@hadoop100 hadoop-2.7.2]$ cd etc/hadoop/</p>
-<p>[root@ hadoop101 ~]# echo $JAVA_HOME</p>
-<p>/opt/module/jdk1.8.0_144</p>
-<p>​                          2.修改Jhadoop-env.sh的JAVA_HOME 路径：</p>
-<p>   export   JAVA_HOME=/opt/module/jdk1.8.0_144   </p>
-<p>（b）配置：core-site.xml</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 指定HDFS中NameNode的地址 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;fs.defaultFS&lt;/name&gt;</div><div class="line">    &lt;value&gt;hdfs://hadoop101:9000&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line">&lt;!-- 指定hadoop运行时产生文件的存储目录 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">	&lt;value&gt;/opt/module/hadoop-2.7.2/data/tmp&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<p>（c）配置：hdfs-site.xml  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 指定HDFS副本的数量 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;dfs.replication&lt;/name&gt;</div><div class="line">	&lt;value&gt;1&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<h4 id="（2）启动集群"><a href="#（2）启动集群" class="headerlink" title="（2）启动集群"></a>（2）启动集群</h4><p><strong>（a）格式化namenode</strong>（<strong>第一次启动时格式化，以后就不要总格式化</strong>）</p>
-<p>​                          [kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs namenode –format</p>
-<p>​                 会在上面配置配置的存储目录生成 这两个文件</p>
-<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image002.jpg" alt="img"></p>
-<p> <strong>（b）启动namenode</strong></p>
-<p>​                          [kingge@hadoop101 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start namenode</p>
-<p>​    <strong>c）启动datanode</strong></p>
-<p>​                          [kingge@hadoop101 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start datanode</p>
-<h4 id="（3）查看集群"><a href="#（3）查看集群" class="headerlink" title="（3）查看集群"></a>（3）查看集群</h4><p>​                 <strong>（a）查看是否启动成功</strong></p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ jps</p>
-<p>13586 NameNode</p>
-<p>13668 DataNode</p>
-<p>13786 Jps</p>
-<p>​                 <strong>（b）查看产生的log日志</strong></p>
-<p>当前目录：/opt/module/hadoop-2.7.2/logs</p>
-<p>[kingge@hadoop101 logs]$ ls</p>
-<p>hadoop-kingge-datanode-hadoop.kingge.com.log</p>
-<p>hadoop-kingge-datanode-hadoop.kingge.com.out</p>
-<p>hadoop-kingge-namenode-hadoop.kingge.com.log</p>
-<p>hadoop-kingge-namenode-hadoop.kingge.com.out</p>
-<p>SecurityAuth-root.audit</p>
-<p>[kingge@hadoop101 logs]# cat hadoop-kingge-datanode-hadoop101.log</p>
-<p>​                 <strong>（c）web端查看HDFS文件系统</strong></p>
-<p>​                          <a href="http://192.168.1.101:50070/dfshealth.html#tab-overview" target="_blank" rel="external">http://192.168.1.101:50070/dfshealth.html#tab-overview</a></p>
-<p>​                          注意：如果不能查看，看如下帖子处理</p>
-<p><a href="http://www.cnblogs.com/zlslch/p/6604189.html" target="_blank" rel="external">http://www.cnblogs.com/zlslch/p/6604189.html</a></p>
-<h4 id="（4）操作集群"><a href="#（4）操作集群" class="headerlink" title="（4）操作集群"></a>（4）操作集群</h4><p>​                 （a）在hdfs文件系统上<strong>创建</strong>一个input文件夹</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -mkdir -p /user/kingge/input</p>
-<p>​                 （b）将测试文件内容<strong>上传</strong>到文件系统上</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -put wcinput/wc.input  /user/kingge/input/</p>
-<p>​                 <strong>（c）查看上传的文件是否正确</strong></p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -ls  /user/kingge/input/</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -cat  /user/kingge/ input/wc.input</p>
-<p>​                 （d）运行mapreduce程序(<strong>所有数据在HDFS上</strong>)</p>
-<p>​                          [kingge@hadoop101 hadoop-2.7.2]$ bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar wordcount /user/kingge/input/ /user/kingge/output</p>
-<p>​                 （e）查看输出结果</p>
-<p>命令行查看：</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -cat /user/kingge/output/*</p>
-<p>浏览器查看</p>
-<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image004.jpg" alt="img"></p>
-<p>​                 （f）将测试文件内容<strong>下载</strong>到本地</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ hadoop fs -get /user/kingge/ output/part-r-00000 ./wcoutput/</p>
-<p>（g）<strong>删除</strong>输出结果</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ hdfs dfs -rmr /user/kingge/output</p>
-<h3 id="4-2-2-YARN上运行MapReduce-程序"><a href="#4-2-2-YARN上运行MapReduce-程序" class="headerlink" title="4.2.2 YARN上运行MapReduce 程序"></a>4.2.2 YARN上运行MapReduce 程序</h3><h4 id="1）分析："><a href="#1）分析：" class="headerlink" title="1）分析："></a>1）分析：</h4><p>​         （1）准备1台客户机</p>
-<p>​         （2）安装jdk</p>
-<p>​         （3）配置环境变量</p>
-<p>​         （4）安装hadoop</p>
-<p>​         （5）配置环境变量</p>
-<p>​         （6）配置集群yarn上运行</p>
-<p>​         （7）启动、测试集群增、删、查</p>
-<p>​         （8）在yarn上执行wordcount案例</p>
-<h4 id="2）执行步骤"><a href="#2）执行步骤" class="headerlink" title="2）执行步骤"></a>2）执行步骤</h4><p><strong>（1）配置集群</strong></p>
-<p>​（a）配置yarn-env.sh</p>
-<p>​         配置一下JAVA_HOME</p>
-<p>   export JAVA_HOME=/opt/module/jdk1.8.0_144   </p>
-<p>（b）配置yarn-site.xml</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- reducer获取数据的方式 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line"> &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</div><div class="line"> &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line">&lt;!-- 指定YARN的ResourceManager的地址 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">&lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;</div><div class="line">&lt;value&gt;hadoop101&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<p>​                 （c）配置：mapred-env.sh</p>
-<p>​         配置一下JAVA_HOME</p>
-<p>   export   JAVA_HOME=/opt/module/jdk1.8.0_144   </p>
-<p>​                 （d）配置： (对mapred-site.xml.template重新命名为) mapred-site.xml</p>
-<p>[kingge@hadoop101 hadoop]$ mv mapred-site.xml.template mapred-site.xml</p>
-<p>[kingge@hadoop101 hadoop]$ vi mapred-site.xml</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 指定mr运行在yarn上 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;mapreduce.framework.name&lt;/name&gt;</div><div class="line">	&lt;value&gt;yarn&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<p>​         <strong>（2）启动集群</strong></p>
-<p>（a）启动resourcemanager</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh start resourcemanager</p>
-<p>（b）启动nodemanager</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh start nodemanager</p>
-<p>​         <strong>（3）集群操作</strong></p>
-<p>（a）yarn的浏览器页面查看</p>
-<p><a href="http://192.168.1.101:8088/cluster" target="_blank" rel="external">http://192.168.1.101:8088/cluster</a></p>
-<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image006.jpg" alt="img"></p>
-<p>​                 （b）删除文件系统上的output文件</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -rm -R /user/kingge/output</p>
-<p>​                 （c）执行mapreduce程序</p>
-<p>​                          [kingge@hadoop101 hadoop-2.7.2]$ bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar wordcount /user/kingge/input  /user/kingge/output</p>
-<p>​                 （d）查看运行结果</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -cat /user/kingge/output/*</p>
-<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image008.jpg" alt="img"></p>
-<h3 id="4-2-3-配置临时文件存储路径"><a href="#4-2-3-配置临时文件存储路径" class="headerlink" title="4.2.3 配置临时文件存储路径"></a>4.2.3 配置临时文件存储路径</h3><p>1）停止进程</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh stop nodemanager</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh stop resourcemanager</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/hadoop-daemon.sh stop datanode</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/hadoop-daemon.sh stop namenode</p>
-<p>2）修改hadoop.tmp.dir</p>
-<p>​         [core-site.xml]</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 指定hadoop运行时产生文件的存储目录 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">	&lt;value&gt;/opt/module/hadoop-2.7.2/data/tmp&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<p>3）将/opt/module/hadoop-2.7.2路径中的logs文件夹删除掉</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ rm -rf logs/</p>
-<p>4）进入到tmp目录将tmp目录中hadoop-kingge目录删除掉</p>
-<p>[kingge@hadoop101 tmp]$ rm -rf hadoop-kingge/</p>
-<p>5）格式化NameNode</p>
-<p>​         [kingge@hadoop101 hadoop-2.7.2]$ hadoop namenode -format</p>
-<p>6）启动所有进程</p>
-<p>​         [kingge@hadoop101 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start namenode</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start datanode</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh start resourcemanager</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh start nodemanager</p>
-<p>​         7）查看/opt/module/hadoop-2.7.2/data/tmp这个目录下的内容。</p>
-<h3 id="4-2-4-配置历史服务器"><a href="#4-2-4-配置历史服务器" class="headerlink" title="4.2.4 配置历史服务器"></a>4.2.4 配置历史服务器</h3><p>​         1）配置mapred-site.xml</p>
-<p>[kingge@hadoop101 hadoop]$ vi mapred-site.xml</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">&lt;name&gt;mapreduce.jobhistory.address&lt;/name&gt;</div><div class="line">&lt;value&gt;hadoop101:10020&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;mapreduce.jobhistory.webapp.address&lt;/name&gt;</div><div class="line">    &lt;value&gt;hadoop101:19888&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<p>​         2）查看启动历史服务器文件目录：</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ ls sbin/ | grep mr</p>
-<p>mr-jobhistory-daemon.sh</p>
-<p>​         3）启动历史服务器</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/mr-jobhistory-daemon.sh start historyserver</p>
-<p>​         4）查看历史服务器是否启动</p>
-<p>​                 [kingge@hadoop101 hadoop-2.7.2]$ jps</p>
-<p>​         5）查看jobhistory</p>
-<p><a href="http://192.168.1.101:19888/jobhistory" target="_blank" rel="external">http://192.168.1.101:19888/jobhistory</a></p>
-<h3 id="4-2-5-配置日志的聚集"><a href="#4-2-5-配置日志的聚集" class="headerlink" title="4.2.5 配置日志的聚集"></a>4.2.5 配置日志的聚集</h3><p>日志聚集概念：应用运行完成以后，将日志信息上传到HDFS系统上。</p>
-<p>开启日志聚集功能步骤：</p>
-<p>（1）配置yarn-site.xml</p>
-<p>[kingge@hadoop101 hadoop]$ vi yarn-site.xml</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 日志聚集功能使能 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">&lt;name&gt;yarn.log-aggregation-enable&lt;/name&gt;</div><div class="line">&lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;!-- 日志保留时间设置7天 --&gt;</div><div class="line">&lt;property&gt;</div><div class="line">&lt;name&gt;yarn.log-aggregation.retain-seconds&lt;/name&gt;</div><div class="line">&lt;value&gt;604800&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<p>（2）关闭nodemanager 、resourcemanager和historymanager</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh stop resourcemanager</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh stop nodemanager</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/mr-jobhistory-daemon.sh stop historyserver</p>
-<p>（3）启动nodemanager 、resourcemanager和historymanager</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh start resourcemanager</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/yarn-daemon.sh start nodemanager</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ sbin/mr-jobhistory-daemon.sh start historyserver</p>
-<p>（4）删除hdfs上已经存在的hdfs文件</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ bin/hdfs dfs -rm -R /user/kingge/output</p>
-<p>（5）执行wordcount程序</p>
-<p>[kingge@hadoop101 hadoop-2.7.2]$ hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar wordcount /user/kingge/input /user/kingge/output</p>
-<p>（6）查看日志</p>
-<p><a href="http://192.168.1.101:19888/jobhistory" target="_blank" rel="external">http://192.168.1.101:19888/jobhistory</a></p>
-<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image0022.jpg" alt="img"></p>
-<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image012.jpg" alt="img"></p>
-<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image014.jpg" alt="img"></p>
-<h3 id="4-2-6-配置文件说明"><a href="#4-2-6-配置文件说明" class="headerlink" title="4.2.6 配置文件说明"></a>4.2.6 配置文件说明</h3><p>Hadoop配置文件分两类：默认配置文件和自定义配置文件，只有用户想修改某一默认配置值时，才需要修改自定义配置文件，更改相应属性值。</p>
-<p>（1）默认配置文件：存放在hadoop相应的jar包中</p>
-<p>[core-default.xml]</p>
-<p>​                          hadoop-common-2.7.2.jar/ core-default.xml</p>
-<p>​                 [hdfs-default.xml]</p>
-<p>hadoop-hdfs-2.7.2.jar/ hdfs-default.xml</p>
-<p>​                 [yarn-default.xml]</p>
-<p>hadoop-yarn-common-2.7.2.jar/ yarn-default.xml</p>
-<p>​                 [core-default.xml]</p>
-<p>hadoop-mapreduce-client-core-2.7.2.jar/ core-default.xml</p>
-<p>​         （2）自定义配置文件：存放在$HADOOP_HOME/etc/hadoop</p>
-<p>​                 core-site.xml</p>
-<p>​                 hdfs-site.xml</p>
-<p>​                 yarn-site.xml</p>
-<p>​                 mapred-site.xml</p>
-<h3 id="4-2-7-总结"><a href="#4-2-7-总结" class="headerlink" title="4.2.7 总结"></a>4.2.7 总结</h3><p>相比于本地运行模式，伪分布式模式支持互联网操作，不过集群的副本是1（不配置的话默认是3，详情查看hdfs-default.xml的dfs.replication属性）。</p>
-<h2 id="4-3-完全分布式部署Hadoop"><a href="#4-3-完全分布式部署Hadoop" class="headerlink" title="4.3 完全分布式部署Hadoop"></a>4.3 完全分布式部署Hadoop</h2><p>分析：</p>
-<p>​         1）准备3台客户机（关闭防火墙、静态ip、主机名称）</p>
-<p>​         2）安装jdk</p>
-<p>​         3）配置环境变量</p>
-<p>​         4）安装hadoop</p>
-<p>​         5）配置环境变量</p>
-<p>​         6）安装ssh</p>
-<p>​         7）配置集群</p>
-<p>​         8）启动测试集群</p>
-<h3 id="4-3-1-虚拟机准备"><a href="#4-3-1-虚拟机准备" class="headerlink" title="4.3.1 虚拟机准备"></a>4.3.1 虚拟机准备</h3><p>详见3.2-3.3章。</p>
-<p><a href="/2018/02/24/hadoop大数据-二-运行环境搭建">Hadoop运行环境搭建3.2-3.3</a></p>
-<h3 id="4-3-2-主机名设置"><a href="#4-3-2-主机名设置" class="headerlink" title="4.3.2 主机名设置"></a>4.3.2 主机名设置</h3><p><a href="/2018/02/24/hadoop大数据-二-运行环境搭建">Hadoop运行环境搭建3.4</a></p>
-<h3 id="4-3-3-scp"><a href="#4-3-3-scp" class="headerlink" title="4.3.3 scp"></a>4.3.3 scp</h3><p>1）scp可以实现服务器与服务器之间的数据拷贝。</p>
-<p>  操作一：hadoop101 主动推送数据到hadoop102</p>
-<p>  操作二：hadoop102主动从hadoop101获取数据到本地</p>
-<p>  操作三：hadoop101 控制将hadoop102的数据拷贝到hadoop103</p>
-<p>​        <strong>接收方一般使用root**</strong>用户接受，因为有些文件夹的权限只有root<strong>用户才有，为保证传输成功，双方最好都切换到root</strong>用户**</p>
-<p>2）案例实操</p>
-<p>（1）将hadoop101中/opt/module和/opt/software文件拷贝到hadoop102、hadoop103和hadoop104上。</p>
-<p>[root@hadoop101 /]# scp -r /opt/module/  root@hadoop102:/opt</p>
-<p>[root@hadoop101 /]# scp -r /opt/software/  root@hadoop102:/opt</p>
-<p>[root@hadoop101 /]# scp -r /opt/module/  root@hadoop103:/opt</p>
-<p>[root@hadoop101 /]# scp -r /opt/software/  root@hadoop103:/opt</p>
-<p>[root@hadoop101 /]# scp -r /opt/module/  root@hadoop104:/opt</p>
-<p>[root@hadoop101 /]# scp -r /opt/software/  root@hadoop105:/opt</p>
-<p>（2）将hadoop101服务器上的/etc/profile文件拷贝到hadoop102上。</p>
-<p>[root@hadoop102 opt]# scp root@hadoop101:/etc/profile /etc/profile 例子1</p>
-<p>[root@hadoop102 opt]# scp -r  root@192.168.1.101:/opt/module/ /opt/–例子二</p>
-<p>​         （3）实现两台远程机器之间的文件传输（hadoop103主机文件拷贝到hadoop104主机上）</p>
-<p>​                 [kingge@hadoop102 test]$ scp kingge@hadoop103:/opt/test/haha kingge@hadoop104:/opt/test/</p>
-<p>注意：如果传递环境变量配置文件后需要source /etc/profile 一下，让其生效。同时可能需要修改一下文件的权限或者文件所属（chmod chown）</p>
-<h3 id="4-3-4-SSH无密码登录"><a href="#4-3-4-SSH无密码登录" class="headerlink" title="4.3.4 SSH无密码登录"></a>4.3.4 SSH无密码登录</h3><p> <em>针对执行ssh<strong>命令</strong>的</em> <em>无密码操作</em></p>
-<p>1）配置ssh</p>
-<p>（1）基本语法</p>
-<p>ssh 另一台电脑的ip地址</p>
-<p>（2）ssh连接时出现Host key verification failed的解决方法</p>
-<p>[root@hadoop102 opt]# ssh 192.168.1.103</p>
-<p>The authenticity of host ‘192.168.1.103 (192.168.1.103)’ can’t be established.</p>
-<p>RSA key fingerprint is cf:1e:de:d7:d0:4c:2d:98:60:b4:fd:ae:b1:2d:ad:06.</p>
-<p>Are you sure you want to continue connecting (yes/no)? </p>
-<p>Host key verification failed.</p>
-<p>（3）解决方案如下：直接输入yes</p>
-<p>2）无密钥配置</p>
-<p>（1）进入到我的home目录</p>
-<p>​                 [kingge@hadoop102 opt]$ cd ~/.ssh </p>
-<p>（2）生成公钥和私钥：</p>
-<p>[kingge@hadoop102 .ssh]$ ssh-keygen -t rsa </p>
-<p>然后敲（三个回车），就会生成两个文件id_rsa（私钥）、id_rsa.pub（公钥）</p>
-<p>（3）将公钥拷贝到要免密登录的目标机器上</p>
-<p>[kingge@hadoop102 .ssh]$ ssh-copy-id hadoop102 （<strong>给自己授权免密登录</strong>）</p>
-<p>[kingge@hadoop102 .ssh]$ ssh-copy-id hadoop103</p>
-<p>[kingge@hadoop102 .ssh]$ ssh-copy-id hadoop104</p>
-<p>查看103或者104的~/.ssh，发现多了authorized_keys 个文件</p>
-<p>需求： A服务器需要访问B服务器，不需要输入密码</p>
-<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/8026452.png" alt="1560048026452"></p>
-<p>3）.ssh文件夹下的文件功能解释</p>
-<p>​         （1）~/.ssh/known_hosts      ：记录ssh访问过计算机的公钥(public key)</p>
-<p>​         （2）id_rsa    ：生成的私钥</p>
-<p>​         （3）id_rsa.pub     ：生成的公钥</p>
-<p>​         （4）authorized_keys    ：存放授权过得无秘登录服务器公钥</p>
-<p><strong>注意：</strong> 如果你授权的免密登录用户，被切换了，那么还是需要输入密码才能够登录。</p>
-<p><strong>例子：hadoop100服务器的kingge用户生成了密匙，然后发给你了hadoop101，那么100服务器就可以免密登录101服务器，但是假设100服务器su root（切换为了root用户），那么当执行ssh hadoop101 操作时，就需要输入101服务器密码，而不能免密登录，所以要想在root用户下也能免密登录101服务器，就需要在root用户下重新走一遍免密登录流程</strong></p>
-<h3 id="4-3-5-rsync"><a href="#4-3-5-rsync" class="headerlink" title="4.3.5 rsync"></a>4.3.5 rsync</h3><p>rsync远程同步工具，主要用于备份和镜像。具有速度快、避免复制相同内容和支持符号链接的优点。</p>
-<p><strong>rsync**</strong>和<strong><strong>scp</strong></strong>区别：<strong><strong>用</strong></strong>rsync<strong><strong>做文件的复制要比</strong></strong>scp<strong><strong>的速度快，</strong></strong>rsync<strong><strong>只对差异文件做更新。</strong></strong>scp<strong>**是把所有文件都复制过去。</strong></p>
-<p>（1）查看rsync使用说明</p>
-<p>man rsync | more</p>
-<p>​         （2）基本语法</p>
-<p>rsync -rvl     $pdir/$fname         $user@hadoop$host:$pdir</p>
-<p>​                 命令 命令参数 要拷贝的文件路径/名称   目的用户@主机:目的路径</p>
-<p>​                 选项</p>
-<p>-r 递归</p>
-<p>-v 显示复制过程</p>
-<p>-l 拷贝符号连接</p>
-<p>​         （3）案例实操</p>
-<p>​                 把本机/opt/tmp目录同步到hadoop103服务器的root用户下的/opt/tmp目录</p>
-<p>[kingge@hadoop102 opt]$ rsync -rvl /opt/tmp  root@hadoop103:/opt/</p>
-<h3 id="4-3-6-编写集群分发脚本xsync"><a href="#4-3-6-编写集群分发脚本xsync" class="headerlink" title="4.3.6 编写集群分发脚本xsync"></a>4.3.6 编写集群分发脚本xsync</h3><p> <strong>场景：分布式系统中假设有6900**</strong>台服务器，那么假设我们需要同步配置信息，我们不可能一台台的执行scp/rsync<strong> </strong>命令，效率极低，那怎么办呢？**</p>
-<p>1）需求分析：循环复制文件到所有节点的相同目录下。</p>
-<p>​         （1）原始拷贝：</p>
-<p>rsync  -rvl     /opt/module                root@hadoop103:/opt/</p>
-<p>​         （2）期望脚本：</p>
-<p>xsync 要同步的文件名称</p>
-<p>​         （3）在/usr/local/bin这个目录下存放的脚本，可以在系统任何地方直接执行。（就是在执行xsync命令时可以不用输入/usr/local/bin这样前缀）</p>
-<p>2）案例实操：</p>
-<p>（1）在/usr/local/bin目录下创建xsync文件，文件内容如下：</p>
-<p>[root@hadoop102 bin]# touch xsync</p>
-<p>[root@hadoop102 bin]# vi xsync</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#1 获取输入参数个数，如果没有参数，直接退出</div><div class="line">pcount=$#</div><div class="line">if((pcount==0)); then</div><div class="line">echo no args;</div><div class="line">exit;</div><div class="line">fi</div><div class="line"></div><div class="line">#2 获取文件名称</div><div class="line">p1=$1</div><div class="line">fname=`basename $p1`</div><div class="line">echo fname=$fname</div><div class="line"></div><div class="line">#3 获取上级目录到绝对路径</div><div class="line">pdir=`cd -P $(dirname $p1); pwd`</div><div class="line">echo pdir=$pdir</div><div class="line"></div><div class="line">#4 获取当前用户名称</div><div class="line">user=`whoami`</div><div class="line"></div><div class="line">#5 循环</div><div class="line">for((host=103; host&lt;105; host++)); do</div><div class="line">        #echo $pdir/$fname $user@hadoop$host:$pdir</div><div class="line">        echo --------------- hadoop$host ----------------</div><div class="line">        rsync -rvl $pdir/$fname $user@hadoop$host:$pdir</div><div class="line">done</div></pre></td></tr></table></figure>
-<p>（2）修改脚本 xsync 具有执行权限</p>
-<p>[root@hadoop102 bin]# chmod 777 xsync</p>
-<p>[root@hadoop102 bin]# chown kingge:kingge -R xsync</p>
-<p>（3）调用脚本形式：xsync 文件名称</p>
-<p>[kingge@hadoop102 opt]$ xsync tmp/</p>
-<h3 id="4-3-7-编写集群操作脚本xcall"><a href="#4-3-7-编写集群操作脚本xcall" class="headerlink" title="4.3.7 编写集群操作脚本xcall"></a>4.3.7 编写集群操作脚本xcall</h3><p>1）需求分析：在所有主机上同时执行相同的命令</p>
-<p>xcall +命令</p>
-<p>2）具体实现</p>
-<p>（1）在/usr/local/bin目录下创建xcall文件，文件内容如下：</p>
-<p>[root@hadoop102 bin]# touch xcall</p>
-<p>[root@hadoop102 bin]# vi xcall</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">pcount=$#</div><div class="line">if((pcount==0));then</div><div class="line">        echo no args;</div><div class="line">        exit;</div><div class="line">fi</div><div class="line"></div><div class="line">echo -------------localhost----------</div><div class="line">$@</div><div class="line">for((host=101; host&lt;=108; host++)); do</div><div class="line">        echo ----------hadoop$host---------</div><div class="line">        ssh hadoop$host $@</div><div class="line">done</div></pre></td></tr></table></figure>
-<p>（2）修改脚本xcall具有执行权限</p>
-<p>​                [root@hadoop102 bin]# chmod 777 xcall</p>
-<p>[root@hadoop102 bin]# chown kingge:kingge xcall</p>
-<p>（3）调用脚本形式： xcall 操作命令</p>
-<p>[root@hadoop102 ~]# xcall rm -rf /opt/tmp/ </p>
-<h3 id="4-3-8-配置集群"><a href="#4-3-8-配置集群" class="headerlink" title="4.3.8 配置集群"></a>4.3.8 配置集群</h3><h4 id="1）集群部署规划"><a href="#1）集群部署规划" class="headerlink" title="1）集群部署规划"></a>1）集群部署规划</h4><table>
-<thead>
-<tr>
-<th></th>
-<th>hadoop102</th>
-<th>hadoop103</th>
-<th>hadoop104</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>HDFS</td>
-<td>NameNode   DataNode</td>
-<td>DataNode</td>
-<td>SecondaryNameNode   DataNode</td>
-</tr>
-<tr>
-<td>YARN</td>
-<td>NodeManager</td>
-<td>ResourceManager   NodeManager</td>
-<td>NodeManager</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p>   <strong>集群规划的原则</strong>：NameNode/SecondaryNameNode/ ResourceManager必须要单独占据一个服务器(或者这三个不能在同一个节点上运行)，因为他是相当于目录，请求他的次数最大，所以不能跟其他插件部署在一起，不能跟NameNode抢占资源，因为他不能挂掉。Datanode就没有这些限制，挂掉也无所谓。</p>
-<p>   但是下面的例子中NameNode和DataNode都部署在hadoop102这个节点，因为我们是属于测试搭建环境下，所以无所谓，<strong>但是生产环境下必须按照规则</strong></p>
-<h4 id="2）配置文件"><a href="#2）配置文件" class="headerlink" title="2）配置文件"></a>2）配置文件</h4><p>​         （1）core-site.xml</p>
-<p>[kingge@hadoop102 hadoop]$ vi core-site.xml</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 指定HDFS中NameNode的地址 --&gt;</div><div class="line">	&lt;property&gt;</div><div class="line">		&lt;name&gt;fs.defaultFS&lt;/name&gt;</div><div class="line">        &lt;value&gt;hdfs://hadoop102:9000&lt;/value&gt;</div><div class="line">	&lt;/property&gt;</div><div class="line"></div><div class="line">	&lt;!-- 指定hadoop运行时产生文件的存储目录 --&gt;</div><div class="line">	&lt;property&gt;</div><div class="line">		&lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">		&lt;value&gt;/opt/module/hadoop-2.7.2/data/tmp&lt;/value&gt;</div><div class="line">	&lt;/property&gt;</div></pre></td></tr></table></figure>
-<p>​         （2）Hdfs</p>
-<p>​                 <strong>2.1 hadoop-env.sh</strong></p>
-<p>[kingge@hadoop102 hadoop]$ vi hadoop-env.sh</p>
-<p>   export   JAVA_HOME=/opt/module/jdk1.8.0_144   </p>
-<p>​                 <strong>2.2 hdfs-site.xml</strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;configuration&gt;	</div><div class="line">	&lt;property&gt;</div><div class="line">		&lt;name&gt;dfs.replication&lt;/name&gt;</div><div class="line">		&lt;value&gt;3&lt;/value&gt;</div><div class="line">	&lt;/property&gt;</div><div class="line"></div><div class="line"># 如果不配置。默认是跟namenode同个位置</div><div class="line">	&lt;property&gt;</div><div class="line">        &lt;name&gt;dfs.namenode.secondary.http-address&lt;/name&gt;</div><div class="line">        &lt;value&gt;hadoop104:50090&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
-<p>​                 <strong>2.3 Slaves</strong></p>
-<p>​              <strong>配置文件里面不能存在多余的空格或者换行</strong></p>
-<p>[kingge@hadoop102 hadoop]$ vi slaves</p>
-<p>   hadoop102   hadoop103   hadoop104   </p>
-<p>​         （3）yarn</p>
-<p>​                 yarn-env.sh</p>
-<p>[kingge@hadoop102 hadoop]$ vi yarn-env.sh</p>
-<p>   export   JAVA_HOME=/opt/module/jdk1.8.0_144   </p>
-<p>​                 yarn-site.xml</p>
-<p>​                 [kingge@hadoop102 hadoop]$ vi yarn-site.xml</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line"></div><div class="line">	&lt;!-- reducer获取数据的方式 --&gt;</div><div class="line">	&lt;property&gt;</div><div class="line">		 &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</div><div class="line">		 &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</div><div class="line">	&lt;/property&gt;</div><div class="line"></div><div class="line">	&lt;!-- 指定YARN的ResourceManager的地址 --&gt;</div><div class="line">	&lt;property&gt;</div><div class="line">		&lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;</div><div class="line">		&lt;value&gt;hadoop103&lt;/value&gt;</div><div class="line">	&lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
-<p>​         （4）mapreduce</p>
-<p>​                 mapred-env.sh</p>
-<p>[kingge@hadoop102 hadoop]$ vi mapred-env.sh</p>
-<p>   export   JAVA_HOME=/opt/module/jdk1.8.0_144   </p>
-<p>​                 mapred-site.xml</p>
-<p>[kingge@hadoop102 hadoop]$ vi mapred-site.xml</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line">	&lt;!-- 指定mr运行在yarn上 --&gt;</div><div class="line">	&lt;property&gt;</div><div class="line">		&lt;name&gt;mapreduce.framework.name&lt;/name&gt;</div><div class="line">		&lt;value&gt;yarn&lt;/value&gt;</div><div class="line">	&lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
-<h4 id="3）在集群上分发以上所有文件"><a href="#3）在集群上分发以上所有文件" class="headerlink" title="3）在集群上分发以上所有文件"></a>3）在集群上分发以上所有文件</h4><p>[kingge@hadoop102 hadoop]$ pwd</p>
-<p>/opt/module/hadoop-2.7.2/etc/hadoop</p>
-<p>[kingge@hadoop102 hadoop]$ xsync /opt/module/hadoop-2.7.2/etc/hadoop/core-site.xml</p>
-<p>[kingge@hadoop102 hadoop]$ xsync /opt/module/hadoop-2.7.2/etc/hadoop/yarn-site.xml</p>
-<p>[kingge@hadoop102 hadoop]$ xsync /opt/module/hadoop-2.7.2/etc/hadoop/slaves</p>
-<p>4）查看文件分发情况</p>
-<p>[kingge@hadoop102 hadoop]$ xcall cat /opt/module/hadoop-2.7.2/etc/hadoop/slaves</p>
-<h3 id="4-3-9-集群启动及测试"><a href="#4-3-9-集群启动及测试" class="headerlink" title="4.3.9 集群启动及测试"></a>4.3.9 集群启动及测试</h3><p>1）启动集群</p>
-<p>​        清空之前启动namenode的数据</p>
-<p>​            Rm –rf data/ log/</p>
-<p>​       Data就是在core-site.xml中配置的文件存储目录，log就是hadoop的log目录。</p>
-<p>​         （0）如果集群是第一次启动，需要格式化namenode</p>
-<p>​                 [kingge@hadoop102 hadoop-2.7.2]$ bin/hdfs namenode -format</p>
-<p>（1）启动HDFS：</p>
-<p>[kingge@hadoop102 hadoop-2.7.2]$ sbin/start-dfs.sh</p>
-<p> –<strong>这一步跟我们之前的单个启动不一样（sbin/hadoop-daemon.sh start namenode**</strong>），这个操作是启动整个集群的namenode<strong>**和datanode</strong>—那么就需要配置ssh 无密码登录</p>
-<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image00209.png" alt="img"></p>
-<p>[kingge@hadoop102 hadoop-2.7.2]$ jps</p>
-<p>4166 NameNode</p>
-<p>4482 Jps</p>
-<p>4263 DataNode</p>
-<p>[kingge@hadoop103 hadoop-2.7.2]$ jps</p>
-<p>3218 DataNode</p>
-<p>3288 Jps</p>
-<p>[kingge@hadoop104 hadoop-2.7.2]$ jps</p>
-<p>3221 DataNode</p>
-<p>3283 SecondaryNameNode</p>
-<p>3364 Jps</p>
-<p>（2）启动yarn （启动namemanager 和 resourceManager）</p>
-<p>[kingge@hadoop103 hadoop-2.7.2]$ sbin/start-yarn.sh</p>
-<p>注意：<strong>Namenode和ResourceManger如果不是同一台机器，不能在NameNode上启动 yarn，应该在ResouceManager所在的机器上启动yarn。</strong></p>
-<p> <strong>因为我们在这个集群中ResourceManager是在hadoop103上面的，所以在103上启动</strong></p>
-<p>2）集群基本测试</p>
-<p>（1）上传文件到集群</p>
-<p>​         1.上传小文件</p>
-<p>​         [kingge@hadoop102 hadoop-2.7.2]$ bin/hdfs dfs -mkdir -p /user/kingge/input</p>
-<p>​         [kingge@hadoop102 hadoop-2.7.2]$ bin/hdfs dfs -put etc/hadoop/wc.input /user/kingge/input</p>
-<p>上传完后 hadoop103和hadoop104 上面也会同步副本（即是，也会存在上面的/user/kingge/tep/conf 和 *-site.xml  这些东西）</p>
-<p> 查看HDFS系统的文件结构</p>
-<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_imag3e006.jpg" alt="img"></p>
-<p> 我们可以看到他是存储在了块0，而且有三个副本101/102/103</p>
-<p>​    接下来我们再上传一个大文件看看</p>
-<p>​         2.上传大文件</p>
-<p>[kingge@hadoop102 hadoop-2.7.2]$ bin/hadoop fs -put /opt/software/hadoop-2.7.2.tar.gz  /user/kingge/input</p>
-<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_imagfe008.jpg" alt="img"></p>
-<p><strong>为什么他这里会分为两块存储呢？因为默认块大小是128，当超过这个大小时就需要分块存储</strong></p>
-<p>（2）上传文件后查看文件存放在什么位置</p>
-<p>​         文件存储路径</p>
-<p>​         [kingge@hadoop102 subdir0]$ pwd</p>
-<p>/opt/module/hadoop-2.7.2/data/tmp/dfs/data/current/BP-938951106-192.168.10.107-1495462844069/current/finalized/subdir0/subdir0</p>
-<p>​         查看文件内容(<strong>wc.input</strong>)</p>
-<p>[kingge@hadoop102 subdir0]$ cat blk_1073741825</p>
-<p>hadoop</p>
-<p>kingge</p>
-<p>kingge</p>
-<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_image0r09.png" alt="img"></p>
-<p>然后26 27 就是那个大文件，分为了两块</p>
-<p>（3）拼接</p>
-<p>-rw-rw-r–. 1 kingge kingge 134217728 5月  23 16:01 blk_1073741836</p>
-<p>-rw-rw-r–. 1 kingge kingge   1048583 5月  23 16:01 blk_1073741836_1012.meta</p>
-<p>-rw-rw-r–. 1 kingge kingge  63439959 5月  23 16:01 blk_1073741837</p>
-<p>-rw-rw-r–. 1 kingge kingge    495635 5月  23 16:01 blk_1073741837_1013.meta</p>
-<p>[kingge@hadoop102 subdir0]$ cat blk_1073741836&gt;&gt;tmp.file</p>
-<p>[kingge@hadoop102 subdir0]$ cat blk_1073741837&gt;&gt;tmp.file</p>
-<p>[kingge@hadoop102 subdir0]$ tar -zxvf tmp.file</p>
-<p>  <strong>已解压发现就是我们上传那个tar**</strong>大文件的解压版本，说明这两个文件就是存放着大文件**</p>
-<p>（4）下载</p>
-<p>[kingge@hadoop102 hadoop-2.7.2]$ bin/hadoop fs -get /user/kingge/input/hadoop-2.7.2.tar.gz</p>
-<p>3）性能测试集群</p>
-<p>​         写海量数据</p>
-<p>​         读海量数据</p>
-<h3 id="4-3-10-Hadoop启动停止方式"><a href="#4-3-10-Hadoop启动停止方式" class="headerlink" title="4.3.10 Hadoop启动停止方式"></a>4.3.10 Hadoop启动停止方式</h3><p>1）各个服务组件逐一启动</p>
-<p>​         （1）分别启动hdfs组件</p>
-<p>​                 hadoop-daemon.sh  start|stop  namenode|datanode|secondarynamenode</p>
-<p>​         （2）启动yarn</p>
-<p>​                 yarn-daemon.sh  start|stop  resourcemanager|nodemanager</p>
-<p>2）各个模块分开启动（配置ssh是前提）常用</p>
-<p>​         （1）整体启动/停止hdfs</p>
-<p>​                 start-dfs.sh</p>
-<p>​                 stop-dfs.sh</p>
-<p>​         （2）整体启动/停止yarn</p>
-<p>​                 start-yarn.sh</p>
-<p>​                 stop-yarn.sh</p>
-<p>3）全部启动（不建议使用）</p>
-<p>​         start-all.sh</p>
-<p>​         stop-all.sh</p>
-<h3 id="4-3-11-集群时间同步"><a href="#4-3-11-集群时间同步" class="headerlink" title="4.3.11 集群时间同步"></a>4.3.11 集群时间同步</h3><p>时间同步的方式：找一个机器，作为时间服务器，所有的机器与这台集群时间进行定时的同步，比如，每隔十分钟，同步一次时间。</p>
-<p><strong>配置时间同步实操：</strong></p>
-<p>1）时间服务器配置（必须root用户）</p>
-<p>（1）检查ntp是否安装</p>
-<p>[root@hadoop102 桌面]# rpm -qa|grep ntp</p>
-<p>ntp-4.2.6p5-10.el6.centos.x86_64</p>
-<p>fontpackages-filesystem-1.41-1.1.el6.noarch</p>
-<p>ntpdate-4.2.6p5-10.el6.centos.x86_64</p>
-<p>（2）修改ntp配置文件</p>
-<p>[root@hadoop102 桌面]# vi /etc/ntp.conf</p>
-<p>修改内容如下</p>
-<p>a）修改1</p>
-<p>#restrict 192.168.1.0 mask 255.255.255.0 nomodify notrap为</p>
-<p>restrict 192.168.1.0 mask 255.255.255.0 nomodify notrap</p>
-<p>​                 b）修改2 注释时间服务器</p>
-<p>server 0.centos.pool.ntp.org iburst</p>
-<p>server 1.centos.pool.ntp.org iburst</p>
-<p>server 2.centos.pool.ntp.org iburst</p>
-<p>server 3.centos.pool.ntp.org iburst为</p>
-<p>#server 0.centos.pool.ntp.org iburst</p>
-<p>#server 1.centos.pool.ntp.org iburst</p>
-<p>#server 2.centos.pool.ntp.org iburst</p>
-<p>#server 3.centos.pool.ntp.org iburst</p>
-<p>​                 c）添加3 自己的时间服务器<img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/clip_imagwe010.png" alt="img"></p>
-<p>server 127.127.1.0</p>
-<p>fudge 127.127.1.0 stratum 10</p>
-<p>（3）修改/etc/sysconfig/ntpd 文件</p>
-<p>[root@hadoop102 桌面]# vim /etc/sysconfig/ntpd</p>
-<p>增加内容如下</p>
-<p>SYNC_HWCLOCK=yes</p>
-<p>​         （4）重新启动ntpd</p>
-<p>[root@hadoop102 桌面]# service ntpd status</p>
-<p>ntpd 已停</p>
-<p>[root@hadoop102 桌面]# service ntpd start</p>
-<p>正在启动 ntpd：                                            [确定]</p>
-<p>​         （5）执行：</p>
-<p>​                  [root@hadoop102 桌面]# chkconfig ntpd on</p>
-<p>2）其他机器配置（必须root用户）</p>
-<p>​         （1）在其他机器配置10分钟与时间服务器同步一次</p>
-<p>​                 [root@hadoop103 hadoop-2.7.2]# crontab -e</p>
-<p>​                 编写脚本</p>
-<p>​                 <em>/10 </em> <em> </em> * /usr/sbin/ntpdate hadoop102</p>
-<p>​         （2）修改任意机器时间</p>
-<p>​                 [root@hadoop103 hadoop]# date -s “2017-9-11 11:11:11”</p>
-<p>​         （3）十分钟后查看机器是否与时间服务器同步</p>
-<p>​                 [root@hadoop103 hadoop]# date</p>
-<h3 id="4-3-12-配置集群常见问题"><a href="#4-3-12-配置集群常见问题" class="headerlink" title="4.3.12 配置集群常见问题"></a>4.3.12 配置集群常见问题</h3><p>1）防火墙没关闭、或者没有启动yarn</p>
-<p><em>INFO client.RMProxy: Connecting to ResourceManager at hadoop108/192.168.10.108:8032</em></p>
-<p>2）主机名称配置错误</p>
-<p>3）ip地址配置错误</p>
-<p>4）ssh没有配置好</p>
-<p>5）root用户和kingge两个用户启动集群不统一</p>
-<p>6）配置文件修改不细心</p>
-<p>7）未编译源码</p>
-<p><em>Unable to load native-hadoop library for your platform… using builtin-java classes where applicable</em></p>
-<p><em>17/05/22 15:38:58 INFO client.RMProxy: Connecting to ResourceManager at hadoop108/192.168.10.108:8032</em></p>
-<p>8）datanode不被namenode识别问题</p>
-<p>Namenode在format初始化的时候会形成两个标识，blockPoolId和clusterId。新的datanode加入时，会获取这两个标识作为自己工作目录中的标识。</p>
-<p>一旦namenode重新format后，namenode的身份标识已变，而datanode如果依然持有原来的id，就不会被namenode识别。</p>
-<p>解决办法，删除datanode节点中的数据后，再次重新格式化namenode。</p>
-<p>9）不识别主机名称</p>
-<p>   java.net.UnknownHostException: hadoop102: hadoop102           at   java.net.InetAddress.getLocalHost(InetAddress.java:1475)           at   org.apache.hadoop.mapreduce.JobSubmitter.submitJobInternal(JobSubmitter.java:146)           at   org.apache.hadoop.mapreduce.Job$10.run(Job.java:1290)           at   org.apache.hadoop.mapreduce.Job$10.run(Job.java:1287)           at   java.security.AccessController.doPrivileged(Native Method)           at   javax.security.auth.Subject.doAs(Subject.java:415)   </p>
-<p>解决办法：</p>
-<p>（1）在/etc/hosts文件中添加192.168.1.102 hadoop102</p>
-<p>​         （2）主机名称不要起hadoop  hadoop000等特殊名称</p>
-<p>10）datanode和namenode进程同时只能工作一个。</p>
-<p><img src="/2018/02/26/hadoop大数据-三-Hadoop三种部署和运行方式/0048286271.png" alt="1560048286271"></p>
-<p>11）执行命令 不生效，粘贴word中命令时，遇到-和长–没区分开。导致命令失效</p>
-<p>解决办法：尽量不要粘贴word中代码。</p>
-<p>12）jps发现进程已经没有，但是重新启动集群，提示进程已经开启。原因是在linux的根目录下/tmp目录中存在启动的进程临时文件，将集群相关进程删除掉，再重新启动集群。</p>
-<p>13）jps不生效。</p>
-<p>原因：全局变量hadoop   java没有生效，需要source /etc/profile文件。</p>
-<p>14）8088端口连接不上</p>
-<p>[kingge@hadoop102 桌面]$ cat /etc/hosts</p>
-<p>注释掉如下代码</p>
-<p>#127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</p>
-<p>#::1         hadoop102</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;四-Hadoop运行模式&quot;&gt;&lt;a href=&quot;#四-Hadoop运行模式&quot; class=&quot;headerlink&quot; title=&quot;四 Hadoop运行模式&quot;&gt;&lt;/a&gt;四 Hadoop运行模式&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;1）官方网址&lt;/strong&gt;&lt;/p&gt;
-&lt;p
     
     </summary>
     

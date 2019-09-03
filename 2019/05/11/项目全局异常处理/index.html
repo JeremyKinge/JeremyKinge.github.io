@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="异常处理,ControllerAdvice注解,ExceptionHandler注解," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="起因 这是service层的一个业务方法，业务功能是：查询某些二维码数据。可以看到我们在这个方法里面除了主要的业务逻辑，还有数据非空判断，以及异常处理等等。 如果我们不仅仅是在service层添加try catch异常处理，在controller层调用service方法的地方也添加了try catch这样的异常处理代码，那么代码冗余严重且不易维护  总结-上诉代码存在两个问题  1、上边的代码只要">
+<meta name="keywords" content="异常处理,ControllerAdvice注解,ExceptionHandler注解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="项目全局异常处理">
+<meta property="og:url" content="http://kingge.top/2019/05/11/项目全局异常处理/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="起因 这是service层的一个业务方法，业务功能是：查询某些二维码数据。可以看到我们在这个方法里面除了主要的业务逻辑，还有数据非空判断，以及异常处理等等。 如果我们不仅仅是在service层添加try catch异常处理，在controller层调用service方法的地方也添加了try catch这样的异常处理代码，那么代码冗余严重且不易维护  总结-上诉代码存在两个问题  1、上边的代码只要">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2019/05/11/项目全局异常处理/1567479454980.png">
+<meta property="og:image" content="http://kingge.top/2019/05/11/项目全局异常处理/1567479831709.png">
+<meta property="og:image" content="http://kingge.top/2019/05/11/项目全局异常处理/1567481359314.png">
+<meta property="og:updated_time" content="2019-09-03T13:24:12.946Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="项目全局异常处理">
+<meta name="twitter:description" content="起因 这是service层的一个业务方法，业务功能是：查询某些二维码数据。可以看到我们在这个方法里面除了主要的业务逻辑，还有数据非空判断，以及异常处理等等。 如果我们不仅仅是在service层添加try catch异常处理，在controller层调用service方法的地方也添加了try catch这样的异常处理代码，那么代码冗余严重且不易维护  总结-上诉代码存在两个问题  1、上边的代码只要">
+<meta name="twitter:image" content="http://kingge.top/2019/05/11/项目全局异常处理/1567479454980.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2019/05/11/项目全局异常处理/"/>
+
+
+
+
+
+  <title>项目全局异常处理 | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2019/05/11/项目全局异常处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">项目全局异常处理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-11T10:21:59+08:00">
+                2019-05-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/springboot项目常用技术实现/" itemprop="url" rel="index">
+                    <span itemprop="name">springboot项目常用技术实现</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,012
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h1><p><img src="/2019/05/11/项目全局异常处理/1567479454980.png" alt="1567479454980"></p>
+<p>这是service层的一个业务方法，业务功能是：查询某些二维码数据。可以看到我们在这个方法里面除了<code>主要的业务逻辑</code>，还有数据非空判断，以及异常处理等等。</p>
+<p>如果我们不仅仅是在service层添加try catch异常处理，在controller层调用service方法的地方也添加了try catch这样的异常处理代码，<strong>那么代码冗余严重且不易维护</strong></p>
+<blockquote>
+<p>总结-上诉代码存在两个问题</p>
+</blockquote>
+<p>1、上边的代码只要操作不成功仅向用户返回“错误代码：-1，失败信息：操作失败”，无法区别具体的错误信<br>息。–参见第三处代码<br>2、service方法在执行过程出现异常在哪捕获？在service中需要都加try/catch，如果在controller也需要添加<br>try/catch，代码冗余严重且不易维护。</p>
+<blockquote>
+<p><strong>以下项目是 springboot2.0.1 下开发</strong></p>
+</blockquote>
+<h1 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h1><p>1、在Service方法中的编码顺序是先校验判断，有问题则抛出具体的异常信息，最后执行具体的业务操作，返回成<br>功信息。</p>
+<p>2、在统一异常处理类中去捕获异常，无需controller捕获异常，向用户返回统一规范的响应信息。</p>
+<h2 id="异常处理流程"><a href="#异常处理流程" class="headerlink" title="异常处理流程"></a>异常处理流程</h2><blockquote>
+<p>系统对异常的处理使用统一的异常处理流程：</p>
+</blockquote>
+<p>1、自定义异常类型。</p>
+<p>2、自定义错误代码及错误信息。</p>
+<p>3、对于可预知的异常由程序员在代码中主动抛出，由SpringMVC统一捕获。可预知异常是程序员在代码中手动抛出本系统定义的特定异常类型，由于是程序员抛出的异常，通常异常信息比较齐全，程序员在抛出时会指定错误代码及错误信息，获取异常信息也比较方便。</p>
+<p>4、对于不可预知的异常（运行时异常）由SpringMVC统一捕获Exception类型的异常。不可预知异常通常是由于系统出现bug、或一些不要抗拒的错误（比如网络中断、服务器宕机等），异常类型为<br>RuntimeException类型（运行时异常）。</p>
+<p>5、可预知的异常及不可预知的运行时异常最终会采用统一的信息格式（错误代码+错误信息）来表示，最终也会随请求响应给客户端。</p>
+<p><img src="/2019/05/11/项目全局异常处理/1567479831709.png" alt="1567479831709"></p>
+<p>1、在controller、service、dao中程序员抛出自定义异常；springMVC框架抛出框架异常类型<br>2、统一由异常捕获类捕获异常，并进行处理<br>3、捕获到自定义异常则直接取出错误代码及错误信息，响应给用户。</p>
+<p>4、捕获到非自定义异常类型首先从Map中找该异常类型是否对应具体的错误代码，如果有则取出错误代码和错误<br>信息并响应给用户，如果从Map中找不到异常类型所对应的错误代码则统一为99999错误代码并响应给用户。</p>
+<p>5、将错误代码及错误信息以Json格式响应给用户。</p>
+<blockquote>
+<p>特别解释</p>
+</blockquote>
+<p>不可知异常我们在上图中有两个分支，左边的分支表示的是有些不可知异常我们是知道的（这个可能比较拗口），例如SQLException，HttpMessageNotReadableException（消息转化异常），这些异常我们是可以特别处理的，可以给其标注响应的错误信息，而不用走右边的99999默认消息异常处理分支。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="定义常用错误代码接口-错误信息格式"><a href="#定义常用错误代码接口-错误信息格式" class="headerlink" title="定义常用错误代码接口-错误信息格式"></a>定义常用错误代码接口-错误信息格式</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public interface ResultCode &#123;</div><div class="line">    //操作是否成功,true为成功，false操作失败</div><div class="line">    boolean success();</div><div class="line">    //操作代码</div><div class="line">    int code();</div><div class="line">    //提示信息</div><div class="line">    String message();</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>根据这个信息格式我们可以自定义我们的错误实现。例如通用的消息模块CommonCode里面包含了常用的错误消息例子、文件上传消息模块FileSystemCode、认证消息模块AuthCode等等。满足我们自己业务的相关提示和异常提示。</p>
+<h3 id="定义通用的消息模块CommonCode"><a href="#定义通用的消息模块CommonCode" class="headerlink" title="定义通用的消息模块CommonCode"></a>定义通用的消息模块CommonCode</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public enum CommonCode implements ResultCode&#123;</div><div class="line">    INVALID_PARAM(false,10003,&quot;非法参数！&quot;),</div><div class="line">    SUCCESS(true,10000,&quot;操作成功！&quot;),</div><div class="line">    FAIL(false,11111,&quot;操作失败！&quot;),</div><div class="line">    UNAUTHENTICATED(false,10001,&quot;此操作需要登陆系统！&quot;),</div><div class="line">    UNAUTHORISE(false,10002,&quot;权限不足，无权操作！&quot;),</div><div class="line">    SERVER_ERROR(false,99999,&quot;抱歉，系统繁忙，请稍后重试！&quot;);</div><div class="line">    //操作是否成功</div><div class="line">    boolean success;</div><div class="line">    //操作代码</div><div class="line">    int code;</div><div class="line">    //提示信息</div><div class="line">    String message;</div><div class="line">    private CommonCode(boolean success,int code, String message)&#123;</div><div class="line">        this.success = success;</div><div class="line">        this.code = code;</div><div class="line">        this.message = message;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public boolean success() &#123;</div><div class="line">        return success;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public int code() &#123;</div><div class="line">        return code;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public String message() &#123;</div><div class="line">        return message;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="文件上传消息模块FileSystemCode-可选"><a href="#文件上传消息模块FileSystemCode-可选" class="headerlink" title="文件上传消息模块FileSystemCode-可选"></a>文件上传消息模块FileSystemCode-可选</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public enum FileSystemCode implements ResultCode &#123;</div><div class="line">    FS_UPLOADFILE_FILEISNULL(false,25001,&quot;上传文件为空！&quot;),</div><div class="line">    FS_UPLOADFILE_BUSINESSISNULL(false,25002,&quot;业务Id为空！&quot;),</div><div class="line">    FS_UPLOADFILE_SERVERFAIL(false,25003,&quot;上传文件服务器失败！&quot;),</div><div class="line">    FS_DELETEFILE_NOTEXISTS(false,25004,&quot;删除的文件不存在！&quot;),</div><div class="line">    FS_DELETEFILE_DBFAIL(false,25005,&quot;删除文件信息失败！&quot;),</div><div class="line">    FS_DELETEFILE_SERVERFAIL(false,25006,&quot;删除文件失败！&quot;),</div><div class="line">    FS_UPLOADFILE_METAERROR(false,25007,&quot;上传文件的元信息请使用json格式！&quot;),</div><div class="line">    FS_UPLOADFILE_USERISNULL(false,25008,&quot;上传文件用户为空！&quot;);</div><div class="line"></div><div class="line">    //操作代码</div><div class="line">    boolean success;</div><div class="line"></div><div class="line">    //操作代码</div><div class="line">    int code;</div><div class="line">    //提示信息</div><div class="line">    String message;</div><div class="line">    private FileSystemCode(boolean success, int code, String message)&#123;</div><div class="line">        this.success = success;</div><div class="line">        this.code = code;</div><div class="line">        this.message = message;</div><div class="line">    &#125;</div><div class="line">   </div><div class="line">    @Override</div><div class="line">    public boolean success() &#123;</div><div class="line">        return success;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public int code() &#123;</div><div class="line">        return code;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public String message() &#123;</div><div class="line">        return message;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>基础的消息格式我们已经做完了，那么接下来就是定义我们的异常</p>
+<h3 id="可预知异常和不可预知异常处理"><a href="#可预知异常和不可预知异常处理" class="headerlink" title="可预知异常和不可预知异常处理"></a><strong>可预知异常和不可预知异常处理</strong></h3><p>（1）<strong>自定义异常类</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/**</div><div class="line"> * 自定义异常类型</div><div class="line"> **/</div><div class="line">public class CustomException extends RuntimeException &#123;</div><div class="line"></div><div class="line">    //错误代码</div><div class="line">    ResultCode resultCode;</div><div class="line"></div><div class="line">    public CustomException(ResultCode resultCode)&#123;</div><div class="line">        this.resultCode = resultCode;</div><div class="line">    &#125;</div><div class="line">    public ResultCode getResultCode()&#123;</div><div class="line">        return resultCode;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>（2）<strong>异常抛出类</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/**</div><div class="line"> * 异常抛出类，业务端代码直接调用即可</div><div class="line"> * 避免在service或者controller端书写throw new CustomException(resultCode);这样的重复性代码</div><div class="line"> *可以直接使用ExceptionCast.cast（）的方式直接抛出异常</div><div class="line"> **/</div><div class="line">public class ExceptionCast &#123;</div><div class="line"></div><div class="line">    public static void cast(ResultCode resultCode)&#123;</div><div class="line">        throw new CustomException(resultCode);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>（3）<strong>异常捕获类</strong></p>
+<p>使用 @ControllerAdvice和@ExceptionHandler注解来捕获指定类型的异常</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/**</div><div class="line"> * 统一异常捕获类</div><div class="line"> **/</div><div class="line">@ControllerAdvice//控制器增强</div><div class="line">public class ExceptionCatch &#123;</div><div class="line"></div><div class="line">    private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionCatch.class);</div><div class="line"></div><div class="line">    //定义map，配置异常类型所对应的错误代码 - 这个就是存储我们在不可预知异常的左边分支的异常</div><div class="line">    private static ImmutableMap&lt;Class&lt;? extends Throwable&gt;,ResultCode&gt; EXCEPTIONS;</div><div class="line">    //定义map的builder对象，去构建ImmutableMap</div><div class="line">    protected static ImmutableMap.Builder&lt;Class&lt;? extends Throwable&gt;,ResultCode&gt; builder = ImmutableMap.builder();</div><div class="line"></div><div class="line">    //捕获CustomException此类异常 -处理可预知异常关键方法（1）</div><div class="line">    @ExceptionHandler(CustomException.class)</div><div class="line">    @ResponseBody//返回给controller的json串格式的异常消息格式</div><div class="line">    public ResponseResult customException(CustomException customException)&#123;</div><div class="line">        customException.printStackTrace();</div><div class="line">        //记录日志</div><div class="line">        LOGGER.error(&quot;catch exception:&#123;&#125;&quot;,customException.getMessage());</div><div class="line">        ResultCode resultCode = customException.getResultCode();</div><div class="line">        return new ResponseResult(resultCode);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //捕获Exception此类异常 - 处理不可预知异常关键方法（2）</div><div class="line">    //里面包含我们在异常处理流程中&lt;处理不可预知异常&gt;的左右两个分支</div><div class="line">    //根据异常的全类名在我们自定义的异常map中查找是否存在已经自定义的不可预知异常，存在直接返回，不存在则当做99999全局异常处理</div><div class="line">    @ExceptionHandler(Exception.class)</div><div class="line">    @ResponseBody</div><div class="line">    public ResponseResult exception(Exception exception)&#123;</div><div class="line">        exception.printStackTrace();</div><div class="line">        //记录日志</div><div class="line">        LOGGER.error(&quot;catch exception:&#123;&#125;&quot;,exception.getMessage());</div><div class="line">        if(EXCEPTIONS == null)&#123;</div><div class="line">            EXCEPTIONS = builder.build();//EXCEPTIONS构建成功</div><div class="line">        &#125;</div><div class="line">        //从EXCEPTIONS中找异常类型所对应的错误代码，如果找到了将错误代码响应给用户，如果找不到给用户响应99999异常</div><div class="line">        ResultCode resultCode = EXCEPTIONS.get(exception.getClass());</div><div class="line">        if(resultCode !=null)&#123;</div><div class="line">            return new ResponseResult(resultCode);</div><div class="line">        &#125;else&#123;</div><div class="line">            //返回99999异常</div><div class="line">            return new ResponseResult(CommonCode.SERVER_ERROR);</div><div class="line">        &#125;</div><div class="line"></div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    static &#123;</div><div class="line">        //定义异常类型所对应的错误代码</div><div class="line">        builder.put(HttpMessageNotReadableException.class,CommonCode.INVALID_PARAM);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="测试使用"><a href="#测试使用" class="headerlink" title="测试使用"></a>测试使用</h3><p>改造上诉代码，try catch语句可以去掉，而且可以返回我们精准自定义的错误信息</p>
+<p><img src="/2019/05/11/项目全局异常处理/1567481359314.png" alt="1567481359314"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>实现的关键点在于，<code>使用 @ControllerAdvice和@ExceptionHandler注解来捕获指定类型的异常</code></p>
+<blockquote>
+<p><strong>@ExceptionHandler</strong></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//该注解作用对象为方法</div><div class="line">@Target(&#123;ElementType.METHOD&#125;)</div><div class="line">//在运行时有效</div><div class="line">@Retention(RetentionPolicy.RUNTIME)</div><div class="line">@Documented</div><div class="line">public @interface ExceptionHandler &#123;</div><div class="line">	//value()可以指定异常类</div><div class="line">    Class&lt;? extends Throwable&gt;[] value() default &#123;&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>@ControllerAdvice</strong> 增强版控制器</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Target(&#123;ElementType.TYPE&#125;)</div><div class="line">@Retention(RetentionPolicy.RUNTIME)</div><div class="line">@Documented</div><div class="line">@Component</div><div class="line">public @interface ControllerAdvice &#123;</div><div class="line">    @AliasFor(&quot;basePackages&quot;)</div><div class="line">    String[] value() default &#123;&#125;;</div><div class="line"></div><div class="line">    @AliasFor(&quot;value&quot;)</div><div class="line">    String[] basePackages() default &#123;&#125;;</div><div class="line"></div><div class="line">    Class&lt;?&gt;[] basePackageClasses() default &#123;&#125;;</div><div class="line"></div><div class="line">    Class&lt;?&gt;[] assignableTypes() default &#123;&#125;;</div><div class="line"></div><div class="line">    Class&lt;? extends Annotation&gt;[] annotations() default &#123;&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/异常处理/" rel="tag"><i class="fa fa-tag"></i> 异常处理</a>
+          
+            <a href="/tags/ControllerAdvice注解/" rel="tag"><i class="fa fa-tag"></i> ControllerAdvice注解</a>
+          
+            <a href="/tags/ExceptionHandler注解/" rel="tag"><i class="fa fa-tag"></i> ExceptionHandler注解</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/01/SpringCloud个人总结/" rel="next" title="SpringCloud个人总结">
+                <i class="fa fa-chevron-left"></i> SpringCloud个人总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/01/Hessian 多系统访问/" rel="prev" title="Hessian 多系统访问">
+                Hessian 多系统访问 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">51</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">73</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#起因"><span class="nav-number">1.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决方式"><span class="nav-number">2.</span> <span class="nav-text">解决方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#异常处理流程"><span class="nav-number">2.1.</span> <span class="nav-text">异常处理流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number">2.2.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义常用错误代码接口-错误信息格式"><span class="nav-number">2.2.1.</span> <span class="nav-text">定义常用错误代码接口-错误信息格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义通用的消息模块CommonCode"><span class="nav-number">2.2.2.</span> <span class="nav-text">定义通用的消息模块CommonCode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件上传消息模块FileSystemCode-可选"><span class="nav-number">2.2.3.</span> <span class="nav-text">文件上传消息模块FileSystemCode-可选</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可预知异常和不可预知异常处理"><span class="nav-number">2.2.4.</span> <span class="nav-text">可预知异常和不可预知异常处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试使用"><span class="nav-number">2.2.5.</span> <span class="nav-text">测试使用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      206.9k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共206.9k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>
