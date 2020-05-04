@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingge.top/"/>
-  <updated>2020-05-04T01:17:02.788Z</updated>
+  <updated>2020-05-04T01:32:48.237Z</updated>
   <id>http://kingge.top/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://kingge.top/2019/06/12/kingspring%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/"/>
     <id>http://kingge.top/2019/06/12/kingspring总结文档/</id>
     <published>2019-06-12T02:21:59.000Z</published>
-    <updated>2020-05-04T01:17:02.788Z</updated>
+    <updated>2020-05-04T01:32:48.237Z</updated>
     
     <content type="html"><![CDATA[<h1 id="编写king-spring的目的"><a href="#编写king-spring的目的" class="headerlink" title="编写king-spring的目的"></a>编写king-spring的目的</h1><p>旨在能够了解spring整个架构核心的脉络，从而更好的理解spring的架构精神和底层原理</p>
 <p><strong>A tiny IoC container refer to Spring</strong></p>
@@ -104,7 +104,7 @@
     
     </summary>
     
-      <category term="king-spring#分类" scheme="http://kingge.top/categories/king-spring-%E5%88%86%E7%B1%BB/"/>
+      <category term="king-spring" scheme="http://kingge.top/categories/king-spring/"/>
     
     
       <category term="spring" scheme="http://kingge.top/tags/spring/"/>
