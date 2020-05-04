@@ -179,7 +179,7 @@
 <meta property="og:image" content="http://kingge.top/2020/04/18/rtm数据最终一致性/image-20200426113538315.png">
 <meta property="og:image" content="http://kingge.top/2020/04/18/rtm数据最终一致性/image-20200426145201920.png">
 <meta property="og:image" content="http://kingge.top/2020/04/18/rtm数据最终一致性/image-20200428162644118.png">
-<meta property="og:updated_time" content="2020-05-04T02:47:00.119Z">
+<meta property="og:updated_time" content="2020-05-04T08:15:02.308Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="可靠消息解决数据最终一致性-开源项目rtm">
 <meta name="twitter:description" content="基础概念为什么使用消息队列？MQ出现的原因/优点在回答这个问题之前，我们想一下，在没有消息队列之前我们的多个业务相互调用时他的逻辑实现是怎么样的？ 画个图：  ​    这是一个很普通的业务调用，也是我们写的比较多的。整个业务逻辑是这样的，客户下订单，调用订单服务生成订单，那么在生成订单的时候，会去调用库存服务减少库存，再去调用用户服务查询用户信息。 ​    这样咋一看没有什么问题，但是如果后面">
@@ -482,7 +482,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  9,328
+                  9,493
                 </span>
               
 
@@ -639,7 +639,7 @@
 </ul>
 <p><strong>逻辑时序图</strong></p>
 <p><img src="/2020/04/18/rtm数据最终一致性/image-20191211161601632.png" alt="image-20191211161601632"></p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>根据图1，你会发现，存在一个问题，那就是假设库存服务成功消费到了消息，但是删减库存失败。那么因为删除失败也是属于业务的一部分，那么他就会返回ack消息给，mq。那么整个流程结束。</p>
+<h3 id="rocketmq事务消息的弊端"><a href="#rocketmq事务消息的弊端" class="headerlink" title="rocketmq事务消息的弊端"></a>rocketmq事务消息的弊端</h3><p>根据图1，你会发现，存在一个问题，那就是假设库存服务成功消费到了消息，但是删减库存失败。那么因为删除失败也是属于业务的一部分，那么他就会返回ack消息给，mq。那么整个流程结束。</p>
 <p> <strong>从上面的原理可以发现 <code>事务消息</code> 仅仅只是保证本地事务和MQ消息发送形成整体的 <code>原子性</code>，而投递到MQ服务器后，并无法保证消费者一定能消费成功！</strong></p>
 <p>如果 <strong>消费端消费失败</strong> 后的处理方式，建议是记录异常信息然后 <strong>人工处理</strong>，并不建议回滚上游服务的数据(因为两者是 <strong>解耦</strong> 的，而且 <strong>复杂度</strong> 太高) </p>
 <p>我们可以利用 <code>MQ</code> 的两个特性 <code>重试</code> 和 <code>死信队列</code> 来协助消费端处理：</p>
@@ -921,6 +921,8 @@
 <p>2.死亡消息，可以在后台进行重发，手动干预</p>
 <p>3.消息重试，采取线程池的方式，根据<strong>线程池的coresize大小（避免线程递增到maxsize）</strong>，去数据库中<strong>取相应数量</strong>需要重复发送搭到mq的消息。</p>
 <p>4.重发消息时，从重发次数大到小进行重发（<strong>例如，RTM支持的最大重试次数是7。那么就先查重发次数是6的消息，处理完后。再接着查重发次数是5的消息</strong>），保证了优先处理快要到重试次数上限的消息，优先处理。</p>
+<h2 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h2><p>​    也就是说rtm系统 在兼有rocketmq事务消息的同时，能够<strong>保证下游系统一定能消费消息（提供消费失败一定次数和时间间隔重试以及记录超过重试次数的消息）</strong>，从而保证了数据的最终一致性，同时提供管理界面，管理已经超过重发次数上限的消息，重新发送。</p>
+<p>​    所以说，当你的项目架构在最初的技术选型时，并没有使用rocketmq，那么又想保证数据最终一致性，那么就可以引入rtm系统，非常方便快捷。</p>
 <h1 id="RTM项目存在的缺点"><a href="#RTM项目存在的缺点" class="headerlink" title="RTM项目存在的缺点"></a>RTM项目存在的缺点</h1><p>1.<strong>目前没有支持多种</strong>mq的版本（现在只是实现了对接kafka版本）</p>
 <p>2.分布式集群的搭建测试</p>
 <p>3.项目模块的拆分还不够清晰，例如rtm-pcm模块，可以拆分成两个模块，一个是rtm-pcm-api模块（提供接口，他的实现类在rtm-pcm中），一个是rtm-pcm模块（真正的业务放到这里）</p>
@@ -1009,6 +1011,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/28/下个开源项目的计划/" rel="prev" title="下个开源项目的计划">
+                下个开源项目的计划 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -1115,7 +1121,7 @@ var jiathis_config={
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-count">54</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1137,7 +1143,7 @@ var jiathis_config={
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">78</span>
+                <span class="site-state-item-count">79</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1251,7 +1257,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础概念"><span class="nav-number">1.</span> <span class="nav-text">基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么使用消息队列？"><span class="nav-number">1.1.</span> <span class="nav-text">为什么使用消息队列？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MQ出现的原因-优点"><span class="nav-number">1.1.1.</span> <span class="nav-text">MQ出现的原因/优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MQ缺点"><span class="nav-number">1.1.2.</span> <span class="nav-text">MQ缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么解决数据的一致性"><span class="nav-number">1.2.</span> <span class="nav-text">怎么解决数据的一致性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式事务-强一致性"><span class="nav-number">1.2.1.</span> <span class="nav-text">分布式事务 - 强一致性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据最终一致性-弱一致性"><span class="nav-number">1.2.2.</span> <span class="nav-text">数据最终一致性 - 弱一致性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CAP理论"><span class="nav-number">1.3.</span> <span class="nav-text">CAP理论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BASE理论"><span class="nav-number">1.4.</span> <span class="nav-text">BASE理论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rocketmq事务消息"><span class="nav-number">1.5.</span> <span class="nav-text">rocketmq事务消息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">1.5.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">1.5.2.</span> <span class="nav-text">问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#我要做什么？项目介绍"><span class="nav-number">2.</span> <span class="nav-text">我要做什么？项目介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM解决的问题"><span class="nav-number">3.</span> <span class="nav-text">RTM解决的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM详细流程介绍"><span class="nav-number">4.</span> <span class="nav-text">RTM详细流程介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#正常流程"><span class="nav-number">4.1.</span> <span class="nav-text">正常流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.1.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息发送到RTM，RTM成功投递流程"><span class="nav-number">4.2.</span> <span class="nav-text">消息发送到RTM，RTM成功投递流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RTM确认消费者成功消费流程"><span class="nav-number">4.3.</span> <span class="nav-text">RTM确认消费者成功消费流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#超时重试次数和重试时间"><span class="nav-number">4.3.1.</span> <span class="nav-text">超时重试次数和重试时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#那么消息死亡后怎么办？"><span class="nav-number">4.3.2.</span> <span class="nav-text">那么消息死亡后怎么办？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-2"><span class="nav-number">4.3.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RTM项目总结"><span class="nav-number">4.4.</span> <span class="nav-text">RTM项目总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目模块"><span class="nav-number">4.4.1.</span> <span class="nav-text">项目模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库表（第一版）"><span class="nav-number">4.4.2.</span> <span class="nav-text">数据库表（第一版）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#项目代码模块结构"><span class="nav-number">4.4.3.</span> <span class="nav-text">项目代码模块结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RTM项目使用环境"><span class="nav-number">4.4.4.</span> <span class="nav-text">RTM项目使用环境</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM代码实现"><span class="nav-number">5.</span> <span class="nav-text">RTM代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#父工程-rtm"><span class="nav-number">5.1.</span> <span class="nav-text">父工程 rtm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#接口层-rtm-api"><span class="nav-number">5.1.1.</span> <span class="nav-text">接口层 rtm-api</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实体类-rtm-pojo"><span class="nav-number">5.1.2.</span> <span class="nav-text">实体类 rtm-pojo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工具层-rtm-common"><span class="nav-number">5.1.3.</span> <span class="nav-text">工具层 rtm-common</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息生命周期管理服务-rtm-mlm"><span class="nav-number">5.1.4.</span> <span class="nav-text">消息生命周期管理服务 rtm-mlm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定时检查消息模块-rtm-pcm"><span class="nav-number">5.1.5.</span> <span class="nav-text">定时检查消息模块 rtm-pcm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#github地址"><span class="nav-number">5.2.</span> <span class="nav-text">github地址</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#怎么使用rtm"><span class="nav-number">6.</span> <span class="nav-text">怎么使用rtm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#上游系统怎么使用？"><span class="nav-number">6.1.</span> <span class="nav-text">上游系统怎么使用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下游系统怎么用？"><span class="nav-number">6.2.</span> <span class="nav-text">下游系统怎么用？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM项目亮点"><span class="nav-number">7.</span> <span class="nav-text">RTM项目亮点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM项目存在的缺点"><span class="nav-number">8.</span> <span class="nav-text">RTM项目存在的缺点</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础概念"><span class="nav-number">1.</span> <span class="nav-text">基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么使用消息队列？"><span class="nav-number">1.1.</span> <span class="nav-text">为什么使用消息队列？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MQ出现的原因-优点"><span class="nav-number">1.1.1.</span> <span class="nav-text">MQ出现的原因/优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MQ缺点"><span class="nav-number">1.1.2.</span> <span class="nav-text">MQ缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么解决数据的一致性"><span class="nav-number">1.2.</span> <span class="nav-text">怎么解决数据的一致性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式事务-强一致性"><span class="nav-number">1.2.1.</span> <span class="nav-text">分布式事务 - 强一致性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据最终一致性-弱一致性"><span class="nav-number">1.2.2.</span> <span class="nav-text">数据最终一致性 - 弱一致性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CAP理论"><span class="nav-number">1.3.</span> <span class="nav-text">CAP理论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BASE理论"><span class="nav-number">1.4.</span> <span class="nav-text">BASE理论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rocketmq事务消息"><span class="nav-number">1.5.</span> <span class="nav-text">rocketmq事务消息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">1.5.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rocketmq事务消息的弊端"><span class="nav-number">1.5.2.</span> <span class="nav-text">rocketmq事务消息的弊端</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#我要做什么？项目介绍"><span class="nav-number">2.</span> <span class="nav-text">我要做什么？项目介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM解决的问题"><span class="nav-number">3.</span> <span class="nav-text">RTM解决的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM详细流程介绍"><span class="nav-number">4.</span> <span class="nav-text">RTM详细流程介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#正常流程"><span class="nav-number">4.1.</span> <span class="nav-text">正常流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.1.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息发送到RTM，RTM成功投递流程"><span class="nav-number">4.2.</span> <span class="nav-text">消息发送到RTM，RTM成功投递流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RTM确认消费者成功消费流程"><span class="nav-number">4.3.</span> <span class="nav-text">RTM确认消费者成功消费流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#超时重试次数和重试时间"><span class="nav-number">4.3.1.</span> <span class="nav-text">超时重试次数和重试时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#那么消息死亡后怎么办？"><span class="nav-number">4.3.2.</span> <span class="nav-text">那么消息死亡后怎么办？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-2"><span class="nav-number">4.3.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RTM项目总结"><span class="nav-number">4.4.</span> <span class="nav-text">RTM项目总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目模块"><span class="nav-number">4.4.1.</span> <span class="nav-text">项目模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库表（第一版）"><span class="nav-number">4.4.2.</span> <span class="nav-text">数据库表（第一版）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#项目代码模块结构"><span class="nav-number">4.4.3.</span> <span class="nav-text">项目代码模块结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RTM项目使用环境"><span class="nav-number">4.4.4.</span> <span class="nav-text">RTM项目使用环境</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM代码实现"><span class="nav-number">5.</span> <span class="nav-text">RTM代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#父工程-rtm"><span class="nav-number">5.1.</span> <span class="nav-text">父工程 rtm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#接口层-rtm-api"><span class="nav-number">5.1.1.</span> <span class="nav-text">接口层 rtm-api</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实体类-rtm-pojo"><span class="nav-number">5.1.2.</span> <span class="nav-text">实体类 rtm-pojo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工具层-rtm-common"><span class="nav-number">5.1.3.</span> <span class="nav-text">工具层 rtm-common</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息生命周期管理服务-rtm-mlm"><span class="nav-number">5.1.4.</span> <span class="nav-text">消息生命周期管理服务 rtm-mlm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定时检查消息模块-rtm-pcm"><span class="nav-number">5.1.5.</span> <span class="nav-text">定时检查消息模块 rtm-pcm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#github地址"><span class="nav-number">5.2.</span> <span class="nav-text">github地址</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#怎么使用rtm"><span class="nav-number">6.</span> <span class="nav-text">怎么使用rtm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#上游系统怎么使用？"><span class="nav-number">6.1.</span> <span class="nav-text">上游系统怎么使用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下游系统怎么用？"><span class="nav-number">6.2.</span> <span class="nav-text">下游系统怎么用？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM项目亮点"><span class="nav-number">7.</span> <span class="nav-text">RTM项目亮点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#总结-3"><span class="nav-number">7.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM项目存在的缺点"><span class="nav-number">8.</span> <span class="nav-text">RTM项目存在的缺点</span></a></li></ol></div>
             
 
           </div>
@@ -1298,7 +1304,7 @@ var jiathis_config={
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
     <span title="Site words total count">
-      218.4k
+      220.1k
     </span>
   
 </div>
@@ -1321,7 +1327,7 @@ var jiathis_config={
 <span class="post-meta-divider">|</span>
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共218.4k字</span>
+  <span class="post-count">博客全站共220.1k字</span>
 </div>
 
 
