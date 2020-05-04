@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="开源项目,事务消息,kafka," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="基础概念为什么使用消息队列？MQ出现的原因/优点在回答这个问题之前，我们想一下，在没有消息队列之前我们的多个业务相互调用时他的逻辑实现是怎么样的？ 画个图：  ​    这是一个很普通的业务调用，也是我们写的比较多的。整个业务逻辑是这样的，客户下订单，调用订单服务生成订单，那么在生成订单的时候，会去调用库存服务减少库存，再去调用用户服务查询用户信息。 ​    这样咋一看没有什么问题，但是如果后面">
+<meta name="keywords" content="开源项目,事务消息,kafka">
+<meta property="og:type" content="article">
+<meta property="og:title" content="可靠消息解决数据最终一致性-开源项目rtm">
+<meta property="og:url" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="基础概念为什么使用消息队列？MQ出现的原因/优点在回答这个问题之前，我们想一下，在没有消息队列之前我们的多个业务相互调用时他的逻辑实现是怎么样的？ 画个图：  ​    这是一个很普通的业务调用，也是我们写的比较多的。整个业务逻辑是这样的，客户下订单，调用订单服务生成订单，那么在生成订单的时候，会去调用库存服务减少库存，再去调用用户服务查询用户信息。 ​    这样咋一看没有什么问题，但是如果后面">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20200424172621286.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20200424173159358.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20200424173753186.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/5.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/2.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/6.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/7.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/10708517-72259de731fcf8a9.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20191211155712515.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20191211161342571.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20191211161426489.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20191211161601632.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20200426092909056.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20200426095618201.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20200426102034824.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20200426113538315.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20200426145201920.png">
+<meta property="og:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20200428162644118.png">
+<meta property="og:updated_time" content="2020-05-04T01:49:16.403Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="可靠消息解决数据最终一致性-开源项目rtm">
+<meta name="twitter:description" content="基础概念为什么使用消息队列？MQ出现的原因/优点在回答这个问题之前，我们想一下，在没有消息队列之前我们的多个业务相互调用时他的逻辑实现是怎么样的？ 画个图：  ​    这是一个很普通的业务调用，也是我们写的比较多的。整个业务逻辑是这样的，客户下订单，调用订单服务生成订单，那么在生成订单的时候，会去调用库存服务减少库存，再去调用用户服务查询用户信息。 ​    这样咋一看没有什么问题，但是如果后面">
+<meta name="twitter:image" content="http://kingge.top/2020/04/18/模拟rmq事务消息总结/image-20200424172621286.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2020/04/18/模拟rmq事务消息总结/"/>
+
+
+
+
+
+  <title>可靠消息解决数据最终一致性-开源项目rtm | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2020/04/18/模拟rmq事务消息总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">可靠消息解决数据最终一致性-开源项目rtm</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-18T22:57:58+08:00">
+                2020-04-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/开源项目/" itemprop="url" rel="index">
+                    <span itemprop="name">开源项目</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  9,328
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  34
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h1><h2 id="为什么使用消息队列？"><a href="#为什么使用消息队列？" class="headerlink" title="为什么使用消息队列？"></a>为什么使用消息队列？</h2><h3 id="MQ出现的原因-优点"><a href="#MQ出现的原因-优点" class="headerlink" title="MQ出现的原因/优点"></a>MQ出现的原因/优点</h3><p>在回答这个问题之前，我们想一下，在没有消息队列之前我们的多个<strong>业务相互调用</strong>时他的逻辑实现是怎么样的？</p>
+<p>画个图：</p>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/image-20200424172621286.png" alt="image-20200424172621286"></p>
+<p>​    这是一个很普通的业务调用，也是我们写的比较多的。整个业务逻辑是这样的，<strong>客户下订单，调用订单服务生成订单，那么在生成订单的时候，会去调用库存服务减少库存，再去调用用户服务查询用户信息</strong>。</p>
+<p>​    这样咋一看没有什么问题，但是如果后面订单服务业务改进，需要在下订单的同时，需要查询<strong>优惠券服务</strong>，查询下订单时所使用的优惠券信息。那么这个时候，你必然要修改订单服务，然后增加调用的代码逻辑。</p>
+<p>​    如下图：</p>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/image-20200424173159358.png" alt="image-20200424173159358"></p>
+<p><strong>而且后面如果订单服务还需要去调用其他服务，那么你就还需要疯狂的修改订单服务。</strong></p>
+<p>而且，例如后面业务改进，订单服务不需要再调用优惠券服务了？那么你又得在订单服务中移除该服务。</p>
+<p>非但如此，订单服务要时时刻刻考虑调用的库存服务、用户服务等等系统如果挂了咋办？我要不要重发？我要不要把消息存起来？？？？</p>
+<p> 总而言之，订单服务所需要承载的责任太重了，而且需要负责的东西太多，这就是<strong>耦合</strong>。</p>
+<p><strong>那么MQ的第一个作用就体现出来了：解耦</strong></p>
+<p>上面的服务使用MQ后：</p>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/image-20200424173753186.png" alt="image-20200424173753186"></p>
+<p>那么经过改进后，整个订单服务就舒服多了，也清净了。订单服务处理完用户下单请求后，只需要发送一条消息到MQ中，代表我下单了，然后整个订单服务就结束了，<strong>不需要同步等待</strong>库存服务等等其他服务的响应。</p>
+<p>​    库存服务，只需要订阅MQ的主题，然后完成自己的业务逻辑即可。</p>
+<p>那么MQ还有其他什么优点呢？</p>
+<p>其实在上面我已经说出来了，你有没有发现，在上面的例图中，我们引入了MQ，<strong>使得订单服务不再需要同步等待调用其他服务的返回结果。</strong></p>
+<p>所以<strong>MQ的第二个优点就是</strong>：<strong>异步</strong></p>
+<p>​    画个图来说明一下，A系统接收一个请求，需要在自己本地写库，还需要在BCD三个系统写库，自己本地写库要3ms，BCD三个系统分别写库要300ms、450ms、200ms。最终请求总延时是3 + 300 + 450 + 200 = 953ms，接近1s，用户感觉搞个什么东西，慢死了慢死了。</p>
+<blockquote>
+<p><strong>未使用MQ前</strong></p>
+</blockquote>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/5.png" alt="5"></p>
+<blockquote>
+<p><strong>使用MQ后</strong></p>
+</blockquote>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/2.png" alt="2"></p>
+<p><strong>MQ的第三个优点：削峰</strong></p>
+<p>​    每天0点到11点，A系统风平浪静，每秒并发请求数量就100个（qps=100）。结果每次一到11点~1点，每秒并发请求数量突然会暴增到1万条。但是系统最大的处理能力就只能是每秒钟处理1000个请求啊。。。尴尬了，系统会死。。。</p>
+<pre><code>**所以MQ充当的角色类似于一个水库。汛期来临时水库首当其冲，起到缓冲作用，避免大量水流冲击下游。这个时候水库只需要开放部分出口，然后水流慢慢的留向下游，最后把水库里的水慢慢消耗最终接近平缓即可。**
+</code></pre><blockquote>
+<p><strong>未用MQ前？</strong></p>
+</blockquote>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/6.png" alt="6"></p>
+<blockquote>
+<p><strong>使用mq后</strong></p>
+</blockquote>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/7.png" alt="7"></p>
+<p>总而言之：    <strong>队列的常见使用场景吧，其实场景有很多，但是比较核心的优点有3个：解耦、异步、削峰</strong></p>
+<h3 id="MQ缺点"><a href="#MQ缺点" class="headerlink" title="MQ缺点"></a>MQ缺点</h3><p>缺点呢？显而易见的</p>
+<ul>
+<li>系统可用性降低：系统引入的外部依赖越多，越容易挂掉，本来你就是A系统调用BCD三个系统的接口就好了，人ABCD四个系统好好的，没啥问题，你偏加个MQ进来，万一MQ挂了咋整？MQ挂了，整套系统崩溃了，你不就完了么。（<strong>需要保证MQ高可用 - 增加系统复杂程度</strong>）</li>
+</ul>
+<ul>
+<li>系统复杂性提高：硬生生加个MQ进来，你怎么保证消息没有重复消费？怎么处理消息丢失的情况？怎么保证消息传递的顺序性？头大头大，问题一大堆，痛苦不已，搞什么捏。（<strong>消息可靠性和消费幂等性</strong>）</li>
+</ul>
+<ul>
+<li>一致性问题：A系统处理完了直接返回成功了，人都以为你这个请求就成功了；但是问题是，要是BCD三个系统那里，BD两个系统写库成功了，结果C系统写库失败了，咋整？你这数据就不一致了。（<strong>分布式事务/数据最终一致性</strong>）</li>
+</ul>
+<p>​    <strong>所以消息队列实际是一种非常复杂的架构，你引入它有很多好处，但是也得针对它带来的坏处做各种额外的技术方案和架构来规避掉，最好之后，你会发现，妈耶，系统复杂度提升了一个数量级，也许是复杂了10倍。但是关键时刻，用，还是得用的。。。但是得想好。</strong></p>
+<p><a href="https://www.showdoc.cc/rmq?page_id=1796661553395018" target="_blank" rel="external">https://www.showdoc.cc/rmq?page_id=1796661553395018</a></p>
+<h2 id="怎么解决数据的一致性"><a href="#怎么解决数据的一致性" class="headerlink" title="怎么解决数据的一致性"></a>怎么解决数据的一致性</h2><h3 id="分布式事务-强一致性"><a href="#分布式事务-强一致性" class="headerlink" title="分布式事务 - 强一致性"></a>分布式事务 - 强一致性</h3><h3 id="数据最终一致性-弱一致性"><a href="#数据最终一致性-弱一致性" class="headerlink" title="数据最终一致性 - 弱一致性"></a>数据最终一致性 - 弱一致性</h3><h2 id="CAP理论"><a href="#CAP理论" class="headerlink" title="CAP理论"></a>CAP理论</h2><p>​    2000年7月，加州大学伯克利分校的Eric Brewer教授在ACM PODC会议上提出CAP猜想。Brewer认为在设计一个大规模的分布式系统时会遇到三个特性：一致性（consistency）、可用性（Availability）、分区容错（partition-tolerance），而一个分布式系统最多只能满足其中的2项。2年后，麻省理工学院的Seth Gilbert和Nancy Lynch从理论上证明了CAP。之后，CAP理论正式成为分布式计算领域的公认定理。</p>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/10708517-72259de731fcf8a9.png" alt="img"></p>
+<p>C：数据一致性（强一致性），<strong>集群中同一数据的多个副本是否实时相同</strong>。（一致性也分为，强一致性和弱一致性）</p>
+<p>A：可用性，指系统提供的服务必须一直处于可用的状态，<strong>对于用户的每一个操作请求总是能够在有限的时间内返回结果。</strong></p>
+<p> P:分区容错性，也就是如果出现网络震荡的时候，服务集群不能够全部挂掉，保证高可用。<strong>将同一服务分布在多个系统中，从而保证某一个系统宕机，仍然有其他系统提供相同的服务。</strong></p>
+<p>​    <strong>在分布式系统中，P肯定要保证的。</strong></p>
+<blockquote>
+<p>​    <strong>为什么要保证p呢？</strong></p>
+</blockquote>
+<pre><code>当业务量猛增，单个服务器已经无法满足我们的业务需求的时候，就需要使用分布式系统，使用多个节点提供相同的功能（需要部署服务集群），从而整体上提升系统的性能，这就是使用分布式系统的第一个原因。那么分区容错性就必须满足。
+</code></pre><p>​        那么我们只能在C和A中二选一，为什么A和C不能够同时选择呢？举个简单例子。我们在部署了五个订单服务，组成了集群。有一天需求修改了，那么需要更新这五个订单服务。这个时候，我们为了保证客户还是能够访问系统，那么就升级部分服务器，也就意味着，必然存在客户调用了新旧订单服务。那么这个时候数据肯定是不一致的。反之亦然，为了保证数据一致性，我们关闭五个服务器，然后更新后再重启，那么在这期间服务对外是不可用的，无法保证系统可用性。</p>
+<p>​    例如我们在使用springcloud的Eureka服务注册中心时，他实现的机制就是 AP，能够保证服务的使用。</p>
+<p>​    DUbbo的服务注册中心采用的是Zookeeper，那么因为zookeeper集群（选举机制），他实现的机制是CP（但是他的C数据一致性是，数据弱一致性，也就是存在某个时间salve的数据是不一致的–因为zk 的是更新操作是采取投票过半机制决定本次更新是否成功。）</p>
+<p>​    所以具体的业务场景采用不同的策略，<strong>不过大多数互联网项目采用的是AP机制</strong>，以能够保证服务的使用为主。    <strong>因为在大谈用户体验的今天，如果业务系统时常出现“系统异常”、响应时间过长等情况，这使得用户对系统的好感度大打折扣。所以可用性还是要保证的</strong></p>
+<h2 id="BASE理论"><a href="#BASE理论" class="headerlink" title="BASE理论"></a>BASE理论</h2><p>​    CAP理论告诉我们一个悲惨但不得不接受的事实——我们只能在C、A、P中选择两个条件。而对于业务系统而言，我们往往选择<strong>牺牲一致性来换取系统的可用性和分区容错性</strong>。不过这里要指出的是，所谓的“牺牲一致性”并不是完全放弃数据一致性，而是牺牲强一致性换取弱一致性     </p>
+<p>​    BASE理论是对CAP理论的延伸，核心思想是即使无法做到强一致性（Strong Consistency，CAP的一致性就是强一致性），但应用可以采用适合的方式达到最终一致性（Eventual Consitency）。</p>
+<p>​    BASE是Basically Available（基本可用）、Soft state（软状态）和Eventually consistent（最终一致性）三个短语的缩写。</p>
+<ol>
+<li><strong>BA：</strong>基本可用（Basically Available）</li>
+</ol>
+<p>​        指分布式系统在出现不可预知故障的时候，允许损失部分可用性。</p>
+<ol>
+<li><strong>S：</strong>软状态（ Soft State）</li>
+</ol>
+<p>​        指允许系统中的数据存在中间状态，并认为该中间状态的存在不会影响系统的整体可用性。</p>
+<ol>
+<li><strong>E：</strong>最终一致（ Eventual Consistency）</li>
+</ol>
+<p>​      </p>
+<p>  强调的是所有的数据更新操作，在经过一段时间的同步之后，最终都能够达到一个一致的状态。因此，最终一致性的本质是需要系统保证最终数据能够达到一致，而不需要实时保证系统数据的强一致性。</p>
+<p>base理论的核心就是，<strong>经过一段时间后，能够保证数据的强一致性，在这之前，数据的一致性不是那么的强调</strong>。</p>
+<p>​    举个简单的例子，例如在双十一购物中心，某件商品的点赞数量我们需不需要它实时的显示数量？很明显是不需要的，我们显示的数量可以使几个小时之前的。我们只需要在双十一过后，再去统计出最终该商品的点赞数量，然后显示即可。</p>
+<p>​    <strong>其实大部分最终一致性是通过消息队列的方式实现的。例如我们对商品的点赞，发送一条消息到消息队列，然后消息消费者消费消息，实现点赞数量增加。这样的流程肯定会存在一定的延时，但是最终结果肯定是正确的，所以实现了最终一致性。</strong></p>
+<h2 id="rocketmq事务消息"><a href="#rocketmq事务消息" class="headerlink" title="rocketmq事务消息"></a>rocketmq事务消息</h2><p><strong>设么是事务消息？</strong>先看案例场景</p>
+<p>例如下图的场景：生成订单记录 -&gt; MQ -&gt; 增加积分</p>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/image-20191211155712515.png" alt="image-20191211155712515"></p>
+<p>我们是应该先 <strong>创建订单记录</strong>，还是先 <strong>发送MQ消息</strong> 呢？</p>
+<ol>
+<li><strong>先发送MQ消息</strong>：这个明显是不行的，因为如果消息发送成功，而订单创建失败的话是没办法把消息收回来的。因为发送消息后，下游消费者，已经消费提交。</li>
+<li><strong>先创建订单记录</strong>：如果订单创建成功后MQ消息发送失败 <strong>抛出异常</strong>，因为两个操作都在本地事务中所以订单数据是可以 <strong>回滚</strong> 的。</li>
+</ol>
+<p>上面的 <strong>方式二</strong> 看似没问题，但是 <strong>网络是不可靠的</strong>！如果 <code>MQ</code> 的响应因为网络原因没有收到，所以在面对不确定的结果只好进行回滚；但是 <code>MQ</code> 端又确实是收到了这条消息的，只是回给客户端的 <strong>响应丢失</strong> 了！</p>
+<p>所以 <code>事务消息</code> 就是用来保证 <strong>本地事务</strong> 与 <strong>MQ消息发送</strong> 的原子性！</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>图一</p>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/image-20191211161342571.png" alt="image-20191211161342571"></p>
+<p> <img src="/2020/04/18/模拟rmq事务消息总结/image-20191211161426489.png" alt="image-20191211161426489"> </p>
+<p>主要的逻辑分为两个流程：</p>
+<ul>
+<li><strong>事务消息发送及提交</strong>：<ol>
+<li>发送 <code>half消息</code></li>
+<li><code>MQ服务端</code> 响应消息写入结果</li>
+<li>根据发送结果执行 <code>本地事务</code>（如果写入失败，此时half消息对业务 <strong>不可见</strong>，本地逻辑不执行）</li>
+<li>根据本地事务状态执行 <code>Commit</code> 或者 <code>Rollback</code>（Commit操作生成消息索引，消息对消费者 <strong>可见</strong>）</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><strong>回查流程</strong>：<ol>
+<li>对于长时间没有 <code>Commit/Rollback</code> 的事务消息（<code>pending</code> 状态的消息），mq服务端发起一次 <strong>回查</strong></li>
+<li><code>Producer</code> 收到回查消息，检查回查消息对应的 <code>本地事务状态</code></li>
+<li>根据本地事务状态，重新 <code>Commit</code> 或者 <code>Rollback</code></li>
+</ol>
+</li>
+</ul>
+<p><strong>逻辑时序图</strong></p>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/image-20191211161601632.png" alt="image-20191211161601632"></p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>根据图1，你会发现，存在一个问题，那就是假设库存服务成功消费到了消息，但是删减库存失败。那么因为删除失败也是属于业务的一部分，那么他就会返回ack消息给，mq。那么整个流程结束。</p>
+<p> <strong>从上面的原理可以发现 <code>事务消息</code> 仅仅只是保证本地事务和MQ消息发送形成整体的 <code>原子性</code>，而投递到MQ服务器后，并无法保证消费者一定能消费成功！</strong></p>
+<p>如果 <strong>消费端消费失败</strong> 后的处理方式，建议是记录异常信息然后 <strong>人工处理</strong>，并不建议回滚上游服务的数据(因为两者是 <strong>解耦</strong> 的，而且 <strong>复杂度</strong> 太高) </p>
+<p>我们可以利用 <code>MQ</code> 的两个特性 <code>重试</code> 和 <code>死信队列</code> 来协助消费端处理：</p>
+<ol>
+<li>消费失败后进行一定次数的 <code>重试</code></li>
+<li>重试后也失败的话该消息丢进 <code>死信队列</code> 里</li>
+<li>另外起一个线程监听消费 <code>死信队列</code> 里的消息，记录日志并且预警！</li>
+</ol>
+<p>因为有 <code>重试</code> 所以消费者需要实现 <code>幂等性</code></p>
+<p>总而言之，rocketmq实现事务消息的两个核心概念：<strong>两阶段提交、事务状态定时回查</strong></p>
+<h1 id="我要做什么？项目介绍"><a href="#我要做什么？项目介绍" class="headerlink" title="我要做什么？项目介绍"></a>我要做什么？项目介绍</h1><p>​    因为我们知道rocketmq是<strong>原生支持事务消息</strong>的，但是如果项目中，最初选型的时候，并没有选用rmq，而是选用了其他的MQ，例如rabbitmq，activemq，kafka等等，但是又想保<strong>证最终一致性事务呢</strong>？</p>
+<p>​    <strong>那么我们仿照上面rmq的事务消息的原理，来自己实现一个提供事务消息的项目工程。</strong></p>
+<p>​    那么这个项目我决定命名为<strong>RTM</strong>（滑稽脸）。    </p>
+<p><strong>RTM( Reliable transaction message )</strong>是<strong>基于可靠消息的最终一致性</strong>的分布式事务解决方案。</p>
+<blockquote>
+<p><strong>框架定位</strong></p>
+</blockquote>
+<p><strong>RTM本身不生产消息队列，只是消息的搬运工。</strong><br><strong>RTM框架提供消息预发送、消息发送、消息确认、消息恢复、消息管理等功能，结合成熟的消息中间件，解决分布式事务，达到数据最终一致性。</strong></p>
+<h1 id="RTM解决的问题"><a href="#RTM解决的问题" class="headerlink" title="RTM解决的问题"></a>RTM解决的问题</h1><blockquote>
+<p><strong>引入消息中间件的场景</strong></p>
+</blockquote>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/image-20200426092909056.png" alt="image-20200426093019755"></p>
+<p>​    存在问题，1处和2处，可能因为网络原因，导致数据一致性的问题产生，<strong>也就是无法保证A系统和B系统数据的一致性</strong>，无法保证。</p>
+<p>​    举个例子，A系统发送完消息到MQ后，在执行自己业务过程中出现异常，本地事务回滚。但是此时消息已经发到MQ，下游服务B系统已经消费消息，B系统执行完自己的业务。那么此时A系统失败，B系统成功。这样就造成了整个业务流不是原子的，存在数据不一致性。</p>
+<p>​    上面的场景还存在着很多数据不一致性的场景。这里就不一一列举，下面在讲解到RTM的细节时会一一说明。</p>
+<blockquote>
+<p><strong>引入RTM后的场景</strong></p>
+</blockquote>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/image-20200426095618201.png" alt="image-20200426095618201"></p>
+<p>​    <strong>可以看到我们在RTM中引进了，rocketmq的事务消息的概念，RTM在这里仅仅只是作为一个协调者，协调上下游服务的业务操作。确保了是上下游服务能够保证数据的一致性，达到数据最终一致性，符合BASE理论。</strong></p>
+<p>​    </p>
+<p> RTM提供了，<strong>发送半消息、半消息确认、消息发送到MQ、消息消费确认、消息重复投递等等功能</strong>。</p>
+<h1 id="RTM详细流程介绍"><a href="#RTM详细流程介绍" class="headerlink" title="RTM详细流程介绍"></a>RTM详细流程介绍</h1><p>​    通过上面的阐述，我们大概知道了RTM在分布式系统中的地位，<strong>协调者</strong>。但是至于他的请求流程，怎么保证数据一致性，下面我们拉一一说明。</p>
+<p>​    我们将从三个方面来说明</p>
+<ul>
+<li>正常使用流程</li>
+<li>消息发送到RTM，RTM成功投递流程</li>
+<li>RTM确认消费者成功消费流程</li>
+</ul>
+<h2 id="正常流程"><a href="#正常流程" class="headerlink" title="正常流程"></a>正常流程</h2><p><img src="/2020/04/18/模拟rmq事务消息总结/image-20200426102034824.png" alt="image-20200426103349050"></p>
+<p>梳理一下流程：</p>
+<p>（1）首先A系统在执行业务之前，先投递半消息到RTM，RTM持久化成功后（这里使用mysql），发送成功消息给A系统，紧接着A系统执行本地业务。（一般这段逻辑需要开启本地事务，这样可以保证了消息发送成功后再执行本地业务，消息发送失败那么也就没有必要执行A系统本地业务了）</p>
+<p>（2）接着A系统在执行完本地业务后，<strong>异步</strong>发送确认消息给RTM，然后RTM标记半消息为确认可投递，接着RTM会把消息发送给MQ。</p>
+<p>（3）系统B收到MQ的消息，然后执行自己的业务逻辑，之后再调用RTM接口，确认消息已经消费，接着RTM会把该消息从数据库中删除。到这里整个流程结束</p>
+<blockquote>
+<p><strong>解释几个问题。</strong></p>
+</blockquote>
+<ul>
+<li><p>在步骤二中，为什么需要异步通知RTM消息可投递。</p>
+<ul>
+<li><p>我们反过来想，如果用同步会发生什么？首先来看一下A系统调用RTM系统的伪代码</p>
+</li>
+<li><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="meta">@Transactional</span>(rollbackFor = RuntimeException.class)<span class="comment">//开启事务</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addOrder</span><span class="params">(Order order)</span> </span>&#123;</div><div class="line"></div><div class="line">      <span class="comment">// 1.调用RMQ，创建预发送消息</span></div><div class="line">      String msgID = rtmService.addHalfMessage(order);</div><div class="line">      <span class="comment">// 2.执行业务</span></div><div class="line">         。。。。。</div><div class="line">      <span class="comment">// 3.同步调用RTM，确认发送消息</span></div><div class="line">      rtmService.confirmHalfMessage(msgID);</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>假设在第三处，调用RTM时，因为网络延迟或者其他原因，导致confirmHalfMessage()抛出异常，那么addOrder()方法回滚<strong>，A系统执行失败</strong>。但是实际上RTM还是调用成功了，也就是意味着RTM会往MQ发送消息，然后<strong>B系统收到消息后成功执行</strong>。那么此时A、B系统的数据是不一致性。</p>
+</li>
+<li><p>所以这里需要异步调用RTM，确认消息。目的就是解耦，保证了A系统的正常执行。</p>
+</li>
+<li><p><strong>但是如果使用异步后？出现A系统成功执行，但是调用RTM确认消息发送失败时，怎么处理呢？这个问题RTM会提供回查机制，确认半消息是删除还是确认投递。</strong></p>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>​        可以看到整个RTM正常流程下是能够保证数据的一致性的，满足base理论。</p>
+<h2 id="消息发送到RTM，RTM成功投递流程"><a href="#消息发送到RTM，RTM成功投递流程" class="headerlink" title="消息发送到RTM，RTM成功投递流程"></a>消息发送到RTM，RTM成功投递流程</h2><p>​    上面我们只是把整个RTM使用的正常流程梳理了一遍，但是在使用过程中肯定会出现很多问题，出现问题的同时可能还会造成数据的不一致性问题，那么怎么保证数据的一致性呢？出现问题怎么解决呢？</p>
+<p>​        </p>
+<p>​    接下来我们来看一下，A系统在跟RTM通信这个阶段出现问题怎么解决？怎么保证数据一致性？</p>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/image-20200426113538315.png" alt="image-20200426113538315"></p>
+<p>​    接下来我们就来分析一下如果上面这六步如果出现了问题，那么RTM是怎么解决的，只要保证了这六步的正确性，那么我们也就保证了消息发送阶段的一致性。</p>
+<ul>
+<li><p>1处发送异常，A系统发送半消息失败。那么因为<strong>A系统</strong>还<strong>没执行本业务</strong>（没有执行到4处），而且<strong>RTM系统</strong>也<strong>没有持久化半消息</strong>。那么此时不会产生数据不一致，<strong>那么RTM系统不需要做处理。</strong></p>
+<ul>
+<li><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="meta">@Transactional</span>(rollbackFor = RuntimeException.class)<span class="comment">//开启事务</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addOrder</span><span class="params">(Order order)</span> </span>&#123;<span class="comment">//A系统调用RTM，伪代码</span></div><div class="line">      <span class="comment">// 1.调用RMQ，创建预发送消息</span></div><div class="line">      String msgID = rtmService.addHalfMessage(order);<span class="comment">//上面1处，实际上就是对应这里的代码段，假设这里发生异常，因为addOrder()方法添加了事务，所以addORder()执行失败。数据一致性没有问题。</span></div><div class="line">      <span class="comment">// 2.执行业务</span></div><div class="line">         。。。。。</div><div class="line">      <span class="comment">// 3.同步调用RTM，确认发送消息</span></div><div class="line">      rtmService.confirmHalfMessage(msgID);</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>2发生异常，RTM持久化半消息失败。同理，因为<strong>A系统</strong>还<strong>没执行本业务</strong>（没有执行到4处），而且<strong>RTM系统</strong>也<strong>没有持久化半消息</strong>。那么此时不会产生数据不一致，<strong>那么RTM系统不需要做处理</strong>。</li>
+</ul>
+<ul>
+<li><p>3.处发生异常，RTM持久化消息成功。但是<strong>A系统</strong>还<strong>没执行本业务</strong>（没有执行到4处），这个时候数据不一致。那么RTM<strong>提供回查机制</strong>，RTM的会<strong>有定时器定时检查RTM系统中没有确认的消息</strong>，向A系统发起请求，请求检查A系统业务状态，如果执行业务失败，那么RTM删除持久化的半消息，否则A系统执行业务成功，那么RTM确认投递消息到MQ。</p>
+<ul>
+<li><p>什么情况下执行2处代码成功，但是上游却报异常呢？例如A系统设定调用 rtmService.addHalfMessage(order)的超时时间是5s，（也就是说在5s内addHalfMessage方法要给我响应，否则我就抛异常），但是addHalfMessage()方法执行需要7s，那么很明显A系统执行addHalfMessage()方法就会超时，然后A系统请求超时抛异常，<strong>A系统业务执行失败</strong>。但是A系统报异常并不影响RTM继续执行addHalfMessage()的逻辑，此时过了7s，addHalfMessage()执行成功。<strong>RTM成功持久化半消息</strong>。</p>
+</li>
+<li><p><strong>所以我们A系统需要提供回查的接口给RTM系统调用，让给RTM系统确认半消息是删除还是投递。</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>4处发生异常，也就是A系统执行本地业务失败。此时RTM系统已经持久化半消息，那么数据是不一致的。<ul>
+<li>怎么解决？<strong>跟解决上面的问题三一样，也是需要RTM的回查机制，进行回查A系统确定当前持久化的半消息是删除还是投递。</strong></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>5处发生异常，A系统业务执行成功。但是RTM系统的半消息没有确认投递，数据不一致。<ul>
+<li>解决办法，还是需要RTM系统的回查功能，<strong>进行回查A系统确定当前持久化的半消息是删除还是投递。</strong></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>6处发生异常，A系统业务执行成功，RTM确认投递消息失败，数据不一致。<ul>
+<li>解决办法，还是需要RTM系统的回查功能，<strong>进行回查A系统确定当前持久化的半消息是删除还是投递。</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>​    我们发现，除了一二处的异常，未产生数据不一致，不需要RTM系统进行干预外，3456处的异常需要RTM系统的回查机制进行确认RTM系统已经持久化的半消息是删除 还是投递。</p>
+<p>​    这个时候，我们就应该得出，RTM系统需要具备一个<strong>定时回查A系统的模块</strong></p>
+<p>分析到这里，我们发现。</p>
+<ul>
+<li><strong>上游系统A需要提供一个查询本地业务执行结果的接口。</strong></li>
+<li><strong>RTM系统提供，创建半消息接口，确认半消息接口，定时回查A系统业务功能</strong></li>
+</ul>
+<h2 id="RTM确认消费者成功消费流程"><a href="#RTM确认消费者成功消费流程" class="headerlink" title="RTM确认消费者成功消费流程"></a>RTM确认消费者成功消费流程</h2><p>我们上面解决了上游系统跟RTM系统交互的可靠性，那么RTM系统跟下游系统的数据一致性，在呢么解决呢？请看流程图。</p>
+<p><img src="/2020/04/18/模拟rmq事务消息总结/image-20200426145201920.png" alt="image-20200426151609573"></p>
+<p>同理我们来分析，下面这几处的如果出现了异常RTM系统是如何处理的？</p>
+<ul>
+<li>7处发生异常，RTM系统的<strong>确认是否消费功能</strong>，会<strong>定时检查</strong>RTM系统中已经确认可以投递的消息（也即是经过操作6之后的消息），如果存在，那么就会<strong>重新投递到MQ中</strong>。（也就是说，<strong>B系统必须保证接口服务的幂等性，因为可能存在重复消费</strong>）</li>
+</ul>
+<ul>
+<li>8处发生异常，同理RTM系统也会通过<strong>确认是否消费功能</strong>，<strong>定时重发</strong>RTM系统中<strong>未被B系统确认消费的消息</strong>。</li>
+</ul>
+<ul>
+<li>9处发生异常，同理RTM系统也会通过<strong>确认是否消费功能</strong>，<strong>定时重发</strong>RTM系统中<strong>未被B系统确认消费的消息</strong>。</li>
+</ul>
+<ul>
+<li>10处发生异常，同理RTM系统也会通过<strong>确认是否消费功能</strong>，<strong>定时重发</strong>RTM系统中<strong>未被B系统确认消费的消息</strong>。</li>
+</ul>
+<p><strong>总而言之，如果下游B系统如果没有向RTM系统确认消费消息，那么RTM系统就会通过定时器反复向MQ重发消息。（B系统必须保证接口服务的幂等性，因为可能存在重复消费）</strong></p>
+<h3 id="超时重试次数和重试时间"><a href="#超时重试次数和重试时间" class="headerlink" title="超时重试次数和重试时间"></a>超时重试次数和重试时间</h3><p><strong>但是有个问题，那就是，无限次重发么？</strong>  <strong>隔几秒发一次呢？</strong></p>
+<p>关于这个问题，我们可以仿照Rocketmq的重试逻辑<strong>，重试多次次后，那么就标记消息为死亡。（类似于rocketmq的死信队列）</strong></p>
+<p>​    <strong>同时重试的时间间隔，也是采取递增的方式</strong>。例如重复通知时间间隔（单位：分钟） 举例： [0, 1, 4, 10, 30, 60] 第一次立即通知，如果业务方没有返回成功，则1分钟后再次通知。如果业务方还是没有返回成功，则4分钟后再次通知（<strong>此时距离第一次通知已经过了5分钟</strong>）。以此类推。<strong>那么这里一共可以重试几次呢？7次。</strong>  <strong>七次后还是没有得到下游B系统的确认消费通知，那么就标记当前消息为死亡。</strong></p>
+<h3 id="那么消息死亡后怎么办？"><a href="#那么消息死亡后怎么办？" class="headerlink" title="那么消息死亡后怎么办？"></a>那么消息死亡后怎么办？</h3><p>消息重试次数超过限制次数后，消息就会被移动到死亡表中，然后你可以在后台进行人工重试。</p>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>  经过上面的分析，我们知道，<strong>RTM系统需要提供一个接口，给下游服务B系统，确认消费成功。</strong></p>
+<p>到这里，我们RTM系统一共需要哪些接口服务，我们再总结一下：</p>
+<ul>
+<li><strong>上游系统A需要提供一个查询本地业务执行结果的接口。</strong></li>
+<li><p><strong>RTM系统提供，创建半消息接口，确认半消息接口，定时回查A系统业务功能</strong></p>
+</li>
+<li><p>RTM系统提供，确认消费成功接口，定时重发消息功能，定时</p>
+</li>
+</ul>
+<h2 id="RTM项目总结"><a href="#RTM项目总结" class="headerlink" title="RTM项目总结"></a>RTM项目总结</h2><p>​    经过上面的总结，我想你应该对于RTM系统的定位，已经流程都已经有了一个比较充分的了解。那么我们接下来就总结一下实现RTM项目所需要的功能模块。</p>
+<p>​    </p>
+<h3 id="项目模块"><a href="#项目模块" class="headerlink" title="项目模块"></a>项目模块</h3><blockquote>
+<p><strong>首先上游系统需要提供什么？</strong></p>
+</blockquote>
+<p>需要提供一个可以查询本地事务结果的接口，方便RTM回查上游系统业务结果，来决定持久化在RTM的半消息是删除还是确认投递。</p>
+<blockquote>
+<p><strong>RTM系统需要提供什么？</strong></p>
+</blockquote>
+<p><strong>（1）message-lifecycle-management模块（消息生命周期管理模块）</strong></p>
+<ul>
+<li>创建半消息的接口 <ul>
+<li>提供上游系统在进行本地业务之前进行调用添加半消息。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>确认半消息投递接口<ul>
+<li>提供给上游系统在执行成功本地业务后，调用该接口，实现确认半消息为可投递，并投递消息到MQ中。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>确认消息消费接口<ul>
+<li>提供给下游系统，在成功消费MQ中的消息后，调用确认消息已经消费。</li>
+</ul>
+</li>
+</ul>
+<p><strong>（2）period-check-message模块（定时检查消息模块）</strong></p>
+<ul>
+<li>定时回查上游系统业务处理结果接口功能<ul>
+<li>RTM系统定时调用，确认是否需要投递消息到MQ</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>定时检查RTM持久化的消息是否已经被下游系统消费功能<ul>
+<li>RTM系统定时调用，如果没有被消费，那么重复投递到MQ中</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>定时检查RTM持久化的消息是否超过投递次数（也即是重复发送到mq次数达到上限，需要标记消息为死亡）<ul>
+<li>RTM系统定时调用，同时把消息移动到死亡表中</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>定时检查RTM持久化的消息是否已经被下游系统消费（如果是那么把已经消费的消息从系统中移除，放到消息历史表中）<ul>
+<li>RTM系统定时调用</li>
+</ul>
+</li>
+</ul>
+<p>​    <strong>也就是说，这个模块需要提供四个定时器。</strong></p>
+<blockquote>
+<p><strong>下游系统需要提供什么？</strong></p>
+</blockquote>
+<p>不需要提供什么，但是需要保证消息消费的幂等性。</p>
+<h3 id="数据库表（第一版）"><a href="#数据库表（第一版）" class="headerlink" title="数据库表（第一版）"></a><strong>数据库表（第一版）</strong></h3><p>第一版，因为时间关系，暂时没有提供前台界面，进行管理消息，后面有时间了，会加上去。</p>
+<blockquote>
+<p><strong>（1）数据库rtm</strong></p>
+</blockquote>
+<p>创建数据库rtm</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">CREATE DATABASE /*!32312 IF NOT EXISTS*/`rtm` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;</div><div class="line"></div><div class="line">USE `rtm`;</div></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>（2）数据库表</strong></p>
+</blockquote>
+<p><strong>消息表</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> t_k_message;</div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_k_message</div><div class="line">(</div><div class="line">   msg_id               <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'id'</span>,</div><div class="line">   msg_name             <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息所属业务'</span>,</div><div class="line">   topic                <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息所属主题(看对接mq使用)'</span>,</div><div class="line">   quene_name           <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息所属队列(看对接mq使用)'</span>,</div><div class="line">   msg_content          <span class="built_in">varchar</span>(<span class="number">300</span>) <span class="keyword">comment</span> <span class="string">'消息内容'</span>,</div><div class="line">   msg_status           <span class="built_in">varchar</span>(<span class="number">7</span>) <span class="keyword">comment</span> <span class="string">'消息状态，0-待确认，1-已确认发送中，2-已消费'</span>,</div><div class="line">   msg_d_status         <span class="built_in">varchar</span>(<span class="number">7</span>) <span class="keyword">comment</span> <span class="string">'消息是否死亡，0-正常，1-已死亡'</span>,</div><div class="line">   retry_counts         <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">comment</span> <span class="string">'重试次数'</span>,</div><div class="line">   check_url            <span class="built_in">varchar</span>(<span class="number">300</span>) <span class="keyword">comment</span> <span class="string">'消息回查地址'</span>,</div><div class="line">   check_timeout        <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">comment</span> <span class="string">'消息回查超时时间'</span>,</div><div class="line">   check_duration       <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">comment</span> <span class="string">'消息回查周期时间，消息未确认时在这时间内需要回查'</span>,</div><div class="line">   create_msg_uid       <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息创建人id'</span>,</div><div class="line">   create_msg_time      datetime <span class="keyword">comment</span> <span class="string">'消息创建时间'</span>,</div><div class="line">   update_msg_uid       <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息更新人id'</span>,</div><div class="line">   update_msg_time      datetime <span class="keyword">comment</span> <span class="string">'消息更新时间'</span>,</div><div class="line">   confirm_msg_time     datetime <span class="keyword">comment</span> <span class="string">'消息确认投递时间'</span>,</div><div class="line">   resend_msg_uid       <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息重发人id'</span>,</div><div class="line">   resend_msg_time      datetime <span class="keyword">comment</span> <span class="string">'消息重发时间'</span>,</div><div class="line">   primary <span class="keyword">key</span> (msg_id)</div><div class="line">)<span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4;</div><div class="line"></div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_k_message <span class="keyword">comment</span> <span class="string">'消息表'</span>;</div></pre></td></tr></table></figure>
+<p><strong>确认消费消息表（历史表）也就是保存的是msg_status==2的消息</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> t_k_message_consumed;</div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_k_message_consumed</div><div class="line">(</div><div class="line">   msg_id               <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'id'</span>,</div><div class="line">   msg_name             <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息所属业务'</span>,</div><div class="line">   topic                <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息所属主题(看对接mq使用)'</span>,</div><div class="line">   quene_name           <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息所属队列(看对接mq使用)'</span>,</div><div class="line">   msg_content          <span class="built_in">varchar</span>(<span class="number">300</span>) <span class="keyword">comment</span> <span class="string">'消息内容'</span>,</div><div class="line">   msg_status           <span class="built_in">varchar</span>(<span class="number">7</span>) <span class="keyword">comment</span> <span class="string">'消息状态，0-待确认，1-已确认发送中，2-已消费'</span>,</div><div class="line">   msg_d_status         <span class="built_in">varchar</span>(<span class="number">7</span>) <span class="keyword">comment</span> <span class="string">'消息是否死亡，0-正常，1-已死亡'</span>,</div><div class="line">   retry_counts         <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">comment</span> <span class="string">'重试次数'</span>,</div><div class="line">   check_url            <span class="built_in">varchar</span>(<span class="number">300</span>) <span class="keyword">comment</span> <span class="string">'消息回查地址'</span>,</div><div class="line">   check_timeout        <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">comment</span> <span class="string">'消息回查超时时间'</span>,</div><div class="line">   check_duration       <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">comment</span> <span class="string">'消息回查周期时间，消息未确认时在这时间内需要回查'</span>,</div><div class="line">   create_msg_uid       <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息创建人id'</span>,</div><div class="line">   create_msg_time      datetime <span class="keyword">comment</span> <span class="string">'消息创建时间'</span>,</div><div class="line">   update_msg_uid       <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息更新人id'</span>,</div><div class="line">   update_msg_time      datetime <span class="keyword">comment</span> <span class="string">'消息更新时间'</span>,</div><div class="line">   confirm_msg_time     datetime <span class="keyword">comment</span> <span class="string">'消息确认投递时间'</span>,</div><div class="line">   resend_msg_uid       <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息重发人id'</span>,</div><div class="line">   resend_msg_time      datetime <span class="keyword">comment</span> <span class="string">'消息重发时间'</span>,</div><div class="line">   primary <span class="keyword">key</span> (msg_id)</div><div class="line">)<span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4;</div><div class="line"></div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_k_message <span class="keyword">comment</span> <span class="string">'已消费消息历史表'</span>;</div></pre></td></tr></table></figure>
+<p><strong>超时死亡消息表 - 保存的是msg_d_status==1的消息</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> t_k_dead_message;</div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_k_dead_message</div><div class="line">(</div><div class="line">   msg_id               <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'id'</span>,</div><div class="line">   msg_name             <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息所属业务'</span>,</div><div class="line">   topic                <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息所属主题(看对接mq使用)'</span>,</div><div class="line">   quene_name           <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息所属队列(看对接mq使用)'</span>,</div><div class="line">   msg_content          <span class="built_in">varchar</span>(<span class="number">300</span>) <span class="keyword">comment</span> <span class="string">'消息内容'</span>,</div><div class="line">   msg_status           <span class="built_in">varchar</span>(<span class="number">7</span>) <span class="keyword">comment</span> <span class="string">'消息状态，0-待确认，1-已确认发送中，2-已消费'</span>,</div><div class="line">   msg_d_status         <span class="built_in">varchar</span>(<span class="number">7</span>) <span class="keyword">comment</span> <span class="string">'消息是否死亡，0-正常，1-已死亡'</span>,</div><div class="line">   retry_counts         <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">comment</span> <span class="string">'重试次数'</span>,</div><div class="line">   check_url            <span class="built_in">varchar</span>(<span class="number">300</span>) <span class="keyword">comment</span> <span class="string">'消息回查地址'</span>,</div><div class="line">   check_timeout        <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">comment</span> <span class="string">'消息回查超时时间'</span>,</div><div class="line">   check_duration       <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">comment</span> <span class="string">'消息回查周期时间，消息未确认时在这时间内需要回查'</span>,</div><div class="line">   create_msg_uid       <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息创建人id'</span>,</div><div class="line">   create_msg_time      datetime <span class="keyword">comment</span> <span class="string">'消息创建时间'</span>,</div><div class="line">   update_msg_uid       <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息更新人id'</span>,</div><div class="line">   update_msg_time      datetime <span class="keyword">comment</span> <span class="string">'消息更新时间'</span>,</div><div class="line">   confirm_msg_time     datetime <span class="keyword">comment</span> <span class="string">'消息确认投递时间'</span>,</div><div class="line">   resend_msg_uid       <span class="built_in">varchar</span>(<span class="number">70</span>) <span class="keyword">comment</span> <span class="string">'消息重发人id'</span>,</div><div class="line">   resend_msg_time      datetime <span class="keyword">comment</span> <span class="string">'消息重发时间'</span>,</div><div class="line">   primary <span class="keyword">key</span> (msg_id)</div><div class="line">)<span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4;</div><div class="line"></div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_k_message <span class="keyword">comment</span> <span class="string">'消息表'</span>;</div></pre></td></tr></table></figure>
+<h3 id="项目代码模块结构"><a href="#项目代码模块结构" class="headerlink" title="项目代码模块结构"></a>项目代码模块结构</h3><p><img src="/2020/04/18/模拟rmq事务消息总结/image-20200428162644118.png" alt="image-20200428162644118"></p>
+<h3 id="RTM项目使用环境"><a href="#RTM项目使用环境" class="headerlink" title="RTM项目使用环境"></a>RTM项目使用环境</h3><blockquote>
+<p><strong>依赖环境</strong></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">环境</th>
+<th style="text-align:left">版本</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">JDK</td>
+<td style="text-align:left">1.8</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">MySQL</td>
+<td style="text-align:left">5.7.25</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">Zookeeper</td>
+<td style="text-align:left">3.4.14</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">kafka</td>
+<td style="text-align:left">5.15.6</td>
+<td>因为原先上下游系统使用的是kafka，所以这里接入的就是kafka（如果是其他的mq则接入你自己的mq即可） -可选</td>
+</tr>
+<tr>
+<td style="text-align:left">Maven</td>
+<td style="text-align:left">3.3.9</td>
+</tr>
+</tbody>
+</table>
+<h1 id="RTM代码实现"><a href="#RTM代码实现" class="headerlink" title="RTM代码实现"></a>RTM代码实现</h1><h2 id="父工程-rtm"><a href="#父工程-rtm" class="headerlink" title="父工程 rtm"></a>父工程 rtm</h2><h3 id="接口层-rtm-api"><a href="#接口层-rtm-api" class="headerlink" title="接口层 rtm-api"></a>接口层 rtm-api</h3><p>保存rtm，对外暴露的接口</p>
+<p><strong>依赖 rtm-pojo</strong></p>
+<p>实现三个接口：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">package</span> com.kingge.rtm.api;</div><div class="line"></div><div class="line"><span class="keyword">import</span> com.kingge.rtm.pojo.TKMessage;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * <span class="doctag">@program</span>: rtm</span></div><div class="line"><span class="comment"> * <span class="doctag">@description</span>: rtm暴露接口，提供上下游服务调用</span></div><div class="line"><span class="comment"> * <span class="doctag">@author</span>: JeremyKing</span></div><div class="line"><span class="comment"> * <span class="doctag">@create</span>: 2020-04-27 11:26</span></div><div class="line"><span class="comment"> **/</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IRtmService</span> </span>&#123;</div><div class="line"></div><div class="line"></div><div class="line">     <span class="comment">/**</span></div><div class="line"><span class="comment">     * <span class="doctag">@Description</span>: 创建半消息</span></div><div class="line"><span class="comment">     * <span class="doctag">@Param</span>: 消息实体</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span>: 消息id</span></div><div class="line"><span class="comment">     * <span class="doctag">@Author</span>: JeremyKing</span></div><div class="line"><span class="comment">     * <span class="doctag">@Date</span>: 2020/4/27 0027</span></div><div class="line"><span class="comment">     */</span></div><div class="line">     <span class="function"><span class="keyword">public</span> String <span class="title">addHalfMessage</span><span class="params">(TKMessage message)</span></span>;</div><div class="line"></div><div class="line"></div><div class="line">     <span class="comment">/**</span></div><div class="line"><span class="comment">     * <span class="doctag">@Description</span>: 根据消息id，确认并发送半消息到mq</span></div><div class="line"><span class="comment">     * <span class="doctag">@Param</span>: 消息id</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span>: void</span></div><div class="line"><span class="comment">     * <span class="doctag">@Author</span>: JeremyKing</span></div><div class="line"><span class="comment">     * <span class="doctag">@Date</span>: 2020/4/27 0027</span></div><div class="line"><span class="comment">     */</span></div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">submitAndSendHalfMessage</span><span class="params">(String msg_id)</span></span>;</div><div class="line"></div><div class="line"></div><div class="line">     <span class="comment">/**</span></div><div class="line"><span class="comment">      * <span class="doctag">@Description</span>: 根据消息id，确认消费消息</span></div><div class="line"><span class="comment">      * <span class="doctag">@Param</span>: 消息id</span></div><div class="line"><span class="comment">      * <span class="doctag">@return</span>: void</span></div><div class="line"><span class="comment">      * <span class="doctag">@Author</span>: JeremyKing</span></div><div class="line"><span class="comment">      * <span class="doctag">@Date</span>: 2020/4/27 0027</span></div><div class="line"><span class="comment">      */</span></div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">confirmConsumeMessage</span><span class="params">(String msg_id)</span></span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="实体类-rtm-pojo"><a href="#实体类-rtm-pojo" class="headerlink" title="实体类 rtm-pojo"></a>实体类 rtm-pojo</h3><p>保存rtm项目的实体类</p>
+<p>根据mybatis-reverse，逆向生成数据库表对应的实体类和mapper、xml文件。</p>
+<h3 id="工具层-rtm-common"><a href="#工具层-rtm-common" class="headerlink" title="工具层 rtm-common"></a>工具层 rtm-common</h3><h3 id="消息生命周期管理服务-rtm-mlm"><a href="#消息生命周期管理服务-rtm-mlm" class="headerlink" title="消息生命周期管理服务 rtm-mlm"></a>消息生命周期管理服务 rtm-mlm</h3><p><strong>message-lifecycle-management模块（消息生命周期管理模块）</strong> -  的简写，mlm</p>
+<h3 id="定时检查消息模块-rtm-pcm"><a href="#定时检查消息模块-rtm-pcm" class="headerlink" title="定时检查消息模块 rtm-pcm"></a>定时检查消息模块 rtm-pcm</h3><p>period-check-message模块（定时检查消息模块） - 简写，pcm</p>
+<h2 id="github地址"><a href="#github地址" class="headerlink" title="github地址"></a>github地址</h2><p><a href="https://github.com/JeremyKinge/rtm.git" target="_blank" rel="external">https://github.com/JeremyKinge/rtm.git</a></p>
+<h1 id="怎么使用rtm"><a href="#怎么使用rtm" class="headerlink" title="怎么使用rtm"></a>怎么使用rtm</h1><p>目前rtm只提供了，dubbo版本，那么也就是在使用时，你需要配置dubbo环境。</p>
+<h2 id="上游系统怎么使用？"><a href="#上游系统怎么使用？" class="headerlink" title="上游系统怎么使用？"></a>上游系统怎么使用？</h2><p>只需要在业务类中，通过dubbo的方式注入rtm服务即可。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">import com.alibaba.dubbo.config.annotation.Reference;</div><div class="line">import com.kingge.rtm.api.IRtmService;</div><div class="line"></div><div class="line">@Reference</div><div class="line">IRtmService iRtmService;</div></pre></td></tr></table></figure>
+<p>例如你的业务逻辑如下：订单支付后，需要给用户增加积分</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="meta">@Transactional</span>(rollbackFor = RuntimeException.class)<span class="comment">//开启事务</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">payOrder</span><span class="params">(Order order)</span> </span>&#123;</div><div class="line">      <span class="comment">// 1.调用RMQ，创建预发送消息</span></div><div class="line">       TKMessage message = <span class="keyword">new</span> TKMessage();</div><div class="line">      String msgID = iRtmService.addHalfMessage(TKMessage message);</div><div class="line">      <span class="comment">// 2.执行业务</span></div><div class="line">         。。。。。</div><div class="line">      <span class="comment">// 3.异步调用RTM，确认发送消息</span></div><div class="line">      iRtmService.submitAndSendHalfMessage(message.getMsgid());</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h2 id="下游系统怎么用？"><a href="#下游系统怎么用？" class="headerlink" title="下游系统怎么用？"></a>下游系统怎么用？</h2><p>根据上面的例子，下游会去mq订阅积分消息，那么需要在处理订阅的消息方法中。下游服务在处理完消息后，调用：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">iRtmService.confirmConsumeMessage(message.getMsgid());</div></pre></td></tr></table></figure>
+<p>完成确认消息已经消费即可。</p>
+<p><strong>需要注意的是：下游消费服务时，需要注意保证消息幂等性，因为可能因为网络等等原因，可能rtm会重发消息。</strong></p>
+<h1 id="RTM项目亮点"><a href="#RTM项目亮点" class="headerlink" title="RTM项目亮点"></a>RTM项目亮点</h1><p>0.首先是给没有提供事务消息机制的mq提供了事务消息的方式</p>
+<p>1.超时重试机制，类似rocketmq，根据时间递增间隔重试</p>
+<p>2.死亡消息，可以在后台进行重发，手动干预</p>
+<p>3.消息重试，采取线程池的方式，根据<strong>线程池的coresize大小（避免线程递增到maxsize）</strong>，去数据库中<strong>取相应数量</strong>需要重复发送搭到mq的消息。</p>
+<p>4.重发消息时，从重发次数大到小进行重发（<strong>例如，RTM支持的最大重试次数是7。那么就先查重发次数是6的消息，处理完后。再接着查重发次数是5的消息</strong>），保证了优先处理快要到重试次数上限的消息，优先处理。</p>
+<h1 id="RTM项目存在的缺点"><a href="#RTM项目存在的缺点" class="headerlink" title="RTM项目存在的缺点"></a>RTM项目存在的缺点</h1><p>1.<strong>目前没有支持多种</strong>mq的版本（现在只是实现了对接kafka版本）</p>
+<p>2.分布式集群的搭建测试</p>
+<p>3.项目模块的拆分还不够清晰，例如rtm-pcm模块，可以拆分成两个模块，一个是rtm-pcm-api模块（提供接口，他的实现类在rtm-pcm中），一个是rtm-pcm模块（真正的业务放到这里）</p>
+<p>4.rtm-pcm或者rtm-web 模块过于依赖rtm-mlm模块，导致前两者，都需要在application.yaml中配置跟rtm-mlm相同的数据库数据源信息（因为前两者使用了rtm-mlm的mapper调用数据库。）。后面考虑由rtm-mlm提供数据库操作接口，让前两者通过dubbo的方式调用mapper调用数据库。 而不用直接使用rtm-mlm的mapper去调用。</p>
+<p>在前两者移除 rtm-mlm依赖，依赖rtm-mlm-api</p>
+<p>也就是说在增加一个rtm-mlm-api模块。里面提供操作数据库的接口，rtm-mlm实现接口。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/开源项目/" rel="tag"><i class="fa fa-tag"></i> 开源项目</a>
+          
+            <a href="/tags/事务消息/" rel="tag"><i class="fa fa-tag"></i> 事务消息</a>
+          
+            <a href="/tags/kafka/" rel="tag"><i class="fa fa-tag"></i> kafka</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/12/kingspring总结文档/" rel="next" title="king-spring">
+                <i class="fa fa-chevron-left"></i> king-spring
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">78</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础概念"><span class="nav-number">1.</span> <span class="nav-text">基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么使用消息队列？"><span class="nav-number">1.1.</span> <span class="nav-text">为什么使用消息队列？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MQ出现的原因-优点"><span class="nav-number">1.1.1.</span> <span class="nav-text">MQ出现的原因/优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MQ缺点"><span class="nav-number">1.1.2.</span> <span class="nav-text">MQ缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么解决数据的一致性"><span class="nav-number">1.2.</span> <span class="nav-text">怎么解决数据的一致性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式事务-强一致性"><span class="nav-number">1.2.1.</span> <span class="nav-text">分布式事务 - 强一致性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据最终一致性-弱一致性"><span class="nav-number">1.2.2.</span> <span class="nav-text">数据最终一致性 - 弱一致性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CAP理论"><span class="nav-number">1.3.</span> <span class="nav-text">CAP理论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BASE理论"><span class="nav-number">1.4.</span> <span class="nav-text">BASE理论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rocketmq事务消息"><span class="nav-number">1.5.</span> <span class="nav-text">rocketmq事务消息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">1.5.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">1.5.2.</span> <span class="nav-text">问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#我要做什么？项目介绍"><span class="nav-number">2.</span> <span class="nav-text">我要做什么？项目介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM解决的问题"><span class="nav-number">3.</span> <span class="nav-text">RTM解决的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM详细流程介绍"><span class="nav-number">4.</span> <span class="nav-text">RTM详细流程介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#正常流程"><span class="nav-number">4.1.</span> <span class="nav-text">正常流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.1.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息发送到RTM，RTM成功投递流程"><span class="nav-number">4.2.</span> <span class="nav-text">消息发送到RTM，RTM成功投递流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RTM确认消费者成功消费流程"><span class="nav-number">4.3.</span> <span class="nav-text">RTM确认消费者成功消费流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#超时重试次数和重试时间"><span class="nav-number">4.3.1.</span> <span class="nav-text">超时重试次数和重试时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#那么消息死亡后怎么办？"><span class="nav-number">4.3.2.</span> <span class="nav-text">那么消息死亡后怎么办？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-2"><span class="nav-number">4.3.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RTM项目总结"><span class="nav-number">4.4.</span> <span class="nav-text">RTM项目总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目模块"><span class="nav-number">4.4.1.</span> <span class="nav-text">项目模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库表（第一版）"><span class="nav-number">4.4.2.</span> <span class="nav-text">数据库表（第一版）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#项目代码模块结构"><span class="nav-number">4.4.3.</span> <span class="nav-text">项目代码模块结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RTM项目使用环境"><span class="nav-number">4.4.4.</span> <span class="nav-text">RTM项目使用环境</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM代码实现"><span class="nav-number">5.</span> <span class="nav-text">RTM代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#父工程-rtm"><span class="nav-number">5.1.</span> <span class="nav-text">父工程 rtm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#接口层-rtm-api"><span class="nav-number">5.1.1.</span> <span class="nav-text">接口层 rtm-api</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实体类-rtm-pojo"><span class="nav-number">5.1.2.</span> <span class="nav-text">实体类 rtm-pojo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工具层-rtm-common"><span class="nav-number">5.1.3.</span> <span class="nav-text">工具层 rtm-common</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息生命周期管理服务-rtm-mlm"><span class="nav-number">5.1.4.</span> <span class="nav-text">消息生命周期管理服务 rtm-mlm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定时检查消息模块-rtm-pcm"><span class="nav-number">5.1.5.</span> <span class="nav-text">定时检查消息模块 rtm-pcm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#github地址"><span class="nav-number">5.2.</span> <span class="nav-text">github地址</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#怎么使用rtm"><span class="nav-number">6.</span> <span class="nav-text">怎么使用rtm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#上游系统怎么使用？"><span class="nav-number">6.1.</span> <span class="nav-text">上游系统怎么使用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下游系统怎么用？"><span class="nav-number">6.2.</span> <span class="nav-text">下游系统怎么用？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM项目亮点"><span class="nav-number">7.</span> <span class="nav-text">RTM项目亮点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTM项目存在的缺点"><span class="nav-number">8.</span> <span class="nav-text">RTM项目存在的缺点</span></a></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      218.4k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共218.4k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>
