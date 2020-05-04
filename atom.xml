@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kingge.top/"/>
-  <updated>2017-08-31T09:44:24.038Z</updated>
+  <updated>2020-05-04T01:17:02.788Z</updated>
   <id>http://kingge.top/</id>
   
   <author>
@@ -14,6 +14,104 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>king-spring</title>
+    <link href="http://kingge.top/2019/06/12/kingspring%E6%80%BB%E7%BB%93%E6%96%87%E6%A1%A3/"/>
+    <id>http://kingge.top/2019/06/12/kingspring总结文档/</id>
+    <published>2019-06-12T02:21:59.000Z</published>
+    <updated>2020-05-04T01:17:02.788Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="编写king-spring的目的"><a href="#编写king-spring的目的" class="headerlink" title="编写king-spring的目的"></a>编写king-spring的目的</h1><p>旨在能够了解spring整个架构核心的脉络，从而更好的理解spring的架构精神和底层原理</p>
+<p><strong>A tiny IoC container refer to Spring</strong></p>
+<h1 id="king-spring的结构逻辑"><a href="#king-spring的结构逻辑" class="headerlink" title="king-spring的结构逻辑"></a>king-spring的结构逻辑</h1><p><img src="/2019/06/12/kingspring总结文档/image-20200503162236006.png" alt="image-20200503162330790"></p>
+<p>可以看到整个spring的简化版逻辑就是这样子的，核心就是<strong>IOC/DI，MVC。</strong></p>
+<p>那么我们接下来就模拟spring实现我们的king-spring</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><h2 id="配置阶段-做准备工作"><a href="#配置阶段-做准备工作" class="headerlink" title="配置阶段-做准备工作"></a>配置阶段-做准备工作</h2><h3 id="配置web-xml和配置控制类-KDispatcherServlet"><a href="#配置web-xml和配置控制类-KDispatcherServlet" class="headerlink" title="配置web.xml和配置控制类 - KDispatcherServlet"></a>配置web.xml和配置控制类 - KDispatcherServlet</h3><blockquote>
+<p><strong>创建web请求控制类 - KDispatcherServlet</strong></p>
+</blockquote>
+<p><img src="/2019/06/12/kingspring总结文档/image-20200503165359658.png" alt="image-20200503165359658"></p>
+<blockquote>
+<p><strong>配置到web.xml中</strong></p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE web-app PUBLIC</span></div><div class="line"><span class="meta"> "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"</span></div><div class="line"><span class="meta"> "http://java.sun.com/dtd/web-app_2_3.dtd" &gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">web-app</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">display-name</span>&gt;</span>king-srping project<span class="tag">&lt;/<span class="name">display-name</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">servlet</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>kc<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>com.kingge.spring.web.servlet.KDispatcherServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>classpath:application.properties<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">load-on-startup</span>&gt;</span>1<span class="tag">&lt;/<span class="name">load-on-startup</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>kc<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">web-app</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="配置application-properties"><a href="#配置application-properties" class="headerlink" title="配置application.properties"></a>配置application.properties</h3><p>这里采用的是properties的方式进行spring项目的配置（后期可以能会扩展成xml方式）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">scanPackage=com.kingge.spring</div></pre></td></tr></table></figure>
+<p>目前就配置一项，项目扫描根目录</p>
+<h3 id="实现扫描注解"><a href="#实现扫描注解" class="headerlink" title="实现扫描注解"></a>实现扫描注解</h3><p>​    我们应该知道，spring是通过校验某个bean是否加了特定的注解，从而决定是否加入到IOC容器中，也即是：<strong>bean的生命周期管理是否托管给spring。</strong></p>
+<p>​    常用的注解有这几个：@Component、@Service、@Controller、@Repository，后三个实际上都是基于Component的实现，所以他们的效果等同@Component，但是后三个出现的目的是<strong>为了标识业务层次</strong>，所以在使用过程中，我们最好是按照不同的业务层次使用不同的注解，<strong>而且在spring官网上提到，后面这三个注解在以后可能还会赋予其他的含义。</strong></p>
+<p>逐层分为两个层次(包)：</p>
+<p> <img src="/2019/06/12/kingspring总结文档/image-20200503164323048.png" alt="image-20200503164323048"></p>
+<p><strong>业务层和web控制层</strong></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>​    做完这一步，我们基本把king-spring的整体架构搭建出来了，而且某些注解类和控制类也已经建立，但是某些细节实现还是没有完成，例如KDispatcherServlet内部还没有实现。</p>
+<p>​    <strong>接下来就实现，具体的解析配置信息（application.properties）</strong></p>
+<h2 id="初始化IOC容器-解析配置类"><a href="#初始化IOC容器-解析配置类" class="headerlink" title="初始化IOC容器-解析配置类"></a>初始化IOC容器-解析配置类</h2><p><strong>首先我们把这段代码逻辑是声明在了KDispatcherServlet的init方法中，也即是项目启动过程中就会去执行</strong></p>
+<p><strong>这个过程分为四步</strong></p>
+<h3 id="根据web-xml配置的contextConfigLocation解析配置类"><a href="#根据web-xml配置的contextConfigLocation解析配置类" class="headerlink" title="根据web.xml配置的contextConfigLocation解析配置类"></a>根据web.xml配置的contextConfigLocation解析配置类</h3><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">//1.加载配置文件</span></div><div class="line">    loadConfig(config.getInitParameter(CONFIG_PROPERTIES_LOCATION));<span class="comment">//CONFIG_PROPERTIES_LOCATION的值等于"contextConfigLocation"</span></div><div class="line"></div><div class="line"><span class="comment">//2. 将配置类映射到Properties中</span></div><div class="line"><span class="comment">//保存解析application.properties 的配置文件信息</span></div><div class="line">    <span class="keyword">private</span> Properties contextConfig = <span class="keyword">new</span> Properties();</div></pre></td></tr></table></figure>
+<h3 id="根据配置类获取扫描包的路径"><a href="#根据配置类获取扫描包的路径" class="headerlink" title="根据配置类获取扫描包的路径"></a>根据配置类获取扫描包的路径</h3><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">//2.根据配置文件配置的扫描路径，扫描类</span></div><div class="line">    scanPackage(contextConfig.getProperty(<span class="string">"scanPackages"</span>));</div><div class="line"><span class="comment">//经过这个方法会把递归把包路径下的所有类都放到下面的list中</span></div><div class="line"></div><div class="line">    <span class="comment">//3.保存扫描到的所有bean的全类名（还未过滤，可能包含不需要注入到ioc容器的bean）</span></div><div class="line">    <span class="keyword">private</span> List&lt;String&gt; classNames = <span class="keyword">new</span> ArrayList&lt;String&gt;();</div></pre></td></tr></table></figure>
+<p>需要注意的是，扫描到的类，可能存在某些类需要过滤掉，并不是都需要加到IOC容器中，判断是否加入IOC容器中的依据是：<strong>是否被我们上面定义的注解所修饰</strong></p>
+<h3 id="解析需要注入到ioc容器中的bean"><a href="#解析需要注入到ioc容器中的bean" class="headerlink" title="解析需要注入到ioc容器中的bean"></a>解析需要注入到ioc容器中的bean</h3><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">//3.筛选上面扫描的所有类，将标有注入注解的类，放到IOC容器中</span></div><div class="line">        <span class="comment">//类似于解析xml的bean标签</span></div><div class="line">            initContext();</div><div class="line"></div><div class="line"><span class="comment">//最终根据注解筛选出需要放到IOC容器中的bean。classNames经过了过滤后得到的bean放入下面的map中</span></div><div class="line"><span class="keyword">private</span> Map&lt;String,Object&gt; beanDefinitionMap = <span class="keyword">new</span> ConcurrentHashMap&lt;String,Object&gt;(<span class="number">256</span>);</div></pre></td></tr></table></figure>
+<h3 id="解决IOC容器中bean-的依赖问题"><a href="#解决IOC容器中bean-的依赖问题" class="headerlink" title="解决IOC容器中bean 的依赖问题"></a>解决IOC容器中bean 的依赖问题</h3><p><strong>也就是DI依赖注入阶段</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">//4.解析IOC容器中的bean，并设置依赖 - DI阶段</span></div><div class="line">    diBean();</div></pre></td></tr></table></figure>
+<h3 id="控制层的url绑定处理方法"><a href="#控制层的url绑定处理方法" class="headerlink" title="控制层的url绑定处理方法"></a>控制层的url绑定处理方法</h3><p>​    <strong>实际上就是处理IOC容器中被@KController注解修饰的类，然后再根据@KRequestMapping获取映射的url，然后再绑定url对应的处理方法。</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">//5.初始化handlerMapping，解析所有控制类的url地址和相关联的处理method</span></div><div class="line">    initHandlerMapping();<span class="comment">//解析出来的映射关系，保存到下面的handlerMapping中</span></div><div class="line"></div><div class="line">    <span class="comment">//保存控制层，url跟处理方法的映射关系</span></div><div class="line">    <span class="keyword">private</span> Map&lt;String,Method&gt; handlerMapping = <span class="keyword">new</span> ConcurrentHashMap&lt;String,Method&gt;();</div></pre></td></tr></table></figure>
+<h2 id="处理请求"><a href="#处理请求" class="headerlink" title="处理请求"></a>处理请求</h2><p><strong>实际上就是根据请求的url，然后从上面的handlerMapping中，获取url对应的处理方法，然后执行，返回结果。</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">//客户端处理请求</span></div><div class="line">doDispatcher(req, resp);</div></pre></td></tr></table></figure>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>​    <strong>IOC容器</strong>在上面我们是使用<code>private Map&lt;String,Object&gt; beanDefinitionMap = new ConcurrentHashMap&lt;String,Object&gt;(256);</code>  <strong>key是beanName（默认是类名首字母小写），value是bean的实例</strong></p>
+<p>​    </p>
+<p>​    url映射关系我们使用的是<strong>handlerMapping</strong>，他的类型是：<code>private Map&lt;String,Method&gt; handlerMapping = new ConcurrentHashMap&lt;String,Method&gt;();</code>     <strong>key就是请求url，value就是url映射的method</strong></p>
+<blockquote>
+<p><strong>自我实现的king-spring 使用了那些设计模式</strong></p>
+</blockquote>
+<p>模板模式：init方法，把初始化分为了多个步骤，每个步骤自己实现自己的逻辑</p>
+<p>策略模式：根据注解类型选择不同的操作方式。</p>
+<p>委托模式：doGet()、doPost().</p>
+<p>单例模式：Constants类</p>
+<blockquote>
+<p><strong>项目地址</strong></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">https://github.com/JeremyKinge/king-spring.git //项目地址</div></pre></td></tr></table></figure>
+<h1 id="回过头来查看spring源码"><a href="#回过头来查看spring源码" class="headerlink" title="回过头来查看spring源码"></a>回过头来查看spring源码</h1><h2 id="spring的ioc容器怎么实现的呢？跟我们自己的实现有何不同"><a href="#spring的ioc容器怎么实现的呢？跟我们自己的实现有何不同" class="headerlink" title="spring的ioc容器怎么实现的呢？跟我们自己的实现有何不同"></a>spring的ioc容器怎么实现的呢？跟我们自己的实现有何不同</h2><p>通过查看我们发现，spring在启动时，假设是注解版本那么，使用的context是</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">AnnotationConfigApplicationContext context</div><div class="line">      = <span class="keyword">new</span> AnnotationConfigApplicationContext();</div><div class="line">那么也就意味着，最终扫描包下的类，然后放到IOC容器中的逻辑肯定在其中</div></pre></td></tr></table></figure>
+<p>最后跟踪到，DefaultListableBeanFactory的registerBeanDefinition()方法，最后调用了<code>this.beanDefinitionMap.put(beanName, beanDefinition);</code></p>
+<p>也就是说BeanDefinitionMap就是我们需要查找的IOC容器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/** Map of bean definition objects, keyed by bean name */</div><div class="line">private final Map&lt;String, BeanDefinition&gt; beanDefinitionMap = new ConcurrentHashMap&lt;&gt;(256);</div></pre></td></tr></table></figure>
+<p>可以看到，他的key跟我们的定义的一样，也是通过beanName方式，<strong>但是value跟我们却不同</strong>。</p>
+<blockquote>
+<p><strong>BeanDefinition</strong></p>
+</blockquote>
+<p>​    他实际上就是spring对于注解的描述类。我们还记不记得，在使用@Service这样的注解时，我们是可以配置作用域，生命周期，是否懒加载等等信息。那么这些信息就是保存在BeanDefinition中。</p>
+<p>​    换句话说，spring的BeanDefinition实现，更加全面，而且更加面对对对象。 <strong>我们上面的做法是直接把实例化的bean当做value，那么这样势必会造成内存的浪费。</strong></p>
+<h2 id="spring的handlermapping是怎么实现的呢？"><a href="#spring的handlermapping是怎么实现的呢？" class="headerlink" title="spring的handlermapping是怎么实现的呢？"></a>spring的handlermapping是怎么实现的呢？</h2><p>那么这个属性的定义肯定是在DispatcherServlet中的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">/** List of HandlerMappings used by this servlet */</span></div><div class="line"><span class="meta">@Nullable</span></div><div class="line"><span class="keyword">private</span> List&lt;HandlerMapping&gt; handlerMappings;</div></pre></td></tr></table></figure>
+<p>可以看到spring他的实现，是一个list，值得类型是HandlerMapping，在handlerMapping维护URl跟method 的映射关系。</p>
+<p><strong>我们的实现是map数据结构，key是url，value是url映射的method</strong></p>
+<p>那为什么不用我们的map结构呢？map架构取数据不是更加清晰么？</p>
+<p>我觉得spring应该是考虑到冗余原则，因为如果用map方式，那么key的值就只能是url。为了保证能够获取更多的信息，那么就封装成对象，然后使用list保存 - <strong>满足单一原则</strong>，就是我所有信息都可以用一个对象保存，干嘛还要分开成key-value的形式呢？。<strong>其实我觉得map也很不错，选择不同而已</strong></p>
+<p>那为什么不用map<string,handlermapping>呢？其实也可以。</string,handlermapping></p>
+<h1 id="目前存在的缺点"><a href="#目前存在的缺点" class="headerlink" title="目前存在的缺点"></a>目前存在的缺点</h1><p><strong>1.在doDispatcher方法中，调用处理方法时，请求参数的拼接是静态写死的，后期需要修改成动态拼接</strong></p>
+<h1 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h1><h2 id="spring中的bean是线程安全的么？"><a href="#spring中的bean是线程安全的么？" class="headerlink" title="spring中的bean是线程安全的么？"></a>spring中的bean是线程安全的么？</h2><p>​    首先，我们要知道，spring的bean是在spring启动时，通过反射实例化出来，然后放到IOC容器中的，也就是说spring中的bean只是帮你管理而已，并没有做什么增强或者修改工作。</p>
+<p>​    也就是说，bean的是不是线程安全的，那么取决于你对于bean的实现，跟spring没有任何关系。</p>
+<p> 所以这个思考题的答案是：spring中的bean是否线程安全，是这个bean的问题，如果你在bean中有操作共享资源的操作，那么就有线程安全的问题，如果没有那么就是跟线程安全的。所以bean是否是线程安全的取决于bean自身的实现，而不是spring的问题。</p>
+<p>​    <strong>虽然IOC容器是基于chm实现的。</strong> 应该说，spring存取bean的操作是线程安全的。这样的因为会比较好点。</p>
+<h2 id="spring中的bean什么时候被回收"><a href="#spring中的bean什么时候被回收" class="headerlink" title="spring中的bean什么时候被回收"></a>spring中的bean什么时候被回收</h2><p>这个跟bean的生命周期 有关系，spring的bean生命周期有：singleton、prototype、request、session。</p>
+<p>所以什么时候被回收，取决于，你设定的生命周期类型</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;编写king-spring的目的&quot;&gt;&lt;a href=&quot;#编写king-spring的目的&quot; class=&quot;headerlink&quot; title=&quot;编写king-spring的目的&quot;&gt;&lt;/a&gt;编写king-spring的目的&lt;/h1&gt;&lt;p&gt;旨在能够了解spring整个
+    
+    </summary>
+    
+      <category term="king-spring#分类" scheme="http://kingge.top/categories/king-spring-%E5%88%86%E7%B1%BB/"/>
+    
+    
+      <category term="spring" scheme="http://kingge.top/tags/spring/"/>
+    
+      <category term="spring源码" scheme="http://kingge.top/tags/spring%E6%BA%90%E7%A0%81/"/>
+    
+  </entry>
   
   <entry>
     <title>Hessian 多系统访问</title>
@@ -1864,9 +1962,9 @@ Eureka仍然能够接受新服务的注册和查询请求，但是不会被同�
       <category term="dubbo" scheme="http://kingge.top/categories/dubbo/"/>
     
     
-      <category term="分布式" scheme="http://kingge.top/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
-    
       <category term="dubbo" scheme="http://kingge.top/tags/dubbo/"/>
+    
+      <category term="分布式" scheme="http://kingge.top/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
     
       <category term="rpc" scheme="http://kingge.top/tags/rpc/"/>
     
@@ -3452,7 +3550,7 @@ containerPort
 <p><img src="/2019/02/28/docker个人总结/clip_image163.png" alt="img"></p>
 <p>内容是</p>
 <p><img src="/2019/02/28/docker个人总结/clip_image165.jpg" alt="img"></p>
-<p>   FROM centos   MAINTAINER kingge<a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#x3a;&#51;&#57;&#51;&#x32;&#49;&#x35;&#x36;&#54;&#x31;&#64;&#113;&#113;&#46;&#x63;&#x6f;&#109;">&#51;&#57;&#51;&#x32;&#49;&#x35;&#x36;&#54;&#x31;&#64;&#113;&#113;&#46;&#x63;&#x6f;&#109;</a>       ENV MYPATH /usr/local   WORKDIR $MYPATH       RUN yum -y install vim   RUN yum -y install net-tools       EXPOSE 80       CMD echo $MYPATH   CMD echo “success————–ok”   CMD /bin/bash   </p>
+<p>   FROM centos   MAINTAINER kingge<a href="&#109;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#x33;&#57;&#x33;&#x32;&#x31;&#53;&#54;&#x36;&#49;&#64;&#113;&#x71;&#x2e;&#x63;&#x6f;&#109;">&#x33;&#57;&#x33;&#x32;&#x31;&#53;&#54;&#x36;&#49;&#64;&#113;&#x71;&#x2e;&#x63;&#x6f;&#109;</a>       ENV MYPATH /usr/local   WORKDIR $MYPATH       RUN yum -y install vim   RUN yum -y install net-tools       EXPOSE 80       CMD echo $MYPATH   CMD echo “success————–ok”   CMD /bin/bash   </p>
 <p>\2. 根据创建的Dockerfile构建镜像</p>
 <p>docker build -t 新镜像名字:TAG . （注意这里还有一个点，表示当前文件夹）</p>
 <p>默认去找当前目录下名字为Dockerfile的文件构建镜像。</p>
@@ -3474,7 +3572,7 @@ containerPort
 <p>存放待传输到容器中的压缩包（测试ADD命令专用）和一个文本文件（测试COPY指令专用）</p>
 <h4 id="2-2-根据原版centos新建Dockerfile文件"><a href="#2-2-根据原版centos新建Dockerfile文件" class="headerlink" title="2.2 根据原版centos新建Dockerfile文件"></a>2.2 根据原版centos新建Dockerfile文件</h4><p><img src="/2019/02/28/docker个人总结/clip_image175.png" alt="img"></p>
 <p>内容是：</p>
-<p>   FROM         centos   MAINTAINER      kingge<a href="&#109;&#x61;&#x69;&#108;&#x74;&#111;&#58;&#51;&#x39;&#51;&#x32;&#x31;&#53;&#x36;&#x36;&#49;&#64;&#x71;&#x71;&#x2e;&#x63;&#111;&#109;">&#51;&#x39;&#51;&#x32;&#x31;&#53;&#x36;&#x36;&#49;&#64;&#x71;&#x71;&#x2e;&#x63;&#111;&#109;</a>   #把宿主机当前上下文的hello.txt拷贝到容器/usr/local/路径下   #并重命名为helloNewName.txt   COPY hello.txt /usr/local/helloNewName.txt   #把java与tomcat添加到容器中   ADD jdk-8u144-linux-x64.tar.gz /usr/local/   ADD apache-tomcat-9.0.21.tar.gz /usr/local/   #安装vim编辑器   RUN yum -y install vim   #设置工作访问时候的WORKDIR路径，登录落脚点   ENV MYPATH /usr/local   WORKDIR $MYPATH   #配置java与tomcat环境变量   ENV JAVA_HOME /usr/local/jdk1.8.0_144   ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar   ENV CATALINA_HOME /usr/local/apache-tomcat-9.0.21   ENV CATALINA_BASE /usr/local/apache-tomcat-9.0.21   ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/lib:$CATALINA_HOME/bin   #容器运行时监听的端口   EXPOSE  8080   #启动时运行tomcat   # ENTRYPOINT   [“/usr/local/apache-tomcat-9.0.21/bin/startup.sh” ]   # CMD   [“/usr/local/apache-tomcat-9.0.21/bin/catalina.sh”,”run”]   CMD /usr/local/apache-tomcat-9.0.21/bin/startup.sh &amp;&amp; tail -F   /usr/local/apache-tomcat-9.0.21/bin/logs/catalina.out   </p>
+<p>   FROM         centos   MAINTAINER      kingge<a href="&#x6d;&#97;&#x69;&#108;&#116;&#x6f;&#58;&#x33;&#57;&#51;&#50;&#49;&#53;&#54;&#54;&#x31;&#x40;&#113;&#113;&#46;&#x63;&#111;&#x6d;">&#x33;&#57;&#51;&#50;&#49;&#53;&#54;&#54;&#x31;&#x40;&#113;&#113;&#46;&#x63;&#111;&#x6d;</a>   #把宿主机当前上下文的hello.txt拷贝到容器/usr/local/路径下   #并重命名为helloNewName.txt   COPY hello.txt /usr/local/helloNewName.txt   #把java与tomcat添加到容器中   ADD jdk-8u144-linux-x64.tar.gz /usr/local/   ADD apache-tomcat-9.0.21.tar.gz /usr/local/   #安装vim编辑器   RUN yum -y install vim   #设置工作访问时候的WORKDIR路径，登录落脚点   ENV MYPATH /usr/local   WORKDIR $MYPATH   #配置java与tomcat环境变量   ENV JAVA_HOME /usr/local/jdk1.8.0_144   ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar   ENV CATALINA_HOME /usr/local/apache-tomcat-9.0.21   ENV CATALINA_BASE /usr/local/apache-tomcat-9.0.21   ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/lib:$CATALINA_HOME/bin   #容器运行时监听的端口   EXPOSE  8080   #启动时运行tomcat   # ENTRYPOINT   [“/usr/local/apache-tomcat-9.0.21/bin/startup.sh” ]   # CMD   [“/usr/local/apache-tomcat-9.0.21/bin/catalina.sh”,”run”]   CMD /usr/local/apache-tomcat-9.0.21/bin/startup.sh &amp;&amp; tail -F   /usr/local/apache-tomcat-9.0.21/bin/logs/catalina.out   </p>
 <h4 id="2-3-构建"><a href="#2-3-构建" class="headerlink" title="2.3 构建"></a>2.3 构建</h4><p><img src="/2019/02/28/docker个人总结/clip_image177.jpg" alt="img"></p>
 <p><img src="/2019/02/28/docker个人总结/clip_image179.jpg" alt="img"></p>
 <p>构建完成</p>
@@ -5112,9 +5210,9 @@ spring.thymeleaf.cache=false
       <category term="dubbo" scheme="http://kingge.top/categories/dubbo/"/>
     
     
-      <category term="分布式" scheme="http://kingge.top/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
-    
       <category term="dubbo" scheme="http://kingge.top/tags/dubbo/"/>
+    
+      <category term="分布式" scheme="http://kingge.top/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
     
       <category term="rpc" scheme="http://kingge.top/tags/rpc/"/>
     
@@ -7484,100 +7582,6 @@ spring.thymeleaf.cache=false
       <category term="大数据" scheme="http://kingge.top/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
       <category term="HDFS" scheme="http://kingge.top/tags/HDFS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>hadoop大数据(四)-Hadoop编译源码</title>
-    <link href="http://kingge.top/2018/02/28/hadoop%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%9B%9B-Hadoop%E7%BC%96%E8%AF%91%E6%BA%90%E7%A0%81/"/>
-    <id>http://kingge.top/2018/02/28/hadoop大数据-四-Hadoop编译源码/</id>
-    <published>2018-02-28T11:31:59.000Z</published>
-    <updated>2019-08-25T04:43:10.303Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="五-Hadoop编译源码"><a href="#五-Hadoop编译源码" class="headerlink" title="五 Hadoop编译源码"></a>五 Hadoop编译源码</h1><h2 id="5-1-前期准备工作"><a href="#5-1-前期准备工作" class="headerlink" title="5.1 前期准备工作"></a>5.1 前期准备工作</h2><p>1）CentOS联网 </p>
-<p>配置CentOS能连接外网。Linux虚拟机ping <a href="http://www.baidu.com" target="_blank" rel="external">www.baidu.com</a> 是畅通的</p>
-<p>注意：采用root角色编译，减少文件夹权限出现问题</p>
-<p>2）jar包准备(hadoop源码、JDK7 、 maven、 ant 、protobuf)</p>
-<p>（1）hadoop-2.7.2-src.tar.gz</p>
-<p>（2）jdk-7u79-linux-x64.gz</p>
-<p>（3）apache-ant-1.9.9-bin.tar.gz</p>
-<p>（4）apache-maven-3.0.5-bin.tar.gz</p>
-<p>（5）protobuf-2.5.0.tar.gz</p>
-<h2 id="5-2-jar包安装"><a href="#5-2-jar包安装" class="headerlink" title="5.2 jar包安装"></a>5.2 jar包安装</h2><p>0）注意：所有操作必须在root用户下完成</p>
-<p>1）JDK解压、配置环境变量 JAVA_HOME和PATH，验证<a href="http://lib.csdn.net/base/javase" target="_blank" rel="external">java</a>-version(如下都需要验证是否配置成功)</p>
-<p>[root@hadoop101 software] # tar -zxf jdk-7u79-linux-x64.gz -C /opt/module/</p>
-<p>[root@hadoop101 software]# vi /etc/profile</p>
-<p>JAVA_HOME   export   JAVA_HOME=/opt/module/jdk1.8.0_144   export   PATH=$PATH:$JAVA_HOME/bin   </p>
-<p>[root@hadoop101 software]#source /etc/profile</p>
-<p>验证命令：java -version</p>
-<p>2）Maven解压、配置  MAVEN_HOME和PATH。</p>
-<p>[root@hadoop101 software]# tar -zxvf apache-maven-3.0.5-bin.tar.gz -C /opt/module/</p>
-<p>[root@hadoop101 apache-maven-3.0.5]#  vi /etc/profile</p>
-<p>MAVEN_HOME   export   MAVEN_HOME=/opt/module/apache-maven-3.0.5   export   PATH=$PATH:$MAVEN_HOME/bin   </p>
-<p>[root@hadoop101 software]#source /etc/profile</p>
-<p>验证命令：mvn -version</p>
-<p>3）ant解压、配置  ANT _HOME和PATH。</p>
-<p>[root@hadoop101 software]# tar -zxvf apache-ant-1.9.9-bin.tar.gz -C /opt/module/</p>
-<p>[root@hadoop101 apache-ant-1.9.9]# vi /etc/profile</p>
-<p>ANT_HOME   export   ANT_HOME=/opt/module/apache-ant-1.9.9   export   PATH=$PATH:$ANT_HOME/bin   </p>
-<p>[root@hadoop101 software]#source /etc/profile</p>
-<p>验证命令：ant -version</p>
-<p>4）安装  glibc-headers 和  g++  命令如下: </p>
-<p>[root@hadoop101 apache-ant-1.9.9]# yum install glibc-headers</p>
-<p>[root@hadoop101 apache-ant-1.9.9]# yum install gcc-c++</p>
-<p>5）安装make和cmake</p>
-<p>[root@hadoop101 apache-ant-1.9.9]# yum install make</p>
-<p>[root@hadoop101 apache-ant-1.9.9]# yum install cmake</p>
-<p>6）解压protobuf ，进入到解压后protobuf主目录，/opt/module/protobuf-2.5.0</p>
-<p>然后相继执行命令：</p>
-<p>[root@hadoop101 software]# tar -zxvf protobuf-2.5.0.tar.gz -C /opt/module/</p>
-<p>[root@hadoop101 opt]# cd /opt/module/protobuf-2.5.0/</p>
-<p>[root@hadoop101 protobuf-2.5.0]#./configure </p>
-<p>[root@hadoop101 protobuf-2.5.0]# make </p>
-<p>[root@hadoop101 protobuf-2.5.0]# make check </p>
-<p>[root@hadoop101 protobuf-2.5.0]# make install </p>
-<p>[root@hadoop101 protobuf-2.5.0]# ldconfig </p>
-<p>[root@hadoop101 hadoop-dist]# vi /etc/profile</p>
-<p>LD_LIBRARY_PATH   export   LD_LIBRARY_PATH=/opt/module/protobuf-2.5.0   export PATH=$PATH:$LD_LIBRARY_PATH   </p>
-<p>[root@hadoop101 software]#source /etc/profile</p>
-<p>验证命令：protoc –version</p>
-<p>7）安装openssl库</p>
-<p>[root@hadoop101 software]#yum install openssl-devel</p>
-<p>8）安装 ncurses-devel库：</p>
-<p>[root@hadoop101 software]#yum install ncurses-devel</p>
-<p>到此，编译工具安装基本完成。</p>
-<h2 id="5-3-编译源码"><a href="#5-3-编译源码" class="headerlink" title="5.3 编译源码"></a>5.3 编译源码</h2><p>1）解压源码到/opt/tools目录</p>
-<p>[root@hadoop101 software]# tar -zxvf hadoop-2.7.2-src.tar.gz -C /opt/</p>
-<p>2）进入到hadoop源码主目录</p>
-<p>[root@hadoop101 hadoop-2.7.2-src]# pwd</p>
-<p>/opt/hadoop-2.7.2-src</p>
-<p>3）通过maven执行编译命令</p>
-<p>[root@hadoop101 hadoop-2.7.2-src]#mvn package -Pdist,native -DskipTests -Dtar</p>
-<p>等待时间30分钟左右，最终成功是全部SUCCESS。</p>
-<p><img src="/2018/02/28/hadoop大数据-四-Hadoop编译源码/clip_image002.jpg" alt="img"></p>
-<p>4）成功的64位hadoop包在/opt/hadoop-2.7.2-src/hadoop-dist/target下。</p>
-<p>[root@hadoop101 target]# pwd</p>
-<p>/opt/hadoop-2.7.2-src/hadoop-dist/target</p>
-<h2 id="5-4-常见的问题及解决方案"><a href="#5-4-常见的问题及解决方案" class="headerlink" title="5.4 常见的问题及解决方案"></a>5.4 常见的问题及解决方案</h2><p>1）MAVEN install时候JVM内存溢出</p>
-<p>处理方式：在环境配置文件和maven的执行文件均可调整MAVEN_OPT的heap大小。（详情查阅MAVEN 编译 JVM调优问题，如：<a href="http://outofmemory.cn/code-snippet/12652/maven-outofmemoryerror-method）" target="_blank" rel="external">http://outofmemory.cn/code-snippet/12652/maven-outofmemoryerror-method）</a></p>
-<p>2）编译期间maven报错。可能网络阻塞问题导致依赖库下载不完整导致，多次执行命令（一次通过比较难）：</p>
-<p>[root@hadoop101 hadoop-2.7.2-src]#mvn package -Pdist,native -DskipTests -Dtar</p>
-<p>3）报ant、protobuf等错误，插件下载未完整或者插件版本问题，最开始链接有较多特殊情况，同时推荐</p>
-<p>2.7.0版本的问题汇总帖子   <a href="http://www.tuicool.com/articles/IBn63qf" target="_blank" rel="external">http://www.tuicool.com/articles/IBn63qf</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;五-Hadoop编译源码&quot;&gt;&lt;a href=&quot;#五-Hadoop编译源码&quot; class=&quot;headerlink&quot; title=&quot;五 Hadoop编译源码&quot;&gt;&lt;/a&gt;五 Hadoop编译源码&lt;/h1&gt;&lt;h2 id=&quot;5-1-前期准备工作&quot;&gt;&lt;a href=&quot;#5-1
-    
-    </summary>
-    
-      <category term="hadoop" scheme="http://kingge.top/categories/hadoop/"/>
-    
-    
-      <category term="hadoop" scheme="http://kingge.top/tags/hadoop/"/>
-    
-      <category term="大数据" scheme="http://kingge.top/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
   </entry>
   
