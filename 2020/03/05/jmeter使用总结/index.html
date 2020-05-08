@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Jmeter,Jmeter压测," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="常用压测工具比对1、loadrunner     性能稳定，压测结果及细粒度大，可以自定义脚本进行压测，但是太过于重大，功能比较繁多  2、apache ab(单接口压测最方便)     模拟多线程并发请求,ab命令对发出负载的计算机要求很低，既不会占用很多CPU，也不会占用太多的内存，但却会给目标服务器造成巨大的负载, 简单DDOS攻击等  3、webbench     webbench首先fo">
+<meta name="keywords" content="Jmeter,Jmeter压测">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jmeter压测工具使用总结">
+<meta property="og:url" content="http://kingge.top/2020/03/05/jmeter使用总结/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="常用压测工具比对1、loadrunner     性能稳定，压测结果及细粒度大，可以自定义脚本进行压测，但是太过于重大，功能比较繁多  2、apache ab(单接口压测最方便)     模拟多线程并发请求,ab命令对发出负载的计算机要求很低，既不会占用很多CPU，也不会占用太多的内存，但却会给目标服务器造成巨大的负载, 简单DDOS攻击等  3、webbench     webbench首先fo">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200310230802324.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200310231331858.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200310231440556.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200310231658973.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200310232229628.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200310232421864.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200310233106267.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200310233205408.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200310233434511.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200310233655324.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311212037626.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311212241796.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311212543404.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311212809140.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311214419503.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311214627477.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311222042363.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311222231277.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311222504580.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311222556879.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311220520958.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311223636629.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311223743534.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311223800590.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311225555594.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311225811699.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200311230216916.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316205942866.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316210223007.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316212601275.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316210300862.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316210629984.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316210813569.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316211954620.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316212013962.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316212034160.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316212049583.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316212103747.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316213223900.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316213458203.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316214044773.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316214201102.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316214301250.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316214624552.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316223338946.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200508100152073.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200316220705994.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200508104723019.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200508104740337.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200508104801678.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200508104908936.png">
+<meta property="og:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200508105008406.png">
+<meta property="og:updated_time" content="2020-05-08T03:02:09.621Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jmeter压测工具使用总结">
+<meta name="twitter:description" content="常用压测工具比对1、loadrunner     性能稳定，压测结果及细粒度大，可以自定义脚本进行压测，但是太过于重大，功能比较繁多  2、apache ab(单接口压测最方便)     模拟多线程并发请求,ab命令对发出负载的计算机要求很低，既不会占用很多CPU，也不会占用太多的内存，但却会给目标服务器造成巨大的负载, 简单DDOS攻击等  3、webbench     webbench首先fo">
+<meta name="twitter:image" content="http://kingge.top/2020/03/05/jmeter使用总结/image-20200310230802324.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2020/03/05/jmeter使用总结/"/>
+
+
+
+
+
+  <title>jmeter压测工具使用总结 | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2020/03/05/jmeter使用总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">jmeter压测工具使用总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-05T22:21:59+08:00">
+                2020-03-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/压测工具/" itemprop="url" rel="index">
+                    <span itemprop="name">压测工具</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  6,695
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  26
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="常用压测工具比对"><a href="#常用压测工具比对" class="headerlink" title="常用压测工具比对"></a>常用压测工具比对</h1><pre><code>1、loadrunner
+    性能稳定，压测结果及细粒度大，可以自定义脚本进行压测，但是太过于重大，功能比较繁多
+
+2、apache ab(单接口压测最方便)
+    模拟多线程并发请求,ab命令对发出负载的计算机要求很低，既不会占用很多CPU，也不会占用太多的内存，但却会给目标服务器造成巨大的负载, 简单DDOS攻击等
+
+3、webbench
+    webbench首先fork出多个子进程，每个子进程都循环做web访问测试。子进程把访问的结果通过pipe告诉父进程，父进程做最终的统计结果。
+</code></pre><h1 id="Jmeter介绍和安装"><a href="#Jmeter介绍和安装" class="headerlink" title="Jmeter介绍和安装"></a>Jmeter介绍和安装</h1><h2 id="Jmeter基本介绍和使用场景"><a href="#Jmeter基本介绍和使用场景" class="headerlink" title="Jmeter基本介绍和使用场景"></a>Jmeter基本介绍和使用场景</h2><blockquote>
+<p><strong>压测不同的协议和应用</strong></p>
+</blockquote>
+<p>​            1) Web - HTTP, HTTPS (Java, NodeJS, PHP, ASP.NET, …)<br>​            2) SOAP / REST Webservices<br>​            3) FTP<br>​            4) Database via JDBC<br>​            5) LDAP  轻量目录访问协议<br>​            6) Message-oriented middleware (MOM) via JMS<br>​            7) Mail - SMTP(S), POP3(S) and IMAP(S)<br>​            8) TCP等等</p>
+<blockquote>
+<p>​    <strong>使用场景及优点</strong></p>
+</blockquote>
+<p>​        1）功能测试<br>​        2）压力测试<br>​        3）分布式压力测试<br>​        4）纯java开发<br>​        5）上手容易，高性能<br>​        4）提供测试数据分析<br>​        5）各种报表数据图形展示</p>
+<h2 id="Jmeter4-0安装"><a href="#Jmeter4-0安装" class="headerlink" title="Jmeter4.0安装"></a>Jmeter4.0安装</h2><p> 简介：GUI图形界面的安装<br>     1、需要安装JDK8。或者JDK9,JDK10<br>     2、快速下载<br>         windows： <a href="http://mirrors.tuna.tsinghua.edu.cn/apache//jmeter/binaries/apache-jmeter-4.0.zip" target="_blank" rel="external">http://mirrors.tuna.tsinghua.edu.cn/apache//jmeter/binaries/apache-jmeter-4.0.zip</a><br>         mac或者linux：<a href="http://mirrors.tuna.tsinghua.edu.cn/apache//jmeter/binaries/apache-jmeter-4.0.tgz" target="_blank" rel="external">http://mirrors.tuna.tsinghua.edu.cn/apache//jmeter/binaries/apache-jmeter-4.0.tgz</a></p>
+<p> 3、文档地址：<a href="http://jmeter.apache.org/usermanual/get-started.html" target="_blank" rel="external">http://jmeter.apache.org/usermanual/get-started.html</a></p>
+<p> 4、建议安装JDK环境，虽然JRE也可以，但是压测https需要JDK里面的 keytool工具</p>
+<blockquote>
+<p><strong>下载完成解压后</strong></p>
+</blockquote>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200310230802324.png" alt="image-20200310230802324"></p>
+<p>目录<br>        bin:核心可执行文件，包含配置<br>            jmeter.bat: windows启动文件：也就是说，在windows平台下，直接双击这个bat文件，即可启动jmeter。</p>
+<p>​            jmeter: mac或者linux启动文件：<br>​            jmeter-server：mac或者Liunx分布式压测使用的启动文件<br>​            jmeter-server.bat：mac或者Liunx分布式压测使用的启动文件<br>​            jmeter.properties: 核心配置文件，例如可以设置GUI界面的语言（中文还是英文）<br>​                    </p>
+<p>​    extras：插件拓展的包<br>​    lib:核心的依赖包<br>​        ext:核心包<br>​        junit:单元测试包</p>
+<blockquote>
+<p><strong>Jmeter语言版本中英文切换</strong></p>
+</blockquote>
+<p>​        1、控制台修改<br>​            menu -&gt; options -&gt; choose language<br>​        2、配置文件修改<br>​            bin目录 -&gt; jmeter.properties<br>​                默认 #language=en<br>​                改为 language=zh_CN </p>
+<h1 id="Jmeter使用"><a href="#Jmeter使用" class="headerlink" title="Jmeter使用"></a>Jmeter使用</h1><p>首先我们双击<code>jmeter.bat</code> 启动jmeter：</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200310231331858.png" alt="image-20200310231331858"></p>
+<h2 id="创建线程组"><a href="#创建线程组" class="headerlink" title="创建线程组"></a>创建线程组</h2><p>右键TestPlan，开始创建测试计划，<strong>首先创建线程组，作用是控制总体并发</strong></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200310231440556.png" alt="image-20200310231440556"></p>
+<blockquote>
+<p><strong>接着看测试组的界面设置</strong></p>
+</blockquote>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200310231658973.png" alt="image-20200310231658973"></p>
+<p>这里主要介绍着三个重要的设置：</p>
+<p>线程数：虚拟用户数。一个虚拟用户占用一个进程或线程，也就是说，你想模拟100个人访问接口，那么这里就填100。</p>
+<p>​        准备时长（Ramp-Up Period(in seconds)）：全部线程启动的时长，比如100个线程，20秒，则表示20秒内100个线程都要启动完成，每秒启动5个线程。也就是说，这个参数模拟的是，用户访问数量的逐渐上涨，随着时间的增加，慢慢增长到设置的“线程数”。因为在真实的环境中，访问某个接口的用户量是慢慢上涨的，一般不会是1s内暴增很多个 用户。 - 总而言之，就是在这个时间过后达到上面设置的线程数。<br>​<br>​        循环次数：每个线程发送的次数，假如值为5，100个线程，则会发送500次请求，可以勾选永远循环，那么就会一直重复发送请求。</p>
+<p><strong>我这里为这三个参数自上而下设置的是：</strong>10、5、1。 表示，一共模拟十个用户请求，5s内发送这十个请求，也就意味着每两秒请求两次接口，第五秒后请求结束。1表示，这进行一轮测试，也就是发送完10个请求后便停止请求。</p>
+<p><strong>那么如果你想模拟，每秒并发1000，持续发送5次，那么就需要由上到下设置为：1000/1/5。</strong></p>
+<h2 id="创建采样器-模拟请求"><a href="#创建采样器-模拟请求" class="headerlink" title="创建采样器 - 模拟请求"></a>创建采样器 - 模拟请求</h2><p>我们在上面通过线程组创建了请求的频率和请求的用户数等设置，那么我们怎么开始发送请求呢？那么这个时候就需要采样器。</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200310232229628.png" alt="image-20200310232229628"></p>
+<p>可以看到，你可以在线程组下面创建多种类型的请求采样器。我这里创建的是http请求采样器。</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200310232421864.png" alt="image-20200310232421864"></p>
+<p>设置完成后，我们就可以，点击上面的启动按钮，这样就可以发送请求，可以看到，请求后台的接口，每两秒打印两次输出，一共打印了五次，一共是10个请求（因为线程组设置10个请求5s内发完，只进行一轮请求）</p>
+<p>看到这里我们，可能会有疑问，那就是，我怎么看请求返回的值或者请求的状态呢？能不能跟踪请求呢？</p>
+<h2 id="创建结果收集树-查看测试结果"><a href="#创建结果收集树-查看测试结果" class="headerlink" title="创建结果收集树 - 查看测试结果"></a>创建结果收集树 - 查看测试结果</h2><p>我们可以右键线程组，然后创建一个结果收集器。</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200310233106267.png" alt="image-20200310233106267"></p>
+<p>启动采样器发出请求后，查看结果收集树。</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200310233205408.png" alt="image-20200310233205408"></p>
+<p>可以看到在线程组下面每个请求的详细信息包括返回值。</p>
+<p><strong>上面的结果树是在线程组上面进行添加，也就意味着，线程组下面多个采样器，那么他们都将使用同一个结果数查看（可以看到上面结果树输出了users、login接口两个的请求信息），当然你也可以专门为某一个接口创建单独的结果树（右键采样器，创建即可）</strong></p>
+<h2 id="模拟一次性请求多个接口"><a href="#模拟一次性请求多个接口" class="headerlink" title="模拟一次性请求多个接口"></a>模拟一次性请求多个接口</h2><p>上面的演示，我们是在线程组下面只创建了一个 采样器。实际上我们可以在线程组下面创建多个采样器。那么这样就意味着，多个接口同时遵循线程组的设置信息。</p>
+<p>例如：</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200310233434511.png" alt="image-20200310233434511"></p>
+<p>如图，创建了两个采样器，那么当启动线程组的时候，是会同时请求这两个接口的，<strong>这样就可以模拟在某一秒的时候，同时去请求多个接口，这种业务场景在现实中也是很常见的。</strong></p>
+<p>上面线程组设置是：10、5、1。启动线程组，查看结果收集树：</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200310233655324.png" alt="image-20200310233655324"></p>
+<p>​    <strong>可以看到，确实是两个采样器使用了通个线程组的配置。1s内发送了两个请求，访问了users接口和login接口。然后一共发送5s，users和login接口各自请求了10次，只进行一轮请求。</strong></p>
+<h1 id="Jmeter的断言"><a href="#Jmeter的断言" class="headerlink" title="Jmeter的断言"></a>Jmeter的断言</h1><p>他的作用就是，结合采样器使用。通过自定义一些判断依据，判断请求接口是否成功，是否达到我们想要的结果。例如我们可以增加一个判断响应状态是202的断言，只有当请求接口相应状态码是202，那么就说明请求成功，否则可以自定义一些错误信息。</p>
+<h2 id="响应断言"><a href="#响应断言" class="headerlink" title="响应断言"></a>响应断言</h2><p><strong>增加断言: 线程组 -&gt; 添加 -&gt; 断言 -&gt; 响应断言</strong>  </p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311212037626.png" alt="image-20200311212037626"></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311212241796.png" alt="image-20200311212241796"></p>
+<p>​        apply to(应用范围):<br>​            Main sample only: 仅当前父取样器 进行断言，一般一个请求，如果发一个请求会触发多个，则就有sub sample（比较少用）</p>
+<p>​        要测试的响应字段：<strong>也就是区域1的内容</strong><br>​            响应文本：即响应的数据，比如json等文本<br>​            响应代码：http的响应状态码，比如200，302，404这些<br>​            响应信息：http响应代码对应的响应信息，例如：OK, Found<br>​            Response Header: 响应头</p>
+<p>​        模式匹配规则：<strong>也就是区域2的内容</strong><br>​            包括：包含在里面就成功<br>​            匹配：响应内容完全匹配，不区分大小写<br>​            equals：完全匹配，区分大小写</p>
+<p>​            Substring：判断子串</p>
+<p>​           </p>
+<p>​         匹配值：<strong>也就是区域3的内容</strong></p>
+<p>​              根据匹配规则，设定值</p>
+<p>​          自定义匹配失败信息：<strong>也就是区域4的内容</strong></p>
+<p>​              当匹配失败的时候，返回的错误说明。</p>
+<h3 id="例子："><a href="#例子：" class="headerlink" title="例子："></a>例子：</h3><p><img src="/2020/03/05/jmeter使用总结/image-20200311212543404.png" alt="image-20200311212543404"></p>
+<p>我们根据接口相应数据，进行判断。当响应数据等于kingge的时候，请求成功，否则请求失败，提示下面的错误信息“users接口返回值，不等于kingge”</p>
+<p>我们知道正常访问users接口的返回值是“laojiang”，当我们启动采样器请求users接口，肯定是断言失败的。</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311212809140.png" alt="image-20200311212809140"></p>
+<p><strong>断言失败，查看结果树任务结果颜色标红(通过结果数里面双击不通过的记录，可以看到错误信息)</strong></p>
+<p><strong>每个sample采样器下面可以加单独的结果树，然后同时加多个断言，最外层可以加个结果树进行汇总，这样的架构是最常用的。</strong></p>
+<h1 id="第一部分总结"><a href="#第一部分总结" class="headerlink" title="第一部分总结"></a>第一部分总结</h1><p>​    我们一般进行接口测试，对应在jmeter需要<strong>创建一个线程组</strong>。一个<strong>接口可能调用了多个接口</strong>，那么这个时候我们就需要<strong>在线程组下面创建多个采样器</strong>，同时在<strong>线程组下面创建</strong>一个<strong>多个采样器共同使用的结果树</strong>，这样的好处是，<strong>可以查看所有采样器的请求结果。</strong>，当然我们也可以在线程组下面创建一个或者多个断言，进行某些规则的匹配从而判断采样器请求是否满足我们的需求（需要注意，这个时候线程组下面的所有采样器，统一使用创建的断言）。</p>
+<p>​    我们也可以单独为某个接口采样器创建相应的结果树和断言，这样能够单独查看某个接口的请求情况和单独的断言判断。</p>
+<h1 id="Jmeter压测结果聚合报告"><a href="#Jmeter压测结果聚合报告" class="headerlink" title="Jmeter压测结果聚合报告"></a>Jmeter压测结果聚合报告</h1><p>新增聚合报告：1. 增加线程组整体的聚合报告，统计线程组下所有的采样器请求数据报告：</p>
+<p>​                                    线程组-&gt;添加-&gt;监听器-&gt;聚合报告（Aggregate Report）</p>
+<p>​                            2.给单个采样器添加聚合报告：</p>
+<p>​                                    sample采样器-&gt;添加-&gt;监听器-&gt;聚合报告（Aggregate Report）</p>
+<p><strong>下面演示的是，给users采样器添加一个聚合报告。</strong></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311214419503.png" alt="image-20200311214419503"></p>
+<p>这里我们设置线程组的参数为30/5/2。也就是一共发送两轮请求，每轮发送30个，每轮发送5s，也就是每秒发送5个请求。</p>
+<p>启动采样器，查看结果：</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311214627477.png" alt="image-20200311214627477"></p>
+<p>​        lable: sampler的名称<br>​        Samples: 一共发出去多少请求，上面的60个请求<br>​        Average: 平均响应时间，4ms<br>​        Median: 中位数，也就是 50％ 用户的响应时间，4ms</p>
+<p>​        90% Line : 90％ 用户的响应不会超过该时间 （90% of the samples took no more than this time. The remaining samples at least as long as this）</p>
+<p>​        95% Line : 95％ 用户的响应不会超过该时间</p>
+<p>​        99% Line : 99％ 用户的响应不会超过该时间</p>
+<p>​        min : 最小响应时间</p>
+<p>​        max : 最大响应时间<br>​<br>​        Error%：错误的请求的数量/请求的总数<br>​        Throughput： 吞吐量——默认情况下表示每秒完成的请求数（Request per Second) 可类比为qps<br>​        KB/Sec: 每秒接收数据量</p>
+<p>​    <strong>所以在实际的压测过程中，我们会关注Throughput吞吐量，随着我们通过增加并发数，观察Throughput的值，他的最大值是多少，那么相应的并发数就是最大并发数，再增大并发数，吞吐量反而会下降了。</strong></p>
+<h2 id="测试案例"><a href="#测试案例" class="headerlink" title="测试案例"></a><strong>测试案例</strong></h2><p>我们进行测试users接口，线程组设置为3000/5/10。</p>
+<p>通过逐渐增加并发数，查看吞吐量的瓶颈。</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311222042363.png" alt="image-20200311222042363"></p>
+<p>我们发现这个时候每秒可以处理请求是593差不多600。</p>
+<p>那么再继续加大并发数，查看qps瓶颈。</p>
+<p><strong>线程组设置为6000/5/10。</strong></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311222231277.png" alt="image-20200311222231277"></p>
+<p>可以看到qps上涨为1166个，那么说明此时并发数还不是瓶颈。继续加大</p>
+<p><strong>线程组设置为15000/5/10。</strong></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311222504580.png" alt="image-20200311222504580"></p>
+<p>可以看到qps上涨为1852个，那么说明此时并发数还不是瓶颈。继续加大</p>
+<p><strong>线程组设置为20000/5/10。</strong></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311222556879.png" alt="image-20200311222556879"></p>
+<p>这个时候，我们发现，qps下降了，变成了1460。那么也就意味着当总并发数到达20000个的时候，程序的qps开始下降了，所以说，程序的瓶颈已经出现了，那么我们可以知道<strong>线程组设置为1500/5/10。</strong>的时候 qps是最高的。</p>
+<p>可以通过多次次测试，得到qps最大值。上面是通过增加并发数的方式进行测试，当然了你也可以设置多少s发送这个参数（ramp-up period ），进行压测。</p>
+<h1 id="Jmeter压测脚本JMX讲解"><a href="#Jmeter压测脚本JMX讲解" class="headerlink" title="Jmeter压测脚本JMX讲解"></a>Jmeter压测脚本JMX讲解</h1><p>我们知道，上面我们设置的测试计划，他最终是保存在一个jmx后缀的文件中的。所以说，后期我们一般是通过直接修改jmx文件的方式，去修改他的并发数等等参数。</p>
+<p>打开你会发现他实际上是一个xml文件</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311220520958.png" alt="image-20200311220520958"></p>
+<h1 id="自定义变量和CSV可变参数实操"><a href="#自定义变量和CSV可变参数实操" class="headerlink" title="自定义变量和CSV可变参数实操"></a>自定义变量和CSV可变参数实操</h1><h2 id="jmeter用户自定义变量"><a href="#jmeter用户自定义变量" class="headerlink" title="jmeter用户自定义变量"></a>jmeter用户自定义变量</h2><p>为什么使用：很多变量在全局中都有使用，或者测试数据更改，可以在一处定义，四处使用。比如服务器地址。</p>
+<p>例如一个线程组中我们添加了一百多个采样器，那么每个采样器的服务器ip都一样，这个时候我们就可以通过自定义变量的方式，统一使用自定义好的ip变量。这样的好处是，后期如果ip或者端口号需要变动，那么我们只需要修改自定义变量的值即可，不需要单独去修改一百多个采样器的ip和端口号。</p>
+<p>​    1、线程组-&gt;add -&gt; Config Element(配置原件)-&gt; User Definde Variable（用户定义的变量）</p>
+<p>​     <img src="/2020/03/05/jmeter使用总结/image-20200311223636629.png" alt="image-20200311223636629"></p>
+<p>定义一个自定义变量</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311223743534.png" alt="image-20200311223743534"></p>
+<p>​    </p>
+<p>​    2、引用方式${XXX}，在接口中变量中使用</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311223800590.png" alt="image-20200311223800590"></p>
+<h2 id="CSV可变参数压测"><a href="#CSV可变参数压测" class="headerlink" title="CSV可变参数压测"></a>CSV可变参数压测</h2><p>它的作用就是，模拟请求数据，然后去压测。例如你要压测登录接口，就可以使用这个功能，进行模拟多个用户数据进行传入压测。</p>
+<p>实战操作jmeter读取CSV和Txt文本文件里面的参数进行压测</p>
+<p>​        1、线程组-&gt;add -&gt; Config Element(配置原件)-&gt; CSV data set config (CSV数据文件设置)</p>
+<p>​       这列可以传入txt文件和csv文件，下面就演示一下txt文件设置可变参数。</p>
+<blockquote>
+<p><strong>1.首先后台定义一个接口，如入参是用户名和密码，模拟详情接口</strong></p>
+</blockquote>
+<pre><code>/**
+ * 用户自定义变量测试
+ */
+@RequestMapping(value = &quot;info&quot;, method = RequestMethod.GET)  
+public @ResponseBody Object info(String name, String pwd) {
+    List&lt;String&gt; userList = new ArrayList&lt;&gt;();
+    userList.add(name);
+    userList.add(pwd);
+    userList.add(name.length()+&quot;&quot;);
+    System.out.println(&quot;get request, info api&quot;);
+    return userList;
+}
+</code></pre><blockquote>
+<p><strong>2.创建一个txt文件保存可变参数</strong></p>
+</blockquote>
+<p>内容是如下，使用<code>|</code>  进行分割</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">kingge1|123</div><div class="line">kingge2|1234</div><div class="line">kingge3|1235</div><div class="line">kingge4|1236</div></pre></td></tr></table></figure>
+<p>对应的csv文件是：需要知道，默认的分隔符是<code>,</code></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311225555594.png" alt="image-20200311225555594"></p>
+<blockquote>
+<p><strong>在线程组下面创建可变参数</strong></p>
+</blockquote>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311225811699.png" alt="image-20200311225811699"></p>
+<p>需要注意的是，变量名这里需要配置两个（当然你也可以配置一个），这样才能按照分隔符进行分割后，他们的值对应的变量名才能匹配上。否者采样器就无法使用了。</p>
+<blockquote>
+<p><strong>采样器中引用</strong></p>
+</blockquote>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200311230216916.png" alt="image-20200311230216916"></p>
+<p>通过结果树查看，请求url的参数拼接。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">GET http://127.0.0.1:8080/info?name=kingge1&amp;pwd=123</div><div class="line">GET http://127.0.0.1:8080/info?name=kingge2&amp;pwd=1234</div><div class="line">GET http://127.0.0.1:8080/info?name=kingge3&amp;pwd=1235</div><div class="line">GET http://127.0.0.1:8080/info?name=kingge4&amp;pwd=1236</div><div class="line">//参数取完后，如果还有请求需要发送，那么就会从头再拿一遍，不断循环。</div><div class="line">GET http://127.0.0.1:8080/info?name=kingge1&amp;pwd=123</div><div class="line">GET http://127.0.0.1:8080/info?name=kingge2&amp;pwd=1234</div><div class="line">。。。。。。</div></pre></td></tr></table></figure>
+<h1 id="Mysql数据库压测实操"><a href="#Mysql数据库压测实操" class="headerlink" title="Mysql数据库压测实操"></a>Mysql数据库压测实操</h1><p>这里通过建立JDBC采样器的方式，进行对数据库的直接测试</p>
+<h2 id="测试案例1-简单查询"><a href="#测试案例1-简单查询" class="headerlink" title="测试案例1 - 简单查询"></a>测试案例1 - 简单查询</h2><h3 id="新建线程组和JDBC采样器"><a href="#新建线程组和JDBC采样器" class="headerlink" title="新建线程组和JDBC采样器"></a>新建线程组和JDBC采样器</h3><p><img src="/2020/03/05/jmeter使用总结/image-20200316205942866.png" alt="image-20200316205942866"></p>
+<p>这里的意思是一共执行两轮，一轮3次，一轮3次在两秒内完成。</p>
+<blockquote>
+<p><strong>建立jdbc采样器</strong></p>
+</blockquote>
+<p><strong>Thread Group -&gt; add -&gt; sampler -&gt; jdbc request</strong></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316210223007.png" alt="image-20200316210223007"></p>
+<p><strong>绿色的说明，方框的值，需要先进行下面的《建立JDBC连接配置》后才能给出。</strong></p>
+<p>当前界面相关参数的值的含义，<strong>查询类型</strong></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316212601275.png" alt="image-20200316212601275"></p>
+<p>自上而下是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">查询语句 - 也就是普通查询语句</div><div class="line"></div><div class="line">更新语句</div><div class="line"></div><div class="line">存储过程</div><div class="line"></div><div class="line">预查询语句 - 也就是带问号（动态参数）的查询语句 ，例如 select * from user where name = ？</div><div class="line"></div><div class="line">预更新语句 - 同上就是带问号，动态参数的更新语句</div><div class="line"></div><div class="line">提交</div><div class="line"></div><div class="line">回滚</div><div class="line"></div><div class="line">自动提交</div></pre></td></tr></table></figure>
+<pre><code>1、variable name of pool declared in JDBC connection configuration（和配置文件同名） 也就是下面的jdbc_connector
+
+    3、parameter values 参数值
+    4、parameter types  参数类型
+    5、variable names  sql执行结果变量名
+    6、result variable names 所有结果当做一个对象存储
+    7、query timeouts  查询超时时间 
+    8、 handle results  处理结果集
+</code></pre><h3 id="建立JDBC连接配置"><a href="#建立JDBC连接配置" class="headerlink" title="建立JDBC连接配置"></a>建立JDBC连接配置</h3><p><strong>JDBC request-&gt;add -&gt; config element -&gt; JDBC connection configuration</strong></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316210300862.png" alt="image-20200316210300862"></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316210629984.png" alt="image-20200316210629984"></p>
+<p>​            核心配置<br>​                Max Number of connections : 最大连接数<br>​                MAX wait :最大等待时间<br>​                Auto Commit: 是否自动提交事务</p>
+<p>​                DataBase URL : 数据库连接地址 jdbc:mysql://127.0.0.1:3306/blog<br>​                JDBC Driver Class : 数据库驱动，选择对应的mysql<br>​                username:数据库用户名<br>​                password:数据库密码</p>
+<h3 id="添加jdbc连接mysqljar包"><a href="#添加jdbc连接mysqljar包" class="headerlink" title="添加jdbc连接mysqljar包"></a>添加jdbc连接mysqljar包</h3><p><img src="/2020/03/05/jmeter使用总结/image-20200316210813569.png" alt="image-20200316210813569"></p>
+<p>我这里因为使用的是mysql8.0，所以jdbc_url必须是com.mysql.cj.jdbc.Driver，mysql-connector.jar是mysql-connector-java-5.1.30.jar</p>
+<h3 id="完整连接测试"><a href="#完整连接测试" class="headerlink" title="完整连接测试"></a>完整连接测试</h3><p><img src="/2020/03/05/jmeter使用总结/image-20200316211954620.png" alt="image-20200316211954620"></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316212013962.png" alt="image-20200316212013962"></p>
+<p>添加了聚合报告和查看结果数</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316212034160.png" alt="image-20200316212034160"></p>
+<p>运行结果查看：</p>
+<p>查看结果树</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316212049583.png" alt="image-20200316212049583"></p>
+<p>聚合报告</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316212103747.png" alt="image-20200316212103747"></p>
+<h2 id="带参数的复杂查询"><a href="#带参数的复杂查询" class="headerlink" title="带参数的复杂查询"></a>带参数的复杂查询</h2><h3 id="预查询语句"><a href="#预查询语句" class="headerlink" title="预查询语句"></a>预查询语句</h3><p><img src="/2020/03/05/jmeter使用总结/image-20200316213223900.png" alt="image-20200316213223900"></p>
+<p>如果多个条件呢？ <strong>那就用逗号分隔开</strong></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316213458203.png" alt="image-20200316213458203"></p>
+<h3 id="预更新语句"><a href="#预更新语句" class="headerlink" title="预更新语句"></a>预更新语句</h3><p>同上</p>
+<h3 id="演示查询结果集handle-resultset"><a href="#演示查询结果集handle-resultset" class="headerlink" title="演示查询结果集handle resultset"></a>演示查询结果集handle resultset</h3><p>接下来的案例主要演示下面这三个参数</p>
+<pre><code>5、variable names  sql执行结果变量名
+6、result variable names 所有结果当做一个对象存储
+8、 handle resultset  处理结果集
+</code></pre><p>也就是说，我们把结果输出到指定的类型</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316214044773.png" alt="image-20200316214044773"></p>
+<p>需要结合debug sample采样器进行查看，查询的结果集（<strong>在线程组下面新建debug采样器</strong>）</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316214201102.png" alt="image-20200316214201102"></p>
+<blockquote>
+<p><strong>开始执行执行程序</strong></p>
+</blockquote>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316214301250.png" alt="image-20200316214301250"></p>
+<p>在结果树就可以看到</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316214624552.png" alt="image-20200316214624552"></p>
+<h1 id="阿里云Linux服务器压测接口实战"><a href="#阿里云Linux服务器压测接口实战" class="headerlink" title="阿里云Linux服务器压测接口实战"></a>阿里云Linux服务器压测接口实战</h1><h2 id="Jmeter非GUI界面-参数讲解-一般压测不会使用gui界面进行操作，因为比较耗性能"><a href="#Jmeter非GUI界面-参数讲解-一般压测不会使用gui界面进行操作，因为比较耗性能" class="headerlink" title="Jmeter非GUI界面 参数讲解 - 一般压测不会使用gui界面进行操作，因为比较耗性能"></a>Jmeter非GUI界面 参数讲解 - 一般压测不会使用gui界面进行操作，因为比较耗性能</h2><p><img src="/2020/03/05/jmeter使用总结/image-20200316223338946.png" alt="image-20200316223338946"></p>
+<p><strong>官方也是不推荐使用，gui窗口进行压测。**</strong>那么gui界面主要是用用来生成和调试jmx压力测试文件的，生成后，再使用jmeter命令进行命令行方式的脚本压测**</p>
+<blockquote>
+<p><strong>jmeter 命令行</strong></p>
+</blockquote>
+<p>​            -h 帮助<br>​            -n 非GUI模式<br>​            -t 指定要运行的 JMeter 测试脚本文件<br>​            -l 记录结果的文件 每次运行之前，(要确保之前没有运行过,即目录下的xxx.jtl不存在，不然报错)<br>​            -r Jmter.properties文件中指定的所有远程服务器<br>​            -e 在脚本运行结束后生成html报告<br>​            -o 用于存放html报告的目录（目录要为空，不然报错）</p>
+<pre><code>官方配置文件地址 http://jmeter.apache.org/usermanual/get-started.html
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">使用例子</div><div class="line">jmeter -n -t linux_users_api.jmx -l result.jtl -e -o /usr/local/softwate/jmeter/temp/ResultReport</div></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>所以整个压测流程是：</strong></p>
+</blockquote>
+<ul>
+<li><p><strong>首先在windows使用gui界面，创建测试计划（jmx文件）</strong></p>
+</li>
+<li><p><strong>接着上传jmx测试脚本到需要测试服务器（一般跟项目所在服务器不同）（例如项目在147，那么测试肯定不在147上进行，可以在其他服务器，例如在148进行测试脚本的执行）</strong></p>
+</li>
+<li><p><strong>获取测试报告进行分析</strong></p>
+</li>
+</ul>
+<h2 id="压测后的jtl结果文件"><a href="#压测后的jtl结果文件" class="headerlink" title="压测后的jtl结果文件"></a>压测后的jtl结果文件</h2><p>通过上面的测试，我们会得到一个结果文件<code>result.jtl</code> ，那么我们接下来就把他从linux上下载到windows本机上进行查看。</p>
+<p><strong>可以通过打开jmeter，新建线程组–&gt;监听器-&gt;summary report-&gt;浏览文件.</strong></p>
+<p><strong>然后选择我们下载下来的result.jtl进行查看</strong></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200508100152073.png" alt="image-20200508100152073"></p>
+<p>你会发现他的测试报告就跟上面我们创建的<code>聚合报告</code> 是一样的。</p>
+<h2 id="html压测报告分析"><a href="#html压测报告分析" class="headerlink" title="html压测报告分析"></a>html压测报告分析</h2><blockquote>
+<p><strong>Dashboard的核心指标</strong></p>
+</blockquote>
+<pre><code>1）Test and Report informations
+    Source file：jtl文件名
+    Start Time ：压测开始时间
+    End Time ：压测结束时间
+    Filter for display：过滤器
+    Lable:sampler采样器名称    
+
+2）APDEX(Application performance Index)
+    apdex:应用程序性能指标,范围在0~1之间，1表示达到所有用户均满意
+    T(Toleration threshold)：可接受阀值
+    F(Frustration threshold)：失败阀值
+
+3）Requests Summary
+    OK:成功率
+    KO:失败率
+4）Statistics 统计数据
+    lable:sampler采样器名称
+
+    samples:请求总数，并发数*循环次数
+    KO:失败次数
+    Error%:失败率
+
+    Average:平均响应时间
+    Min:最小响应时间
+    Max:最大响应时间
+    90th pct: 90%的用户响应时间不会超过这个值（关注这个就可以了）
+     举个例子，假设有10个请求，每个请求可能服务器相应的时间都不一样：2ms,3ms,4,5,2,6,8,3,9,11
+     那么，我们去掉极端的%10，也就是响应时间是11s，那么剩下的百分之90，最大的响应时间就是9ms，那么也就意味着，90%的用户响应时间不会超过这个9ms这个值
+
+    95th pct: 95%的用户响应时间不会超过这个值
+    99th pct: 99%的用户响应时间不会超过这个值 (存在极端值)
+    throughtput:Request per Second吞吐量 qps
+
+    received:每秒从服务器接收的数据量
+    send：每秒发送的数据量
+</code></pre><blockquote>
+<p><strong>Charts的核心指标</strong></p>
+</blockquote>
+<pre><code>1、charts讲解
+    1)Over Time（随着时间的变化）
+        Response Times Over Time：响应时间变化趋势（比较关注）
+        Response Time Percentiles Over Time (successful responses)：最大，最小，平均，用户响应时间分布
+        Active Threads Over Time：并发用户数趋势
+        Bytes Throughput Over Time：每秒接收和请求字节数变化，蓝色表示发送，黄色表示接受
+        Latencies Over Time：平均响应延时趋势
+        Connect Time Over Time    ：连接耗时趋势
+
+    1)Throughput
+        Hits Per Second (excluding embedded resources):每秒点击次数
+        Codes Per Second (excluding embedded resources)：每秒状态码数量
+        Transactions Per Second：即TPS，每秒事务数
+        Response Time Vs Request：响应时间和请求数对比
+        Latency Vs Request：延迟时间和请求数对比
+
+    1)Response Times（接口整体性能）
+        Response Time Percentiles：响应时间百分比
+        Response Time Overview：响应时间概述
+        Time Vs Threads：活跃线程数和响应时间
+        Response Time Distribution：响应时间分布图
+</code></pre><h2 id="Jmeter压测接口的性能优化"><a href="#Jmeter压测接口的性能优化" class="headerlink" title="Jmeter压测接口的性能优化"></a><strong>Jmeter压测接口的性能优化</strong></h2><p>在使用Jmeter压测减少资源使用的一些建议，即压测结果更准确：</p>
+<p>1、使用非GUI模式：jmeter -n -t test.jmx -l result.jtl</p>
+<p>2、少使用Listener， 如果使用-l参数，它们都可以被删除或禁用（我们还记得之前创建过的查看结果数、聚合报告等等listener，在真实测试时，最好去掉）。<br>3、在加载测试期间不要使用“查看结果树”或“查看结果”表监听器，只能在脚本阶段使用它们来调试脚本。</p>
+<p>4、包含控制器在这里没有帮助，因为它将文件中的所有测试元素添加到测试计划中<br>5、不要使用功能模式,使用CSV输出而不是XML<br>6、只保存你需要的数据,尽可能少地使用断言</p>
+<p>7、如果测试需要大量数据，可以提前准备好测试数据放到数据文件中，以CSV Read方式读取。<br>8、用内网压测，减少其他带宽影响压测结果<br>9、如果压测大流量，尽量用多几个节点以非GUI模式向服务器施压</p>
+<p>官方推荐 ：<a href="http://jakarta.apache.org/jmeter/usermanual/best-practices.html#lean_mean" target="_blank" rel="external">http://jakarta.apache.org/jmeter/usermanual/best-practices.html#lean_mean</a></p>
+<h1 id="分布式压测基础知识"><a href="#分布式压测基础知识" class="headerlink" title="分布式压测基础知识"></a>分布式压测基础知识</h1><p> 普通压测：单台机可以对目标机器产生的压力比较小，受限因素包括CPU，网络，IO等<br>         分布式压测：利用多台机器向目标机器产生压力，模拟几万用户并发访问</p>
+<p><strong>Jmeter分布式压测原理</strong></p>
+<p>​        1、总控机器的节点master，其他产生压力的机器叫“肉鸡” server<br>​        2、master会把压测脚本发送到 server上面</p>
+<p>​    3、执行的时候，server上只需要把jmeter-server打开就可以了，不用启动jmeter<br>​    4、结束后，server会把压测数据回传给master,然后master汇总输出报告<br>​    5、配置详情</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200316220705994.png" alt="image-20200316220705994"></p>
+<blockquote>
+<p><strong>分布式压测注意事项：</strong></p>
+</blockquote>
+<p>​    the firewalls on the systems are turned off or correct ports are opened.<br>​            系统上的防火墙被关闭或正确的端口被打开。</p>
+<p>​        all the clients are on the same subnet.<br>​        所有的客户端都在同一个子网上。</p>
+<p>​        the server is in the same subnet, if 192.x.x.x or 10.x.x.x IP addresses are used. If the server doesn’t use 192.xx or 10.xx IP address, there shouldn’t be any problems.<br>​        如果使用192.x.x.x或10.x.x.x IP地址，则服务器位于同一子网中。 如果服务器不使用192.xx或10.xx IP地址，则不应该有任何问题。</p>
+<p>​        Make sure JMeter can access the server.<br>​        确保JMeter可以访问服务器。</p>
+<p>​        Make sure you use the same version of JMeter and Java on all the systems. Mixing versions will not work correctly.<br>​        确保在所有系统上使用相同版本的JMeter和Java。 混合版本将无法正常工作。</p>
+<p>​        You have setup SSL for RMI or disabled it.<br>​        您已为RMI设置SSL或将其禁用。</p>
+<p>​        官网地址 <a href="http://jmeter.apache.org/usermanual/jmeter_distributed_testing_step_by_step.html" target="_blank" rel="external">http://jmeter.apache.org/usermanual/jmeter_distributed_testing_step_by_step.html</a></p>
+<p>​        <strong>压测注意事项：一定要用内网IP，不用用公网IP,用ping去检查</strong></p>
+<blockquote>
+<p>注意事项</p>
+</blockquote>
+<p><strong>（1）启动 slave</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">	./jmeter-server 或者    nohup ./jmeter-server &amp;</div><div class="line"></div><div class="line">检查启动是否成功</div><div class="line">	ps -ef|grep jmeter-server</div><div class="line">	ps aux|grep jmeter-server</div></pre></td></tr></table></figure>
+<p>启动slave的过程中可能遇到问题，那么这些问题的解决方案如下：</p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200508104723019.png" alt="image-20200508104723019"></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200508104740337.png" alt="image-20200508104740337"></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200508104801678.png" alt="image-20200508104801678"></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200508104908936.png" alt="image-20200508104908936"></p>
+<p><img src="/2020/03/05/jmeter使用总结/image-20200508105008406.png" alt="image-20200508105008406"></p>
+<h2 id="开始分布式压测"><a href="#开始分布式压测" class="headerlink" title="开始分布式压测"></a>开始分布式压测</h2><p>​    1.修改master节点信息：<br>​        jemeter.properties 值是slave机器的ip+端口号，如果有多个，用逗号分隔</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">remote_hosts=192.168.0.102:8899,192.168.0.101:8899</div><div class="line">server.rmi.ssl.disable=true (前面有说到)</div></pre></td></tr></table></figure>
+<p>​    </p>
+<p> 2.启动slave机器，注意要同个网段，ip地址用内网ip</p>
+<pre><code>./jmeter-server
+        Using local port: 8899
+        Created remote object: UnicastServerRef2 [liveRef: [endpoint:[192.168.0.102:8899](local),objID:[3a585a4d:162724586ab:-7fff, 3963132813614033916]]]
+</code></pre><p>3.启动master开始压测</p>
+<pre><code>./jmeter -n -t /Users/jack/Desktop/remote.jmx -r -l /Users/jack/Desktop/jtl/result.jtl -e -o /Users/jack/Desktop/result
+
+        Creating summariser &lt;summary&gt;
+        Created the tree successfully using /Users/jack/Desktop/remote.jmx
+        Configuring remote engine: 172.20.10.3:8899
+        Using local port: 8899
+        Configuring remote engine: 172.20.10.11:8899
+        Starting remote engines
+        Starting the test @ Thu Mar 29 23:21:13 CST 2018 (1522336873931)
+        Remote engines have been started
+        Waiting for possible Shutdown/StopTestNow/Heapdump message on port 4445
+        summary =      4 in 00:00:22 =    0.2/s Avg:  5582 Min:    94 Max: 21006 Err:     1 (25.00%)
+        Tidying up remote @ Thu Mar 29 23:21:36 CST 2018 (1522336896842)
+        ... end of run
+
+
+    相关资料：
+        https://www.cnblogs.com/Fine-Chan/p/6233823.html
+        https://blog.csdn.net/liujingqiu/article/details/52635289
+        https://www.cnblogs.com/puresoul/p/4844539.html
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Jmeter/" rel="tag"><i class="fa fa-tag"></i> Jmeter</a>
+          
+            <a href="/tags/Jmeter压测/" rel="tag"><i class="fa fa-tag"></i> Jmeter压测</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/12/kingspring总结文档/" rel="next" title="king-spring">
+                <i class="fa fa-chevron-left"></i> king-spring
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/18/rtm数据最终一致性/" rel="prev" title="可靠消息解决数据最终一致性-开源项目rtm">
+                可靠消息解决数据最终一致性-开源项目rtm <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">81</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#常用压测工具比对"><span class="nav-number">1.</span> <span class="nav-text">常用压测工具比对</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jmeter介绍和安装"><span class="nav-number">2.</span> <span class="nav-text">Jmeter介绍和安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Jmeter基本介绍和使用场景"><span class="nav-number">2.1.</span> <span class="nav-text">Jmeter基本介绍和使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jmeter4-0安装"><span class="nav-number">2.2.</span> <span class="nav-text">Jmeter4.0安装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jmeter使用"><span class="nav-number">3.</span> <span class="nav-text">Jmeter使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建线程组"><span class="nav-number">3.1.</span> <span class="nav-text">创建线程组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建采样器-模拟请求"><span class="nav-number">3.2.</span> <span class="nav-text">创建采样器 - 模拟请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建结果收集树-查看测试结果"><span class="nav-number">3.3.</span> <span class="nav-text">创建结果收集树 - 查看测试结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模拟一次性请求多个接口"><span class="nav-number">3.4.</span> <span class="nav-text">模拟一次性请求多个接口</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jmeter的断言"><span class="nav-number">4.</span> <span class="nav-text">Jmeter的断言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#响应断言"><span class="nav-number">4.1.</span> <span class="nav-text">响应断言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#例子："><span class="nav-number">4.1.1.</span> <span class="nav-text">例子：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第一部分总结"><span class="nav-number">5.</span> <span class="nav-text">第一部分总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jmeter压测结果聚合报告"><span class="nav-number">6.</span> <span class="nav-text">Jmeter压测结果聚合报告</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#测试案例"><span class="nav-number">6.1.</span> <span class="nav-text">测试案例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jmeter压测脚本JMX讲解"><span class="nav-number">7.</span> <span class="nav-text">Jmeter压测脚本JMX讲解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义变量和CSV可变参数实操"><span class="nav-number">8.</span> <span class="nav-text">自定义变量和CSV可变参数实操</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#jmeter用户自定义变量"><span class="nav-number">8.1.</span> <span class="nav-text">jmeter用户自定义变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSV可变参数压测"><span class="nav-number">8.2.</span> <span class="nav-text">CSV可变参数压测</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mysql数据库压测实操"><span class="nav-number">9.</span> <span class="nav-text">Mysql数据库压测实操</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#测试案例1-简单查询"><span class="nav-number">9.1.</span> <span class="nav-text">测试案例1 - 简单查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新建线程组和JDBC采样器"><span class="nav-number">9.1.1.</span> <span class="nav-text">新建线程组和JDBC采样器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#建立JDBC连接配置"><span class="nav-number">9.1.2.</span> <span class="nav-text">建立JDBC连接配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加jdbc连接mysqljar包"><span class="nav-number">9.1.3.</span> <span class="nav-text">添加jdbc连接mysqljar包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#完整连接测试"><span class="nav-number">9.1.4.</span> <span class="nav-text">完整连接测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#带参数的复杂查询"><span class="nav-number">9.2.</span> <span class="nav-text">带参数的复杂查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#预查询语句"><span class="nav-number">9.2.1.</span> <span class="nav-text">预查询语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预更新语句"><span class="nav-number">9.2.2.</span> <span class="nav-text">预更新语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#演示查询结果集handle-resultset"><span class="nav-number">9.2.3.</span> <span class="nav-text">演示查询结果集handle resultset</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#阿里云Linux服务器压测接口实战"><span class="nav-number">10.</span> <span class="nav-text">阿里云Linux服务器压测接口实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Jmeter非GUI界面-参数讲解-一般压测不会使用gui界面进行操作，因为比较耗性能"><span class="nav-number">10.1.</span> <span class="nav-text">Jmeter非GUI界面 参数讲解 - 一般压测不会使用gui界面进行操作，因为比较耗性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#压测后的jtl结果文件"><span class="nav-number">10.2.</span> <span class="nav-text">压测后的jtl结果文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#html压测报告分析"><span class="nav-number">10.3.</span> <span class="nav-text">html压测报告分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jmeter压测接口的性能优化"><span class="nav-number">10.4.</span> <span class="nav-text">Jmeter压测接口的性能优化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式压测基础知识"><span class="nav-number">11.</span> <span class="nav-text">分布式压测基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#开始分布式压测"><span class="nav-number">11.1.</span> <span class="nav-text">开始分布式压测</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      226.8k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共226.8k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>
