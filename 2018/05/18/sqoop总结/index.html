@@ -1,0 +1,2274 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="sqoop,数据传输工具," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="一、Sqoop简介Apache Sqoop(TM)是一种旨在有效地在Apache Hadoop和诸如关系数据库等结构化数据存储之间传输大量数据的工具。 Sqoop于2012年3月孵化出来，现在是一个顶级的Apache项目。 最新的稳定版本是1.4.6。Sqoop2的最新版本是1.99.7。请注意，1.99.7与1.4.6不兼容，且没有特征不完整，它并不打算用于生产部署。 二、Sqoop原理将导入或">
+<meta name="keywords" content="sqoop,数据传输工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqoop总结">
+<meta property="og:url" content="http://kingge.top/2018/05/18/sqoop总结/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="一、Sqoop简介Apache Sqoop(TM)是一种旨在有效地在Apache Hadoop和诸如关系数据库等结构化数据存储之间传输大量数据的工具。 Sqoop于2012年3月孵化出来，现在是一个顶级的Apache项目。 最新的稳定版本是1.4.6。Sqoop2的最新版本是1.99.7。请注意，1.99.7与1.4.6不兼容，且没有特征不完整，它并不打算用于生产部署。 二、Sqoop原理将导入或">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/sqoop总结/image-20200509175018698.png">
+<meta property="og:image" content="http://kingge.top/sqoop总结/clip_image002.png">
+<meta property="og:updated_time" content="2020-05-09T09:55:32.317Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sqoop总结">
+<meta name="twitter:description" content="一、Sqoop简介Apache Sqoop(TM)是一种旨在有效地在Apache Hadoop和诸如关系数据库等结构化数据存储之间传输大量数据的工具。 Sqoop于2012年3月孵化出来，现在是一个顶级的Apache项目。 最新的稳定版本是1.4.6。Sqoop2的最新版本是1.99.7。请注意，1.99.7与1.4.6不兼容，且没有特征不完整，它并不打算用于生产部署。 二、Sqoop原理将导入或">
+<meta name="twitter:image" content="http://kingge.top/sqoop总结/image-20200509175018698.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2018/05/18/sqoop总结/"/>
+
+
+
+
+
+  <title>sqoop总结 | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2018/05/18/sqoop总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">sqoop总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-18T00:00:00+08:00">
+                2018-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5,355
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  23
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、Sqoop简介"><a href="#一、Sqoop简介" class="headerlink" title="一、Sqoop简介"></a>一、Sqoop简介</h1><p>Apache Sqoop(TM)是一种旨在有效地在Apache Hadoop和诸如关系数据库等结构化数据存储之间传输大量数据的工具。</p>
+<p>Sqoop于2012年3月孵化出来，现在是一个顶级的Apache项目。</p>
+<p>最新的稳定版本是1.4.6。Sqoop2的最新版本是1.99.7。请注意，1.99.7与1.4.6不兼容，且没有特征不完整，它并不打算用于生产部署。</p>
+<h1 id="二、Sqoop原理"><a href="#二、Sqoop原理" class="headerlink" title="二、Sqoop原理"></a>二、Sqoop原理</h1><p>将导入或导出命令翻译成mapreduce程序来实现。</p>
+<p>在翻译出的mapreduce中主要是对inputformat和outputformat进行定制。</p>
+<h1 id="三、Sqoop安装"><a href="#三、Sqoop安装" class="headerlink" title="三、Sqoop安装"></a>三、Sqoop安装</h1><p>安装Sqoop的前提是已经具备Java和Hadoop的环境。</p>
+<h2 id="3-1、下载并解压"><a href="#3-1、下载并解压" class="headerlink" title="3.1、下载并解压"></a>3.1、下载并解压</h2><p>1) 最新版下载地址：<a href="http://mirrors.hust.edu.cn/apache/sqoop/1.4.6/" target="_blank" rel="external">http://mirrors.hust.edu.cn/apache/sqoop/1.4.6/</a></p>
+<p>2) 上传安装包sqoop-1.4.6.bin__hadoop-2.0.4-alpha.tar.gz到虚拟机中，如我的上传目录是：/home/admin/softwares/installation</p>
+<p>3) 解压sqoop安装包到指定目录，如：</p>
+<p>  $ tar -zxf  sqoop-1.4.6.bin__hadoop-2.0.4-alpha.tar.gz -C ~/modules/  </p>
+<h2 id="3-2、修改配置文件"><a href="#3-2、修改配置文件" class="headerlink" title="3.2、修改配置文件"></a>3.2、修改配置文件</h2><p>Sqoop的配置文件与大多数大数据框架类似，在sqoop根目录下的conf目录中。</p>
+<p><strong>1)</strong> <strong>重命名配置文件</strong></p>
+<p>  $ mv sqoop-env-template.sh sqoop-env.sh  $ mv sqoop-site-template.xml  sqoop-site.xml  </p>
+<p><strong>2)</strong> <strong>修改配置文件</strong></p>
+<p>sqoop-env.sh</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">export HADOOP_COMMON_HOME=/home/admin/modules/hadoop-2.7.2</div><div class="line">export HADOOP_MAPRED_HOME=/home/admin/modules/hadoop-2.7.2</div><div class="line">export HIVE_HOME=/home/admin/modules/apache-hive-1.2.2-bin</div><div class="line">export ZOOKEEPER_HOME=/home/admin/modules/zookeeper-3.4.5</div><div class="line">export ZOOCFGDIR=/home/admin/modules/zookeeper-3.4.5/conf</div></pre></td></tr></table></figure>
+<p>这里的zookeeper是配合HBASE使用的，所以这里可以不配置他，因为没有用到HBASE</p>
+<h2 id="3-3、拷贝JDBC驱动"><a href="#3-3、拷贝JDBC驱动" class="headerlink" title="3.3、拷贝JDBC驱动"></a>3.3、拷贝JDBC驱动</h2><p>拷贝jdbc驱动到sqoop的lib目录下，如：</p>
+<p>  $ cp  -a mysql-connector-java-5.1.27-bin.jar  ~/modules/sqoop-1.4.6.bin__hadoop-2.0.4-alpha/lib/  </p>
+<h2 id="3-4、验证Sqoop"><a href="#3-4、验证Sqoop" class="headerlink" title="3.4、验证Sqoop"></a>3.4、验证Sqoop</h2><p>我们可以通过某一个command来验证sqoop配置是否正确：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ bin/sqoop help</div><div class="line">出现一些Warning警告（警告信息已省略），并伴随着帮助命令的输出：</div><div class="line">Available commands:</div><div class="line">  codegen            Generate code to interact with database records</div><div class="line">  create-hive-table     Import a table definition into Hive</div><div class="line">  eval               Evaluate a SQL statement and display the results</div><div class="line">  export             Export an HDFS directory to a database table</div><div class="line">  help               List available commands</div><div class="line">  import             Import a table from a database to HDFS</div><div class="line">  import-all-tables     Import tables from a database to HDFS</div><div class="line">  import-mainframe    Import datasets from a mainframe server to HDFS</div><div class="line">  job                Work with saved jobs</div><div class="line">  list-databases        List available databases on a server</div><div class="line">  list-tables           List available tables in a database</div><div class="line">  merge              Merge results of incremental imports</div><div class="line">  metastore           Run a standalone Sqoop metastore</div><div class="line">  version            Display version information</div></pre></td></tr></table></figure>
+<h2 id="3-5、测试Sqoop是否能够成功连接数据库"><a href="#3-5、测试Sqoop是否能够成功连接数据库" class="headerlink" title="3.5、测试Sqoop是否能够成功连接数据库"></a>3.5、测试Sqoop是否能够成功连接数据库</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ bin/sqoop list-databases --connect jdbc:mysql://linux01:3306/ --username root --password 123456</div><div class="line">出现如下输出：</div><div class="line">information_schema</div><div class="line">metastore</div><div class="line">mysql</div><div class="line">performance_schema</div></pre></td></tr></table></figure>
+<h1 id="四、Sqoop的简单使用案例"><a href="#四、Sqoop的简单使用案例" class="headerlink" title="四、Sqoop的简单使用案例"></a>四、Sqoop的简单使用案例</h1><h2 id="4-1、导入数据"><a href="#4-1、导入数据" class="headerlink" title="4.1、导入数据"></a>4.1、导入数据</h2><p>在Sqoop中，“导入”概念指：从非大数据集群（RDBMS）向大数据集群（HDFS，HIVE，HBASE）中传输数据，叫做：导入，即使用import关键字。</p>
+<h3 id="4-1-1、RDBMS到HDFS"><a href="#4-1-1、RDBMS到HDFS" class="headerlink" title="4.1.1、RDBMS到HDFS"></a>4.1.1、RDBMS到HDFS</h3><p>1) 确定Mysql服务开启正常</p>
+<p>2) 在Mysql中新建一张表并插入一些数据</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ mysql -uroot -p123456</div><div class="line">mysql&gt; create database company;</div><div class="line">mysql&gt; create table company.staff(id int(4) primary key not null auto_increment, name varchar(255), sex varchar(255));</div><div class="line">mysql&gt; insert into company.staff(name, sex) values(&apos;Thomas&apos;, &apos;Male&apos;);</div><div class="line">mysql&gt; insert into company.staff(name, sex) values(&apos;Catalina&apos;, &apos;FeMale&apos;);</div></pre></td></tr></table></figure>
+<p>3) 导入数据</p>
+<p>​    <strong>（1）全部导入</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ bin/sqoop import \      --这里反斜杠的意思是，命令没有书写完，此时敲回车的继续书写下一行的意思。如果没有这个反斜杠敲回车是直接执行当前命令了</div><div class="line">--connect jdbc:mysql://linux01:3306/company \</div><div class="line">--username root \</div><div class="line">--password 123456 \</div><div class="line">--table staff \</div><div class="line">--target-dir /user/company \</div><div class="line">--delete-target-dir \</div><div class="line">--num-mappers 1 \</div><div class="line">--fields-terminated-by &quot;\t&quot;</div></pre></td></tr></table></figure>
+<p>前三行-连接mysql需要信息，第四行：源mysql数据表 第五六行：输出到hdfs那个目录、如果目录存在则删除 第七行：导数据需要一个map 第八行：每一列分隔符（）</p>
+<p><img src="\sqoop总结\image-20200509175018698.png" alt="image-20200509175018698"></p>
+<p>   <strong>（2）查询导入</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ bin/sqoop import \</div><div class="line">--connect jdbc:mysql://hadoop101:3306/company \</div><div class="line">--username root \</div><div class="line">--password 123456 \</div><div class="line">--target-dir /user/company \</div><div class="line">--delete-target-dir \</div><div class="line">--num-mappers 1 \</div><div class="line">--fields-terminated-by &quot;\t&quot; \</div><div class="line">--query &apos;select name,sex from staff where id &lt;=1 and $CONDITIONS;&apos;</div></pre></td></tr></table></figure>
+<p>尖叫提示：must contain ‘$CONDITIONS’ in WHERE clause.( 详情参见文档 Sqoop User Guide (v1.4.6).mhtml )</p>
+<p>尖叫提示：如果query后使用的是双引号，则$CONDITIONS前必须加转移符，防止shell识别为自己的变量。（linux系统以为使用linux变量）</p>
+<p>尖叫提示：–query选项，不能同时与–table选项使用</p>
+<p><img src="\sqoop总结\clip_image002.png" alt="img"></p>
+<p><strong><em>当我们启用三个map***</em></strong>去处理mysql*<strong>*</strong>过来的数据的时候，那么每个map*<strong>*</strong>读取的数据的索引是不同的，为了避免重复读取，那么我们就需要记住索引，那么CONDITIONS*<strong>*</strong>的作用就是如此。记住当前map*<strong>*</strong>读取数据的索引。例如map1 –*<strong> *</strong>获取第一行到第十行数据、map2*<strong>*</strong>获取11-20*<strong>*</strong>、map3*<strong>*</strong>获取21-31***</p>
+<p>  我们要知道使用$<strong><em>CONDITIONS\</em></strong>$的时候，必须<strong><em>同时使用***</em></strong>split by*<strong>，标注，我们需要根据表中的那个字段分割数据。*</strong>注意当*<strong>*</strong>map num=1*<strong>*</strong>的时候不需要指明*<strong>*</strong>split by*<strong>*</strong>（上面的代码就没有指明*<strong>*</strong>split by*<strong>*</strong>）***</p>
+<p>​    <strong>（3**</strong>）导入指定列**</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ bin/sqoop import \</div><div class="line">--connect jdbc:mysql://hadoop101:3306/company \</div><div class="line">--username root \</div><div class="line">--password 123456 \</div><div class="line">--target-dir /user/company \</div><div class="line">--delete-target-dir \</div><div class="line">--num-mappers 1 \</div><div class="line">--fields-terminated-by &quot;\t&quot; \</div><div class="line">--columns id,sex \</div><div class="line">--table staff</div></pre></td></tr></table></figure>
+<p>尖叫提示：columns中如果涉及到多列，用逗号分隔，分隔时不要添加空格</p>
+<p>​    <strong>（4**</strong>）使用sqoop<strong>**关键字筛选查询导入数据</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ bin/sqoop import \</div><div class="line">--connect jdbc:mysql://linux01:3306/company \</div><div class="line">--username root \</div><div class="line">--password 123456 \</div><div class="line">--target-dir /user/company \</div><div class="line">--delete-target-dir \</div><div class="line">--num-mappers 1 \</div><div class="line">--fields-terminated-by &quot;\t&quot; \</div><div class="line">--table staff \</div><div class="line">--where &quot;id=1&quot;</div></pre></td></tr></table></figure>
+<p>尖叫提示：在Sqoop中可以使用sqoop import -D property.name=property.value这样的方式加入执行任务的参数，多个参数用空格隔开。</p>
+<h3 id="4-1-2、RDBMS到Hive"><a href="#4-1-2、RDBMS到Hive" class="headerlink" title="4.1.2、RDBMS到Hive"></a>4.1.2、RDBMS到Hive</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ bin/sqoop import \</div><div class="line">--connect jdbc:mysql://hadoop101:3306/company \</div><div class="line">--username root  \</div><div class="line">--password 123456  \ </div><div class="line">--table staff  \</div><div class="line">--num-mappers 1  \</div><div class="line">--hive-import  \</div><div class="line">--fields-terminated-by &quot;\t&quot;  \</div><div class="line">--hive-overwrite  \</div><div class="line">--hive-table staff_hive</div></pre></td></tr></table></figure>
+<p>尖叫提示：该过程分为两步，第一步将数据导入到HDFS，第二步将导入到HDFS的数据迁移到Hive仓库</p>
+<p>尖叫提示：第一步默认的临时目录是/user/admin/表名</p>
+<p>如果不指明导入hive那张表，那么会自动仔hive中创建跟mysql表名相同的表，存储数据</p>
+<h2 id="4-2、导出数据"><a href="#4-2、导出数据" class="headerlink" title="4.2、导出数据"></a>4.2、导出数据</h2><p>在Sqoop中，“导出”概念指：从大数据集群（HDFS，HIVE，HBASE）向非大数据集群（RDBMS）中传输数据，叫做：导出，即使用export关键字。</p>
+<h3 id="4-2-1、HIVE-HDFS到RDBMS"><a href="#4-2-1、HIVE-HDFS到RDBMS" class="headerlink" title="4.2.1、HIVE/HDFS到RDBMS"></a>4.2.1、HIVE/HDFS到RDBMS</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ bin/sqoop export \</div><div class="line">--connect jdbc:mysql://hadoop101:3306/company \</div><div class="line">--username root \</div><div class="line">--password 123456 \</div><div class="line">--table staff \</div><div class="line">--num-mappers 1 \</div><div class="line">--export-dir /user/hive/warehouse/staff \</div><div class="line">--input-fields-terminated-by &quot;\t&quot;</div></pre></td></tr></table></figure>
+<p>尖叫提示：Mysql中如果表不存在，不会自动创建</p>
+<p>思考：数据是覆盖还是追加 -追加</p>
+<h2 id="4-3、脚本打包"><a href="#4-3、脚本打包" class="headerlink" title="4.3、脚本打包"></a>4.3、脚本打包</h2><p>使用opt格式的文件打包sqoop命令，然后执行</p>
+<p><strong>1)</strong> <strong>创建一个.opt**</strong>文件**</p>
+<p>  $ mkdir opt  $ touch opt/job_HDFS2RDBMS.opt  </p>
+<p><strong>2)</strong> <strong>编写sqoop**</strong>脚本（每个参数一行的风格：参数一行，值一行）**</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ vi opt/job_HDFS2RDBMS.opt</div><div class="line"></div><div class="line">export</div><div class="line">--connect</div><div class="line">jdbc:mysql://linux01:3306/company</div><div class="line">--username</div><div class="line">root</div><div class="line">--password</div><div class="line">123456</div><div class="line">--table</div><div class="line">staff</div><div class="line">--num-mappers</div><div class="line">1</div><div class="line">--export-dir</div><div class="line">/user/hive/warehouse/staff_hive</div><div class="line">--input-fields-terminated-by</div><div class="line">&quot;\t&quot;</div></pre></td></tr></table></figure>
+<p><strong>3)</strong> <strong>执行该脚本</strong></p>
+<p>  $ bin/sqoop –options-file opt/job_HDFS2RDBMS.opt  </p>
+<h1 id="五、Sqoop一些常用命令及参数"><a href="#五、Sqoop一些常用命令及参数" class="headerlink" title="五、Sqoop一些常用命令及参数"></a>五、Sqoop一些常用命令及参数</h1><h2 id="5-1、常用命令列举"><a href="#5-1、常用命令列举" class="headerlink" title="5.1、常用命令列举"></a>5.1、常用命令列举</h2><p>这里给大家列出来了一部分Sqoop操作时的常用参数，以供参考，需要深入学习的可以参看对应类的源代码。</p>
+<table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>命令</strong></th>
+<th><strong>类</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>import</td>
+<td>ImportTool</td>
+<td>将数据导入到集群</td>
+</tr>
+<tr>
+<td>2</td>
+<td>export</td>
+<td>ExportTool</td>
+<td>将集群数据导出</td>
+</tr>
+<tr>
+<td>3</td>
+<td>codegen</td>
+<td>CodeGenTool</td>
+<td>获取数据库中某张表数据生成Java并打包Jar</td>
+</tr>
+<tr>
+<td>4</td>
+<td>create-hive-table</td>
+<td>CreateHiveTableTool</td>
+<td>创建Hive表</td>
+</tr>
+<tr>
+<td>5</td>
+<td>eval</td>
+<td>EvalSqlTool</td>
+<td>查看SQL执行结果</td>
+</tr>
+<tr>
+<td>6</td>
+<td>import-all-tables</td>
+<td>ImportAllTablesTool</td>
+<td>导入某个数据库下所有表到HDFS中</td>
+</tr>
+<tr>
+<td>7</td>
+<td>job</td>
+<td>JobTool</td>
+<td>用来生成一个sqoop的任务，生成后，该任务并不执行，除非使用命令执行该任务。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>list-databases</td>
+<td>ListDatabasesTool</td>
+<td>列出所有数据库名</td>
+</tr>
+<tr>
+<td>9</td>
+<td>list-tables</td>
+<td>ListTablesTool</td>
+<td>列出某个数据库下所有表</td>
+</tr>
+<tr>
+<td>10</td>
+<td>merge</td>
+<td>MergeTool</td>
+<td>将HDFS中不同目录下面的数据合在一起，并存放在指定的目录中</td>
+</tr>
+<tr>
+<td>11</td>
+<td>metastore</td>
+<td>MetastoreTool</td>
+<td>记录sqoop job的元数据信息，如果不启动metastore实例，则默认的元数据存储目录为：~/.sqoop，如果要更改存储目录，可以在配置文件sqoop-site.xml中进行更改。</td>
+</tr>
+<tr>
+<td>12</td>
+<td>help</td>
+<td>HelpTool</td>
+<td>打印sqoop帮助信息</td>
+</tr>
+<tr>
+<td>13</td>
+<td>version</td>
+<td>VersionTool</td>
+<td>打印sqoop版本信息</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-2、命令-amp-参数详解"><a href="#5-2、命令-amp-参数详解" class="headerlink" title="5.2、命令&amp;参数详解"></a>5.2、命令&amp;参数详解</h2><p>刚才列举了一些Sqoop的常用命令，对于不同的命令，有不同的参数，让我们来一一列举说明。</p>
+<p>首先来我们来介绍一下公用的参数，所谓公用参数，就是大多数命令都支持的参数。</p>
+<h3 id="5-2-1、公用参数：数据库连接"><a href="#5-2-1、公用参数：数据库连接" class="headerlink" title="5.2.1、公用参数：数据库连接"></a>5.2.1、公用参数：数据库连接</h3><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>–connect</td>
+<td>连接关系型数据库的URL</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–connection-manager</td>
+<td>指定要使用的连接管理类（不常用）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–driver</td>
+<td>JDBC的driver class（不常用）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–help</td>
+<td>打印帮助信息（不常用）</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–password</td>
+<td>连接数据库的密码</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–username</td>
+<td>连接数据库的用户名</td>
+</tr>
+<tr>
+<td>7</td>
+<td>–verbose</td>
+<td>在控制台打印出详细信息（不常用）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-2-2、公用参数：import"><a href="#5-2-2、公用参数：import" class="headerlink" title="5.2.2、公用参数：import"></a>5.2.2、公用参数：import</h3><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>–enclosed-by <char></char></td>
+<td>给字段值前后加上指定的字符</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–escaped-by <char></char></td>
+<td>对字段中的双引号加转义符</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–fields-terminated-by <char></char></td>
+<td>设定每个字段是以什么符号作为结束，默认为逗号</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–lines-terminated-by <char></char></td>
+<td>设定每行记录之间的分隔符，默认是\n</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–mysql-delimiters</td>
+<td>Mysql默认的分隔符设置，字段之间以逗号分隔，行之间以\n分隔，默认转义符是\，字段值以单引号包裹。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–optionally-enclosed-by <char></char></td>
+<td>给带有双引号或单引号的字段值前后加上指定字符。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-2-3、公用参数：export"><a href="#5-2-3、公用参数：export" class="headerlink" title="5.2.3、公用参数：export"></a>5.2.3、公用参数：export</h3><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>–input-enclosed-by <char></char></td>
+<td>对字段值前后加上指定字符</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–input-escaped-by <char></char></td>
+<td>对含有转移符的字段做转义处理</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–input-fields-terminated-by <char></char></td>
+<td>字段之间的分隔符</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–input-lines-terminated-by <char></char></td>
+<td>行之间的分隔符</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–input-optionally-enclosed-by <char></char></td>
+<td>给带有双引号或单引号的字段前后加上指定字符</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-2-4、公用参数：hive"><a href="#5-2-4、公用参数：hive" class="headerlink" title="5.2.4、公用参数：hive"></a>5.2.4、公用参数：hive</h3><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>–hive-delims-replacement <arg></arg></td>
+<td>用自定义的字符串替换掉数据中的\r\n和\013 \010等字符</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–hive-drop-import-delims</td>
+<td>在导入数据到hive时，去掉数据中的\r\n\013\010这样的字符</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–map-column-hive <map></map></td>
+<td>生成hive表时，可以更改生成字段的数据类型（更改mysql数据类型再导入hive）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–hive-partition-key</td>
+<td>创建分区，后面直接跟分区名，分区字段的默认类型为string</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–hive-partition-value <v></v></td>
+<td>导入数据时，指定某个分区的值</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–hive-home <dir></dir></td>
+<td>hive的安装目录，可以通过该参数覆盖之前默认配置的目录</td>
+</tr>
+<tr>
+<td>7</td>
+<td>–hive-import</td>
+<td>将数据从关系数据库中导入到hive表中</td>
+</tr>
+<tr>
+<td>8</td>
+<td>–hive-overwrite</td>
+<td>覆盖掉在hive表中已经存在的数据</td>
+</tr>
+<tr>
+<td>9</td>
+<td>–create-hive-table</td>
+<td>默认是false，即，如果目标表已经存在了，那么创建任务失败。</td>
+</tr>
+<tr>
+<td>10</td>
+<td>–hive-table</td>
+<td>后面接要创建的hive表,默认使用MySQL的表名</td>
+</tr>
+<tr>
+<td>11</td>
+<td>–table</td>
+<td>指定关系数据库的表名</td>
+</tr>
+</tbody>
+</table>
+<p>公用参数介绍完之后，我们来按照命令介绍命令对应的特有参数。</p>
+<h3 id="5-2-5、命令-amp-参数：import"><a href="#5-2-5、命令-amp-参数：import" class="headerlink" title="5.2.5、命令&amp;参数：import"></a>5.2.5、命令&amp;参数：import</h3><p>将关系型数据库中的数据导入到HDFS（包括Hive，HBase）中，如果导入的是Hive，那么当Hive中没有对应表时，则自动创建。</p>
+<p><strong>1)</strong> <strong>命令：</strong></p>
+<p>如：导入数据到hive中</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ bin/sqoop import \</div><div class="line">--connect jdbc:mysql://linux01:3306/company \</div><div class="line">--username root \</div><div class="line">--password 123456 \</div><div class="line">--table staff \</div><div class="line">--hive-import   //如果删除这行，表示是导入到hdfs中。路径默认是/user/admin/表名</div></pre></td></tr></table></figure>
+<p>如：增量导入数据到hive中，mode=append</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">append导入：</div><div class="line">$ bin/sqoop import \</div><div class="line">--connect jdbc:mysql://linux01:3306/company \</div><div class="line">--username root \</div><div class="line">--password 123456 \</div><div class="line">--table staff \</div><div class="line">--num-mappers 1 \</div><div class="line">--fields-terminated-by &quot;\t&quot; \</div><div class="line">--target-dir /user/hive/warehouse/staff_hive \   //如果不指定那么会放到临时目录中，然后再删除</div><div class="line">--check-column id \</div><div class="line">--incremental append \  //追加的方式添加到hive中</div><div class="line">--last-value 3   //从mysql中取第三行后面的数据追加（不包括第三行）</div></pre></td></tr></table></figure>
+<p>尖叫提示：append不能与–hive-等参数同时使用（Append mode for hive imports is not yet supported. Please remove the parameter –append-mode）</p>
+<p>如：增量导入数据到hdfs中，mode=lastmodified</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">先在mysql中建表并插入几条数据：</div><div class="line">mysql&gt; create table company.staff_timestamp(id int(4), name varchar(255), sex varchar(255), last_modified timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP);</div><div class="line">mysql&gt; insert into company.staff_timestamp (id, name, sex) values(1, &apos;AAA&apos;, &apos;female&apos;);</div><div class="line">mysql&gt; insert into company.staff_timestamp (id, name, sex) values(2, &apos;BBB&apos;, &apos;female&apos;);</div><div class="line">先导入一部分数据：</div><div class="line">$ bin/sqoop import \</div><div class="line">--connect jdbc:mysql://linux01:3306/company \</div><div class="line">--username root \</div><div class="line">--password 123456 \</div><div class="line">--table staff_timestamp \</div><div class="line">--delete-target-dir \</div><div class="line">--m 1</div><div class="line">再增量导入一部分数据：</div><div class="line">mysql&gt; insert into company.staff_timestamp (id, name, sex) values(3, &apos;CCC&apos;, &apos;female&apos;);</div><div class="line">$ bin/sqoop import \</div><div class="line">--connect jdbc:mysql://linux01:3306/company \</div><div class="line">--username root \</div><div class="line">--password 123456 \</div><div class="line">--table staff_timestamp \</div><div class="line">--check-column last_modified \</div><div class="line">--incremental lastmodified \</div><div class="line">--last-value &quot;2017-09-28 22:20:38&quot; \</div><div class="line">--m 1 \</div><div class="line">--append</div></pre></td></tr></table></figure>
+<p>尖叫提示：使用lastmodified方式导入数据要指定增量数据是要–append（追加）还是要–merge-key（合并）</p>
+<p>尖叫提示：last-value指定的值是会包含于增量导入的数据中</p>
+<p><strong>2)</strong> <strong>参数：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>–append</td>
+<td>将数据追加到HDFS中已经存在的DataSet中，如果使用该参数，sqoop会把数据先导入到临时文件目录，再合并。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–as-avrodatafile</td>
+<td>将数据导入到一个Avro数据文件中</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–as-sequencefile</td>
+<td>将数据导入到一个sequence文件中</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–as-textfile</td>
+<td>将数据导入到一个普通文本文件中</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–boundary-query <statement></statement></td>
+<td>边界查询，导入的数据为该参数的值（一条sql语句）所执行的结果区间内的数据。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–columns  <col1, col2,="" col3=""></col1,></td>
+<td>指定要导入的字段</td>
+</tr>
+<tr>
+<td>7</td>
+<td>–direct</td>
+<td>直接导入模式，使用的是关系数据库自带的导入导出工具，以便加快导入导出过程。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>–direct-split-size</td>
+<td>在使用上面direct直接导入的基础上，对导入的流按字节分块，即达到该阈值就产生一个新的文件</td>
+</tr>
+<tr>
+<td>9</td>
+<td>–inline-lob-limit</td>
+<td>设定大对象数据类型的最大值</td>
+</tr>
+<tr>
+<td>10</td>
+<td>–m或–num-mappers</td>
+<td>启动N个map来并行导入数据，默认4个。</td>
+</tr>
+<tr>
+<td>11</td>
+<td>–query或–e <statement></statement></td>
+<td>将查询结果的数据导入，使用时必须伴随参–target-dir，–hive-table，如果查询中有where条件，则条件后必须加上$CONDITIONS关键字</td>
+</tr>
+<tr>
+<td>12</td>
+<td>–split-by  <column-name></column-name></td>
+<td>按照某一列来切分表的工作单元，不能与–autoreset-to-one-mapper连用（请参考官方文档）</td>
+</tr>
+<tr>
+<td>13</td>
+<td>–table  <table-name></table-name></td>
+<td>关系数据库的表名</td>
+</tr>
+<tr>
+<td>14</td>
+<td>–target-dir  <dir></dir></td>
+<td>指定HDFS路径</td>
+</tr>
+<tr>
+<td>15</td>
+<td>–warehouse-dir  <dir></dir></td>
+<td>与14参数不能同时使用，导入数据到HDFS时指定的目录</td>
+</tr>
+<tr>
+<td>16</td>
+<td>–where</td>
+<td>从关系数据库导入数据时的查询条件</td>
+</tr>
+<tr>
+<td>17</td>
+<td>–z或–compress</td>
+<td>允许压缩</td>
+</tr>
+<tr>
+<td>18</td>
+<td>–compression-codec</td>
+<td>指定hadoop压缩编码类，默认为gzip(Use Hadoop codec default gzip)</td>
+</tr>
+<tr>
+<td>19</td>
+<td>–null-string  <null-string></null-string></td>
+<td>string类型的列如果null，替换为指定字符串</td>
+</tr>
+<tr>
+<td>20</td>
+<td>–null-non-string  <null-string></null-string></td>
+<td>非string类型的列如果null，替换为指定字符串</td>
+</tr>
+<tr>
+<td>21</td>
+<td>–check-column  <col></td>
+<td>作为增量导入判断的列名</td>
+</tr>
+<tr>
+<td>22</td>
+<td>–incremental  <mode></mode></td>
+<td>mode：append或lastmodified</td>
+</tr>
+<tr>
+<td>23</td>
+<td>–last-value  <value></value></td>
+<td>指定某一个值，用于标记增量导入的位置</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-2-6、命令-amp-参数：export"><a href="#5-2-6、命令-amp-参数：export" class="headerlink" title="5.2.6、命令&amp;参数：export"></a>5.2.6、命令&amp;参数：export</h3><p>从HDFS（包括Hive和HBase）中奖数据导出到关系型数据库中。</p>
+<p><strong>1)</strong> <strong>命令：</strong></p>
+<p><strong>如：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ bin/sqoop export \</div><div class="line">--connect jdbc:mysql://linux01:3306/company \</div><div class="line">--username root \</div><div class="line">--password 123456 \</div><div class="line">--table staff \</div><div class="line">--export-dir /user/company \</div><div class="line">--input-fields-terminated-by &quot;\t&quot; \</div><div class="line">--num-mappers 1</div></pre></td></tr></table></figure>
+<p><strong>2)</strong> <strong>参数：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>–direct</td>
+<td>利用数据库自带的导入导出工具，以便于提高效率</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–export-dir <dir></dir></td>
+<td>存放数据的HDFS的源目录</td>
+</tr>
+<tr>
+<td>3</td>
+<td>-m或–num-mappers <n></n></td>
+<td>启动N个map来并行导入数据，默认4个</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–table <table-name></table-name></td>
+<td>指定导出到哪个RDBMS中的表</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–update-key <col-name></col-name></td>
+<td>对某一列的字段进行更新操作</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–update-mode <mode></mode></td>
+<td>updateonly  allowinsert(默认)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>–input-null-string <null-string></null-string></td>
+<td>请参考import该类似参数说明</td>
+</tr>
+<tr>
+<td>8</td>
+<td>–input-null-non-string  <null-string></null-string></td>
+<td>请参考import该类似参数说明</td>
+</tr>
+<tr>
+<td>9</td>
+<td>–staging-table  <staging-table-name></staging-table-name></td>
+<td>创建一张临时表，用于存放所有事务的结果，然后将所有事务结果一次性导入到目标表中，防止错误。</td>
+</tr>
+<tr>
+<td>10</td>
+<td>–clear-staging-table</td>
+<td>如果第9个参数非空，则可以在导出操作执行前，清空临时事务结果表</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-2-7、命令-amp-参数：codegen"><a href="#5-2-7、命令-amp-参数：codegen" class="headerlink" title="5.2.7、命令&amp;参数：codegen"></a>5.2.7、命令&amp;参数：codegen</h3><p>将关系型数据库中的表映射为一个Java类，在该类中有各列对应的各个字段。</p>
+<p>如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ bin/sqoop codegen \</div><div class="line">--connect jdbc:mysql://linux01:3306/company \</div><div class="line">--username root \</div><div class="line">--password 123456 \</div><div class="line">--table staff \</div><div class="line">--bindir /home/admin/Desktop/staff \</div><div class="line">--class-name Staff \</div><div class="line">--fields-terminated-by &quot;\t&quot;</div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>–bindir <dir></dir></td>
+<td>指定生成的Java文件、编译成的class文件及将生成文件打包为jar的文件输出路径</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–class-name <name></name></td>
+<td>设定生成的Java文件指定的名称</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–outdir <dir></dir></td>
+<td>生成Java文件存放的路径</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–package-name <name></name></td>
+<td>包名，如com.z，就会生成com和z两级目录</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–input-null-non-string <null-str></null-str></td>
+<td>在生成的Java文件中，可以将null字符串或者不存在的字符串设置为想要设定的值（例如空字符串）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–input-null-string <null-str></null-str></td>
+<td>将null字符串替换成想要替换的值（一般与5同时使用）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>–map-column-java  <arg></arg></td>
+<td>数据库字段在生成的Java文件中会映射成各种属性，且默认的数据类型与数据库类型保持对应关系。该参数可以改变默认类型，例如：–map-column-java id=long, name=String</td>
+</tr>
+<tr>
+<td>8</td>
+<td>–null-non-string  <null-str></null-str></td>
+<td>在生成Java文件时，可以将不存在或者null的字符串设置为其他值</td>
+</tr>
+<tr>
+<td>9</td>
+<td>–null-string  <null-str></null-str></td>
+<td>在生成Java文件时，将null字符串设置为其他值（一般与8同时使用）</td>
+</tr>
+<tr>
+<td>10</td>
+<td>–table  <table-name></table-name></td>
+<td>对应关系数据库中的表名，生成的Java文件中的各个属性与该表的各个字段一一对应</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-2-8、命令-amp-参数：create-hive-table"><a href="#5-2-8、命令-amp-参数：create-hive-table" class="headerlink" title="5.2.8、命令&amp;参数：create-hive-table"></a>5.2.8、命令&amp;参数：create-hive-table</h3><p>生成与关系数据库表结构对应的hive表结构。</p>
+<p><strong>命令：</strong></p>
+<p>如：</p>
+<p>  $  bin/sqoop create-hive-table \  –connect  jdbc:mysql://hadoop101:3306/company \  –username  root \  –password  123456 \  –table  staff \  –hive-table  hive_staff  </p>
+<p><strong>参数：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>–hive-home <dir></dir></td>
+<td>Hive的安装目录，可以通过该参数覆盖掉默认的Hive目录</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–hive-overwrite</td>
+<td>覆盖掉在Hive表中已经存在的数据</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–create-hive-table</td>
+<td>默认是false，如果目标表已经存在了，那么创建任务会失败</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–hive-table</td>
+<td>后面接要创建的hive表</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–table</td>
+<td>指定关系数据库的表名</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-2-9、命令-amp-参数：eval"><a href="#5-2-9、命令-amp-参数：eval" class="headerlink" title="5.2.9、命令&amp;参数：eval"></a>5.2.9、命令&amp;参数：eval</h3><p>可以快速的使用SQL语句对关系型数据库进行操作，经常用于在import数据之前，了解一下SQL语句是否正确，数据是否正常，并可以将结果显示在控制台。</p>
+<p><strong>命令：</strong></p>
+<p>如：</p>
+<p>  $  bin/sqoop eval \  –connect  jdbc:mysql://hadoop101:3306/company \  –username  root \  –password  123456 \  –query  “SELECT * FROM staff”  </p>
+<p><strong>参数：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>–query或–e</td>
+<td>后跟查询的SQL语句</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-2-10、命令-amp-参数：import-all-tables"><a href="#5-2-10、命令-amp-参数：import-all-tables" class="headerlink" title="5.2.10、命令&amp;参数：import-all-tables"></a>5.2.10、命令&amp;参数：import-all-tables</h3><p>可以将RDBMS中的所有表导入到HDFS中，每一个表都对应一个HDFS目录</p>
+<p><strong>命令：</strong></p>
+<p>如：</p>
+<p>  $  bin/sqoop import-all-tables \  –connect  jdbc:mysql://linux01:3306/company \  –username  root \  –password  123456 \  –warehouse-dir  /all_tables  </p>
+<p><strong>参数：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>–as-avrodatafile</td>
+<td>这些参数的含义均和import对应的含义一致</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–as-sequencefile</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>–as-textfile</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>–direct</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>–direct-split-size <n></n></td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>–inline-lob-limit <n></n></td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>–m或—num-mappers <n></n></td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>–warehouse-dir <dir></dir></td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>-z或–compress</td>
+<td></td>
+</tr>
+<tr>
+<td>10</td>
+<td>–compression-codec</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-2-11、命令-amp-参数：job"><a href="#5-2-11、命令-amp-参数：job" class="headerlink" title="5.2.11、命令&amp;参数：job"></a>5.2.11、命令&amp;参数：job</h3><p>用来生成一个sqoop任务，生成后不会立即执行，需要手动执行。</p>
+<p><strong>命令：</strong></p>
+<p>如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ bin/sqoop job \</div><div class="line"> --create myjob -- import-all-tables \</div><div class="line"> --connect jdbc:mysql://linux01:3306/company \</div><div class="line"> --username root \</div><div class="line"> --password 123456</div><div class="line">$ bin/sqoop job \</div><div class="line">--list</div><div class="line">$ bin/sqoop job \</div><div class="line">--exec myjob</div></pre></td></tr></table></figure>
+<p>尖叫提示：注意import-all-tables和它左边的–之间有一个空格</p>
+<p>尖叫提示：如果需要连接metastore，则–meta-connect jdbc:hsqldb:hsql://linux01:16000/sqoop</p>
+<p>参数：</p>
+<table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>–create <job-id></job-id></td>
+<td>创建job参数</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–delete <job-id></job-id></td>
+<td>删除一个job</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–exec <job-id></job-id></td>
+<td>执行一个job</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–help</td>
+<td>显示job帮助</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–list</td>
+<td>显示job列表</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–meta-connect <jdbc-uri></jdbc-uri></td>
+<td>用来连接metastore服务</td>
+</tr>
+<tr>
+<td>7</td>
+<td>–show <job-id></job-id></td>
+<td>显示一个job的信息</td>
+</tr>
+<tr>
+<td>8</td>
+<td>–verbose</td>
+<td>打印命令运行时的详细信息</td>
+</tr>
+</tbody>
+</table>
+<p>尖叫提示：在执行一个job时，如果需要手动输入数据库密码，可以做如下优化</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;sqoop.metastore.client.record.password&lt;/name&gt;</div><div class="line">	&lt;value&gt;true&lt;/value&gt;</div><div class="line">	&lt;description&gt;If true, allow saved passwords in the metastore.&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<h3 id="5-2-12、命令-amp-参数：list-databases"><a href="#5-2-12、命令-amp-参数：list-databases" class="headerlink" title="5.2.12、命令&amp;参数：list-databases"></a>5.2.12、命令&amp;参数：list-databases</h3><p><strong>命令：</strong></p>
+<p>如：</p>
+<p>  $  bin/sqoop list-databases \  –connect  jdbc:mysql://linux01:3306/ \  –username  root \  –password  123456  </p>
+<p><strong>参数：</strong>与公用参数一样</p>
+<h3 id="5-2-13、命令-amp-参数：list-tables"><a href="#5-2-13、命令-amp-参数：list-tables" class="headerlink" title="5.2.13、命令&amp;参数：list-tables"></a>5.2.13、命令&amp;参数：list-tables</h3><p><strong>命令：</strong></p>
+<p>如：</p>
+<p>  $  bin/sqoop list-tables \  –connect  jdbc:mysql://linux01:3306/company \  –username  root \  –password  123456  </p>
+<p><strong>参数：</strong>与公用参数一样</p>
+<h3 id="5-2-14、命令-amp-参数：merge"><a href="#5-2-14、命令-amp-参数：merge" class="headerlink" title="5.2.14、命令&amp;参数：merge"></a>5.2.14、命令&amp;参数：merge</h3><p>将HDFS中不同目录下面的数据合并在一起并放入指定目录中</p>
+<p>数据环境：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">new_staff</div><div class="line">1       AAA     male</div><div class="line">2       BBB     male</div><div class="line">3       CCC     male</div><div class="line">4       DDD     male</div><div class="line">old_staff</div><div class="line">1       AAA     female</div><div class="line">2       CCC     female</div><div class="line">3       BBB     female</div><div class="line">6       DDD     female</div></pre></td></tr></table></figure>
+<p>尖叫提示：上边数据的列之间的分隔符应该为\t，行与行之间的分割符为\n，如果直接复制，请检查之。</p>
+<p><strong>命令：</strong></p>
+<p>如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">创建JavaBean：</div><div class="line">$ bin/sqoop codegen \</div><div class="line">--connect jdbc:mysql://linux01:3306/company \</div><div class="line">--username root \</div><div class="line">--password 123456 \</div><div class="line">--table staff \</div><div class="line">--bindir /home/admin/Desktop/staff \</div><div class="line">--class-name Staff \</div><div class="line">--fields-terminated-by &quot;\t&quot;</div><div class="line"></div><div class="line">开始合并：</div><div class="line">$ bin/sqoop merge \</div><div class="line">--new-data /test/new/ \</div><div class="line">--onto /test/old/ \</div><div class="line">--target-dir /test/merged \</div><div class="line">--jar-file /home/admin/Desktop/staff/Staff.jar \</div><div class="line">--class-name Staff \</div><div class="line">--merge-key id</div><div class="line">结果：</div><div class="line">1	AAA	MALE</div><div class="line">2	BBB	MALE</div><div class="line">3	CCC	MALE</div><div class="line">4	DDD	MALE</div><div class="line">6	DDD	FEMALE</div></pre></td></tr></table></figure>
+<p>参数：</p>
+<table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>–new-data <path></path></td>
+<td>HDFS 待合并的数据目录，合并后在新的数据集中保留</td>
+</tr>
+<tr>
+<td>2</td>
+<td>–onto <path></path></td>
+<td>HDFS合并后，重复的部分在新的数据集中被覆盖</td>
+</tr>
+<tr>
+<td>3</td>
+<td>–merge-key <col></td>
+<td>合并键，一般是主键ID</td>
+</tr>
+<tr>
+<td>4</td>
+<td>–jar-file <file></file></td>
+<td>合并时引入的jar包，该jar包是通过Codegen工具生成的jar包</td>
+</tr>
+<tr>
+<td>5</td>
+<td>–class-name <class></class></td>
+<td>对应的表名或对象名，该class类是包含在jar包中的</td>
+</tr>
+<tr>
+<td>6</td>
+<td>–target-dir <path></path></td>
+<td>合并后的数据在HDFS里存放的目录</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-2-15、命令-amp-参数：metastore"><a href="#5-2-15、命令-amp-参数：metastore" class="headerlink" title="5.2.15、命令&amp;参数：metastore"></a>5.2.15、命令&amp;参数：metastore</h3><p>记录了Sqoop job的元数据信息，如果不启动该服务，那么默认job元数据的存储目录为~/.sqoop，可在sqoop-site.xml中修改。</p>
+<p><strong>命令：</strong></p>
+<p>如：启动sqoop的metastore服务</p>
+<p>  $ bin/sqoop metastore  </p>
+<p><strong>参数：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>–shutdown</td>
+<td>关闭metastore</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>如果不启动这个服务，那么外部的机器是无法访问到这个***</em></strong>sqoop*<strong>*</strong>的，只能够进行本机操作而已。*<strong>*</strong>Metastore*<strong>*</strong>就是暴露本机的*<strong>*</strong>sqoop*<strong>*</strong>，向外提供服务，能够使远程的机器调用本机的*<strong>*</strong>sqoop*<strong>*</strong>进行操作（类似*<strong>*</strong>hive*<strong> *</strong>的*<strong> *</strong>bin/hive –service metastore*<strong> *</strong>向外暴露*<strong>*</strong>hive*<strong>*</strong>服务）***</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/sqoop/" rel="tag"><i class="fa fa-tag"></i> sqoop</a>
+          
+            <a href="/tags/数据传输工具/" rel="tag"><i class="fa fa-tag"></i> 数据传输工具</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/16/hive总结/" rel="next" title="hive总结">
+                <i class="fa fa-chevron-left"></i> hive总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/28/flume总结/" rel="prev" title="flume总结">
+                flume总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">63</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、Sqoop简介"><span class="nav-number">1.</span> <span class="nav-text">一、Sqoop简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、Sqoop原理"><span class="nav-number">2.</span> <span class="nav-text">二、Sqoop原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、Sqoop安装"><span class="nav-number">3.</span> <span class="nav-text">三、Sqoop安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1、下载并解压"><span class="nav-number">3.1.</span> <span class="nav-text">3.1、下载并解压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2、修改配置文件"><span class="nav-number">3.2.</span> <span class="nav-text">3.2、修改配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3、拷贝JDBC驱动"><span class="nav-number">3.3.</span> <span class="nav-text">3.3、拷贝JDBC驱动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4、验证Sqoop"><span class="nav-number">3.4.</span> <span class="nav-text">3.4、验证Sqoop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5、测试Sqoop是否能够成功连接数据库"><span class="nav-number">3.5.</span> <span class="nav-text">3.5、测试Sqoop是否能够成功连接数据库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、Sqoop的简单使用案例"><span class="nav-number">4.</span> <span class="nav-text">四、Sqoop的简单使用案例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1、导入数据"><span class="nav-number">4.1.</span> <span class="nav-text">4.1、导入数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-1、RDBMS到HDFS"><span class="nav-number">4.1.1.</span> <span class="nav-text">4.1.1、RDBMS到HDFS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-2、RDBMS到Hive"><span class="nav-number">4.1.2.</span> <span class="nav-text">4.1.2、RDBMS到Hive</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2、导出数据"><span class="nav-number">4.2.</span> <span class="nav-text">4.2、导出数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-1、HIVE-HDFS到RDBMS"><span class="nav-number">4.2.1.</span> <span class="nav-text">4.2.1、HIVE/HDFS到RDBMS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3、脚本打包"><span class="nav-number">4.3.</span> <span class="nav-text">4.3、脚本打包</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、Sqoop一些常用命令及参数"><span class="nav-number">5.</span> <span class="nav-text">五、Sqoop一些常用命令及参数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1、常用命令列举"><span class="nav-number">5.1.</span> <span class="nav-text">5.1、常用命令列举</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2、命令-amp-参数详解"><span class="nav-number">5.2.</span> <span class="nav-text">5.2、命令&参数详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-1、公用参数：数据库连接"><span class="nav-number">5.2.1.</span> <span class="nav-text">5.2.1、公用参数：数据库连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-2、公用参数：import"><span class="nav-number">5.2.2.</span> <span class="nav-text">5.2.2、公用参数：import</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-3、公用参数：export"><span class="nav-number">5.2.3.</span> <span class="nav-text">5.2.3、公用参数：export</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-4、公用参数：hive"><span class="nav-number">5.2.4.</span> <span class="nav-text">5.2.4、公用参数：hive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-5、命令-amp-参数：import"><span class="nav-number">5.2.5.</span> <span class="nav-text">5.2.5、命令&参数：import</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-6、命令-amp-参数：export"><span class="nav-number">5.2.6.</span> <span class="nav-text">5.2.6、命令&参数：export</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-7、命令-amp-参数：codegen"><span class="nav-number">5.2.7.</span> <span class="nav-text">5.2.7、命令&参数：codegen</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-8、命令-amp-参数：create-hive-table"><span class="nav-number">5.2.8.</span> <span class="nav-text">5.2.8、命令&参数：create-hive-table</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-9、命令-amp-参数：eval"><span class="nav-number">5.2.9.</span> <span class="nav-text">5.2.9、命令&参数：eval</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-10、命令-amp-参数：import-all-tables"><span class="nav-number">5.2.10.</span> <span class="nav-text">5.2.10、命令&参数：import-all-tables</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-11、命令-amp-参数：job"><span class="nav-number">5.2.11.</span> <span class="nav-text">5.2.11、命令&参数：job</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-12、命令-amp-参数：list-databases"><span class="nav-number">5.2.12.</span> <span class="nav-text">5.2.12、命令&参数：list-databases</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-13、命令-amp-参数：list-tables"><span class="nav-number">5.2.13.</span> <span class="nav-text">5.2.13、命令&参数：list-tables</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-14、命令-amp-参数：merge"><span class="nav-number">5.2.14.</span> <span class="nav-text">5.2.14、命令&参数：merge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-15、命令-amp-参数：metastore"><span class="nav-number">5.2.15.</span> <span class="nav-text">5.2.15、命令&参数：metastore</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      406.9k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共406.9k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>
