@@ -135,7 +135,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="hbase,数据结构化," />
 
 
 
@@ -153,35 +153,36 @@
 
 
 
-<meta name="description" content="layout: wtitle: hbase总结date: 2018-07-02 22:22:10 categories: hadoop #分类tags: [hbase,数据结构化] 一、HBaes介绍1.1、HBase的起源HBase的原型是Google的BigTable论文，受到了该论文思想的启发，目前作为Hadoop的子项目来开发维护，用于支持结构化的数据存储（非结构化数据也可存储-数据挖掘）">
+<meta name="description" content="一、HBaes介绍1.1、HBase的起源HBase的原型是Google的BigTable论文，受到了该论文思想的启发，目前作为Hadoop的子项目来开发维护，用于支持结构化的数据存储（非结构化数据也可存储-数据挖掘）。 官方网站：http://hbase.apache.org – 2006年Google发表BigTable白皮书。 – 2006年开始开发HBase。 – 2008年北京成功开奥运">
+<meta name="keywords" content="hbase,数据结构化">
 <meta property="og:type" content="article">
-<meta property="og:title" content="King哥">
-<meta property="og:url" content="http://kingge.top/2020/05/10/hbase总结/index.html">
+<meta property="og:title" content="hbase总结">
+<meta property="og:url" content="http://kingge.top/2018/07/02/hbase总结/index.html">
 <meta property="og:site_name" content="King哥">
-<meta property="og:description" content="layout: wtitle: hbase总结date: 2018-07-02 22:22:10 categories: hadoop #分类tags: [hbase,数据结构化] 一、HBaes介绍1.1、HBase的起源HBase的原型是Google的BigTable论文，受到了该论文思想的启发，目前作为Hadoop的子项目来开发维护，用于支持结构化的数据存储（非结构化数据也可存储-数据挖掘）">
+<meta property="og:description" content="一、HBaes介绍1.1、HBase的起源HBase的原型是Google的BigTable论文，受到了该论文思想的启发，目前作为Hadoop的子项目来开发维护，用于支持结构化的数据存储（非结构化数据也可存储-数据挖掘）。 官方网站：http://hbase.apache.org – 2006年Google发表BigTable白皮书。 – 2006年开始开发HBase。 – 2008年北京成功开奥运">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/clip_image002.png">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/clip_image003.jpg">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/clip_image005.jpg">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/image-20200510113948557.png">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/clip_image002.jpg">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/image-20200510114341556.png">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/clip_image02202.jpg">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/123.png">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/image-20200510114823112.png">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/image-20200510114832543.png">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/image-20200510114845784.png">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/image-20200510115403745.png">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/image-20200510115417538.png">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/image-20200510115442300.png">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/image-20200510115920725.png">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/image-20200510120021250.png">
-<meta property="og:image" content="http://kingge.top/2020/05/10/hbase总结/image-20200510120028174.png">
-<meta property="og:updated_time" content="2020-05-10T04:03:50.347Z">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/clip_image002.png">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/clip_image003.jpg">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/clip_image005.jpg">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/image-20200510113948557.png">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/clip_image002.jpg">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/image-20200510114341556.png">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/clip_image02202.jpg">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/123.png">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/image-20200510114823112.png">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/image-20200510114832543.png">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/image-20200510114845784.png">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/image-20200510115403745.png">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/image-20200510115417538.png">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/image-20200510115442300.png">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/image-20200510115920725.png">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/image-20200510120021250.png">
+<meta property="og:image" content="http://kingge.top/2018/07/02/hbase总结/image-20200510120028174.png">
+<meta property="og:updated_time" content="2020-05-10T08:24:38.743Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="King哥">
-<meta name="twitter:description" content="layout: wtitle: hbase总结date: 2018-07-02 22:22:10 categories: hadoop #分类tags: [hbase,数据结构化] 一、HBaes介绍1.1、HBase的起源HBase的原型是Google的BigTable论文，受到了该论文思想的启发，目前作为Hadoop的子项目来开发维护，用于支持结构化的数据存储（非结构化数据也可存储-数据挖掘）">
-<meta name="twitter:image" content="http://kingge.top/2020/05/10/hbase总结/clip_image002.png">
+<meta name="twitter:title" content="hbase总结">
+<meta name="twitter:description" content="一、HBaes介绍1.1、HBase的起源HBase的原型是Google的BigTable论文，受到了该论文思想的启发，目前作为Hadoop的子项目来开发维护，用于支持结构化的数据存储（非结构化数据也可存储-数据挖掘）。 官方网站：http://hbase.apache.org – 2006年Google发表BigTable白皮书。 – 2006年开始开发HBase。 – 2008年北京成功开奥运">
+<meta name="twitter:image" content="http://kingge.top/2018/07/02/hbase总结/clip_image002.png">
 
 
 
@@ -210,13 +211,13 @@
 
 
 
-  <link rel="canonical" href="http://kingge.top/2020/05/10/hbase总结/"/>
+  <link rel="canonical" href="http://kingge.top/2018/07/02/hbase总结/"/>
 
 
 
 
 
-  <title> | King哥</title>
+  <title>hbase总结 | King哥</title>
   
 
 
@@ -397,7 +398,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://kingge.top/2020/05/10/hbase总结/">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2018/07/02/hbase总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jeremy Kinge">
@@ -414,7 +415,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">hbase总结</h1>
         
 
         <div class="post-meta">
@@ -426,8 +427,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-10T12:04:22+08:00">
-                2020-05-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-02T22:22:10+08:00">
+                2018-07-02
               </time>
             
 
@@ -436,6 +437,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -458,7 +481,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  15,989
+                  15,967
                 </span>
               
 
@@ -497,8 +520,7 @@
       
 
       
-        <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">layout: w</div><div class="line">title: hbase总结</div><div class="line">date: 2018-07-02 22:22:10 </div><div class="line">categories: hadoop #分类</div><div class="line">tags: [hbase,数据结构化]</div></pre></td></tr></table></figure>
-<h1 id="一、HBaes介绍"><a href="#一、HBaes介绍" class="headerlink" title="一、HBaes介绍"></a>一、HBaes介绍</h1><h2 id="1-1、HBase的起源"><a href="#1-1、HBase的起源" class="headerlink" title="1.1、HBase的起源"></a>1.1、HBase的起源</h2><p>HBase的原型是Google的BigTable论文，受到了该论文思想的启发，目前作为Hadoop的子项目来开发维护，用于支持结构化的数据存储（非结构化数据也可存储-数据挖掘）。</p>
+        <h1 id="一、HBaes介绍"><a href="#一、HBaes介绍" class="headerlink" title="一、HBaes介绍"></a>一、HBaes介绍</h1><h2 id="1-1、HBase的起源"><a href="#1-1、HBase的起源" class="headerlink" title="1.1、HBase的起源"></a>1.1、HBase的起源</h2><p>HBase的原型是Google的BigTable论文，受到了该论文思想的启发，目前作为Hadoop的子项目来开发维护，用于支持结构化的数据存储（非结构化数据也可存储-数据挖掘）。</p>
 <p>官方网站：<a href="http://hbase.apache.org" target="_blank" rel="external">http://hbase.apache.org</a></p>
 <p>– 2006年Google发表BigTable白皮书。</p>
 <p>– 2006年开始开发HBase。</p>
@@ -532,11 +554,11 @@
 <p>Hbase表的分片，HBase表会根据RowKey值被切分成不同的region存储在RegionServer中，在一个RegionServer中可以有多个不同的region。</p>
 <h2 id="1-3、HBase的架构"><a href="#1-3、HBase的架构" class="headerlink" title="1.3、HBase的架构"></a>1.3、HBase的架构</h2><p>HBase一种是作为存储的分布式文件系统，另一种是作为数据处理模型的MR框架。因为日常开发人员比较熟练的是结构化的数据进行处理，但是在HDFS直接存储的文件往往不具有结构化，所以催生出了HBase在HDFS上的操作。如果需要查询数据，只需要通过键值便可以成功访问。</p>
 <p>架构图如下图所示：</p>
-<p><img src="/2020/05/10/hbase总结/clip_image002.png" alt="img"> </p>
+<p><img src="/2018/07/02/hbase总结/clip_image002.png" alt="img"> </p>
 <p>HBase内置有Zookeeper，但一般我们会有其他的Zookeeper集群来监管master和regionserver，Zookeeper通过选举，保证任何时候，集群中只有一个活跃的HMaster，HMaster与HRegionServer 启动时会向ZooKeeper注册，存储所有HRegion的寻址入口，实时监控HRegionserver的上线和下线信息。并实时通知给HMaster，存储HBase的schema和table元数据，默认情况下，HBase 管理ZooKeeper 实例，Zookeeper的引入使得HMaster不再是单点故障。一般情况下会启动两个HMaster，非Active的HMaster会定期的和Active HMaster通信以获取其最新状态，从而保证它是实时更新的，因而如果启动了多个HMaster反而增加了Active HMaster的负担。</p>
 <p>一个RegionServer可以包含多个HRegion，每个RegionServer维护一个HLog，和多个HFiles以及其对应的MemStore。RegionServer运行于DataNode上，数量可以与DatNode数量一致，请参考如下架构图：</p>
-<p><img src="/2020/05/10/hbase总结/clip_image003.jpg" alt="http://upload-images.jianshu.io/upload_images/4951489-8dee031e87bde745.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p><img src="/2020/05/10/hbase总结/clip_image005.jpg" alt="img"></p>
+<p><img src="/2018/07/02/hbase总结/clip_image003.jpg" alt="http://upload-images.jianshu.io/upload_images/4951489-8dee031e87bde745.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><img src="/2018/07/02/hbase总结/clip_image005.jpg" alt="img"></p>
 <h1 id="二、HBase部署与使用"><a href="#二、HBase部署与使用" class="headerlink" title="二、HBase部署与使用"></a>二、HBase部署与使用</h1><h2 id="2-1、部署"><a href="#2-1、部署" class="headerlink" title="2.1、部署"></a>2.1、部署</h2><h3 id="2-1-1、Zookeeper正常部署"><a href="#2-1-1、Zookeeper正常部署" class="headerlink" title="2.1.1、Zookeeper正常部署"></a>2.1.1、Zookeeper正常部署</h3><p>首先保证Zookeeper集群的正常部署，并启动之：</p>
 <p>  $ ~/modules/zookeeper-3.4.5/bin/zkServer.sh  start  </p>
 <h3 id="2-1-2、Hadoop正常部署"><a href="#2-1-2、Hadoop正常部署" class="headerlink" title="2.1.2、Hadoop正常部署"></a>2.1.2、Hadoop正常部署</h3><p>Hadoop集群的正常部署并启动：</p>
@@ -593,7 +615,7 @@
 <p><strong><em>这个时候产生一个问题，原先的Thomas***</em></strong>就消失了嘛？其实不是，之前的值还是存在的。通过时间戳来区分***。（version 版本）</p>
 <p><strong>3)</strong> <strong>扫描查看表数据</strong></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">hbase(main) &gt; scan &apos;student&apos;</div><div class="line">hbase(main) &gt; scan &apos;student&apos;,&#123;STARTROW =&gt; &apos;1001&apos;, STOPROW  =&gt; &apos;1001&apos;&#125;</div><div class="line">hbase(main) &gt; scan &apos;student&apos;,&#123;STARTROW =&gt; &apos;1001&apos;&#125;</div></pre></td></tr></table></figure>
-<p><img src="/2020/05/10/hbase总结/image-20200510113948557.png" alt="image-20200510113948557"></p>
+<p><img src="/2018/07/02/hbase总结/image-20200510113948557.png" alt="image-20200510113948557"></p>
 <p>时间戳是在插入数据时，默认添加的，目的是为了保存冗余的数据。</p>
 <p>注意在hbase中比较大小时按位比较。那么比较大小时STARTROW，<strong><em>根据***</em></strong>ascall*<strong>*</strong>码按位比较***。例如存在行的rowkey有abc、aaa、abcd、e、ac。那么STARTROW =&gt; ‘ac’.首先比较第一个字母a，这五个rowkey都满足，再比较第二个字母c，最终只有e、ac满足。故输出这两行的值</p>
 <p><strong>4)</strong> <strong>查看表结构</strong></p>
@@ -624,17 +646,17 @@
 <p><strong>11)</strong> <strong>变更表信息</strong></p>
 <p>将info列族中的数据存放3个版本：（默认只保留一个版本）</p>
 <p>  hbase(main) &gt; alter ‘student’,{NAME=&gt;’info’,VERSIONS=&gt;3}  </p>
-<h3 id="2-2-3-hbase的表结构"><a href="#2-2-3-hbase的表结构" class="headerlink" title="2.2.3 hbase的表结构"></a>2.2.3 hbase的表结构</h3><p><img src="/2020/05/10/hbase总结/clip_image002.jpg" alt="img"></p>
+<h3 id="2-2-3-hbase的表结构"><a href="#2-2-3-hbase的表结构" class="headerlink" title="2.2.3 hbase的表结构"></a>2.2.3 hbase的表结构</h3><p><img src="/2018/07/02/hbase总结/clip_image002.jpg" alt="img"></p>
 <p>每个表必须有一个唯一的rowkey，已经时间戳（ts）,info是一个列镞，也就是说info里面可能包含多个列（图中就包含name和sex两个列- nick和male是这两个列的值）。</p>
 <p>那么我们需要给name列赋值，就需要通过一系列属性定位- </p>
-<p> <img src="/2020/05/10/hbase总结/image-20200510114341556.png" alt="image-20200510114341556"></p>
-<h2 id="2-3、读写流程"><a href="#2-3、读写流程" class="headerlink" title="2.3、读写流程"></a>2.3、读写流程</h2><h3 id="2-3-0-Region的寻址"><a href="#2-3-0-Region的寻址" class="headerlink" title="2.3.0 Region的寻址"></a>2.3.0 Region的寻址</h3><p><img src="/2020/05/10/hbase总结/clip_image02202.jpg" alt="img"></p>
-<p><img src="/2020/05/10/hbase总结/123.png" alt="img"></p>
+<p> <img src="/2018/07/02/hbase总结/image-20200510114341556.png" alt="image-20200510114341556"></p>
+<h2 id="2-3、读写流程"><a href="#2-3、读写流程" class="headerlink" title="2.3、读写流程"></a>2.3、读写流程</h2><h3 id="2-3-0-Region的寻址"><a href="#2-3-0-Region的寻址" class="headerlink" title="2.3.0 Region的寻址"></a>2.3.0 Region的寻址</h3><p><img src="/2018/07/02/hbase总结/clip_image02202.jpg" alt="img"></p>
+<p><img src="/2018/07/02/hbase总结/123.png" alt="img"></p>
 <h3 id="2-3-1、HBase读数据流程"><a href="#2-3-1、HBase读数据流程" class="headerlink" title="2.3.1、HBase读数据流程"></a>2.3.1、HBase读数据流程</h3><p><strong>1)</strong> HRegionServer保存着.META.的这样一张表以及表数据，要访问表数据，首先Client先去访问zookeeper，从zookeeper里面获取-ROOT-表所在位置，进而找到.META.表所在的位置信息，即找到这个.META.表在哪个HRegionServer上保存着。</p>
 <p><strong>2)</strong> 接着Client通过刚才获取到的HRegionServer的IP来访问.META.表所在的HRegionServer，从而读取到.META.，进而获取到.META.表中存放的元数据。</p>
 <p><strong>3)</strong> Client通过元数据中存储的信息，访问对应的HRegionServer，然后扫描所在HRegionServer的Memstore和Storefile来查询数据。</p>
 <p><strong>4)</strong> 最后HRegionServer把查询到的数据响应给Client。-详细的请看视频，涉及到memorystore（存储写入的数据，内存存储）和blockcache（存储读取的数据。内存存储）的hfile（物理逻辑上的输出-在hdfs中）的读取。</p>
-<p><img src="/2020/05/10/hbase总结/image-20200510114823112.png" alt="image-20200510114823112"></p>
+<p><img src="/2018/07/02/hbase总结/image-20200510114823112.png" alt="image-20200510114823112"></p>
 <h3 id="2-3-2、HBase写数据流程"><a href="#2-3-2、HBase写数据流程" class="headerlink" title="2.3.2、HBase写数据流程"></a>2.3.2、HBase写数据流程</h3><p><strong>1)</strong> Client也是先访问zookeeper，找到-ROOT-表，进而找到.META.表，并获取.META.表信息。</p>
 <p><strong>2)</strong> 确定当前将要写入的数据所对应的RegionServer服务器和Region。</p>
 <p><strong>3)</strong> Client向该RegionServer服务器发起写入数据请求，然后RegionServer收到请求并响应。</p>
@@ -643,7 +665,7 @@
 <p><strong>6)</strong> 如果Hlog和Memstore均写入成功，则这条数据写入成功。在此过程中，如果Memstore达到阈值，会把Memstore中的数据flush到StoreFile中。(溢出后，会重新创建一块memostore存储接下来需要写入的数据。当前溢出的memostore会把数据打包放入到一个队列中，等到flush，也即是说一个memstore溢出后写入，对应着一个storefile，一对多的关系)</p>
 <p><strong>7)</strong> 当Storefile越来越多，会触发Compact合并操作，把过多的Storefile合并成一个大的Storefile（避免datanode出现大量小文件）。当Storefile越来越大，Region也会越来越大，达到阈值后，会触发Split操作，将Region一分为二。</p>
 <p>尖叫提示：因为内存空间是有限的，所以说溢写过程必定伴随着大量的小文件产生。</p>
-<p><img src="/2020/05/10/hbase总结/image-20200510114832543.png" alt="image-20200510114832543"></p>
+<p><img src="/2018/07/02/hbase总结/image-20200510114832543.png" alt="image-20200510114832543"></p>
 <p>从上图可以看出氛围3步骤：</p>
 <p>第1步：Client获取数据写入的Region所在的RegionServer<br> 第2步：请求写Hlog<br> 第3步：请求写MemStore</p>
 <p>只有当写Hlog和写MemStore都成功了才算请求写入完成。MemStore后续会逐渐刷到HDFS中。</p>
@@ -665,7 +687,7 @@
 <h2 id="2-4、JavaAPI"><a href="#2-4、JavaAPI" class="headerlink" title="2.4、JavaAPI"></a>2.4、JavaAPI</h2><h3 id="2-4-1、安装Maven并配置环境变量"><a href="#2-4-1、安装Maven并配置环境变量" class="headerlink" title="2.4.1、安装Maven并配置环境变量"></a>2.4.1、安装Maven并配置环境变量</h3><p>  $ tar  -zxf ~/softwares/installations/apache-maven-3.5.0-bin.tar.gz -C ~/modules/  </p>
 <p>在环境变量中添加：</p>
 <p>  MAVEN_HOME=/home/admin/modules/apache-maven-3.5.0  export PATH=$PATH:$MAVEN_HOME/bin  </p>
-<h3 id="2-4-2、新建Maven-Project"><a href="#2-4-2、新建Maven-Project" class="headerlink" title="2.4.2、新建Maven Project"></a>2.4.2、新建Maven Project</h3><p><img src="/2020/05/10/hbase总结/image-20200510114845784.png" alt="image-20200510114845784"></p>
+<h3 id="2-4-2、新建Maven-Project"><a href="#2-4-2、新建Maven-Project" class="headerlink" title="2.4.2、新建Maven Project"></a>2.4.2、新建Maven Project</h3><p><img src="/2018/07/02/hbase总结/image-20200510114845784.png" alt="image-20200510114845784"></p>
 <p> <strong>需要三个配置文件信息：core-site.xml**</strong>、hdfs-site.xml<strong>**、hbase-site.xml</strong></p>
 <p>新建项目后在pom.xml中添加依赖：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.apache.hbase&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;hbase-server&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;1.3.1&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line"></div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.apache.hbase&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;hbase-client&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;1.3.1&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line"></div><div class="line">----下面这个可以不导入</div><div class="line">&lt;dependency&gt;</div><div class="line">	&lt;groupId&gt;jdk.tools&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;jdk.tools&lt;/artifactId&gt;</div><div class="line">	&lt;version&gt;1.6&lt;/version&gt;</div><div class="line">	&lt;scope&gt;system&lt;/scope&gt;</div><div class="line">	&lt;systemPath&gt;$&#123;JAVA_HOME&#125;/lib/tools.jar&lt;/systemPath&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
@@ -688,7 +710,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public static void getRow(String tableName, String rowKey) throws IOException&#123;</div><div class="line">	HTable table = new HTable(conf, tableName);</div><div class="line">	Get get = new Get(Bytes.toBytes(rowKey));</div><div class="line">	//get.setMaxVersions();显示所有版本</div><div class="line">    //get.setTimeStamp();显示指定时间戳的版本</div><div class="line">	Result result = table.get(get);</div><div class="line">	for(Cell cell : result.rawCells())&#123;</div><div class="line">		System.out.println(&quot;行键:&quot; + Bytes.toString(result.getRow()));</div><div class="line">		System.out.println(&quot;列族&quot; + Bytes.toString(CellUtil.cloneFamily(cell)));</div><div class="line">		System.out.println(&quot;列:&quot; + Bytes.toString(CellUtil.cloneQualifier(cell)));</div><div class="line">		System.out.println(&quot;值:&quot; + Bytes.toString(CellUtil.cloneValue(cell)));</div><div class="line">		System.out.println(&quot;时间戳:&quot; + cell.getTimestamp());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p><strong>9)</strong> <strong>获取某一行指定“列族:**</strong>列”的数据**</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public static void getRowQualifier(String tableName, String rowKey, String family, String qualifier) throws IOException&#123;</div><div class="line">	HTable table = new HTable(conf, tableName);</div><div class="line">	Get get = new Get(Bytes.toBytes(rowKey));</div><div class="line">	get.addColumn(Bytes.toBytes(family), Bytes.toBytes(qualifier));</div><div class="line">	Result result = table.get(get);</div><div class="line">	for(Cell cell : result.rawCells())&#123;</div><div class="line">		System.out.println(&quot;行键:&quot; + Bytes.toString(result.getRow()));</div><div class="line">		System.out.println(&quot;列族&quot; + Bytes.toString(CellUtil.cloneFamily(cell)));</div><div class="line">		System.out.println(&quot;列:&quot; + Bytes.toString(CellUtil.cloneQualifier(cell)));</div><div class="line">		System.out.println(&quot;值:&quot; + Bytes.toString(CellUtil.cloneValue(cell)));</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><img src="/2020/05/10/hbase总结/image-20200510115403745.png" alt="image-20200510115403745"></p>
+<p><img src="/2018/07/02/hbase总结/image-20200510115403745.png" alt="image-20200510115403745"></p>
 <h2 id="2-5、MapReduce"><a href="#2-5、MapReduce" class="headerlink" title="2.5、MapReduce"></a>2.5、MapReduce</h2><p>通过HBase的相关JavaAPI，我们可以实现伴随HBase操作的MapReduce过程，比如使用MapReduce将数据从本地文件系统导入到HBase的表中，比如我们从HBase中读取一些原始数据后使用MapReduce做数据分析。</p>
 <h3 id="2-5-1、官方HBase-MapReduce"><a href="#2-5-1、官方HBase-MapReduce" class="headerlink" title="2.5.1、官方HBase-MapReduce"></a>2.5.1、官方HBase-MapReduce</h3><p><strong>1)</strong> <strong>查看HBase**</strong>的MapReduce<strong><strong>任务的所需的依赖-</strong></strong>也就是说当前hbase<strong><strong>想要执行mapreduce</strong></strong>所需要的依赖**</p>
 <p>  $ bin/hbase mapredcp  </p>
@@ -696,9 +718,9 @@
 <p>  $ export HBASE_HOME= /opt/module/hbase-1.3.1/  $ export HADOOP_CLASSPATH=<code>${HBASE_HOME}/bin/hbase  mapredcp</code>  </p>
 <p><strong>2.2)</strong> <strong>执行环境变量的导入（永久-**</strong>在hadoop<strong><strong>启动时自动加载jar</strong></strong>包到环境中）**</p>
 <p> \1. 打开hadoop的 hadoop-env.sh</p>
-<p><img src="/2020/05/10/hbase总结/image-20200510115417538.png" alt="image-20200510115417538"></p>
+<p><img src="/2018/07/02/hbase总结/image-20200510115417538.png" alt="image-20200510115417538"></p>
 <p>写入命令脚本（如果配置了hbase_home那么可以不书写hbase的全路径，用${HBASE_HOME} 代替即可）</p>
-<p><img src="/2020/05/10/hbase总结/image-20200510115442300.png" alt="image-20200510115442300"></p>
+<p><img src="/2018/07/02/hbase总结/image-20200510115442300.png" alt="image-20200510115442300"></p>
 <p>必须放在上面for循环下面，避免被覆盖，同时也要保留for循环已经为hadoop_classpath赋的值。（<strong><em>为了避免被覆盖推荐放到***</em></strong>hadoop-env.sh*<strong>*</strong>的最末尾***）</p>
 <p>export HADOOP_CLASSPATH=<code>/opt/module/hbase-1.3.1/bin/hbase mapredcp</code></p>
 <p>\3. hadoop-env.sh分发到hadoop集群</p>
@@ -984,7 +1006,7 @@
 <h2 id="3-5、HBase优化"><a href="#3-5、HBase优化" class="headerlink" title="3.5、HBase优化"></a>3.5、HBase优化</h2><h3 id="3-5-1、预分区-避免region被无线切分-（他的本质实际上就是预估rowkey的范围）"><a href="#3-5-1、预分区-避免region被无线切分-（他的本质实际上就是预估rowkey的范围）" class="headerlink" title="3.5.1、预分区(避免region被无线切分)（他的本质实际上就是预估rowkey的范围）"></a>3.5.1、预分区(避免region被无线切分)（他的本质实际上就是预估rowkey的范围）</h3><p>每一个region维护着startRow与endRowKey，如果加入的数据符合某个region维护的rowKey范围，则该数据交给这个region维护。那么依照这个原则，我们可以将数据索要投放的分区提前大致的规划好，以提高HBase性能。</p>
 <p><strong>1)</strong> <strong>手动设定预分区（很明显生成五个分区</strong> <strong>负无穷到1000,1000-2000,2000-3000**</strong>，3000-4000,4000-<strong>**正无穷）</strong></p>
 <p>  hbase&gt; create animal,’info’,’partition1’,SPLITS  =&gt; [‘1000’,’2000’,’3000’,’4000’]  </p>
-<p><img src="/2020/05/10/hbase总结/image-20200510115920725.png" alt="image-20200510115920725"></p>
+<p><img src="/2018/07/02/hbase总结/image-20200510115920725.png" alt="image-20200510115920725"></p>
 <p><strong>2)</strong> <strong>生成16**</strong>进制序列预分区(<strong><strong>直接指定15</strong></strong>个分区)**</p>
 <p>  create  ‘staff2’,’info’,’partition2’,{NUMREGIONS =&gt; 15, SPLITALGO =&gt;  ‘HexStringSplit’}  </p>
 <p><strong>3)</strong> <strong>按照文件中设置的规则预分区</strong></p>
@@ -1045,7 +1067,7 @@
 <p>即：这个参数的作用是当单个HRegion内所有的Memstore大小总和超过指定值时，flush该HRegion的所有memstore。RegionServer的flush是通过将请求添加一个队列，模拟生产消费模型来异步处理的。那这里就有一个问题，当队列来不及消费，产生大量积压请求时，可能会导致内存陡增，最坏的情况是触发OOM。</p>
 <p>  hbase.regionserver.global.memstore.upperLimit：0.4  hbase.regionserver.global.memstore.lowerLimit：0.38  </p>
 <p>即：当MemStore使用内存总量达到hbase.regionserver.global.memstore.upperLimit指定值时，将会有多个MemStores flush到文件中，MemStore flush 顺序是按照大小降序执行的，直到刷新到MemStore使用内存略小于lowerLimit</p>
-<h1 id="四、HBase项目"><a href="#四、HBase项目" class="headerlink" title="四、HBase项目"></a>四、HBase项目</h1><h2 id="4-1、涉及概念梳理：命名空间"><a href="#4-1、涉及概念梳理：命名空间" class="headerlink" title="4.1、涉及概念梳理：命名空间"></a>4.1、涉及概念梳理：命名空间</h2><h3 id="4-1-1、命名空间的结构"><a href="#4-1-1、命名空间的结构" class="headerlink" title="4.1.1、命名空间的结构"></a>4.1.1、命名空间的结构</h3><p><img src="/2020/05/10/hbase总结/image-20200510120021250.png" alt="image-20200510120021250"></p>
+<h1 id="四、HBase项目"><a href="#四、HBase项目" class="headerlink" title="四、HBase项目"></a>四、HBase项目</h1><h2 id="4-1、涉及概念梳理：命名空间"><a href="#4-1、涉及概念梳理：命名空间" class="headerlink" title="4.1、涉及概念梳理：命名空间"></a>4.1、涉及概念梳理：命名空间</h2><h3 id="4-1-1、命名空间的结构"><a href="#4-1-1、命名空间的结构" class="headerlink" title="4.1.1、命名空间的结构"></a>4.1.1、命名空间的结构</h3><p><img src="/2018/07/02/hbase总结/image-20200510120021250.png" alt="image-20200510120021250"></p>
 <p><strong>1) Table</strong>：表，所有的表都是命名空间的成员，即表必属于某个命名空间，如果没有指定，则在default默认的命名空间中。</p>
 <p><strong>2) RegionServer group**</strong>：**一个命名空间包含了默认的RegionServer Group。</p>
 <p><strong>3) Permission**</strong>：**权限，命名空间能够让我们来定义访问控制列表ACL（Access Control List）。例如，创建表，读取表，删除，更新等等操作。</p>
@@ -1055,7 +1077,7 @@
 <p>2) <strong>创建表时指定命名空间</strong></p>
 <p>  hbase(main):004:0&gt; create  ‘ns_school:tbl_student’,’info’  </p>
 <p><strong>3)</strong> <strong>观察HDFS**</strong>中的目录结构的变化**</p>
-<p><img src="/2020/05/10/hbase总结/image-20200510120028174.png" alt="image-20200510120028174"></p>
+<p><img src="/2018/07/02/hbase总结/image-20200510120028174.png" alt="image-20200510120028174"></p>
 <h2 id="4-2、微博系统"><a href="#4-2、微博系统" class="headerlink" title="4.2、微博系统"></a>4.2、微博系统</h2><h3 id="4-1-1、需求分析"><a href="#4-1-1、需求分析" class="headerlink" title="4.1.1、需求分析"></a>4.1.1、需求分析</h3><p>1) 微博内容的浏览，数据库表设计</p>
 <p>2) 用户社交体现：关注用户，取关用户</p>
 <p>3) 拉取关注的人的微博内容</p>
@@ -1289,6 +1311,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/hbase/" rel="tag"><i class="fa fa-tag"></i> hbase</a>
+          
+            <a href="/tags/数据结构化/" rel="tag"><i class="fa fa-tag"></i> 数据结构化</a>
+          
+        </div>
+      
 
       
       
@@ -1298,8 +1328,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/05/10/oozie总结/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2018/06/28/flume总结/" rel="next" title="flume总结">
+                <i class="fa fa-chevron-left"></i> flume总结
               </a>
             
           </div>
@@ -1307,6 +1337,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/18/oozie总结/" rel="prev" title="oozie总结">
+                oozie总结 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -1435,7 +1469,7 @@ var jiathis_config={
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-count">100</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
