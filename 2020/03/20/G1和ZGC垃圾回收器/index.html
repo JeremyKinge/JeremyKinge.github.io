@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="jvm,垃圾回收器,G1,ZGC," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="G1垃圾回收器G1回收器基本概念统一收集新生代 和老年代，采用了更加优秀的算法和设计机制。  1、ParNew + CMS的组合让我们有哪些痛点？  Stop the World - STW，这个是大家最痛的一个点！ ​    无论是新生代垃圾回收，还是老年代垃圾回收，都会或多或少产生“Stop the World”现象，对系统的运行是有一定影响的。 所以其实之后对垃圾回收器的优化，都是朝着减少“">
+<meta name="keywords" content="jvm,垃圾回收器,G1,ZGC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="G1和ZGC垃圾回收器">
+<meta property="og:url" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="G1垃圾回收器G1回收器基本概念统一收集新生代 和老年代，采用了更加优秀的算法和设计机制。  1、ParNew + CMS的组合让我们有哪些痛点？  Stop the World - STW，这个是大家最痛的一个点！ ​    无论是新生代垃圾回收，还是老年代垃圾回收，都会或多或少产生“Stop the World”现象，对系统的运行是有一定影响的。 所以其实之后对垃圾回收器的优化，都是朝着减少“">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218102752760.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218102808577.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/27092700_1571135637.jpg">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/39862300_1571135637.jpg">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/50850300_1571135637.jpg">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218103846669.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218105658603.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218105747097.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218105828904.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218105939677.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218110042480.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218110244416.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218110350081.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218113037224.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218113917147.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218113956478.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/35729800_1571135502.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218114128560.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218114217544.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218114324205.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218114533978.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218114541987.png">
+<meta property="og:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/1577885759697.png">
+<meta property="og:updated_time" content="2020-05-24T13:54:58.370Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="G1和ZGC垃圾回收器">
+<meta name="twitter:description" content="G1垃圾回收器G1回收器基本概念统一收集新生代 和老年代，采用了更加优秀的算法和设计机制。  1、ParNew + CMS的组合让我们有哪些痛点？  Stop the World - STW，这个是大家最痛的一个点！ ​    无论是新生代垃圾回收，还是老年代垃圾回收，都会或多或少产生“Stop the World”现象，对系统的运行是有一定影响的。 所以其实之后对垃圾回收器的优化，都是朝着减少“">
+<meta name="twitter:image" content="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/image-20191218102752760.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/"/>
+
+
+
+
+
+  <title>G1和ZGC垃圾回收器 | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2020/03/20/G1和ZGC垃圾回收器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">G1和ZGC垃圾回收器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-20T22:57:58+08:00">
+                2020-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  6,498
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  23
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="G1垃圾回收器"><a href="#G1垃圾回收器" class="headerlink" title="G1垃圾回收器"></a><strong>G1垃圾回收器</strong></h2><h3 id="G1回收器基本概念"><a href="#G1回收器基本概念" class="headerlink" title="G1回收器基本概念"></a>G1回收器基本概念</h3><p>统一收集新生代 和老年代，采用了更加优秀的算法和设计机制。</p>
+<blockquote>
+<p><strong>1、ParNew + CMS的组合让我们有哪些痛点？</strong></p>
+</blockquote>
+<p><strong>Stop the World - STW，这个是大家最痛的一个点！</strong></p>
+<p>​    无论是新生代垃圾回收，还是老年代垃圾回收，都会或多或少产生“Stop the World”现象，对系统的运行是有一定影响的。</p>
+<p>所以其实之后对垃圾回收器的优化，都是朝着减少“Stop the World”的目标去做的。</p>
+<p>在这个基础之上，G1垃圾回收器就应运而生了，他可以提供比“ParNew + CMS”组合更好的垃圾回收的性能。</p>
+<blockquote>
+<p><strong>2、G1垃圾回收器</strong></p>
+</blockquote>
+<p>​    G1垃圾回收器是可以同时回收新生代和老年代的对象的，不需要两个垃圾回收器配合起来运作，他一个人就可以搞定所有的垃圾回收。</p>
+<p><strong>他最大的一个特点，就是把Java堆内存拆分为多个大小相等的Region</strong>，如下图。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218102752760.png" alt="image-20191218102752760"></p>
+<p>然后G1也会有新生代和老年代的概念，但是只不过是<strong>逻辑上的概念</strong></p>
+<p>也就是说，新生代可能包含了某些Region，老年代可能包含了某些Reigon，<strong>需要注意的是，新生代跟老年代可能就不是连续的一块内存了，他们由多个region组成，分散在四处</strong>，如下图。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218102808577.png" alt="image-20191218102808577"></p>
+<p>而且G1最大的一个特点，就是可以让我们<strong>设置一个垃圾回收的预期停顿时间</strong></p>
+<p>也就是说比如我们可以指定：希望G1在垃圾回收的时候，可以保证，在1小时内由G1垃圾回收导致的“Stop the World”时间，也就是系统停顿的时间，不能超过1分钟。</p>
+<p>​    以前我们很多JVM优化的思路，最终是对内存合理分配，优化一些参数，就是为了尽可能减少Minor GC和Full GC，尽量减少GC带来的系统停顿，避免影响系统处理请求。</p>
+<p>​    但是现在我们直接可以给G1指定，在一个时间内，垃圾回收导致的系统停顿时间不能超过多久，G1全权给你负责，保证达到这个目标。</p>
+<p>这样相当于我们就可以直接控制垃圾回收对系统性能的影响了。</p>
+<blockquote>
+<p><strong>3、G1是如何做到对垃圾回收导致的系统停顿可控的？</strong></p>
+</blockquote>
+<p>其实G1如果要做到这一点，他就必须要追踪每个<strong>Region里的回收价值</strong>，啥叫做回收价值呢？</p>
+<p>​    <strong>他必须搞清楚每个Region里的对象有多少是垃圾，如果对这个Region进行垃圾回收，需要耗费多长时间，可以回收掉多少垃圾？</strong></p>
+<p>​    大家看下图，G1通过追踪发现，1个Region中的垃圾对象有10MB，回收他们需要耗费1秒钟，另外一个Region中的垃圾对象有20MB，回收他们需要耗费200毫秒。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/27092700_1571135637.jpg" alt="03_Region追踪 改.jpg"></p>
+<p>​    然后在垃圾回收的时候，G1会发现在最近一个时间段内，比如1小时内，垃圾回收已经导致了几百毫秒的系统停顿了，现在又要执行一次垃圾回收，那么必须是回收上图中那个只需要200ms就能回收掉20MB垃圾的Region啊！</p>
+<p>于是G1触发一次垃圾回收，虽然可能导致系统停顿了200ms，但是一下子回收了更多的垃圾，就是20MB的垃圾，如下图。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/39862300_1571135637.jpg" alt="04_回收Region.jpg"></p>
+<p>​    <strong>所以简单来说，G1可以做到让你来设定垃圾回收对系统的影响，他自己通过把内存拆分为大量小Region，以及追踪每个Region中可以回收的对象大小和预估时间，最后在垃圾回收的时候，尽量把垃圾回收对系统造成的影响控制在你指定的时间范围内，同时在有限的时间内尽量回收尽可能多的垃圾对象。</strong></p>
+<p>这就是G1的<strong>核心设计思路</strong>。</p>
+<blockquote>
+<p><strong>4、Region可能属于新生代也可能属于老年代</strong></p>
+</blockquote>
+<p>另外在G1中，每一个Region时可能属于新生代，但是也可能属于老年代的。</p>
+<p>刚开始Region可能谁都不属于，然后接着就分配给了新生代，然后放了很多属于新生代的对象，接着就触发了垃圾回收这个Region，如下图。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/50850300_1571135637.jpg" alt="05_回收新生代region改.jpg"></p>
+<p>然后下一次同一个Region可能又被分配了老年代了，用来放老年代的长生存周期的对象，如下图所示。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218103846669.png" alt="image-20191218103846669"></p>
+<p>​    所以其实在G1对应的内存模型中，Region随时会属于新生代也会属于老年代，所以没有所谓新生代给多少内存，老年代给多少内存这 一说了</p>
+<p><strong>实际上新生代和老年代各自的内存区域是不停的变动的，由G1自动控制。</strong></p>
+<blockquote>
+<p><strong>5、g1 回收算法 - 也是复制算法</strong></p>
+</blockquote>
+<p>为了保证碎片化的不存在，回收一个region的时候，会把存活对象，复制到其他region。然后清空回收的region</p>
+<blockquote>
+<p><strong>本文总结</strong></p>
+</blockquote>
+<p>​    本文先初步的介绍一下G1垃圾回收器的设计思想，包括Region的划分，然后Region动态转移给新生代或者老年代，按需分配，某个region某个时刻，可能是属于新生代，但是下一个时刻，他可能就是属于老年代（<strong>例如一个region回收之后，未来可以分配给老年代也可能是新生代</strong>）。所以是动态的，但是新生代和老年代的内存比率还是存在的，下面会讲。</p>
+<p>然后触发垃圾回收的时候，可以根据<strong>设定的预期系统停顿时间</strong>，来选择<strong>最少回收时间和最多回收对象的Region进行垃圾回收（选择性价比最高的region）</strong>，保证GC对系统停顿的影响在可控范围内，同时还能尽可能回收最多的对象。</p>
+<p>​    <strong>猜测，G1回收器，适合对STW特别敏感的业务上，因为不能让系统停摆太长时间。可能是实时通信之类的，也就是一些追求低延迟的响应的业务。</strong></p>
+<p>​    <strong>又或者是，高内存的机器，例如16G,32G等，如果不用G1回收器，那么回收的时间就太长了（堆大小很大，那么回收的垃圾就越多），stw的时间也就越长。用了G1就可以控制，只回收部分region即可，不用回收全部新生代或者老年代。</strong></p>
+<h3 id="G1进阶理解1"><a href="#G1进阶理解1" class="headerlink" title="G1进阶理解1"></a>G1进阶理解1</h3><p><strong>2、如何设定G1对应的内存大小</strong></p>
+<p>我们知道G1对应的是一大堆的Region内存区域，<strong>每个Region的大小是一致</strong>的。</p>
+<p>那么首先思考两个问题：<strong>到底有多少个Region呢？每个Region的大小是多大呢？</strong></p>
+<p>​    其实这个默认情况下<strong>自动计算和设置</strong>的，我们可以给整个堆内存设置一个大小，比如说用“-Xms”和“-Xmx”来设置堆内存的大小。</p>
+<p>​    然后JVM启动的时候一旦发现你使用的是G1垃圾回收器，可以<strong>使用“-XX:+UseG1GC”来指定使用G1垃圾回收器</strong>，此时会自动用<strong>堆大小除以2048。</strong></p>
+<p>​    因为<strong>JVM最多可以有2048个Region</strong>，然后<strong>Region的大小必须是2的倍数</strong>，比如说1MB、2MB、4MB之类的（因为假设不能整除2048，那么为了满足region大小必须是2的倍数，那么肯定存在，某些region的值是不一样的）。</p>
+<p>​    比如说堆大小是4G，那么就是4096MB，此时除以2048个Region，每个Region的大小就是2MB。大概就是这样子来决定Region的数量和大小的，大家一般保持默认的计算方式就可以</p>
+<p>如果通过<strong>手动方式指定region大小</strong>，<strong>则是“-XX:G1HeapRegionSize”</strong>。<strong>但是需要注意，假设堆内存你分配的是8G，-XX:G1HeapRegionSize=2m，因为JVM最多有2048个region。那么也就是2*2048=4G，也就意味着，这里你只用了4G堆内存，还有4G就浪费了，所以这个时候需要设置-XX:G1HeapRegionSize=4m。</strong>如下图。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218105658603.png" alt="image-20191218105658603"></p>
+<p>​    刚开始的时候，<strong>默认新生代对堆内存的占比是5%</strong>，也就是占据200MB左右的内存，对应大概是100个Region，这个是可以通过<strong>“-XX:G1NewSizePercent”来设置新生代初始占比</strong>的，其实维持这个默认值即可。</p>
+<p>​    因为在系统运行中，JVM其实会不停的给新生代增加更多的Region，但是最多<strong>新生代的占比不会超过60%</strong>，可以通过<strong>“-XX:G1MaxNewSizePercent”</strong>。</p>
+<p><strong>也就是说，新生代的默认内存区间是 5% ~ 60%</strong></p>
+<p>而且一旦Region进行了垃圾回收，此时新生代的Region数量还会减少，这些其实都是<strong>动态的</strong>。</p>
+<p>大家看下图，刚开始就是一部分的Region是属于新生代的。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218105747097.png" alt="image-20191218105747097"></p>
+<p><strong>3、新生代还有Eden和Survivor的概念吗？</strong></p>
+<p>G1中虽然把内存划分为了很多的 Region，但是其实<strong>还是有新生代、老年代的区分（但都是逻辑上的概念，他们可能分散在各个region，并不是连续的一块内存）。</strong></p>
+<p>而且<strong>新生代里还是有Eden和Survivor的划分的</strong>，所以大家会发现之前学习的很多技术原理在G1时期都是有用的。</p>
+<p>​    大家应该还记得之前说过的一个新生代的参数，“-XX:SurvivorRatio=8”，所以这里还是可以区分出来属于新生代的Region里哪些属于Eden，哪些属于Survivor。</p>
+<p>​    比如新生代之前说刚开始初始的时候，有100个Region，那么可能80个Region就是Eden，两个Survivor各自占10个Region，如下图。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218105828904.png" alt="image-20191218105828904"></p>
+<p>​    所以大家要明白在这里其实还是有Eden和Survivor的概念的，他们会各自占据不同的Region。</p>
+<p>​    <strong>只不过随着对象不停的在新生代里分配，属于新生代的Region会不断增加，Eden和Survivor对应的Region也会不断增加。</strong></p>
+<p><strong>4、G1的新生代垃圾回收触发点和如何设置回收时间</strong></p>
+<p>​    既然G1的新生代也有Eden和Survivor的区分，那么触发垃圾回收的机制都是类似的。</p>
+<p>​    随着不停的在新生代的Eden对应的Region中放对象，<strong>JVM就会不停的给新生代加入更多的Region，直到新生代占据堆大小的最大比例60%</strong>。</p>
+<p>​    一旦<strong>新生代达到了设定的占据堆内存的最大大小60%</strong>，比如都有1200个Region了，里面的Eden可能占据了1000个Region，每个Survivor是100个Region，而且<strong>Eden区还占满了对象</strong>，此时如下图所示。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218105939677.png" alt="image-20191218105939677"></p>
+<p>​    这个时候还是会<strong>触发新生代的GC</strong>，G1就会用之前说过的<strong>复制算法来进行垃圾回收</strong>，<strong>进入一个“Stop the World”状态。（但是stw的的时间是可以控制的）</strong></p>
+<p>​    然后把Eden对应的Region中的存活对象放入S1对应的Region中，接着回收掉Eden对应的Region中的垃圾对象，如下图。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218110042480.png" alt="image-20191218110042480"></p>
+<p>​    <strong>但是这个过程跟之前是有区别的</strong>，因为G1是<strong>可以设定目标GC停顿时间</strong>的，也就是G1执行GC的时候最多可以让系统停顿多长时间，<strong>那么也就意味着，GC完成之后，肯定存在某些region 的垃圾是不能回收的，因为需要在设定的时间内进行回收垃圾</strong>。</p>
+<p>​    可以通过<strong>“-XX:MaxGCPauseMills”</strong>参数来设定，默认值是200ms。</p>
+<p>​    那么G1就会通过之前说的，对每个Region追踪回收他需要多少时间，可以回收多少对象来选择回收一部分的Region，保证GC停顿时间控制在指定范围内，尽可能多的回收掉一些对象。</p>
+<p><strong>问题，<em>难道G1真的要等新生代内存使用到60%后，才进行新生代回收？很明显不是，我们后面会讲</em></strong></p>
+<p><strong>5、对象什么时候进入老年代？</strong></p>
+<p>大家都知道，在G1的内存模型下，新生代和老年代各自都会占据一定的Region，老年代也会有自己的Region</p>
+<p>按照默认<strong>新生代最多</strong>只能<strong>占据堆内存60%的Region</strong>来推算，<strong>老年代最多</strong>可以<strong>占据40%的Region</strong>，大概就是800个左右的Region。</p>
+<p>那么对象什么时候从新生代进入老年代呢？</p>
+<p><strong>可以说跟之前几乎是一样的，还是这么几个条件：</strong></p>
+<p><strong>（1）</strong>对象在新生代躲过了很多次的垃圾回收，达到了一定的年龄了，“<strong>-XX:MaxTenuringThreshold</strong>”参数可以设置这个年龄，他就会进入老年代</p>
+<p><strong>（2）</strong>动态年龄判定规则，如果一旦发现某次新生代GC过后，存活对象超过了Survivor的50%</p>
+<p>​    此时就会判断一下，比如年龄为1岁，2岁，3岁，4岁的对象的大小总和超过了Survivor的50%，此时4岁以上的对象全部会进入老年代，这就是动态年龄判定规则</p>
+<p>大家看下图，所以经过一段时间的新生代使用和垃圾回收之后，总有一些对象会进入老年代中。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218110244416.png" alt="image-20191218110244416"></p>
+<p><strong>6、大对象Region</strong></p>
+<p>​    大家此时可能会疑惑了，唉？以前说是那种大对象也是可以直接进入老年代的，那么现在在G1的这套内存模型下呢？</p>
+<p>实际上这里会有所改变，<strong>G1提供了专门的Region来存放大对象，而不是让大对象进入老年代的Region中。</strong></p>
+<p>​    在G1中，<strong>大对象的判定规则</strong>就是一个大对象<strong>超过了一个Region大小的50%</strong>，比如按照上面算的，每个Region是2MB，只要一个大对象超过了1MB，就会被放入大对象专门的Region中。</p>
+<p>而且一个<strong>大对象如果太大，可能会横跨多个Region来存放</strong>。如下图。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218110350081.png" alt="image-20191218110350081"></p>
+<p><strong>肯定还有人会问，那堆内存里哪些Region用来存放大对象啊？</strong></p>
+<p><strong>不是说60%的给新生代，40%的给老年代吗，那还有哪些Region给大对象？</strong></p>
+<p>很简单，之前说过了，在G1里，新生代和老年代的Region是不停的变化的</p>
+<p>​    比如新生代现在占据了1200个Region，但是一次垃圾回收之后，就让里面1000个Region都空了，此时那1000个Region就可以不属于新生代了，里面很多Region可以用来存放大对象。</p>
+<p><strong>那么还有人会问了，大对象既然不属于新生代和老年代，那么什么时候会触发垃圾回收呢？</strong></p>
+<p>​    也很简单，<strong>其实新生代、老年代在回收的时候，会顺带带着大对象Region一起回收</strong>，所以这就是在G1内存模型下对大对象的分配和回收的策略。</p>
+<p>其他回收器大对象的判断标准是通过一个参数来设定，<strong>就是“-XX:PretenureSizeThreshold”，可以把他的值设置为字节数，比如“1048576”字节，就是1MB。</strong>G1回收器判断是否是大对象的依据是，是否大于region的百分之五十。</p>
+<h3 id="G1进阶理解2"><a href="#G1进阶理解2" class="headerlink" title="G1进阶理解2"></a>G1进阶理解2</h3><p><strong>1、前文回顾</strong></p>
+<p>​    现在大家已经搞清楚了G1的动态内存管理策略，他会<strong>根据情况动态</strong>的把Region分配给新生代、Eden、Survivor、老年代和大对象，但是新生代和老年代有一个各自的最大占比，然后在新生代的Eden满的时候，触发新生代垃圾回收。</p>
+<p>​    <strong>新生代的垃圾回收还是采用了复制算法，只不过会考虑预设GC停顿时间，保证垃圾回收的停顿时间不能超过预设时间，因此会挑选一些Region来进行垃圾回收。</strong></p>
+<p>​    <strong>然后跟之前说的一样，如果一些对象在新生代熬过了一定次数的GC，或者是触发了动态年龄判定规则，或者是存活对象在Survivor放不下了，都会让对象进入老年代中。</strong></p>
+<p><strong>而大对象则是进入单独的大对象Region，不再进入老年代。</strong></p>
+<p>所以实际上在G1中，还是会存在新生代的对象慢慢会因为各种情况进入老年代的。</p>
+<p><strong>2、什么时候触发新生代+老年代的混合垃圾回收？</strong></p>
+<p><strong>G1有一个参数，是“-XX:InitiatingHeapOccupancyPercent”，他的默认值是45%</strong></p>
+<p>​    意思就是说，如果<strong>老年代占据了堆内存的45%的Region</strong>（<strong>不是说，新生代占据了百分之60么？老年代怎么会有百分之四十五？那是新生代最多占据%60，所以老年代是有可能到%45</strong>）的时候，此时就会尝试触发一个新生代+老年代一起回收的混合回收阶段。</p>
+<p>​    比如按照我们之前说的，堆内存有2048个Region，如果老年代占据了其中45%的Region，也就是接近1000个Region的时候，就会开始触发一个混合回收，如下图所示。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218113037224.png" alt="image-20191218113037224"></p>
+<p><strong>3、G1垃圾回收的过程</strong></p>
+<p>  <strong>你会发现G1的回收过程跟CMS回收器的步骤一样，也是四个步骤。</strong></p>
+<p>​    首先会触发一个<strong>“初始标记”的操作</strong>，这个过程是需要进入<strong>“Stop the World”</strong>的，仅仅只是标记一下GC  Roots直接能引用的对象，这个过程速度是很快的。</p>
+<p>​    如下图，先停止系统程序的运行，然后对各个线程栈内存中的局部变量代表的GC Roots，以及方法区中的类静态变量代表的GC Roots，进行扫描，标记出来他们<strong>直接引用的那些对象</strong>。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218113917147.png" alt="image-20191218113917147"></p>
+<p>​    接着会进入<strong>“并发标记”的阶段</strong>，这个阶段会<strong>允许系统程序的运行</strong>，同时进行GC Roots追踪，从GC Roots开始追踪所有的存活对象，如下图所示。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218113956478.png" alt="image-20191218113956478"></p>
+<p>这里对GC Roots追踪做更加详细的说明，比如下面的代码</p>
+<p>​    大家可以看到，Kafka这个类有一个静态变量是“replicaManager”，他就是一个<strong>GC Root对象</strong>，初始标记阶段，仅仅就是标记这个“replicaManager”作为GC Roots直接关联的对象，就是“ReplicaManager”对象，他肯定是要存活的。</p>
+<p>​    然后在并发标记阶段，就会进行GC Roots追踪，会从“replicaManager”这个GC Root对象直接关联的“ReplicaManager”对象开始往下追踪</p>
+<p>​    可以看到“ReplicasManager”对象里有一个实例变量“replicaFetcher”，此时追踪这个“replicaFetcher”变量可以看到他引用了“ReplicaFetcher”对象，那么此时这个“ReplicaFetcher”对象也要被标记为存活对象。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/35729800_1571135502.png" alt="blob.png"></p>
+<p>这个并发标记阶段还是很耗时的，因为要追踪全部的存活对象。</p>
+<p>但是这个阶段是可以跟系统程序并发运行的，所以对系统程序的影响不太大。</p>
+<p><strong>而且JVM会对并发标记阶段对对象做出的一些修改记录起来，比如说哪个对象被新建了，哪个对象失去了引用。</strong></p>
+<p>​    接着是下一个阶段，<strong>最终标记阶段</strong>，这个阶段会<strong>进入“Stop the World”</strong>，系统程序是禁止运行的，但是会根据并发标记 阶段记录的那些对象修改，最终标记一下有哪些存活对象，有哪些是垃圾对象，如下图所示。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218114128560.png" alt="image-20191218114128560"></p>
+<p>​    最后一个阶段，<strong>就是“混合回收“阶段</strong>，这个阶段会计算老年代中每个Region中的存活对象数量，存活对象的占比，还有执行垃圾回收的预期性能和效率。</p>
+<p>​    <strong>接着会停止系统程序</strong>，然后全力以赴尽快进行垃圾回收，此时会选择部分Region进行回收，因为必须让垃圾回收的停顿时间控制在我们指定的范围内。</p>
+<p>​    比如说老年代此时有1000个Region都满了，但是因为根据预定目标，本次垃圾回收可能只能停顿200毫秒，那么通过之前的计算得知，可能回收其中800个Region刚好需要200ms，那么就只会回收800个Region，把GC导致的停顿时间控制在我们指定的范围内，如下图。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218114217544.png" alt="image-20191218114217544"></p>
+<p>​    <strong>而且大家需要在这里有一点认识，其实老年代对堆内存占比达到45%的时候，触发的是“混合回收”</strong></p>
+<p><strong>也就是说，此时垃圾回收不仅仅是回收老年代，还会回收新生代，还会回收大对象。</strong></p>
+<p>那么，到底是回收这些区域的哪些Region呢？</p>
+<p>​    <strong>那就要看情况了，因为我们设定了对GC停顿时间的目标，所以说他会从新生代、老年代、大对象里各自挑选一些Region，保证用指定的时间（比如200ms）回收尽可能多的垃圾，这就是所谓的混合回收，如下图。</strong></p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218114324205.png" alt="image-20191218114324205"></p>
+<p><strong>4、G1垃圾回收器的一些参数</strong></p>
+<p>​    大家在上面都看到了，<strong>一般在老年代的Region占据了堆内存的Region的45%之后，会触发一个混合回收的过程，也就是Mixed GC，分为了好几个阶段</strong>。</p>
+<p>​    在这里最后一个环节，其实就是执行混合回收，从新生代和老年代里都回收一些Region。</p>
+<p>​    但是最后一个阶段混合回收的时候，<strong>其实会停止所有程序运行，所以说G1是允许执行多次混合回收。</strong></p>
+<p>​    比如先停止工作，执行一次混合回收回收掉 一些Region，接着恢复系统运行，然后再次停止系统运行，再执行一次混合回收回收掉一些Region。</p>
+<p>​    有一些参数可以控制这个，<strong>比如“-XX:G1MixedGCCountTarget”参数，就是在一次混合回收的过程中，最后一个阶段执行几次混合回收，默认值是8次</strong></p>
+<p>​    意味着最后一个阶段，先停止系统运行，混合回收一些Region，再恢复系统运行，接着再次禁止系统运行，混合回收一些Region，反复8次。</p>
+<p>​    如下图，假设一次混合回收预期要回收掉一共有160个Region，那么此时第一次混合回收，会回收掉一些Region，比如就是 20个Region。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218114533978.png" alt="image-20191218114533978"></p>
+<p>接着恢复系统运行一会儿，然后再执行一次“混合回收”，如下图，再次回收掉20个Region。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/image-20191218114541987.png" alt="image-20191218114541987"></p>
+<p>​    如此反复执行8次混合回收阶段之后 ，不就把预订的160个Region都回收掉了？<strong>而且还把系统停顿时间控制在指定范围内。</strong></p>
+<p>​    那么为什么要反复回收多次呢？</p>
+<p>​    因为你停止系统一会儿，回收掉一些Region，再让系统运行一会儿，然后再次停止系统一会儿，再次回收掉一些Region，这样可以尽可能让系统不要停顿时间过长，可以在多次回收的间隙，也运行一下。</p>
+<p>​    <strong>还有一个参数，就是“-XX:G1HeapWastePercent”，默认值是5%</strong></p>
+<p>​    他的意思就是说，在混合回收的时候，对Region回收都是基于复制算法进行的，都是把要回收的Region里的存活对象放入其他Region，然后这个Region中的垃圾对象全部清理掉</p>
+<p>如下图。</p>
+<p><img src="/2020/03/20/G1和ZGC垃圾回收器/1577885759697.png" alt="1577885759697"></p>
+<p>​    这样的话在回收过程就会不断空出来新的Region，<strong>一旦空闲出来的Region数量达到了堆内存的5%，此时就会 立即停止混合回收，意味着本次混合回收就结束了</strong>。</p>
+<p>​    而且从这里也能看出来G1整体是基于复制算法进行Region垃圾回收的，不会出现内存碎片的问题，不需要像CMS那样标记-清理之后，再进行内存碎片的整理。</p>
+<p>​    <strong>还有一个参数，“-XX:G1MixedGCLiveThresholdPercent”，他的默认值是85%，意思就是确定要回收的Region的时候，必须是存活对象低于85%的Region才可以进行回收</strong></p>
+<p>​    否则要是一个Region的存活对象多余85%，你还回收他干什么？这个时候要把85%的对象都拷贝到别的Region，这个成本是很高的。</p>
+<p><strong>5、回收失败时的Full GC</strong></p>
+<p>​    如果在进行Mixed回收的时候，无论是年轻代还是老年代都基于复制算法进行回收，都要把各个Region的存活对象拷贝到别的Region里去</p>
+<p>​    此时万一出现拷贝的过程中发现没有空闲Region可以承载自己的存活对象了，就会触发 一次失败。</p>
+<p>​    一旦失败，立马就会切换为停止系统程序，然后采用单线程进行标记、清理和压缩整理，空闲出来一批Region，这个过程是极慢极慢的。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>新生代触发GC的条件是：当新生代内存使用率达到%60（但是实际情况不会真的等到新生代内存用了60%，才去回收，G1会自动评估怎么在最短时间回收更多垃圾），那么就会触发GC，可以配合<strong>“-XX:MaxGCPauseMills”</strong>参数来控制GC的时间，也就是系统停止运行时间（STW）。</p>
+<p>老年代触发GC条件：<strong>一般在老年代的Region占据了堆内存的Region的45%之后，会触发一个混合回收的过程，也就是Mixed GC，分为了好几个阶段</strong>。  <strong>你会发现G1的回收过程跟CMS回收器的步骤一样，也是四个步骤。</strong></p>
+<h3 id="跟其他回收器的区别"><a href="#跟其他回收器的区别" class="headerlink" title="跟其他回收器的区别"></a>跟其他回收器的区别</h3><p>（1）首先G1他是可以控制GC（region gc）时间。</p>
+<p>（2）堆内存区域的划分，由eden+2个survivor，变成了最多2048个region区</p>
+<p>（3）G1触发region gc的时机是，新生代超过了%60的内存。</p>
+<p>（4）新生代对象进入老年代规则，依旧跟其他回收器一样</p>
+<p>（5）G1大对象不会再进入老年代，而是通过region保存，如果一个region不够，可能会跨region保存。</p>
+<h2 id="ZGC垃圾回收器-未完待续"><a href="#ZGC垃圾回收器-未完待续" class="headerlink" title="ZGC垃圾回收器 - 未完待续"></a>ZGC垃圾回收器 - 未完待续</h2>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/jvm/" rel="tag"><i class="fa fa-tag"></i> jvm</a>
+          
+            <a href="/tags/垃圾回收器/" rel="tag"><i class="fa fa-tag"></i> 垃圾回收器</a>
+          
+            <a href="/tags/G1/" rel="tag"><i class="fa fa-tag"></i> G1</a>
+          
+            <a href="/tags/ZGC/" rel="tag"><i class="fa fa-tag"></i> ZGC</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/19/教你摸清线上系统的JVM运行情况/" rel="next" title="教你摸清线上系统的JVM运行情况">
+                <i class="fa fa-chevron-left"></i> 教你摸清线上系统的JVM运行情况
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/20/Serial和SerialOld垃圾回收器/" rel="prev" title="Serial和SerialOld垃圾回收器">
+                Serial和SerialOld垃圾回收器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">70</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">114</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#G1垃圾回收器"><span class="nav-number">1.</span> <span class="nav-text">G1垃圾回收器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#G1回收器基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">G1回收器基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#G1进阶理解1"><span class="nav-number">1.2.</span> <span class="nav-text">G1进阶理解1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#G1进阶理解2"><span class="nav-number">1.3.</span> <span class="nav-text">G1进阶理解2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跟其他回收器的区别"><span class="nav-number">1.5.</span> <span class="nav-text">跟其他回收器的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ZGC垃圾回收器-未完待续"><span class="nav-number">2.</span> <span class="nav-text">ZGC垃圾回收器 - 未完待续</span></a></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      451.8k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共451.8k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>

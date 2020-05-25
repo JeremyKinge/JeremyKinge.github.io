@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="jvm,jstat,GC," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="使用 jstat 摸清线上系统的JVM运行状况平时我们对运行中的系统，如果要检查他的JVM的整体运行情况，比较实用的工具之一，就是jstat 他可以轻易的让你看到当前运行中的系统，他的JVM内的Eden、Survivor、老年代的内存使用情况，还有Young GC和Full gC的执行次数以及耗时。 通过这些指标，我们可以轻松的分析出当前系统的运行情况，判断当前系统的内存使用压力以及GC压力，还有">
+<meta name="keywords" content="jvm,jstat,GC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="教你摸清线上系统的JVM运行情况">
+<meta property="og:url" content="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="使用 jstat 摸清线上系统的JVM运行状况平时我们对运行中的系统，如果要检查他的JVM的整体运行情况，比较实用的工具之一，就是jstat 他可以轻易的让你看到当前运行中的系统，他的JVM内的Eden、Survivor、老年代的内存使用情况，还有Young GC和Full gC的执行次数以及耗时。 通过这些指标，我们可以轻松的分析出当前系统的运行情况，判断当前系统的内存使用压力以及GC压力，还有">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/image-20200524213657689.png">
+<meta property="og:image" content="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230093716625.png">
+<meta property="og:image" content="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230093745120.png">
+<meta property="og:image" content="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230094016955.png">
+<meta property="og:image" content="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230094239730.png">
+<meta property="og:image" content="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230102239003.png">
+<meta property="og:image" content="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230102258170.png">
+<meta property="og:image" content="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230102706468.png">
+<meta property="og:image" content="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230103022979.png">
+<meta property="og:image" content="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230103810265.png">
+<meta property="og:image" content="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/image-20200524213821057.png">
+<meta property="og:updated_time" content="2020-05-24T13:41:13.522Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="教你摸清线上系统的JVM运行情况">
+<meta name="twitter:description" content="使用 jstat 摸清线上系统的JVM运行状况平时我们对运行中的系统，如果要检查他的JVM的整体运行情况，比较实用的工具之一，就是jstat 他可以轻易的让你看到当前运行中的系统，他的JVM内的Eden、Survivor、老年代的内存使用情况，还有Young GC和Full gC的执行次数以及耗时。 通过这些指标，我们可以轻松的分析出当前系统的运行情况，判断当前系统的内存使用压力以及GC压力，还有">
+<meta name="twitter:image" content="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/image-20200524213657689.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/"/>
+
+
+
+
+
+  <title>教你摸清线上系统的JVM运行情况 | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2020/03/19/教你摸清线上系统的JVM运行情况/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">教你摸清线上系统的JVM运行情况</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-19T12:57:58+08:00">
+                2020-03-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4,966
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  19
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="使用-jstat-摸清线上系统的JVM运行状况"><a href="#使用-jstat-摸清线上系统的JVM运行状况" class="headerlink" title="使用 jstat 摸清线上系统的JVM运行状况"></a>使用 jstat 摸清线上系统的JVM运行状况</h2><p>平时我们对运行中的系统，如果要检查他的JVM的整体运行情况，比较实用的工具之一，就是jstat</p>
+<p>他可以轻易的让你看到当前运行中的系统，他的JVM内的Eden、Survivor、老年代的内存使用情况，还有Young GC和Full gC的执行次数以及耗时。</p>
+<p>通过这些指标，我们可以轻松的分析出当前系统的运行情况，判断当前系统的内存使用压力以及GC压力，还有就是内存分配是否合理。下面我们就一点点来看看这个jstat工具的使用。</p>
+<h3 id="jstat-gc-PID"><a href="#jstat-gc-PID" class="headerlink" title="jstat -gc PID"></a><strong>jstat -gc PID</strong></h3><p>​    首先第一个命令，就是在你们的生产机器linux上，找出你们的Java进程的PID，这个大家自行百度一下即可，用jps命令就可以看到。</p>
+<p>​    接着就针对我们的Java进程执行：jstat -gc PID。这就可以看到这个Java进程（其实本质就是一个JVM）的内存和GC情况了。</p>
+<p>运行这个命令之后会看到如下列，给大家解释一下：（<strong>单位都是kb</strong>）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1. S0C：这是From Survivor区的大小</div><div class="line">2. S1C：这是To Survivor区的大小</div><div class="line">3. S0U：这是From Survivor区当前使用的内存大小</div><div class="line">4. S1U：这是To Survivor区当前使用的内存大小</div><div class="line">5. EC：这是Eden区的大小</div><div class="line">6. EU：这是Eden区当前使用的内存大小</div><div class="line">7. OC：这是老年代的大小</div><div class="line">8. OU：这是老年代当前使用的内存大小</div><div class="line">9. MC：这是方法区（永久代、元数据区）的大小</div><div class="line">10. MU：这是方法区（永久代、元数据区）的当前使用的内存大小</div><div class="line">11. YGC：这是系统运行迄今为止的Young GC次数</div><div class="line">12. YGCT：这是Young GC的耗时</div><div class="line">13. FGC：这是系统运行迄今为止的Full GC次数</div><div class="line">14. FGCT：这是Full GC的耗时</div><div class="line">15. GCT：这是所有GC的总耗时</div></pre></td></tr></table></figure>
+<p>举个例子：</p>
+<p><strong>jvm参数设置</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">-XX:NewSize=104857600 -XX:MaxNewSize=104857600 -XX:InitialHeapSize=209715200 -XX:MaxHeapSize=209715200 -XX:SurvivorRatio=8  -XX:MaxTenuringThreshold=15 -XX:PretenureSizeThreshold=3145728 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc.log</div></pre></td></tr></table></figure>
+<p>堆内存设置为了200MB，把年轻代设置为了100MB，然后Eden区是80MB，每块Survivor区是10MB，老年代也是100MB。大对象的阈值是3M</p>
+<p>java代码</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class Demo1 &#123;</div><div class="line">    </div><div class="line">    public static void main(String[] args) throws InterruptedException &#123;</div><div class="line">        Thread.sleep(30000);</div><div class="line">        while(true) &#123;</div><div class="line">            laodData();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private static void laodData() throws InterruptedException &#123;</div><div class="line">        byte[] data = null;</div><div class="line">        for (int i = 0; i &lt; 50; i++) &#123;</div><div class="line">            data = new byte[100*1024];</div><div class="line">        &#125;</div><div class="line">        data = null;</div><div class="line">        Thread.sleep(1000);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>为什么刚开始先休眠30s？</strong>目的是为了在真正进入业务逻辑之前，我们先找到这个进程的PID，以便我们执行jstat命令。</p>
+<p>​    接着看loadData()方法内的代码，其实非常简单，他会循环50次，模拟每秒50个请求</p>
+<p>​    然后每次请求会分配一个100KB的数组，模拟每次请求会从数据存储中加载出来100KB的数据。接着会休眠1秒钟，模拟这一切都是发生在1秒内的。</p>
+<p><strong>开始执行程序</strong></p>
+<p>此时程序会先进入一个30秒的休眠状态，此时尽快执行jps命令，查看一下我们启动程序的进程ID，如下图所示：</p>
+<p><img src="/2020/03/19/教你摸清线上系统的JVM运行情况/image-20200524213657689.png" alt="image-20200524213657689"></p>
+<p>此时会发现我们运行的Demo1这个程序的JVM进程ID是11144。</p>
+<p>然后尽快执行下述jstat命令：<strong>jstat -gc 11144 1000 1000</strong></p>
+<p><strong>他的意思就是针对11144这个进程统计JVM运行状态，同时每隔1秒钟打印一次统计信息，连续打印1000次。</strong></p>
+<p>然后我们就让jstat开始统计运行，每隔一秒他都会打印一行新的统计信息，过了几十秒后可以看到如下图所示的统计信息：</p>
+<p><img src="/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230093716625.png" alt="image-20191230093716625"></p>
+<p>接着我们一点点来分析这个图。首先我们先看如下图所示的一段信息：</p>
+<p><img src="/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230093745120.png" alt="image-20191230093745120"></p>
+<p><strong>这个EU大家应该还记得，就是之前我们所说的Eden区被使用的容量，可以发现他刚开始是3MB左右的内存使用量</strong></p>
+<blockquote>
+<p><strong>可以得到新生代增长速率</strong></p>
+</blockquote>
+<p>​    接着从我们程序开始运行，会发现每秒钟都会有对象增长，从3MB左右到7MB左右，接着是12MB，17MB，22MB，<strong>每秒都会新增5MB左右的对象</strong>。</p>
+<p><strong>这个跟我们写的代码是完全吻合的，我们就是每秒钟会增加5mB左右的对象。</strong></p>
+<p>然后当Eden区使用量达到70多MB的时候，再要分配5MB的对象就失败了，此时就会触发一次Young GC，然后大家继续看下面的图：</p>
+<p><img src="/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230094016955.png" alt="image-20191230094016955"></p>
+<p><strong>注意看上面红圈里的内容</strong>，大家会发现，Eden区的使用量从70多MB降低为了1MB多，这就是因为一次Young GC直接回收掉了大部分对象。</p>
+<blockquote>
+<p><strong>Young GC的触发频率</strong></p>
+</blockquote>
+<p>​    通过新生代的增长速率我们，也是可以推算出，ygc的频率是：80M/5M = 16s 左右。</p>
+<p>​    所以我们现在就知道了，针对这个代码示例，可以清晰的从jstat中看出来，<strong>对象增速大致为每秒5MB左右，大致在十几秒左右会触发一次Young GC</strong></p>
+<blockquote>
+<p><strong>Young GC的耗时</strong></p>
+</blockquote>
+<p>这个就是Young GC的触发频率，以及每次Young GC的耗时，大家看下图：</p>
+<p><img src="/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230094239730.png" alt="image-20191230094239730"></p>
+<p>​    上图清晰告诉你了，<strong>一次Young GC回收70多MB对象，大概就1毫秒</strong>，所以大家想想，<strong>Young GC其实是很快的，即使回收800MB的对象，也就10毫秒那样。</strong></p>
+<p>​    <strong>所以你想如果是线上系统，他Eden区800MB的话，每秒新增对象50MB，十多秒一次Young GC，也就10毫秒左右，系统卡顿10毫秒，几乎没什么大影响的。</strong></p>
+<p>​    <strong>所以我们继续推论，在这个示例中，80MB的Eden区，每秒新增对象5MB，大概十多秒触发一次Young GC，每次Young GC耗时在1毫秒左右。</strong></p>
+<blockquote>
+<p><strong>每次Young GC后有多少对象是存活下来的</strong></p>
+</blockquote>
+<p>​    简单看上上图，<strong>S1U就是Survivor中被使用的内存，之前一直是0，在一次Young GC过后变成了675KB，所以一次Young GC后也就存活675KB的对象而已，轻松放入10MB的Survivor中。</strong></p>
+<p>而且大家注意上上图中的OU，那是老年代被使用的内存量，在Young GC前后都是0</p>
+<p>​    这说明这个系统运行良好，Young GC都不会导致对象进入老年代，这就几乎不需要什么优化了。因为几乎可以默认老年代对象增速为0，Full  GC发生频率趋向于0，对系统无影响。</p>
+<h3 id="其他的jstat命令"><a href="#其他的jstat命令" class="headerlink" title="其他的jstat命令"></a><strong>其他的jstat命令</strong></h3><p>除了上面的jstat -gc命令是最常用的以外，他还有一些命令可以看到更多详细的信息，如下所示：</p>
+<ol>
+<li>jstat -gccapacity PID：堆内存分析</li>
+<li>jstat -gcnew PID：年轻代GC分析，这里的TT和MTT可以看到对象在年轻代存活的年龄和存活的最大年龄</li>
+<li>jstat -gcnewcapacity PID：年轻代内存分析</li>
+<li>jstat -gcold PID：老年代GC分析</li>
+<li>jstat -gcoldcapacity PID：老年代内存分析</li>
+<li>jstat -gcmetacapacity PID：元数据区内存分析</li>
+</ol>
+<h3 id="新生代对象增长的速率"><a href="#新生代对象增长的速率" class="headerlink" title="新生代对象增长的速率"></a><strong>新生代对象增长的速率</strong></h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">jstat -gc PID 1000 10</div></pre></td></tr></table></figure>
+<p>这行命令，他的意思就是每隔1秒钟更新出来最新的一行jstat统计信息，一共执行10次jstat统计</p>
+<p>通过这个命令，你可以非常灵活的对线上机器通过固定频率输出统计信息，观察每隔一段时间的jvm中的Eden区对象占用变化。</p>
+<p>​    比如给大家举个例子，执行这个命令之后，第一秒先显示出来Eden区使用了200MB内存，第二秒显示出来的那行统计信息里，发信Eden区使用了205MB内存，第三秒显示出来的那行统计信息里，发现Eden区使用了209MB内存，以此类推。</p>
+<p><strong>此时你可以轻易的推断出来，这个系统大概每秒钟会新增5MB左右的对象。</strong></p>
+<p><strong>也就是说，新生代对象增长速率，只需要关注eden区的增长速率即可。</strong></p>
+<p>​    而且这里大家可以根据自己系统的情况灵活多变的使用，比如你们系统负载很低，不一定每秒都有请求，那么可以把上面的1秒钟调整为1分钟，甚至10分钟，去看你们系统每隔1分钟或者10分钟大概增长多少对象。</p>
+<p>​    还有就是一般系统都有高峰和日常两种状态，比如系统高峰期用的人很多，此时你就应该在系统高峰期去用上述命令看看高峰期的对象增长速率。然后你再得在非高峰的日常时间段内看看对象的增长速率。</p>
+<p>按照上述思路，基本上你可以对线上系统的高峰和日常两个时间段内的对象增长速率有很清晰的了解。</p>
+<p><strong>详情参见上面例子</strong></p>
+<h3 id="Young-GC的触发频率和每次耗时"><a href="#Young-GC的触发频率和每次耗时" class="headerlink" title="Young GC的触发频率和每次耗时"></a><strong>Young GC的触发频率和每次耗时</strong></h3><p>接着下一步我们就想知道大概多久会触发一次Young GC，以及每次Young GC的耗时了。</p>
+<p>​    其实多久触发一次Young GC就很容易推测出来了，因为系统高峰和日常时候的对象增长速率你都知道了，那么非常简单就可以推测出来高峰期多久发生一次Young GC，日常期多久发生一次Young GC。</p>
+<p>​    <strong>比如你Eden区有800MB内存，那么发现高峰期每秒新增5MB对象，大概高峰期就是3分钟左右会触发一次Young GC。日常期每秒新增0.5MB对象，那么日常期大概需要半个小时才会触发一次Young GC。</strong></p>
+<p>那么每次Young GC的平均耗时呢？</p>
+<p>​    简单，之前给大家说过，jstat会告诉你迄今为止系统已经发生了多少次Young GC（<strong>ygc参数</strong>）以及这些Young GC的总耗时（<strong>ygct参数</strong>）。</p>
+<p>​    比如系统运行24小时后共发生了260次Young GC，总耗时为20s。那么平均下来每次Young GC大概就耗时几十毫秒的时间。</p>
+<p>你大概就知道每次Young GC的时候会导致系统停顿几十毫秒。</p>
+<p><strong>详情参见上面的例子</strong></p>
+<h3 id="每次Young-GC后有多少对象是存活和进入老年代"><a href="#每次Young-GC后有多少对象是存活和进入老年代" class="headerlink" title="每次Young GC后有多少对象是存活和进入老年代"></a><strong>每次Young GC后有多少对象是存活和进入老年代</strong></h3><p>接着我们想要知道，每次Young GC后有多少对象会存活下来，以及有多少对象会进入老年代。</p>
+<p>其实每次Young GC过后有多少对象会存活下来，这个没法直接看出来，但是有办法可以大致推测出来。</p>
+<p>之前我们已经推算出来高峰期的时候多久发生一次Young GC，比如3分钟会有一次Young GC</p>
+<p>那么此时我们可以执行下述jstat命令：jstat -gc PID 180000 10。这就相当于是让他每隔三分钟执行一次统计，连续执行10次。</p>
+<p>此时大家可以观察一下，每隔三分钟之后发生了一次Young GC，此时Eden、Survivor、老年代的对象变化。</p>
+<p>​    正常来说，Eden区肯定会在几乎放满之后重新变得里面对象很少，比如800MB的空间就使用了几十MB。Survivor区肯定会放入一些存活对象，老年代可能会增长一些对象占用。所以这里的关键，就是观察老年代的对象增长速率。</p>
+<p><strong>从一个正常的角度来看，老年代的对象是不太可能不停的快速增长的，因为普通的系统其实没那么多长期存活的对象。如果你发现比如每次Young GC过后，老年代对象都要增长几十MB，那很有可能就是你一次Young GC过后存活对象太多了。</strong></p>
+<p>存活对象太多，可能导致放入Survivor区域之后触发了<strong>动态年龄判定规则进入老年代</strong>，也可能是Survivor区域放不下了，所以大部分存活对象进入老年代。</p>
+<p>最常见的就是这种情况。<strong>如果你的老年代每次在Young GC过后就新增几百KB，或者几MB的对象，这个还算情有可缘，但是如果老年代对象快速增长，那一定是不正常的。</strong></p>
+<p>​    所以通过上述观察策略，你就可以知道每次Young GC过后多少对象是存活的，实际上Survivor区域里的和进入老年代的对象，都是存活的。</p>
+<p>​    你也可以知道老年代对象的增长速率，比如每隔3分钟一次Young GC，每次会有50MB对象进入老年代，这就是年代对象的增长速率，每隔3分钟增长50MB。</p>
+<p>接下来看个例子：</p>
+<p><strong>jvm参数：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">-XX:NewSize=104857600 -XX:MaxNewSize=104857600 -XX:InitialHeapSize=209715200 -XX:MaxHeapSize=209715200 -XX:SurvivorRatio=8  -XX:MaxTenuringThreshold=15 -XX:PretenureSizeThreshold=20971520 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc.log</div></pre></td></tr></table></figure>
+<p><strong>java代码</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo2</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        Thread.sleep(<span class="number">30000</span>);</div><div class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line">            laodData();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">laodData</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        <span class="keyword">byte</span>[] data = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) &#123;</div><div class="line">            data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span>*<span class="number">1024</span>*<span class="number">1024</span>];</div><div class="line">        &#125;</div><div class="line">        data = <span class="keyword">null</span>;</div><div class="line">        </div><div class="line">    <span class="keyword">byte</span>[]  data1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span>*<span class="number">1024</span>*<span class="number">1024</span>];<span class="comment">//存活</span></div><div class="line">    <span class="keyword">byte</span>[]  data2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span>*<span class="number">1024</span>*<span class="number">1024</span>];<span class="comment">//存活</span></div><div class="line">    </div><div class="line">    <span class="keyword">byte</span>[]  data3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span>*<span class="number">1024</span>*<span class="number">1024</span>];</div><div class="line">                data3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span>*<span class="number">1024</span>*<span class="number">1024</span>];<span class="comment">//存活</span></div><div class="line">        </div><div class="line">        Thread.sleep(<span class="number">1000</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​    大概意思其实就是，每秒钟都会执行一次loadData()方法，他会分配4个10MB的数组，但是都立马成为垃圾，但是会有data1和data2两个10MB的数组是被变量引用必须存活的，此时Eden区已经占用了六七十MB空间了，接着是data3变量依次指向了两个10MB的数组，这是为了在<strong>1s内触发Young GC的</strong>。</p>
+<p>接着我们基于jstat分析程序运行的状态，启动程序后立马采用jstat监控其运行状态可以看到如下的信息：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">jstat -gc 17704 1000 1000</div></pre></td></tr></table></figure>
+<p><img src="/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230102239003.png" alt="image-20191230102239003"></p>
+<p>接着我们一点点来分析这个jvm的运行状态。首先我们先看如下一行截图：</p>
+<p><img src="/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230102258170.png" alt="image-20191230102258170"></p>
+<p><strong>前面没有变化是因为，sleep30秒没有结束，还未进入代码逻辑。</strong>sleep30秒结束后，注意观察ygc的变化，jstat命令每输出一行日志，ygc的值就会增加1（符合代码的，1s进行一次ygc）</p>
+<p><strong>在这里最后一行</strong>，可以清晰看到，程序运行起来之后，突然在一秒内就发生了一次Young GC，这是为什么呢？</p>
+<p>很简单，按照我们上述的代码，<strong>他一定会在一秒内触发一次Young GC的</strong>。</p>
+<p>Young GC过后，我们发现S1U，<strong>也就是一个Survivor区中有587KB的存活对象，这应该就是那些未知对象了</strong>。</p>
+<p>​    <strong>然后我们明显看到在OU中多出来了30MB左右的对象，因此可以确定，在这次Young GC的时候，有30MB的对象存活了，此时因为Survivor区域放不下，所以直接进入老年代了。</strong></p>
+<p>我们接着看下面的截图：</p>
+<p><img src="/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230102706468.png" alt="image-20191230102706468"></p>
+<p>​    大家看上图中红圈的部分，<strong>很明显每秒会发生一次Young GC，都会导致20MB~30MB左右的对象进入老年代</strong></p>
+<p>​    因为每次Young GC都会存活下来这么多对象，但是Survivor区域（survivor才20M）是放不下的，所以都会直接进入老年代。</p>
+<p>​    <strong>此时看到老年代的对象占用从30MB一路到60MB左右，此时突然在60MB之后下一秒，明显发生了一次Full GC，对老年代进行了垃圾回收，因为此时老年代重新变成30MB了。</strong></p>
+<p><strong>为啥会这样？</strong></p>
+<p>​    很简单，老年代总共就100MB左右，已经占用了60MB了，此时如果发生一次Young GC，有30MB存活对象要放入老年代的话，你还要放30MB对象，明显老年代就要不够了，此时必须会进行Full GC，回收掉之前那60MB对象，然后再放入进去新的30MB对象。</p>
+<p>​    <strong>所以大家可以看到，按照我们的这段代码，几乎是每秒新增80MB左右，触发每秒1次Young GC，每次Young GC后存活下来20MB~30MB的对象，老年代每秒新增20MB~30MB的对象，触发老年代几乎三秒一次Full GC。</strong></p>
+<p><strong>Young GC太频繁，而且每次GC后存活对象太多，频繁进入老年代，频繁触发老年代的GC。</strong></p>
+<p>那么Young GC和Full GC的耗时呢？看下图：</p>
+<p><img src="/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230103022979.png" alt="image-20191230103022979"></p>
+<p><strong>大家看上图，有没有发现Young GC特别坑爹，28次Young GC，结果耗费了180毫秒，平均下来一次Young GC要6毫秒左右。但是14次Full GC才耗费34毫秒，平均下来一次Full GC才耗费两三毫秒。这是为什么呢？</strong></p>
+<p>很简单，按照上述程序，每次Full GC都是由Young GC触发的，因为Young GC过后存活对象太多要放入老年代，老年代内存不够了触发Full GC，所以必须得等Full GC执行完毕了，Young GC才能把存活对象放入老年代，才算结束。这就导致Young GC也是速度非常慢。</p>
+<p><strong>对JVM性能进行优化</strong></p>
+<p>​    接着我们按照之前学习的思路对JVM进行优化，很简单，他最大的问题就是每次Young GC过后存活对象太多了，导致频繁进入老年代，频繁触发Full GC</p>
+<p>我们只需要调大年轻代的内存空间，增加Survivor的内存即可，看如下JVM参数：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">-XX:NewSize=209715200 -XX:MaxNewSize=209715200 -XX:InitialHeapSize=314572800 -XX:MaxHeapSize=314572800 -XX:SurvivorRatio=2  -XX:MaxTenuringThreshold=15 -XX:PretenureSizeThreshold=20971520 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc3.log</div></pre></td></tr></table></figure>
+<p>​    <strong>我们把堆大小调大为了300MB，年轻代给了200MB，同时“-XX:SurvivorRatio=2”表明，Eden:Survivor:Survivor的比例为2:1:1，所以Eden区是100MB，每个Survivor区是50MB，老年代也是100MB。</strong></p>
+<p>接着我们用这个JVM参数运行程序，用jstat来监控其运行状态如下：</p>
+<p><img src="/2020/03/19/教你摸清线上系统的JVM运行情况/image-20191230103810265.png" alt="image-20191230103810265"></p>
+<p>​    在上述截图里，大家可以清晰看到，每秒的Young gC过后，都会有20MB左右的存活对象进入Survivor，但是每个Survivor区都是50MB的大小，因此可以轻松容纳，而且一般不会过50%的动态年龄判定的阈值。</p>
+<p>​    我们可以清晰看到每秒触发Yuong GC过后，几乎就没有对象会进入老年代，最终就600KB的对象进入了老年代里，其他就没有对象进入老年代了。</p>
+<p>再看下面的截图：</p>
+<p><img src="/2020/03/19/教你摸清线上系统的JVM运行情况/image-20200524213821057.png" alt="image-20200524213821057"></p>
+<p>我们可以看到，只有Young GC，没有Full GC，而且11次Young GC才不过9毫秒（<strong>11/(0.091*1000) =9ms</strong> ），平均一次GC1毫秒都不到，没有Full GC干扰之后，Young GC的性能极高。</p>
+<p>所以，其实这个案例就优化成功了，同样的程序，仅仅是调整了内存分配比例，立马就大幅度提升了JVM的性能，几乎把Full GC给消灭掉了。</p>
+<h3 id="Full-GC的触发时机和耗时"><a href="#Full-GC的触发时机和耗时" class="headerlink" title="Full GC的触发时机和耗时"></a><strong>Full GC的触发时机和耗时</strong></h3><p>只要知道了老年代对象的增长速率，那么Full GC的触发时机就很清晰了，比如老年代总共有800MB的内存，每隔3分钟新增50MB对象，那么大概每小时就会触发一次Full GC。</p>
+<p>然后可以看到jstat打印出来的系统运行起劲为止的Full GC次数以及总耗时，比如一共执行了10次Full GC，共耗时30s，每次Full GC大概就是需要耗费3s左右。</p>
+<h3 id="需要摸清系统这些参数值"><a href="#需要摸清系统这些参数值" class="headerlink" title="需要摸清系统这些参数值"></a>需要摸清系统这些参数值</h3><p>按照上述我们介绍的思路，把以下jvm运行情况全部摸出来：</p>
+<ul>
+<li>新生代对象增长的速率</li>
+<li>Young GC的触发频率</li>
+<li>Young GC的耗时</li>
+<li>每次Young GC后有多少对象是存活下来的</li>
+<li>每次Young GC过后有多少对象进入了老年代</li>
+<li>老年代对象增长的速率</li>
+<li>Full GC的触发频率</li>
+<li>Full GC的耗时</li>
+</ul>
+<p>这有了解了系统的这些参数，那么才能根据机器的配置更好的配置jvm的参数。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/jvm/" rel="tag"><i class="fa fa-tag"></i> jvm</a>
+          
+            <a href="/tags/jstat/" rel="tag"><i class="fa fa-tag"></i> jstat</a>
+          
+            <a href="/tags/GC/" rel="tag"><i class="fa fa-tag"></i> GC</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/09/java基础核心技术/" rel="next" title="java核心技术杂记">
+                <i class="fa fa-chevron-left"></i> java核心技术杂记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/20/G1和ZGC垃圾回收器/" rel="prev" title="G1和ZGC垃圾回收器">
+                G1和ZGC垃圾回收器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">70</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">114</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-jstat-摸清线上系统的JVM运行状况"><span class="nav-number">1.</span> <span class="nav-text">使用 jstat 摸清线上系统的JVM运行状况</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jstat-gc-PID"><span class="nav-number">1.1.</span> <span class="nav-text">jstat -gc PID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他的jstat命令"><span class="nav-number">1.2.</span> <span class="nav-text">其他的jstat命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新生代对象增长的速率"><span class="nav-number">1.3.</span> <span class="nav-text">新生代对象增长的速率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Young-GC的触发频率和每次耗时"><span class="nav-number">1.4.</span> <span class="nav-text">Young GC的触发频率和每次耗时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#每次Young-GC后有多少对象是存活和进入老年代"><span class="nav-number">1.5.</span> <span class="nav-text">每次Young GC后有多少对象是存活和进入老年代</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Full-GC的触发时机和耗时"><span class="nav-number">1.6.</span> <span class="nav-text">Full GC的触发时机和耗时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#需要摸清系统这些参数值"><span class="nav-number">1.7.</span> <span class="nav-text">需要摸清系统这些参数值</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      451.8k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共451.8k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>

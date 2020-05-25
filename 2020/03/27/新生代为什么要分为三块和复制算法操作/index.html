@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="jvm,垃圾回收器,新生代,复制算法," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="新生代内存分为那三块内存？使用复制算法回收是怎么操作？我们知道，针对新生代的垃圾回收算法，他叫做复制算法 我们知道，系统运行时，对JVM内存的使用模型，大体上就是我们的代码不停的创建对象然后分配在新生代里，但是一般很快那个对象就没人引用了，成了垃圾对象。 接着一段时间过后，新生代就满了，此时就会回收掉那些垃圾对象，空出来内存空间，给后续其他的对象来使用。 其实绝大多数的对象都是存活周期非常短的对象">
+<meta name="keywords" content="jvm,垃圾回收器,新生代,复制算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="新生代为什么要分为三块和复制算法操作">
+<meta property="og:url" content="http://kingge.top/2020/03/27/新生代为什么要分为三块和复制算法操作/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="新生代内存分为那三块内存？使用复制算法回收是怎么操作？我们知道，针对新生代的垃圾回收算法，他叫做复制算法 我们知道，系统运行时，对JVM内存的使用模型，大体上就是我们的代码不停的创建对象然后分配在新生代里，但是一般很快那个对象就没人引用了，成了垃圾对象。 接着一段时间过后，新生代就满了，此时就会回收掉那些垃圾对象，空出来内存空间，给后续其他的对象来使用。 其实绝大多数的对象都是存活周期非常短的对象">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216163330899.png">
+<meta property="og:image" content="http://kingge.top/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216163412407.png">
+<meta property="og:image" content="http://kingge.top/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216163625597.png">
+<meta property="og:image" content="http://kingge.top/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216172242291.png">
+<meta property="og:image" content="http://kingge.top/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216172256106.png">
+<meta property="og:image" content="http://kingge.top/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216173021448.png">
+<meta property="og:image" content="http://kingge.top/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216173214294.png">
+<meta property="og:updated_time" content="2020-05-24T14:11:29.899Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="新生代为什么要分为三块和复制算法操作">
+<meta name="twitter:description" content="新生代内存分为那三块内存？使用复制算法回收是怎么操作？我们知道，针对新生代的垃圾回收算法，他叫做复制算法 我们知道，系统运行时，对JVM内存的使用模型，大体上就是我们的代码不停的创建对象然后分配在新生代里，但是一般很快那个对象就没人引用了，成了垃圾对象。 接着一段时间过后，新生代就满了，此时就会回收掉那些垃圾对象，空出来内存空间，给后续其他的对象来使用。 其实绝大多数的对象都是存活周期非常短的对象">
+<meta name="twitter:image" content="http://kingge.top/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216163330899.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2020/03/27/新生代为什么要分为三块和复制算法操作/"/>
+
+
+
+
+
+  <title>新生代为什么要分为三块和复制算法操作 | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2020/03/27/新生代为什么要分为三块和复制算法操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">新生代为什么要分为三块和复制算法操作</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-27T20:57:58+08:00">
+                2020-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,963
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="新生代内存分为那三块内存？使用复制算法回收是怎么操作？"><a href="#新生代内存分为那三块内存？使用复制算法回收是怎么操作？" class="headerlink" title="新生代内存分为那三块内存？使用复制算法回收是怎么操作？"></a>新生代内存分为那三块内存？使用复制算法回收是怎么操作？</h1><p><strong>我们知道，针对新生代的垃圾回收算法，他叫做复制算法</strong></p>
+<p>我们知道，系统运行时，对JVM内存的使用模型，大体上就是我们的代码不停的创建对象然后分配在新生代里，但是一般很快那个对象就没人引用了，成了垃圾对象。</p>
+<p>接着一段时间过后，新生代就满了，此时就会回收掉那些垃圾对象，空出来内存空间，给后续其他的对象来使用。</p>
+<p>其实绝大多数的对象都是存活周期非常短的对象，可能被创建出来1毫秒之后就没人引用了，他就是垃圾对象了。</p>
+<p>所以大家可以想象一下，可能一次新生代垃圾回收过后，99%的对象其实都被垃圾回收了，就1%的对象存活了下来，可能就是一些长期存活的对象，或者还没使用完的对象。</p>
+<p><strong>所以实际上真正的复制算法会做出如下优化</strong>，把新生代内存区域划分为三块：</p>
+<p><strong>1个Eden区，2个Survivor区</strong>，其中Eden区占80%内存空间，每一块Survivor区各占10%内存空间，比如说假设堆内存是2G，分配给新生代是1G。那么Eden区有800MB内存，每一块Survivor区就100MB内存，如下图。（为了方便说明，我把左边的survivor区称之为s1，右边的survivor区称之为s2）</p>
+<p><img src="/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216163330899.png" alt="image-20191216163330899"></p>
+<p><strong>平时可以使用的，就是Eden区和其中一块Survivor区</strong>（s1），<strong>另一块survivor是用来在ygc后保存ygc存活的对象</strong>，那么相当于就是有900MB的内存是可以使用的，如下图所示。</p>
+<p><img src="/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216163412407.png" alt="image-20191216163412407"></p>
+<p><strong>但是刚开始对象都是分配在Eden区内的，如果Eden区快满了，此时就会触发垃圾回收</strong>。</p>
+<p>​    <strong>此时就会把Eden区中的存活对象都一次性转移到一块空着的Survivor区(s1)</strong>。接着Eden区就会被清空，然后再次分配新对象到Eden区里，然后就会如上图所示，Eden区和一块Survivor区(s1)里是有对象的，<strong>其中Survivor区(s1)里放的是上一次Minor GC后存活的对象</strong>。</p>
+<p>​    <strong>如果下次再次Eden区满，那么再次触发Minor GC，就会把Eden区和放着上一次Minor GC后存活对象的Survivor区(s1)内的存活对象，转移到另外一块Survivor区(s2)去。转移过后，s1区被清空了，因为里面的对象已经被转移到s2区</strong></p>
+<p>  <strong>如果再发生第三次GC，那么就会把。eden区和s2区的，存活对象，都转移到s1区，那么这个时候s2区被清空。</strong></p>
+<p><strong>以此类推，你会发现，每次GC，survivor的两个分区，总会有一个是空着的。</strong></p>
+<p>所以这里大家就能体会到，为啥是这么分配内存空间了。</p>
+<p>​    因为之前分析了，每次垃圾回收可能存活下来的对象就1%，所以在设计的时候就留了一块100MB的内存空间来存放垃圾回收后转移过来的存活对象。</p>
+<p>比如Eden区+一块Survivor区有900MB的内存空间都占满了，但是垃圾回收之后，可能就10MB的对象是存活的。</p>
+<p>​    此时就把那10MB的存活对象转移到另外一块Survivor区域就可以，然后再一次性把Eden区和之前使用的Survivor区里的垃圾对象全部回收掉，如下图。</p>
+<p><img src="/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216163625597.png" alt="image-20191216163625597"></p>
+<p>​    <strong>接着新对象继续分配在Eden区和另外那块开始被使用的Survivor区，然后始终保持一块Survivor区是空着的，就这样一直循环使用这三块内存区域。（重要）</strong></p>
+<p>这么做<strong>最大的好处</strong>，就是只有10%的内存空间是被闲置的，90%的内存都被使用上了</p>
+<p>无论是垃圾回收的性能，内存碎片的控制，还是说内存使用的效率，都非常的好。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​    新对象的创建，永远是放在eden区。</p>
+<p>​    每次gc，都会空出一个survivor，清空eden和另一个survivor。保留一个survivor的目的是保存下次GC，从eden和另一个survivor存活下来的对象。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="为什么新生代要分成三块，分成两块行不行，9-1，一块eden和一块survivor"><a href="#为什么新生代要分成三块，分成两块行不行，9-1，一块eden和一块survivor" class="headerlink" title="为什么新生代要分成三块，分成两块行不行，9:1，一块eden和一块survivor"></a><strong>为什么新生代要分成三块，分成两块行不行，9:1，一块eden和一块survivor</strong></h3><blockquote>
+<p><strong>没有survivor区可不可以？</strong></p>
+</blockquote>
+<p>如果没有两个survivor区，只有新生代（只有eden区）和老年代，可不可以？肯定不可以：</p>
+<ul>
+<li>如果发生ygc也就意味着，存活对象直接进入老年代，那么可能因为老年代空间不够频繁gc。</li>
+<li>但是如果你说， 增加老年代空间，那么虽然说老年代gc频率下降，但是gc所需要时间变长（内存越大，扫描对象越久 - <strong>g1垃圾回收器分partition的原因</strong>）</li>
+</ul>
+<p>​    我们可以得到第一条结论：Survivor的存在意义，就是减少被送到老年代的对象，进而减少Full GC的发生，Survivor的预筛选保证，只有经历16次Minor GC还能在新生代中存活的对象，才会被送到老年代。</p>
+<blockquote>
+<p><strong>那为什么需要两个survivor区？一个不行？</strong></p>
+</blockquote>
+<p>​    如果只有一个eden区和一个survivor区，那么假设场景，当发生ygc后，存活对象从eden迁移到survivor，这样看好像没什么问题，很棒，但是假设eden满了，这个时候要进行ygc，那么发现此时，eden和survivor都保存有存活对象，那么你是不是要对这两个区域进行gc，找出存活对象，那么你想想是不是难度很大，还容易造成碎片，如果你使用复制算法，那么难度很大，如果你使用标记清除算法，那么容易造成内存碎片，如果你使用标记清除算法，那么耗时很长。</p>
+<p>​    所以如果存在两个survivor区，那么工作就非常的 轻松，只需要在eden区和其中一个survivor（b1）找出存活对象，一次性放到另一个空的survivor（b2），然后再直接清除eden区和survivor（b1），这样效率是不是很快？快的一。</p>
+<h3 id="万一垃圾回收过后，存活下来的对象在Survivor区域中放不下咋整？"><a href="#万一垃圾回收过后，存活下来的对象在Survivor区域中放不下咋整？" class="headerlink" title="万一垃圾回收过后，存活下来的对象在Survivor区域中放不下咋整？"></a><strong>万一垃圾回收过后，存活下来的对象在Survivor区域中放不下咋整？</strong></h3><p>现在有一个比较大的问题，就是如果在young GC之后发现剩余的存活对象太多了，没办法放入另外一块Survivor区怎么办？如下图。</p>
+<p><img src="/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216172242291.png" alt="image-20191216172242291"></p>
+<p>​    比如上面这个图，假设在发生GC的时候，发现Eden区里超过150MB的存活对象，此时没办法放入Survivor区中，此时该怎么办呢？</p>
+<p>​    这个时候就必须得把这些对象<strong>直接转移到老年代</strong>去，如下图所示。</p>
+<p><img src="/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216172256106.png" alt="image-20191216172256106"></p>
+<h3 id="如果新生代里有大量对象存活下来，自己的Survivor区放不下了，必须转移到老年代去，那么如果老年代里空间也不够放这些对象呢？"><a href="#如果新生代里有大量对象存活下来，自己的Survivor区放不下了，必须转移到老年代去，那么如果老年代里空间也不够放这些对象呢？" class="headerlink" title="如果新生代里有大量对象存活下来，自己的Survivor区放不下了，必须转移到老年代去，那么如果老年代里空间也不够放这些对象呢？"></a>如果新生代里有大量对象存活下来，自己的Survivor区放不下了，必须转移到老年代去，那么如果老年代里空间也不够放这些对象呢？</h3><p>​    首先，<strong>在执行任何一次young GC之前，JVM会先检查一下老年代可用的可用内存空间，是否大于新生代所有对象的总大小。</strong></p>
+<p>​    为啥检查这个呢？因为最极端的情况下，可能新生代young  GC过后，所有对象都存活下来了，那岂不是新生代所有对象全部要进入老年代？如下图。</p>
+<p><img src="/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216173021448.png" alt="image-20191216173021448"></p>
+<p>​    <strong>如果说发现老年代的内存大小是大于新生代所有对象的，此时就可以放心大胆的对新生代发起一次young GC了，因为即使young GC之后所有对象都存活，Survivor区放不下了，也可以转移到老年代去。</strong></p>
+<blockquote>
+<p><strong>但是假如执行young  GC之前，发现老年代的可用内存已经小于了新生代的全部对象大小了。</strong></p>
+</blockquote>
+<p>​    那么这个时候是不是有可能在young GC之后新生代的对象全部存活下来，然后全部需要转移到老年代去，但是老年代空间又不够？</p>
+<p>理论上，是有这种可能的。</p>
+<p>​    所以假如young GC之前，发现老年代的可用内存已经小于了新生代的全部对象大小了，就会看一个<strong>“-XX:-HandlePromotionFailure”</strong>的<strong>空间担保参数</strong>是否设置了，<strong>没设置，那么进行fullgc</strong></p>
+<p>如果有这个参数，那么就会继续尝试进行下一步判断。</p>
+<p>下一步判断，就是看看老年代的内存大小，是否大于之前每一次young GC后进入老年代的对象的平均大小。</p>
+<p>举个例子，之前每次young GC后，平均都有10MB左右的对象会进入老年代，那么系统会认为这次young gc后，也会有大概10M对象进入老年代。那么此时老年代可用内存如果大于10MB。</p>
+<p>这就说明，很可能这次young GC过后也是差不多10MB左右的对象会进入老年代，此时老年代空间是够的，看下图。</p>
+<p><img src="/2020/03/27/新生代为什么要分为三块和复制算法操作/image-20191216173214294.png" alt="image-20191216173214294"></p>
+<p><strong>如果上面那个步骤判断失败了</strong>，或者<strong>是“-XX:-HandlePromotionFailure”空间担保参数没设置</strong>，此时就会直接触发一次“Full GC”，就是对老年代进行垃圾回收，尽量腾出来一些内存空间，然后再执行young GC。</p>
+<p><strong>如果上面两个步骤都判断成功了，那么就是说可以冒点风险尝试一下young GC。此时进行young GC有几种可能。</strong></p>
+<p>第一种可能，young GC过后，剩余的存活对象的大小，是小于Survivor区的大小的，那么此时存活对象进入Survivor区域即可。</p>
+<p>第二种可能，young GC过后，剩余的存活对象的大小，是大于 Survivor区域的大小，但是是小于老年代可用内存大小的，此时就直接进入老年代即可。</p>
+<p>第三种可能，很不幸，young GC过后，剩余的存活对象的大小，大于了Survivor区域的大小，也大于了老年代可用内存的大小。此时老年代都放不下这些存活对象了，就会发生“Handle Promotion Failure”的情况，这个时候就会触发一次“Full GC”。</p>
+<p><strong>Full GC就是对老年代进行垃圾回收，同时也一般会对新生代进行垃圾回收。</strong></p>
+<p>​    因为这个时候必须得把老年代里的没人引用的对象给回收掉，然后才可能让young GC过后剩余的存活对象进入老年代里面。</p>
+<p><strong>如果要是Full GC过后，老年代还是没有足够的空间存放young GC过后的剩余存活对象，那么此时就会导致所谓的“OOM”内存溢出了</strong></p>
+<p><strong>因为内存实在是不够了，你还是要不停的往里面放对象，当然就崩溃了。</strong></p>
+<h4 id="特别提示"><a href="#特别提示" class="headerlink" title="特别提示"></a>特别提示</h4><p>​    <strong>需要注意的是 “-XX:HandlePromotionFailure”参数在JDK 1.6以后就被废弃了，所以现在一般都不会在生产环境里设置这个参数了。在JDK 1.6以后，只要判断“老年代可用空间”&gt; “新生代对象总和”，或者“老年代可用空间”&gt; “历次young GC升入老年代对象的平均大小”，两个条件满足一个，就可以直接进行Minor GC，不需要提前触发Full GC了。</strong></p>
+<h3 id="万一我们突然创建了一个超级大的对象，大到啥程度？新生代找不到连续内存空间来存放，此时咋整？"><a href="#万一我们突然创建了一个超级大的对象，大到啥程度？新生代找不到连续内存空间来存放，此时咋整？" class="headerlink" title="万一我们突然创建了一个超级大的对象，大到啥程度？新生代找不到连续内存空间来存放，此时咋整？"></a><strong>万一我们突然创建了一个超级大的对象，大到啥程度？新生代找不到连续内存空间来存放，此时咋整？</strong></h3><p>直接放到 老年代 </p>
+<p><strong>到底一个存活对象要在新生代里这么来回倒腾多少次之后才会被转移都老年代去？</strong></p>
+<p>默认最大是15次（<strong>为什么是15次？请看《java核心技术杂记》中synchronize章节中的java对象头的相关信息</strong>)</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/jvm/" rel="tag"><i class="fa fa-tag"></i> jvm</a>
+          
+            <a href="/tags/垃圾回收器/" rel="tag"><i class="fa fa-tag"></i> 垃圾回收器</a>
+          
+            <a href="/tags/新生代/" rel="tag"><i class="fa fa-tag"></i> 新生代</a>
+          
+            <a href="/tags/复制算法/" rel="tag"><i class="fa fa-tag"></i> 复制算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/22/ParNew和CMS垃圾回收器/" rel="next" title="ParNew和CMS垃圾回收器">
+                <i class="fa fa-chevron-left"></i> ParNew和CMS垃圾回收器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/29/jvm哪三块区域容易溢出/" rel="prev" title="jvm哪三块区域容易溢出">
+                jvm哪三块区域容易溢出 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">70</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">114</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#新生代内存分为那三块内存？使用复制算法回收是怎么操作？"><span class="nav-number">1.</span> <span class="nav-text">新生代内存分为那三块内存？使用复制算法回收是怎么操作？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.1.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">1.2.</span> <span class="nav-text">问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么新生代要分成三块，分成两块行不行，9-1，一块eden和一块survivor"><span class="nav-number">1.2.1.</span> <span class="nav-text">为什么新生代要分成三块，分成两块行不行，9:1，一块eden和一块survivor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#万一垃圾回收过后，存活下来的对象在Survivor区域中放不下咋整？"><span class="nav-number">1.2.2.</span> <span class="nav-text">万一垃圾回收过后，存活下来的对象在Survivor区域中放不下咋整？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如果新生代里有大量对象存活下来，自己的Survivor区放不下了，必须转移到老年代去，那么如果老年代里空间也不够放这些对象呢？"><span class="nav-number">1.2.3.</span> <span class="nav-text">如果新生代里有大量对象存活下来，自己的Survivor区放不下了，必须转移到老年代去，那么如果老年代里空间也不够放这些对象呢？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特别提示"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">特别提示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#万一我们突然创建了一个超级大的对象，大到啥程度？新生代找不到连续内存空间来存放，此时咋整？"><span class="nav-number">1.2.4.</span> <span class="nav-text">万一我们突然创建了一个超级大的对象，大到啥程度？新生代找不到连续内存空间来存放，此时咋整？</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      451.8k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共451.8k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>

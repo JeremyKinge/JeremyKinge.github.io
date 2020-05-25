@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="jvm,溢出,OOM," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="什么是内存溢出？在哪些区域会发生内存溢出？原理解析内存溢出其实很简单，那就是，某个内存空间是固定的，当他满了之后，再往里面添加数据的时候。放不下，那么就会溢出 –  内存溢出 那么什么叫内存泄漏？举个例子，比如一堆对象在老年代里占用了某些内存，但是他始终不释放这些内存。那么就有可能引发内存溢出。 所以说，内存泄漏时内存溢出的一种原因。  运行一个Java系统就是运行一个JVM进程  首先的话呢，大">
+<meta name="keywords" content="jvm,溢出,OOM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jvm哪三块区域容易溢出">
+<meta property="og:url" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="什么是内存溢出？在哪些区域会发生内存溢出？原理解析内存溢出其实很简单，那就是，某个内存空间是固定的，当他满了之后，再往里面添加数据的时候。放不下，那么就会溢出 –  内存溢出 那么什么叫内存泄漏？举个例子，比如一堆对象在老年代里占用了某些内存，但是他始终不释放这些内存。那么就有可能引发内存溢出。 所以说，内存泄漏时内存溢出的一种原因。  运行一个Java系统就是运行一个JVM进程  首先的话呢，大">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/40050000_1575455133.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577854767228.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577854839256.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577854903773.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577854913028.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577854977815.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577855531385.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577855573539.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577855617726.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/78943500_1575455286.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577969300328.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577885403144.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577892096100.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577892131982.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577969590656.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/19751800_1575455312.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577856097646.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577856348949.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577856376988.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577856584902.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577856708786.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/75813300_1575455149.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577892847455.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577893004698.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/78920700_1575455276.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577857454601.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577857524276.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577857557180.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577857588140.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577893845555.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577893948831.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577971050811.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577971096605.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577971122108.png">
+<meta property="og:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/1577971228025.png">
+<meta property="og:updated_time" content="2020-05-24T14:53:30.277Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jvm哪三块区域容易溢出">
+<meta name="twitter:description" content="什么是内存溢出？在哪些区域会发生内存溢出？原理解析内存溢出其实很简单，那就是，某个内存空间是固定的，当他满了之后，再往里面添加数据的时候。放不下，那么就会溢出 –  内存溢出 那么什么叫内存泄漏？举个例子，比如一堆对象在老年代里占用了某些内存，但是他始终不释放这些内存。那么就有可能引发内存溢出。 所以说，内存泄漏时内存溢出的一种原因。  运行一个Java系统就是运行一个JVM进程  首先的话呢，大">
+<meta name="twitter:image" content="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/40050000_1575455133.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/"/>
+
+
+
+
+
+  <title>jvm哪三块区域容易溢出 | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2020/03/29/jvm哪三块区域容易溢出/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">jvm哪三块区域容易溢出</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-29T23:57:58+08:00">
+                2020-03-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  11,910
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  44
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="什么是内存溢出？在哪些区域会发生内存溢出？"><a href="#什么是内存溢出？在哪些区域会发生内存溢出？" class="headerlink" title="什么是内存溢出？在哪些区域会发生内存溢出？"></a>什么是内存溢出？在哪些区域会发生内存溢出？</h2><h3 id="原理解析"><a href="#原理解析" class="headerlink" title="原理解析"></a>原理解析</h3><p>内存溢出其实很简单，那就是，某个内存空间是固定的，当他满了之后，再往里面添加数据的时候。放不下，那么就会溢出 –  内存溢出</p>
+<p>那么什么叫内存泄漏？举个例子，比如一堆对象在老年代里占用了某些内存，但是他始终不释放这些内存。那么就有可能引发内存溢出。</p>
+<p>所以说，内存泄漏时内存溢出的一种原因。</p>
+<blockquote>
+<p><strong>运行一个Java系统就是运行一个JVM进程</strong></p>
+</blockquote>
+<p>首先的话呢，大家得先搞明白一个事情，就是我们平时说启动一个Java系统，其实本质就是启动一个JVM进程。</p>
+<p>咱们就用最最基本的情况来给大家演示一下好了，比如说下面的一段代码，是每个Java初学者都会写的一段代码：</p>
+<p><img src="/2020/03/29/jvm哪三块区域容易溢出/40050000_1575455133.png" alt="image.png"></p>
+<p>那么大家知道，当你在Eclipse或者Intellij IDEA中写好这个代码，然后通过IDE来运行这个代码的时候，会发生哪些事情吗？</p>
+<p>首先，我们知道后缀为“.java”的源代码，这个代码是不能运行的。</p>
+<p>所以第一步就是这份“java”源代码文件必须先编译成一个“.class”字节码文件，这个字节码文件才是可以运行的。接着对于这种编译好的字节码文件，比如HelloWorld.class，如果里面包含了main方法，接下来我们就可以用“java命令”来在命令行执行这个字节码文件了。</p>
+<p><strong>实际上一旦你执行“java命令”，相当于就会启动一个JVM进程</strong>。这个JVM进程就会负责去执行你写好的那些代码，如下图所示。</p>
+<p>​      <img src="/2020/03/29/jvm哪三块区域容易溢出/1577854767228.png" alt="1577854767228"></p>
+<p>所以首先要清楚第一点，运行一个Java系统，本质上就是启动一个JVM进程，这个JVM进程负责来执行你写好的一大堆代码。只要你的Java系统中包含一个main方法，接着JVM进程就会从你指定的这个main方法入手，开始执行你写的代码。</p>
+<blockquote>
+<p><strong>到底执行哪些代码：JVM得加载你写的类</strong></p>
+</blockquote>
+<p>下一个问题，JVM进程怎么执行你写的那些代码呢？</p>
+<p>大家都知道，Java是一个面向对象的语言，所以最最基本的代码组成单元就是一个一个的类，平时我们说写Java代码，不就是写一个一个的类吗？是不是。</p>
+<p>然后在一个一个的类里我们会定义各种变量，方法，数据结构，通过if else之类的语法，写出来各种各样的系统业务逻辑，这就是所谓的编程了。</p>
+<p>所以<strong>JVM既然要执行你写的代码，首先当然得把你写好的类加载到内存里来啊！</strong></p>
+<p>​    <strong>所以JVM的内存区域里大家都知道，有一块区域叫做永久代，当然JDK 1.8以后都叫做Metaspace</strong>了，我们也用最新的说法好了。</p>
+<p><strong>这块内存区域就是用来存放你系统里的各种类的信息的，包括JDK自身内置的一些类的信息，都在这块区域里。</strong></p>
+<p>JVM有类加载器和一套类加载的机制，之前的章节已经说过，这里不再赘述，他会负责把我们写好的类从编译好的“.class”字节码文件里加载到内存里来，如下图。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577854839256.png" alt="1577854839256">             </p>
+<p>好，那么既然有这么一块Metaspace区域是用来存放类信息的，<strong>那是不是有可能在这个Metaspace区域里就会发生OOM？</strong></p>
+<p>没错，是有这种可能的。<strong>而且上面的文章《Metadata GC 引发的full gc 》就是因为元数据空间内存溢出而导致的full gc</strong></p>
+<blockquote>
+<p><strong>Java虚拟机栈：让线程执行各种方法</strong></p>
+</blockquote>
+<p>大家都知道，我们写好的那些Java代码虽然是一个一个的类，但是其实核心的代码逻辑一般都是封装在类里面的各种方法中的</p>
+<p>比如JVM已经加载了我们写好的HelloWorld类到内存里了，接着怎么执行他里面的代码呢？</p>
+<p><strong>Java语言中的一个通用的规则，就是一个JVM进程总是从main方法开始执行的，所以我们既然在HelloWorld中写了一个main()方法，那么当然得执行这个方法中的代码了。</strong></p>
+<p>但是等一等，JVM进程里的谁去执行main()方法的代码？</p>
+<p>其实我们所有的方法执行，都必须依赖JVM进程中的某个线程去执行，你可以理解为线程才是执行我们写的代码的核心主体。</p>
+<p><strong>JVM进程启动之后默认就会有一个main线程，这个main线程就是专门负责执行main()方法的。</strong></p>
+<p>大家如下图所示。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577854903773.png" alt="1577854903773">      现在又有一个问题了，在main()方法里定义了一个局部变量，“message”，那么大家回忆一下，这些方法里的局部变量可能会有很多，那么这些局部变量是放在哪里的呢？</p>
+<p>很简单，<strong>每个线程都有一个自己的虚拟机栈，就是所谓的栈内存。</strong></p>
+<p>然后<strong>这个线程只要执行一个方法，就会为方法创建一个栈桢，将栈桢放入自己的虚拟机栈里去，然后在这个栈桢里放入方法中定义的各种局部变量</strong>，如下图所示。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577854913028.png" alt="1577854913028">      好，现在问题来了，大家如果还记得之前我们讲过的一个参数，应该都知道，<strong>我们是可以设置JVM中每个线程的虚拟机栈的内存大小的，一般是设置为1MB。</strong></p>
+<p>那么既然每个线程的虚拟机栈的内存大小是固定的，是否可能会发生虚拟机栈的内存溢出？</p>
+<p>没错，所以<strong>第二块可能发生OOM的区域，就是每个线程的虚拟机栈内存。</strong></p>
+<blockquote>
+<p><strong>堆内存：放我们创建的各种对象</strong></p>
+</blockquote>
+<p>最后我们知道，我们写好的代码里，特别在一些方法中，可能会频繁的创建各种各样的对象，这些对象都是放在堆内存里的，如下图所示。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577854977815.png" alt="1577854977815">            </p>
+<p>而且我们通过之前的学习，也都知道了一点，通常我们在JVM中分配给堆内存的空间其实一般是固定的。</p>
+<p>既然如此，我们还不停在堆内存里创建对象，是不是说明，堆内存也有可能会发生内存溢出？</p>
+<p>没错，<strong>第三块可能发生内存溢出的区域，就是堆内存空间！</strong></p>
+<p><strong>本节总结</strong></p>
+<p>也就是说：元数据空间、java虚拟机栈、堆内存（老年代的oom）。这三块内存有可能发生内存溢出的。</p>
+<h2 id="Metaspace区域是如何因为类太多而发生内存溢出的？"><a href="#Metaspace区域是如何因为类太多而发生内存溢出的？" class="headerlink" title="Metaspace区域是如何因为类太多而发生内存溢出的？"></a>Metaspace区域是如何因为类太多而发生内存溢出的？</h2><h3 id="原理解析-1"><a href="#原理解析-1" class="headerlink" title="原理解析"></a>原理解析</h3><blockquote>
+<p><strong>Metaspace区域是如何触发内存溢出的？</strong></p>
+</blockquote>
+<p>​    好，我们通过之前的学习都知道，在启动一个JVM时是可以设置很多参数的，其中有一些参数就是专门用来设置Metaspace区域的内存大小的，大家如果有遗忘的回顾一下之前的文章即可。</p>
+<p>如下两个参数就是用来设置Metaspace区域大小的：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">-XX:MetaspaceSize=512m </div><div class="line">-XX:MaxMetaspaceSize=512m</div></pre></td></tr></table></figure>
+<p>我们看下图，图中我们就限定了Metaspace区域的内存大小为512m。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577855531385.png" alt="1577855531385">             </p>
+<p>所以实际上来说，<strong>在一个JVM中，Metaspace区域的大小是固定的，比如512MB。</strong></p>
+<p>那么一旦<strong>JVM不停地加载类</strong>，加载了很多很多的类，然后<strong>Metaspace区域放满</strong>了，此时会如何？大家看下图。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577855573539.png" alt="1577855573539">             </p>
+<p>​    大家如果还记得之前我们说过的频繁Full GC触发的几个问题，其中之一就是<strong>Metaspace区域满就会触发Full GC</strong>，<strong>Full GC会带着一块进行Old GC就是回收老年代的，也会带着回收年轻代的Young GC</strong>。</p>
+<p>当然，<strong>Full GC</strong>的时候，必然<strong>会尝试回收Metaspace区域中的类（记住，这里只是尝试，因为回收元数据空间的内存条件很多）</strong>，如下图所示。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577855617726.png" alt="1577855617726">            </p>
+<p>所以一旦Metaspace区域满了，此时会触发Full GC，连带着回收Metaspace里的类。</p>
+<p><strong>那么什么样的类才是可以被回收的呢？</strong></p>
+<p>​    <strong>这个条件是相当的苛刻，包括不限于以下一些：比如这个类的类加载器先要被回收，比如这个类的所有对象实例都要被回收，这个类的class对象没有被引用（三大条件），等等。</strong></p>
+<p><strong>所以一旦你的Metaspace区域满了，未必能回收掉里面很多的类。</strong></p>
+<p>那么一旦回收不了多少类，此时你的JVM还在拼命的加载类放到Metaspace里去，你觉得此时会发生什么事情？</p>
+<p>​    显而易见，一旦你尝试回收了Metaspace中的类之后发现还是没能腾出来太多空间，此时还要继续往Metaspace中塞入更多的类，<strong>直接就会引发内存溢出的问题</strong>。因为此时Metaspace区域的内存空间不够了。</p>
+<p>一旦发生了内存溢出就说明JVM已经没办法继续运行下去了，此时可能你的系统就直接崩溃了，这就是Metaspace区域发生内存溢出的一个根本的原理。</p>
+<blockquote>
+<p><strong>到底什么情况下会发生Metaspace内存溢出？</strong></p>
+</blockquote>
+<p>平心而论，Metaspace这块区域一般很少发生内存溢出，如果发生内存溢出一般都是因为两个原因：</p>
+<ul>
+<li><p>第一种原因，很多工程师他不懂JVM的运行原理，在上线系统的时候对Metaspace区域直接用默认的参数，即根本不设置其大小。</p>
+<ul>
+<li>这会导致默认的Metaspace区域可能才几十MB而已，此时对于一个稍微大型一点的系统，因为他自己有很多类，还依赖了很多外部的jar包有有很多的类，几十MB的Metaspace很容易就不够了。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>第二种原因，就是很多人写系统的时候会用cglib之类的技术动态生成一些类，一旦代码中没有控制好，导致你生成的类过于多的时候，就很容易把Metaspace给塞满，进而引发内存溢出。</li>
+</ul>
+<p>对于第一种问题，<strong>通常来说，有经验的工程师上线系统往往会设置对应的Metaspace大小，推荐的值在512MB那样，一般都是足够的。</strong></p>
+<p>对于第二种问题，应避免无限制的动态生成类，后面会通过代码演示。</p>
+<blockquote>
+<p><strong>本节总结</strong></p>
+</blockquote>
+<p>大家以后只要记得，<strong>合理分配Metaspace区域（一般是给512M），同时避免无限制的动态生成类。</strong>一般这块区域其实都是比较安全的，不至于会触发内存溢出的。</p>
+<blockquote>
+<p><strong>疑问</strong></p>
+</blockquote>
+<p>有的人说，因为jdk1.8以后，元数据空间使用的是物理内存（电脑内存）而不是堆内存，实际上是不会发生内存溢出的，这种说法对不对？</p>
+<p>答案是：不对，请看后面章节的事例</p>
+<h3 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h3><p>首先我们回顾一下，metadata空间中<strong>什么样的类才是可以被回收的呢？</strong></p>
+<p>​    <strong>这个条件是相当的苛刻，包括不限于以下一些：</strong></p>
+<ul>
+<li><p><strong>这个类的类加载器先要被回收</strong></p>
+</li>
+<li><p><strong>这个类的所有对象实例都要被回收</strong></p>
+</li>
+<li><p><strong>这个类的class对象没有被引用等等。</strong></p>
+</li>
+</ul>
+<p>​    </p>
+<p>接下来我们通过cglib，动态的生成类，来模拟，metada内存溢出。</p>
+<blockquote>
+<p>**到底什么是动态生成类？动态代理</p>
+</blockquote>
+<p>可能有的人不太理解什么叫做动态生成类，其实很简单，我们平时正常情况下，类都是通过自己的双手一行一行代码写出来的，而且都是写的“.java”后缀的源代码文件，大家想想是不是这样？</p>
+<p>大家回忆一下，平时我们自己写出来的类大致长什么样子？是不是一般都包含一些静态变量、实例变量、静态方法、实例方法，里面还有一大堆的业务逻辑？大致其实类就是这么个东西。</p>
+<p>所以既然你双手都能写出来这种普普通通的类，那么当然是有办法可以借助一些方法在系统运行的时候，通过程序动态的生成出更多的类了，这是没有问题的。</p>
+<p>所以一旦我们程序中拼命的生成大量的类，而且这些类还不能被回收，那么必然会最终导致Metaspace区域被占满，进而导致Metaspace内存溢出了。</p>
+<p>接着我们就来实际看看代码层面上，动态生成类到底是怎么做的吧！</p>
+<blockquote>
+<p><strong>一段CGLIB动态生成类的代码示例</strong></p>
+</blockquote>
+<p>首先引入cglib依赖</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">   &lt;groupId&gt;cglib&lt;/groupId&gt;</div><div class="line">   &lt;artifactId&gt;cglib&lt;/artifactId&gt;</div><div class="line">   &lt;version&gt;3.3.0&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+<p>接着我们就可以使用CGLIB来动态生成类了，大家看下面的代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class App </div><div class="line">&#123;</div><div class="line">    public static void main( String[] args )&#123;</div><div class="line">    int counter = 0;</div><div class="line">    	while (true) &#123;</div><div class="line">    		Enhancer enhancer =  new Enhancer();</div><div class="line">    		enhancer.setSuperclass(Car.class);</div><div class="line">    		enhancer.setUseCache(false);</div><div class="line">    		enhancer.setCallback(new MethodInterceptor() &#123;</div><div class="line">				public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable &#123;</div><div class="line">					if( method.getName().equals(&quot;run&quot;) ) &#123;</div><div class="line">						System.out.println(&quot;启动汽车前，先进行安全检查。。。。&quot;);//横切入自定义逻辑</div><div class="line">						return proxy.invokeSuper(obj, args);</div><div class="line">					&#125;else &#123;</div><div class="line">						return proxy.invokeSuper(obj, args);</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125;);</div><div class="line">			System.out.println(&quot;目前动态创建了&quot;+(++counter)+&quot;个Car类的子类&quot;);</div><div class="line">    		Car carSonn = (Car) enhancer.create();</div><div class="line">    		carSonn.run();</div><div class="line">		&#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    static class Car&#123;</div><div class="line">    	public void run() &#123;</div><div class="line">    		System.out.println(&quot;汽车启动，开始行驶。。。。&quot;);</div><div class="line">    	&#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先我们可以看到我们在这里定义了一个类，代表了一个汽车，他有一个run()方法，执行的时候就会启动汽车，开始让汽车行驶。</p>
+<p>那么我们接着来看下面的代码片段，我们通过CGLIB的Enhancer类<strong>动态</strong>生成了一个Car类的子类。</p>
+<p>注意，从这里开始，就是开始动态生成类了，大家要仔细看，看下面的代码片段：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Enhancer enhancer =  new Enhancer();</div><div class="line">enhancer.setSuperclass(Car.class);</div><div class="line">enhancer.setUseCache(false);</div></pre></td></tr></table></figure>
+<p>你权且当做Enhancer是用来生成类的一个API吧，看到片段里我们给Enhancer设置了一个SuperClass没有？这里的意思就是说Enhancer生成的代理类是Car类的子类，Car类是生成类的父类。至于那个UseCache是什么意思，就先别管了。</p>
+<p>既然Enhancer动态生成的类是Car的子类，那么是不是Car有的方法子类都有？所以子类是不是也有Car的run()方法？</p>
+<p>答案是肯定的，但我们现在想要在调用子类的run()方法的时候做点手脚，如下面代码片段：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"> 		enhancer.setCallback(new MethodInterceptor() &#123;</div><div class="line">	public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable &#123;</div><div class="line">		if( method.getName().equals(&quot;run&quot;) ) &#123;</div><div class="line">			System.out.println(&quot;启动汽车前，先进行安全检查。。。。&quot;);</div><div class="line">			return proxy.invokeSuper(obj, args);</div><div class="line">		&#125;else &#123;</div><div class="line">			return proxy.invokeSuper(obj, args);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>​    这个片段的意思是：<strong>如果你调用动态生成的子类对象的run()方法，会先被这里的MethodInterceptor拦截一下，拦截之后，各位看里面的代码，是不是判断了一下，如果你调用的Method是run方法，那么就先对汽车做一下安全检查。</strong></p>
+<p>​    安全检查做完之后，再通过“methodProxy.invokeSuper(o, objects);”调用父类Car的run()方法，去启动汽车，这行代码就会执行到Car类的run()方法里去了。</p>
+<p>​    到此为止，我们就已经通过CGLIB的Enhancer生成了一个Car类的子类了，而且定义好了对这个子类调用继承自父类的run()方法的时候，先干点别的，再调用父类的run()方法。</p>
+<p><strong>这么一搞，是不是跟下面这种在IDE里手写一个Car的子类是类似的？</strong></p>
+<p>看看下面的手写版本的代码：</p>
+<p><img src="/2020/03/29/jvm哪三块区域容易溢出/78943500_1575455286.png" alt="blob.png"></p>
+<p>看看上面那个SafeCar作为Car的子类，是不是干了一样的事？</p>
+<p><strong>但是这个类需要你用双手提前写出来代码，而CGLIB Enhancer那种模式可以在系统运行期间动态的创建一个Car的子类出来，实现一样的效果。</strong></p>
+<p>看到这里，各位应该理解这个动态创建类了！</p>
+<blockquote>
+<p><strong>限制Metaspace大小看看内存溢出效果</strong></p>
+</blockquote>
+<p>接着我们可以设置一下这个程序的JVM参数，限制他的Metaspace区域比较小一点，如下所示，我们把这个程序的JVM中的Metaspace区域设置为仅仅10m：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">-XX:MetaspaceSize=10m -XX:MaxMetaspaceSize=10m</div></pre></td></tr></table></figure>
+<p>接着我们可以在上述代码中做点手脚，大家看到上面的代码是有一个while循环的，所以他会不停的创建Car类的子类</p>
+<p><strong>接着大家用上述JVM参数来运行这个程序即可，可以看到如下所示的打印输出：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">。。。。重复输出一下三行日志。。。</div><div class="line">目前动态创建了637个Car类的子类</div><div class="line">启动汽车前，先进行安全检查。。。。</div><div class="line">汽车启动，开始行驶。。。。</div><div class="line"></div><div class="line">Exception in thread &quot;main&quot; net.sf.cglib.core.CodeGenerationException: java.lang.reflect.InvocationTargetException--&gt;null</div><div class="line">	at net.sf.cglib.core.AbstractClassGenerator.generate(AbstractClassGenerator.java:348)</div><div class="line">	at net.sf.cglib.proxy.Enhancer.generate(Enhancer.java:492)</div><div class="line">	at net.sf.cglib.core.AbstractClassGenerator$ClassLoaderData.get(AbstractClassGenerator.java:117)</div><div class="line">	at net.sf.cglib.core.AbstractClassGenerator.create(AbstractClassGenerator.java:294)</div><div class="line">	at net.sf.cglib.proxy.Enhancer.createHelper(Enhancer.java:480)</div><div class="line">	at net.sf.cglib.proxy.Enhancer.create(Enhancer.java:305)</div><div class="line">	at cm.kingge.TestJVM.App.main(App.java:28)</div><div class="line">Caused by: java.lang.reflect.InvocationTargetException</div><div class="line">	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)</div><div class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</div><div class="line">	at java.lang.reflect.Method.invoke(Method.java:498)</div><div class="line">	at net.sf.cglib.core.ReflectUtils.defineClass(ReflectUtils.java:459)</div><div class="line">	at net.sf.cglib.core.AbstractClassGenerator.generate(AbstractClassGenerator.java:339)</div><div class="line">	... 6 more</div><div class="line">Caused by: java.lang.OutOfMemoryError: Metaspace</div><div class="line">	at java.lang.ClassLoader.defineClass1(Native Method)</div><div class="line">	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)</div><div class="line">	... 11 more</div></pre></td></tr></table></figure>
+<p>大家注意一下上述异常日志的两个地方，<strong>一个是在创建了637个类之后，10M的Metaspace区域就被耗尽了</strong>，接着就会看到异常中有如下的一个：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Caused by: java.lang.OutOfMemoryError: Metaspace。</div></pre></td></tr></table></figure>
+<p>这个OutOfMemoryError就是经典的内存溢出的问题，而且他明确告诉你，是Metaspace这块区域内存溢出了。</p>
+<p>而且大家可以看到，一旦内存溢出，本来在运行的JVM进程直接会崩溃掉，你的程序会退出，这就是真实的内存溢出的日志。</p>
+<h4 id="进阶分析-jvisualvm工具和堆内存镜像分析"><a href="#进阶分析-jvisualvm工具和堆内存镜像分析" class="headerlink" title="进阶分析 jvisualvm工具和堆内存镜像分析"></a><strong>进阶分析 jvisualvm工具和堆内存镜像分析</strong></h4><p>为了便于观察我们把，metaspace增加10倍，并设置在oom的时候，</p>
+<p>为了便于观察，我们通过增加10倍的metaspace（便于启动jvisualvm工具观察，否则程序运行太快就结束了），同时在oom的时候导出堆内存快照便于分析。</p>
+<p>完整jvm参数如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">-XX:MetaspaceSize=100m -XX:MaxMetaspaceSize=100m</div><div class="line">-XX:NewSize=104857600 -XX:MaxNewSize=104857600 -XX:InitialHeapSize=209715200 -XX:MaxHeapSize=209715200 -XX:SurvivorRatio=8  -XX:MaxTenuringThreshold=15 -XX:PretenureSizeThreshold=3145728 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:gc1.log</div><div class="line">-XX:+HeapDumpOnOutOfMemoryError</div></pre></td></tr></table></figure>
+<p><strong>dump出来的堆内存快照，他会用你的PID进程id作为文件名字。</strong></p>
+<p>然后打开jdk的bin目录下的jvisualvm.exe 工具，运行程序。程序输出日志：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">。。。。。。。。以上还有</div><div class="line">汽车启动，开始行驶。。。。</div><div class="line">目前动态创建了8209个Car类的子类</div><div class="line">启动汽车前，先进行安全检查。。。。</div><div class="line">java.lang.OutOfMemoryError: Metaspace</div><div class="line">Dumping heap to java_pid16804.hprof ...</div><div class="line">Heap dump file created [27228842 bytes in 0.229 secs]</div><div class="line">Exception in thread &quot;main&quot; net.sf.cglib.core.CodeGenerationException: java.lang.reflect.InvocationTargetException--&gt;null</div><div class="line">	at net.sf.cglib.core.AbstractClassGenerator.generate(AbstractClassGenerator.java:348)</div><div class="line">	at net.sf.cglib.core.AbstractClassGenerator$ClassLoaderData$3.apply(AbstractClassGenerator.java:96)</div><div class="line">	at net.sf.cglib.core.AbstractClassGenerator$ClassLoaderData$3.apply(AbstractClassGenerator.java:94)</div><div class="line">	at net.sf.cglib.core.internal.LoadingCache$2.call(LoadingCache.java:54)</div><div class="line">	at java.util.concurrent.FutureTask.run(FutureTask.java:266)</div><div class="line">	at net.sf.cglib.core.internal.LoadingCache.createEntry(LoadingCache.java:61)</div><div class="line">	at net.sf.cglib.core.internal.LoadingCache.get(LoadingCache.java:34)</div><div class="line">	at net.sf.cglib.core.AbstractClassGenerator$ClassLoaderData.get(AbstractClassGenerator.java:119)</div><div class="line">	at net.sf.cglib.core.AbstractClassGenerator.create(AbstractClassGenerator.java:294)</div><div class="line">	at net.sf.cglib.reflect.FastClass$Generator.create(FastClass.java:65)</div><div class="line">	at net.sf.cglib.proxy.MethodProxy.helper(MethodProxy.java:121)</div><div class="line">	at net.sf.cglib.proxy.MethodProxy.init(MethodProxy.java:75)</div><div class="line">	at net.sf.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:226)</div><div class="line">	at cm.kingge.TestJVM.App$1.intercept(App.java:21)</div><div class="line">	at cm.kingge.TestJVM.App$Car$$EnhancerByCGLIB$$c101eb63_8209.run(&lt;generated&gt;)</div><div class="line">	at cm.kingge.TestJVM.App.main(App.java:29)</div><div class="line">Caused by: java.lang.reflect.InvocationTargetException</div><div class="line">	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)</div><div class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</div><div class="line">	at java.lang.reflect.Method.invoke(Method.java:498)</div><div class="line">	at net.sf.cglib.core.ReflectUtils.defineClass(ReflectUtils.java:459)</div><div class="line">	at net.sf.cglib.core.AbstractClassGenerator.generate(AbstractClassGenerator.java:339)</div><div class="line">	... 15 more</div><div class="line">Caused by: java.lang.OutOfMemoryError: Metaspace</div><div class="line">	at java.lang.ClassLoader.defineClass1(Native Method)</div><div class="line">	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)</div><div class="line">	... 20 more</div></pre></td></tr></table></figure>
+<p>可以看到，一共动态创建了8209个Car类的子类。</p>
+<p><strong>首先查看打印出来的gc1.log日志</strong></p>
+<p><img src="/2020/03/29/jvm哪三块区域容易溢出/1577969300328.png" alt="1577969300328"></p>
+<p>可以看到，进行了多次的ygc，因此上述代码不光是动态生成类，本身他也是对应很多对象的，因此你在while(true)循环里不停的创建对象，当然会塞满Eden区，从而发生了ygc。</p>
+<p>0.771: [Full GC (Metadata GC Threshold) 0.771: [CMS: 0K-&gt;2161K(349568K), 0.0721349 secs] 20290K-&gt;2161K(506816K), [Metaspace: 9201K-&gt;9201K(1058816K)], 0.0722612 secs] [Times: user=0.12 sys=0.03, real=0.08 secs]</p>
+<p><strong>接着我们来看这次GC，这就是Full GC了，而且通过“Metadata GC Threshold”清晰看到，是Metaspace区域满了，所以触发了Full GC。</strong></p>
+<p>这个时候看下面的日志，20290K-&gt;2161K(506816K)，这个就是说堆内存（年轻代+老年代）一共是500MB左右，然后有20MB左右的内存被使用了，这个必然是年轻代用的。</p>
+<p>然后Full GC必然会带着一次Young GC，因此这次Full GC其实是执行了ygc了，所以回收了很多对象，剩下了2161KB的对象，这个大概就是JVM的一些内置对象了。</p>
+<p>然后直接就把这些对象放入老年代，为什么呢，因为下面的日志：[CMS: 0K-&gt;2161K(349568K), 0.0721349 secs] </p>
+<p>这里明显说了，Full GC带着CMS进行了老年代的Old GC，结果人家本来是0KB，什么都没有，然后从年轻代转移来了2161KB的对象，所以老年代变成2161KB了。</p>
+<p><strong>接着看日志： [Metaspace: 9201K-&gt;9201K(1058816K)]</strong></p>
+<p>​    <strong>此时Metaspace区域已经使用了差不多9MB左右的内存了，此时明显是发现离我们限制的10MB内存很接近了，所以触发了Full GC，但是对Metaspace GC后发现类全部存活了，因此还是剩余9MB左右的类在Metaspace里。</strong></p>
+<p>0.843: [Full GC (Last ditch collection) 0.843: [CMS: 2161K-&gt;1217K(349568K), 0.0164047 secs] 2161K-&gt;1217K(506944K), [Metaspace: 9201K-&gt;9201K(1058816K)], 0.0165055 secs] [Times: user=0.03 sys=0.00, real=0.01 secs]</p>
+<p><strong>接着又是这次Full GC，人家也说的很清晰了，Last ditch collection</strong></p>
+<p>就是说，最后一次拯救的机会了，因为之前Metaspace回收了一次但是没有类可以回收，所以新的类无法放入Metaspace了。</p>
+<p>所以再最后试一试Full GC，能不能回收掉一些</p>
+<p><strong>结果如下：[Metaspace: 9201K-&gt;9201K(1058816K)], 0.0165055 secs]</strong></p>
+<p><strong>Metaspace区域还是无法回收掉任何的类，几乎还是占满了我们设置的10MB左右。</strong></p>
+<p>0.860: [GC (CMS Initial Mark) [1 CMS-initial-mark: 1217K(349568K)] 1217K(506944K), 0.0002251 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</p>
+<p>0.860: [CMS-concurrent-mark-start]</p>
+<p>0.878: [CMS-concurrent-mark: 0.003/0.018 secs] [Times: user=0.05 sys=0.01, real=0.02 secs]</p>
+<p>0.878: [CMS-concurrent-preclean-start]</p>
+<p>Heap</p>
+<p>par new generation   total 157376K, used 6183K [0x00000005ffe00000, 0x000000060a8c0000, 0x0000000643790000)</p>
+<p> eden space 139904K,   4% used [0x00000005ffe00000, 0x0000000600409d48, 0x00000006086a0000)</p>
+<p> from space 17472K,   0% used [0x00000006086a0000, 0x00000006086a0000, 0x00000006097b0000)</p>
+<p> to   space 17472K,   0% used [0x00000006097b0000, 0x00000006097b0000, 0x000000060a8c0000)</p>
+<p>concurrent mark-sweep generation total 349568K, used 1217K [0x0000000643790000, 0x0000000658cf0000, 0x00000007ffe00000)</p>
+<p>Metaspace       used 9229K, capacity 10146K, committed 10240K, reserved 1058816K</p>
+<p> class space    used 794K, capacity 841K, committed 896K, reserved 1048576K</p>
+<p>​    <strong>接着就直接JVM退出了，退出的时候就打印出了当前内存的一个情况，年轻代和老年代几乎没占用，但是Metaspace的capacity是10MB，使用了9MB左右，无法再继续使用了，所以触发了内存溢出。</strong></p>
+<p><strong>通过观察jvisualvm可以得到。</strong></p>
+<p><img src="/2020/03/29/jvm哪三块区域容易溢出/1577885403144.png" alt="1577885403144"></p>
+<p>观察Metaspace区域，可以看到他的空间使用一直上涨，直到最大值100M，然后发生了OOM。持续的装入了18186个类在metaspace中。而且没有卸载，所以这个就是为什么OOM的原因。</p>
+<p>打开生成的java_pid16804.hprof 堆内存快照。</p>
+<p><img src="/2020/03/29/jvm哪三块区域容易溢出/1577892096100.png" alt="1577892096100"></p>
+<p><img src="/2020/03/29/jvm哪三块区域容易溢出/1577892131982.png" alt="1577892131982"></p>
+<p>从这里可以看到实例最多的就是AppClassLoader，点击detail。</p>
+<p><img src="/2020/03/29/jvm哪三块区域容易溢出/1577969590656.png" alt="1577969590656"></p>
+<p>为什么这里有一大堆咱们自己的App中动态生成出来的Car$$EnhancerByCGLIB的类呢？</p>
+<p>看到这里就真相大白了，上图已经清晰告诉我们，是我们自己的哪个类里搞出来了一大堆的动态生成的类，所以填满了Metaspace区域。</p>
+<p><strong>每次的while循环虽然结束了，但是cglib内部还是保留着Car.class的引用，所以导致没有回收掉，一直在增长。</strong></p>
+<p>所以此时直接去代码里排查动态生成类的代码即可。</p>
+<h3 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h3><p><strong>解决这个问题的办法也很简单，直接对Enhancer做一个缓存，只有一个，不要无限制的去生成类就可以了。</strong></p>
+<p>比如你用CGLIB的Enhancer针对某个类动态生成了一个子类，这个子类你完全可以缓存起来，下次直接用这个已经生成好的子类来创建对象就可以了。<strong>没必要每次调用都创建一次enhancer和一个Car子类。</strong></p>
+<p>类似下面这样：</p>
+<p><img src="/2020/03/29/jvm哪三块区域容易溢出/19751800_1575455312.png" alt="blob.png"></p>
+<p>其实这个类只要生成一次就可以了，下次来直接用这个动态生成的类创建一个对象就可以了。</p>
+<h2 id="java虚拟机栈溢出，无限制的调用方法是如何让线程的栈内存溢出的？"><a href="#java虚拟机栈溢出，无限制的调用方法是如何让线程的栈内存溢出的？" class="headerlink" title="java虚拟机栈溢出，无限制的调用方法是如何让线程的栈内存溢出的？"></a>java虚拟机栈溢出，无限制的调用方法是如何让线程的栈内存溢出的？</h2><h3 id="原理解析-2"><a href="#原理解析-2" class="headerlink" title="原理解析"></a>原理解析</h3><p>因为在JVM加载了我们写的类到内存里之后，下一步就是去通过线程执行方法，此时就会有方法的入栈出栈相关的操作，那么我们来分析一下线程的栈内存到底是因为什么原因会导致溢出呢？</p>
+<p>而且我们可以通过 -Xss来指定一个java虚拟机栈的内存，一般是1M。足够用了。</p>
+<p><strong>但是这里有个疑问，jvm总的能够分配的java虚拟机栈的内存是多少呢？有没有类似的-Xss这样的参数来进行设置呢？答案是没有。但是我们可以通过这个方式得到一个近似值：操作系统给进程分配的最大大小，减去堆内存（-Xmn）和永久代内存（-MetadataSize）再减去操作系统用掉的某部分内存，就是可分配的Java虚拟机栈的总内存大小。</strong></p>
+<p><strong>那么启动的jvm支持创建多少个线程呢（估计）？那就是：可分配的Java虚拟机栈的总内存/1M。所以我们估计一下，假设-Xss设置为1M，那么能够分配多少个线程就等同于，可分配的Java虚拟机栈的总内存大小。</strong></p>
+<blockquote>
+<p><strong>一个线程调用多个方法的入栈和出栈</strong></p>
+</blockquote>
+<p>大家先回顾一下之前我们画好的图，那个图是一个相对较为完整的JVM运行原理图，如下所示。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577856097646.png" alt="1577856097646">            </p>
+<p>现在我们来看下面的代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class Demo2 &#123;</div><div class="line">	</div><div class="line">	public static void main(String[] args)  &#123;</div><div class="line">		String message = &quot;kingge&quot;;</div><div class="line">		System.out.println(message);</div><div class="line">		sayHello(&quot;您好，King哥&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	private static void sayHello(String name)  &#123;</div><div class="line">		System.out.println(name);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​    按照我们之前所说的，JVM启动之后，<strong>HelloWorld类被加载到了内存里(metadata空间)来</strong>，然后就会通过main线程执行main()方法，此时在main线程的虚拟机栈里，就会压入main()方法对应的栈桢，里面就会放入main()方法中的局部变量。</p>
+<p>大家看看上面的图，在图里是不是有main线程的虚拟机栈和main()方法的栈桢的概念？</p>
+<p>而且我们还知道一个概念，<strong>就是我们是可以手动设置每个线程的虚拟机栈的内存大小的，一般来说现在默认都是给设置1MB。</strong></p>
+<p>所以看下图，main线程的虚拟机栈内存大小一般也是固定的。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577856348949.png" alt="1577856348949">             </p>
+<p>现在回过头思考一下上面的代码，<strong>代码中是不是在main()方法中又继续调用了一个sayHello()方法？</strong></p>
+<p>而且sayHello()方法中也会自己的局部变量，所以此时会继续将sayHello()方法的栈桢压入到main线程的虚拟机栈中去，如下图。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577856376988.png" alt="1577856376988">            </p>
+<p>​    接着sayHello()方法如果运行完毕之后，就不需要为这个方法在内存中保存他的一些局部变量之类的东西了，此时就会将sayHello()方法对应的栈桢从main线程的虚拟机栈里出栈，如下图。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577856584902.png" alt="1577856584902">            </p>
+<p>​    <strong>再接着，一旦main()方法自己本身也运行完毕，自然会将main()方法对应的栈桢也从main线程的虚拟机栈里出栈</strong>，这里我们就不在图里表示出来了。</p>
+<p>也就是说，每个方法执行完成后，都会出栈，每个栈帧里面方法局部变量都会被销毁。</p>
+<blockquote>
+<p><strong>一个重要的概念：每次方法调用的栈桢都是要占用内存的</strong></p>
+</blockquote>
+<p>​    在这里，要给大家明确一个重要的概念，那就是每个线程的虚拟机栈的大小是固定的，比如可能就是1MB，然后每次这个线程调用一个方法，都会将本次方法调用的栈桢压入虚拟机栈里，这个栈桢里是有方法的局部变量的。</p>
+<p>​    虽然说一些变量和其他的一些数据占用不了太大的内存，但是大家要记得，<strong>每次方法调用的栈桢实际上也是会占用内存的！</strong></p>
+<p><strong>这是非常关键的一点，哪怕一个方法调用的栈桢就占用几百个字节的内存，那也是内存占用！</strong></p>
+<blockquote>
+<p><strong>到底什么情况下会导致JVM中的栈内存溢出？</strong></p>
+</blockquote>
+<p>既然明确了上述前提之后，那么大家思考一下，到底什么情况下JVM中的栈内存会溢出呢？</p>
+<p>​    其实非常简单，既然一个线程的虚拟机栈内存大小是有限的，比如1MB，那么假设你不停的让这个线程去调用各种方法，然后不停的把方法调用的栈桢压入栈中，是不是就会不断的占用这个线程1MB的栈内存？</p>
+<p>如下图所示</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577856708786.png" alt="1577856708786">             </p>
+<p>那么如果不停的让线程调用方法，不停的往栈里放入栈桢，此时终有一个时刻，<strong>大量的栈桢会消耗完毕这个1MB的线程栈内存，最终就会导致出现栈内存溢出</strong>的情况。</p>
+<p><strong>一般什么情况下会发生栈内存溢出？</strong></p>
+<p>那么一般什么情况下会发生栈内存溢出呢？</p>
+<p>通常而言，哪怕你的线程的虚拟机栈内存就128KB，或者256KB，通常都是足够进行一定深度的方法调用的。</p>
+<p>但是如果说你要是走一个递归方法调用，那就不一定了，看下面的代码。</p>
+<p><img src="/2020/03/29/jvm哪三块区域容易溢出/75813300_1575455149.png" alt="blob.png"></p>
+<p>一旦出现上述代码，一个线程就会不停的调用同一个方法，即使是同一个方法，每一次方法调用也会产生一个栈桢压入栈里，比如说对sayHello()进行100次调用，那么就会有100个栈桢压入中。</p>
+<p>所以如果疯狂的运行上述代码，就会不停的将sayHello()方法的栈桢压入栈里，最终一定会消耗掉线程的栈内存，引发内存溢出。</p>
+<p><strong>所以一般来说，其实引发栈内存溢出，往往都是代码里写了一些bug才会导致的，正常情况下发生的比较少。</strong></p>
+<h3 id="案例分析-1"><a href="#案例分析-1" class="headerlink" title="案例分析"></a>案例分析</h3><blockquote>
+<p><strong>重新分析一下JVM中的栈内存</strong></p>
+</blockquote>
+<p>咱们先来简单的回顾一下JVM的整体运行原理，<strong>大家不要忘记下面这张图，必须牢牢印刻在自己的脑海里</strong>。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577892847455.png" alt="1577892847455">            </p>
+<p>既然大家已经对Metaspace这块区域的内存溢出理解的很深刻了，那么接着我们来回顾一下栈内存这块区域的内存溢出。</p>
+<p>讲到这里我们先带着大家来思考一下，JVM进程到底会占用机器上多少内存？</p>
+<p>先不考虑一些细小的其他内存区域，就仅仅考虑一下最核心的几块就可以了，包括了：Metaspace区域，堆内存区域，各个线程的栈内存区域。</p>
+<p><strong>Metaspace区域我们一般会设置为512MB左右的大小</strong>，这个大小只要你代码里没有自己胡乱生成类，一般都是绝对足够存放你一个系统运行时需要的类的。</p>
+<p>堆内存大小，之前在分析GC的时候给大家大量的分析过，<strong>堆内存一般分配在机器内存的一半就差不多了</strong>，毕竟还要考虑其他人对内存的使用。</p>
+<p>那么最后一块内存区域我们之前一直没怎么给大家说过，<strong>就是栈内存区域。</strong></p>
+<p><strong>其实大家考虑一个最基本的线上机器配置，比如4核8G的线上机器，其中512MB给了Metaspace，4G给了堆内存（其中包括了年轻代和老年代），剩余就只有3G左右内存了，要考虑到操作系统自己也会用掉一些内存。</strong></p>
+<p><strong>那么剩余你就认为有一两个GB的内存可以留给栈内存好了。</strong></p>
+<p>通常来说，<strong>我们会设置每个线程的栈内存就是1MB</strong>，假设你一个JVM进程内包括他自带的后台线程，你依赖的第三方组件的后台线程，加上你的核心工作线程（比如说你部署在Tomcat中，那就是Tomcat的工作线程），还有你自己可能额外创建的一些线程，可能你一共JVM中有1000个线程。</p>
+<p>那么1000个线程就需要1GB的栈内存空间，每个线程有1MB的空间。</p>
+<p><strong>所以基本上这套内存模型是比较合理的，其实一般来说，4核8G机器上运行的JVM进程，比如一个Tomcat吧，他内部所有的线程数量加起来在几百个是比较合理的，也就占据几百MB的内存，线程太多了，4核CPU负载也会过高，也并不好。</strong></p>
+<p><strong>所以Metaspace区域+堆内存+几百个线程的栈内存，就是JVM一共对机器上的内存资源的一个消耗。</strong></p>
+<p>​    <strong>所以大家这里也能理解一个道理，你要是给每个线程的栈内存分配过大的空间，那么会导致机器上能创建的线上数量变少，要是给每个线程的栈内存相对较小，能创建的线程就会比较多一些。</strong></p>
+<p>当然一般来说，<strong>现在都建议给栈内存在1MB</strong>就可以了。</p>
+<blockquote>
+<p><strong>回顾一下栈内存溢出的原理</strong></p>
+</blockquote>
+<p>接着我们来回顾一下栈内存溢出的原理，其实特别的简单，大家看下图中画红圈的地方，其实每个线程的栈内存是固定的，要是你一个线程不停的无限制的调用方法，每次方法调用都会有一个栈桢入栈，此时就会导致线程的栈内存被消耗殆尽。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577893004698.png" alt="1577893004698">            </p>
+<p>​    但是通常而言你的线程不至于连续调用几千次甚至几万次方法，对不对？一般发生这种情况，只有一个原因，就是<strong>你的代码有bug，</strong>出现了<strong>死循环调用</strong>，或者是<strong>无限制的递归调用</strong>，最后连续调用几万次之后，栈内存就溢出了，没法放入更多的方法栈桢了。</p>
+<blockquote>
+<p><strong>用一段代码示范一下栈内存溢出</strong></p>
+</blockquote>
+<p>下面大家先看一段代码：</p>
+<p><img src="/2020/03/29/jvm哪三块区域容易溢出/78920700_1575455276.png" alt="blob.png"></p>
+<p>上面的代码非常简单，就是work()方法调用自己，进入一个无限制的递归调用，陷入死循环，也就是说在main线程的栈中，会不停的压入work()方法调用的栈桢，直到1MB的内存空间耗尽。</p>
+<p><strong>另外大家需要设置这个程序的JVM参数如下：-XX:ThreadStackSize=1m（等同于-Xss1M），通过这个参数设置JVM的栈内存为1MB。</strong></p>
+<p>完整jvm参数如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">-XX:ThreadStackSize=1m</div><div class="line">-XX:+PrintGCDetails</div><div class="line">-Xloggc:gc.log</div><div class="line">-XX:+HeapDumpOnOutOfMemoryError</div><div class="line">-XX:HeapDumpPath=./</div><div class="line">-XX:+UseParNewGC</div><div class="line">-XX:+UseConcMarkSweepGC</div></pre></td></tr></table></figure>
+<p>接着大家运行这段代码，会看到如下所示的打印输出：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">目前是第5675次调用方法</div><div class="line"></div><div class="line">java.lang.StackOverflowError</div></pre></td></tr></table></figure>
+<p><strong>也就是说，当main线程调用了5675次work方法之后（也就意味着在main线程创建的Java虚拟机栈中一共创建了5675个栈帧），他的栈里压入了5675个栈桢，最终把1MB的栈内存给塞满了，引发了栈内存的溢出。大家看到StackOverflowError，就知道是线程栈内存溢出了。</strong></p>
+<p><strong>本文总结</strong></p>
+<p>本文带着大家用代码实验了一下栈内存的溢出，大家可以看到1MB的栈内存可以让你连续调用5000次以上的方法，其实这个数量已经很多了，除了递归方法以外，一般根本不可能出现方法连续调用几千次的。</p>
+<p>所以大家就知道，一般这种栈内存溢出是极少在生产环境出现的，即使有，一般都是代码中的bug导致的.</p>
+<h2 id="对象太多了！堆内存实在是放不下，只能内存溢出！"><a href="#对象太多了！堆内存实在是放不下，只能内存溢出！" class="headerlink" title="对象太多了！堆内存实在是放不下，只能内存溢出！"></a>对象太多了！堆内存实在是放不下，只能内存溢出！</h2><h3 id="原理解析-3"><a href="#原理解析-3" class="headerlink" title="原理解析"></a>原理解析</h3><blockquote>
+<p><strong>1、前文回顾</strong></p>
+</blockquote>
+<p>之前的文章已经分析了Metaspace和栈内存两块内存区域发生内存溢出的原理，同时给出了一些较为常见的引发他们内存溢出的场景，一般只要代码上注意一些，不太容易引发那两块区域的内存溢出。</p>
+<p>其实真正最容易引发内存溢出的就是堆内存，说白了就是平时我们系统创建出来的对象实在是太多了，最终就导致了系统的内存溢出！</p>
+<blockquote>
+<p><strong>2、从对象在Eden区分配开始讲起</strong></p>
+</blockquote>
+<p>如果要把这大量的对象是如何导致堆内存溢出的给讲清楚，那就得从系统运行，在Eden区创建对象开始讲起了。</p>
+<p>咱们都知道，平时系统运行的时候一直不停的创建对象，然后大量的对象会填满Eden区</p>
+<p>一旦Eden区满之后，就会触发一次Young GC，然后存活对象进入S区。</p>
+<p>如下图所示</p>
+<p>​                       </p>
+<p><img src="/2020/03/29/jvm哪三块区域容易溢出/1577857454601.png" alt="1577857454601">            </p>
+<blockquote>
+<p><strong>3、高并发场景下导致ygc后存活对象太多</strong></p>
+</blockquote>
+<p>当然因为各种各样的情况，一旦出现了高并发场景，导致ygc后很多请求还没处理完毕，存活对象太多，可能就在Survivor区域放不下了，此时就只能进入到老年代里去了，老年代很快就会放满了。                  </p>
+<p>一旦老年代放满了就会触发Full GC，如下图所示。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577857524276.png" alt="1577857524276">             </p>
+<p>`<strong>我们假设ygc过后有一批存活对象，Survivor放不了，此时就等着要进入老年代里，然后老年代也满了，那么就得等着老年代进行CMS GC，必须回收掉一批对象，才能让年轻代里存活下来的一批对象进去。</strong></p>
+<p><strong>但是呢，不幸的事情发生了，老年代GC过后，依然存活下来了很多的对象</strong>！如下图所示。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577857557180.png" alt="1577857557180">            </p>
+<p><strong>这个时候如果年轻代还有一批对象等着放进老年代，人家GC过后空间还是不足怎么办？</strong></p>
+<p><strong>还能怎么办！只能是内存溢出了</strong>！如下图所示！</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577857588140.png" alt="1577857588140">            </p>
+<p>所以这个时候，老年代都已经塞满了，你还要往里面放东西，而且触发了Full GC回收了老年代还是没有足够内存空间，你坚持要放？那只能给你一个内存溢出的异常了！JVM跑不动了，崩溃掉。</p>
+<p>这个就是典型的堆内存实在放不下过多对象的内存溢出的一个典型范例。</p>
+<blockquote>
+<p><strong>4、什么时候会发生堆内存的溢出？</strong></p>
+</blockquote>
+<p>发生堆内存溢出的原因其实总结下来，就一句话：</p>
+<p>有限的内存中放了过多的对象，而且大多数都是存活的，此时即使GC过后还是大部分都存活，所以要继续放入更多对象已经不可能了，此时只能引发内存溢出问题。</p>
+<p>所以一般来说发生内存溢出有两种主要的场景：</p>
+<ol>
+<li>系统承载高并发请求，因为请求量过大，导致大量对象都是存活的，所以老年代要继续放入新的对象实在是不行了，此时就会引发OOM系统崩溃。这种时候，一般是增加机器内存或者增加机器进行负载均衡。</li>
+</ol>
+<ol>
+<li>系统有内存泄漏的问题，就是莫名其妙弄了很多的对象，结果对象都是存活的，没有及时取消对他们的引用，导致触发GC还是无法回收，此时只能引发内存溢出，因为内存实在放不下更多对象了</li>
+</ol>
+<p>因此总结起来，一般引发OOM，要不然是系统负载过高，要不然就是有内存泄漏的问题。</p>
+<h3 id="案例解析"><a href="#案例解析" class="headerlink" title="案例解析"></a>案例解析</h3><blockquote>
+<p><strong>1、前文回顾</strong></p>
+</blockquote>
+<p><strong>不过说实话，Metaspace区域和栈内存的溢出，一般都是极个别情况下才会发生的，并不是一种普遍的现象。</strong></p>
+<p>但是堆内存溢出的场景，就是非常普遍的现象了，一旦要是系统负载过高，比如并发量过大，或者是数据量过大，或者是出现了内存泄漏的情况，很容易就导致JVM内存不够用了，就会堆内存溢出，然后系统崩溃。</p>
+<blockquote>
+<p><strong>2、回顾一下堆内存溢出的一个典型场景</strong></p>
+</blockquote>
+<p>首先还是来一张完整的JVM运行原理图，里面包含了对象的分配，GC的触发，对象的转移，各个环节如何触发内存溢出的，大家一定要<strong>牢记这张图</strong>。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577893845555.png" alt="1577893845555">            </p>
+<p>接着我们就来回顾一下一个典型的堆内存溢出的场景：</p>
+<p><strong>假设现在系统负载很高，不停的运转和工作，不停的创建对象塞入内存里，刚开始是塞入哪里的？</strong></p>
+<p><strong>当然是年轻代的Eden区了。</strong></p>
+<p>但是因为系统负载实在太高了，很快就把Eden区塞满了，这个时候触发ygc。</p>
+<p>但是<strong>ygc的时候发现</strong>不对劲，因为似乎<strong>Eden区里还有很多的对象都是存活</strong>的，而且<strong>survivor区域根本放不下</strong>，这个时候只能把<strong>存活下来的大批对象放入老年代</strong>中去。</p>
+<p>​                    </p>
+<p>就这么来几次ygc之后，每次ygc后都有大批对象进入老年代，老年代很快就会塞满了，而且最重要的是这里的对象还大多都是存活的。</p>
+<p>所以接下来一次ygc后又要转移一大批对象进入老年代，<strong>先触发full gc，但是full gc之后老年代里还是塞满了对象</strong>，如下图红圈所示。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577893948831.png" alt="1577893948831">            </p>
+<p><strong>这个时候ygc后存活下来的对象哪怕在full gc之后还是无法放入老年代中，此时就直接报出堆内存溢出了。</strong></p>
+<p>所以堆内存溢出的场景就是这样子，非常的简单。</p>
+<blockquote>
+<p><strong>3、用示例代码来演示堆内存溢出的场景</strong></p>
+</blockquote>
+<p>我们来看下面这段代码： </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class App3 &#123;</div><div class="line">    public static void main( String[] args ) &#123;</div><div class="line">    	long counter = 0;</div><div class="line">    	List&lt;Object&gt; list = new ArrayList&lt;Object&gt;();</div><div class="line">    	while (true) &#123;</div><div class="line">    		list.add(new Object());</div><div class="line">    		System.out.println(&quot;当前创建了第&quot;+(++counter)+&quot;个对象&quot;);</div><div class="line">		&#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>代码很简单，就是在一个while循环里不停的创建对象，而且对象全部都是放在List里面被引用的，也就是不能被回收。</p>
+<p>大家试想一下，如果你不停的创建对象，Eden区满了，他们全部存活会全部转移到老年代，反复几次之后老年代满了。</p>
+<p>然后Eden区再次满了，ygc后存活对象再次进入老年代，此时老年代先full gc，但是回收不了任何对象，因此ygc后的存活对象就一定是无法进入老年代的。</p>
+<p>所以我们用下面的JVM参数来运行一下代码：<strong>-Xms10m -Xmx10m</strong>，我们限制了堆内存大小总共就只有10m，这样可以尽快触发堆内存的溢出。</p>
+<p><strong>采用的JVM参数如下：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">-Xms10m</div><div class="line">-Xmx10m</div><div class="line">-XX:+PrintGCDetails</div><div class="line">-Xloggc:gc.log</div><div class="line">-XX:+HeapDumpOnOutOfMemoryError</div><div class="line">-XX:HeapDumpPath=./</div><div class="line">-XX:+UseParNewGC</div><div class="line">-XX:+UseConcMarkSweepGC</div></pre></td></tr></table></figure>
+<p>我们在控制台打印的信息中可以看到如下的信息：</p>
+<p>当前创建了第360145个对象</p>
+<p>Exception in thread “main” java.lang.OutOfMemoryError: Java heap space</p>
+<p>​    所以从这里就可以看到，<strong>在10M的堆内存中，用最简单的Object对象搞到老年代被塞满大概需要36万个对象</strong>。然后堆内存实在放不下任何其他对象，此时就会OutOfMemory了，而且告诉了你是Java heap space，也就是堆空间发生了内存溢出的。</p>
+<blockquote>
+<p><strong>4.用MAT分析内存快照</strong></p>
+</blockquote>
+<p>采用MAT打开内存快照之后会看到下图：</p>
+<p>​          <img src="/2020/03/29/jvm哪三块区域容易溢出/1577971050811.png" alt="1577971050811">            </p>
+<p>这次MAT非常简单，直接在内存泄漏报告中告诉我们，内存溢出原因只有一个！那就是这个问题，因为他没提示任何其他的问题。</p>
+<p>我们这次来给大家仔细分析一下MAT给我们的分析报告。</p>
+<p>首先看下面的句子：The thread java.lang.Thread @ 0x7bf6a9a98 main keeps local variables with total size 7,203,536 (92.03%) bytes。</p>
+<p>这个意思就是main线程通过局部变量引用了7230536个字节的对象，大概就是7MB左右。</p>
+<p>考虑到我们总共就给堆内存10MB，所以7MB基本上个已经到极限了，是差不多的。</p>
+<p>我们接着看：The memory is accumulated in one instance of “java.lang.Object[]” loaded by “<system class="" loader="">“。</system></p>
+<p>这句话的意思就是内存都被一个实例对象占用了，就是java.lang.Object[]。</p>
+<p>我们肯定不知道这个是什么东西，所以得往下看，点击<strong>Details</strong></p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577971096605.png" alt="1577971096605">            </p>
+<p>​    在Details里我们能看到这个东西，也就是占用了7MB内存的的java.lang.Object[]，他里面的每个元素在这里都有，我们看到是一大堆的java.lang.Object。那么这些java.lang.Object不就是我们在代码里创建的吗？</p>
+<p>至此真相大白，我们已经知道，就是一大堆的Object对象占用了7MB的内存导致了内存溢出。</p>
+<p>接着下一个任务就是知道这些对象是怎么创建出来的，那么我们怎么找呢？回到之前的上一级页面，各位看下图。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577971122108.png" alt="1577971122108">            </p>
+<p>这个是说可以看看创建那么多对象的线程，他的一个执行栈，这样我们就知道这个线程执行什么方法的时候创建了一大堆的对象。</p>
+<p>​           <img src="/2020/03/29/jvm哪三块区域容易溢出/1577971228025.png" alt="1577971228025">            </p>
+<p>大家看上面的调用栈，其实说的很明显了，在Demo3.main()方法中，一直在调用ArrayList.add()方法，然后此时直接引发了内存溢出。所以我们只要在对应代码里看一下，立马就知道怎么回事了。</p>
+<p>接下来优化对应的代码即可，就不会发生内存溢出了。</p>
+<blockquote>
+<p><strong>5、本文总结</strong></p>
+</blockquote>
+<p>今天的文章带着大家分析了一下，堆内存溢出的问题如何分析和定位</p>
+<p>​    其实很简单，<strong>一个是必须在JVM参数中加入自动导出内存快照</strong>，<strong>一个是到线上看一下日志文件里的报错，如果是堆溢出，立马用MAT分析内存快照</strong>。</p>
+<p>​    MAT分析的时候一些顺序和技巧，还有思路，也教给大家了，<strong>先看占用内存最多的对象是谁</strong>，然后分析那个<strong>线程的调用栈</strong>，<strong>接着就可以看到是哪个方法引发的内存溢出了</strong>。接着优化代码即可。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/jvm/" rel="tag"><i class="fa fa-tag"></i> jvm</a>
+          
+            <a href="/tags/溢出/" rel="tag"><i class="fa fa-tag"></i> 溢出</a>
+          
+            <a href="/tags/OOM/" rel="tag"><i class="fa fa-tag"></i> OOM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/27/新生代为什么要分为三块和复制算法操作/" rel="next" title="新生代为什么要分为三块和复制算法操作">
+                <i class="fa fa-chevron-left"></i> 新生代为什么要分为三块和复制算法操作
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/18/rtm数据最终一致性/" rel="prev" title="可靠消息解决数据最终一致性-开源项目rtm">
+                可靠消息解决数据最终一致性-开源项目rtm <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">70</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">114</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是内存溢出？在哪些区域会发生内存溢出？"><span class="nav-number">1.</span> <span class="nav-text">什么是内存溢出？在哪些区域会发生内存溢出？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理解析"><span class="nav-number">1.1.</span> <span class="nav-text">原理解析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Metaspace区域是如何因为类太多而发生内存溢出的？"><span class="nav-number">2.</span> <span class="nav-text">Metaspace区域是如何因为类太多而发生内存溢出的？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理解析-1"><span class="nav-number">2.1.</span> <span class="nav-text">原理解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#案例分析"><span class="nav-number">2.2.</span> <span class="nav-text">案例分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#进阶分析-jvisualvm工具和堆内存镜像分析"><span class="nav-number">2.2.1.</span> <span class="nav-text">进阶分析 jvisualvm工具和堆内存镜像分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方式"><span class="nav-number">2.3.</span> <span class="nav-text">解决方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java虚拟机栈溢出，无限制的调用方法是如何让线程的栈内存溢出的？"><span class="nav-number">3.</span> <span class="nav-text">java虚拟机栈溢出，无限制的调用方法是如何让线程的栈内存溢出的？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理解析-2"><span class="nav-number">3.1.</span> <span class="nav-text">原理解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#案例分析-1"><span class="nav-number">3.2.</span> <span class="nav-text">案例分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对象太多了！堆内存实在是放不下，只能内存溢出！"><span class="nav-number">4.</span> <span class="nav-text">对象太多了！堆内存实在是放不下，只能内存溢出！</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理解析-3"><span class="nav-number">4.1.</span> <span class="nav-text">原理解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#案例解析"><span class="nav-number">4.2.</span> <span class="nav-text">案例解析</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      451.8k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共451.8k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>
