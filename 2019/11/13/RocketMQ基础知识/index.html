@@ -594,17 +594,17 @@
 <ol>
 <li>启动NameServer</li>
 </ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span> 1.启动NameServer - 后台的方式启动</div><div class="line">nohup sh bin/mqnamesrv &amp;</div><div class="line"><span class="meta">#</span> 2.查看启动日志</div><div class="line">tail -f ~/logs/rocketmqlogs/namesrv.log</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> 1.启动NameServer - 后台的方式启动</span></div><div class="line">nohup sh bin/mqnamesrv &amp;</div><div class="line"><span class="meta">#</span><span class="bash"> 2.查看启动日志</span></div><div class="line">tail -f ~/logs/rocketmqlogs/namesrv.log</div></pre></td></tr></table></figure>
 <ol>
 <li>启动Broker</li>
 </ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span> 1.启动Broker</div><div class="line">nohup sh bin/mqbroker -n localhost:9876 &amp;</div><div class="line"><span class="meta">#</span> 2.查看启动日志</div><div class="line">tail -f ~/logs/rocketmqlogs/broker.log</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> 1.启动Broker</span></div><div class="line">nohup sh bin/mqbroker -n localhost:9876 &amp;</div><div class="line"><span class="meta">#</span><span class="bash"> 2.查看启动日志</span></div><div class="line">tail -f ~/logs/rocketmqlogs/broker.log</div></pre></td></tr></table></figure>
 <ul>
 <li><p>问题描述：</p>
 <p>RocketMQ默认的虚拟机内存较大，启动Broker如果因为内存不足失败，需要编辑如下两个配置文件，修改JVM内存大小</p>
 </li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span> 编辑runbroker.sh和runserver.sh修改默认JVM大小</div><div class="line">vi runbroker.sh</div><div class="line">vi runserver.sh</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> 编辑runbroker.sh和runserver.sh修改默认JVM大小</span></div><div class="line">vi runbroker.sh</div><div class="line">vi runserver.sh</div></pre></td></tr></table></figure>
 <ul>
 <li>参考设置：</li>
 </ul>
@@ -1097,7 +1097,7 @@ var jiathis_config={
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">70</span>
+                <span class="site-state-item-count">71</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1119,7 +1119,7 @@ var jiathis_config={
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">114</span>
+                <span class="site-state-item-count">116</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1280,7 +1280,7 @@ var jiathis_config={
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
     <span title="Site words total count">
-      451.8k
+      458.0k
     </span>
   
 </div>
@@ -1303,7 +1303,7 @@ var jiathis_config={
 <span class="post-meta-divider">|</span>
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共451.8k字</span>
+  <span class="post-count">博客全站共458.0k字</span>
 </div>
 
 
