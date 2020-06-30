@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+<script>
+    (function(){
+        if(''){
+            if (prompt('OOPS, 主人请输入文章密码才能够观看哟') !== ''){
+                alert('哎呀，密码错误哟！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|40:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="bufferpool,lru链表,flush链表,free链表," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="King哥" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Buffer Pool这个内存数据结构到底长个什么样子？​    首先我们要知道Buffer Pool默认情况下是128MB，还是有一点偏小了，我们实际生产环境下完全可以对Buffer Pool进行调整（bufferpool分配的内存，我们建议是系统机器总内存的%50-%60）。 ​    比如我们的数据库如果是2核4G的机器，那么你就可以给Buffer Pool分配个2GB的内存，使用下面的配置">
+<meta name="keywords" content="bufferpool,lru链表,flush链表,free链表">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BufferPoo到底什么鬼和多个链表的关系">
+<meta property="og:url" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/index.html">
+<meta property="og:site_name" content="King哥">
+<meta property="og:description" content="Buffer Pool这个内存数据结构到底长个什么样子？​    首先我们要知道Buffer Pool默认情况下是128MB，还是有一点偏小了，我们实际生产环境下完全可以对Buffer Pool进行调整（bufferpool分配的内存，我们建议是系统机器总内存的%50-%60）。 ​    比如我们的数据库如果是2核4G的机器，那么你就可以给Buffer Pool分配个2GB的内存，使用下面的配置">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514172857343.png">
+<meta property="og:image" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514173718695.png">
+<meta property="og:image" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514174143081.png">
+<meta property="og:image" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514174531206.png">
+<meta property="og:image" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514175129506.png">
+<meta property="og:image" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514175351651.png">
+<meta property="og:image" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515082201508.png">
+<meta property="og:image" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515090748744.png">
+<meta property="og:image" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515091819132.png">
+<meta property="og:image" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515091921628.png">
+<meta property="og:image" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515092020503.png">
+<meta property="og:image" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515094416088.png">
+<meta property="og:updated_time" content="2020-06-30T04:18:57.507Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BufferPoo到底什么鬼和多个链表的关系">
+<meta name="twitter:description" content="Buffer Pool这个内存数据结构到底长个什么样子？​    首先我们要知道Buffer Pool默认情况下是128MB，还是有一点偏小了，我们实际生产环境下完全可以对Buffer Pool进行调整（bufferpool分配的内存，我们建议是系统机器总内存的%50-%60）。 ​    比如我们的数据库如果是2核4G的机器，那么你就可以给Buffer Pool分配个2GB的内存，使用下面的配置">
+<meta name="twitter:image" content="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514172857343.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/"/>
+
+
+
+
+
+  <title>BufferPoo到底什么鬼和多个链表的关系 | King哥</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">King哥</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-picture">
+          <a href="/picture/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            照片
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jeremy Kinge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="King哥">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">BufferPoo到底什么鬼和多个链表的关系</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-17T15:59:59+08:00">
+                2020-05-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  7,487
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  26
+                </span>
+              
+            </div>
+          
+
+          
+
+		  
+		  
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Buffer-Pool这个内存数据结构到底长个什么样子？"><a href="#Buffer-Pool这个内存数据结构到底长个什么样子？" class="headerlink" title="Buffer Pool这个内存数据结构到底长个什么样子？"></a>Buffer Pool这个内存数据结构到底长个什么样子？</h2><p>​    首先我们要知道<strong>Buffer Pool默认情况下是128MB</strong>，还是有一点偏小了，我们实际生产环境下完全可以对Buffer Pool进行调整（bufferpool分配的内存，我们建议是系统机器总内存的%50-%60）。</p>
+<p>​    比如我们的数据库如果是2核4G的机器，那么你就可以给Buffer Pool分配个2GB的内存，使用下面的配置就可以了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[server] </div><div class="line">innodb_buffer_pool_size = 2147483648</div></pre></td></tr></table></figure>
+<p>首先我们要知道，磁盘中的数据到底是以什么样的形式存在的？是以一行一行存储还是？</p>
+<p><strong>按照数据页存储，一个数据页里面存在多行数据</strong></p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514172857343.png" alt="image-20200514173147742"></p>
+<p>​    所以实际上假设我们要<strong>更新一行数据</strong>（<strong>如果该行数据所在的数据页不在bufferpool中，则先从磁盘中获取数据页加载到buffer pool，如果在bufferpool则进行内存中的更新</strong>），此时数据库会找到<strong>这行数据所在的数据页</strong>，然后从磁盘文件里把这行数据所在的数据页 直接给加载到Buffer Pool里去。（为什么直接加载数据页呢？<strong>避免磁盘随机读的频率，因为磁盘随机读的效率太低</strong>）<br>​    也就是说，Buffer Pool中存放的是一个一个的数据页（缓存页）。</p>
+<p><strong>数据页包含多条数据，例如我们要更新update xxx set xxx=xxx where id=1那么此时他会把id=1这条数据所在的一页数据都加载到内存里去，这一页数据里，可能还包含了id=2，id=3等其他数据。</strong></p>
+<blockquote>
+<p><strong>磁盘上的数据页和Buffer Pool中的缓存页是如何对应起来的？</strong></p>
+</blockquote>
+<p>​    实际上默认情况下，磁盘中存放的<strong>数据页的大小是16KB</strong>，也就是说，一页数据包含了16KB的内容。<br>​    而Buffer Pool中存放的一个一个的<strong>数据页</strong>，我们通常叫做<strong>缓存页</strong>，因为毕竟Buffer Pool是一个缓冲池，里面的数据都是从磁 盘缓存到内存去的。<br>​    而Buffer Pool中默认情况下，一个<strong>缓存页的大小</strong>和磁盘上的一个数据页的大小是一一对应起来的，<strong>都是16KB</strong>。</p>
+<blockquote>
+<p><strong>缓存页对应的描述信息是什么？</strong></p>
+</blockquote>
+<p>​    接着我们要了解下一个概念，对于每个缓存页，他实际上都会有一个描述信息，这个描述信息大体可以认为是用来描述这个缓 存页的<br>​    比如包含如下的一些东西：<strong>这个数据页所属的表空间、数据页的编号、这个缓存页在Buffer Pool中的地址以及别的一些杂七杂 八的东西。</strong><br>​    每个缓存页都会对应一个描述信息，这个描述信息本身也是一块数据，在Buffer Pool中，每个缓存页的描述数据放在最前面， 然后各个缓存页放在后面<br>​    所以此时我们看下面的图，Buffer Pool实际看起来大概长这个样子。</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514173718695.png" alt="image-20200514173718695"></p>
+<p>​    而且这里我们要注意一点，Buffer Pool中的描述数据大概相当于缓存页大小的5%左右，也就是每个描述数据大概是800个字 节左右的大小，然后假设你设置的buffer pool大小是128MB，实际上Buffer Pool真正的最终大小会超出一些，可能有个130 多MB的样子，因为他里面还要存放每个缓存页的描述数据</p>
+<h3 id="数据库启动的时候，是如何初始化Buffer-Pool的？"><a href="#数据库启动的时候，是如何初始化Buffer-Pool的？" class="headerlink" title="数据库启动的时候，是如何初始化Buffer Pool的？"></a>数据库启动的时候，是如何初始化Buffer Pool的？</h3><p>首先我们知道，buffer pool<strong>包含了缓存页，和么一个缓存页对应的缓存元数据信息（描述数据）。</strong></p>
+<p>那么在数据库启动的时候，他是如何初始化Buffer Pool的呢？</p>
+<p>​    其实这个也很简单，数据库只要一启动，就会按照你设置的Buffer Pool大小，稍微再加大一点，去找操作系统申请一块内存区 域，作为Buffer Pool的内存区域。</p>
+<p>​    然后当内存区域申请完毕之后，数据库就会按照默认的缓存页的16KB的大小以及对应的800个字节左右的描述数据的大小，在 Buffer Pool中划分出来一个一个的缓存页和一个一个的他们对应的描述数据。</p>
+<p>​    然后当数据库把Buffer Pool划分完毕之后，看起来就是之前我们看到的那张图了，如下图所示。</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514174143081.png" alt="image-20200514174143081"></p>
+<p>​    只不过这个时候，Buffer Pool中的一个一个的<strong>缓存页都是空的</strong>，里面什么都没有，要等数据库运行起来之后，当我们要对数据 执行增删改查的操作的时候，才会把数据对应的页从磁盘文件里读取出来，放入Buffer Pool中的缓存页中。</p>
+<h3 id="mysql-怎么维护缓存页的空闲状态？-free链表"><a href="#mysql-怎么维护缓存页的空闲状态？-free链表" class="headerlink" title="mysql 怎么维护缓存页的空闲状态？ - free链表"></a>mysql 怎么维护缓存页的空闲状态？ - free链表</h3><p>​    数据库会为<strong>Buffer Pool设计一个free链表</strong>，他是一个<strong>双向链表数据结构</strong>，这个free链表里，<strong>每个节点</strong>就是一个空闲的缓存页的<strong>描述数据块的地址</strong>，也就是说，只要你一个<strong>缓存页是空闲</strong>的，那么他的<strong>描述数据块</strong>就会被<strong>放入</strong>这个<strong>free链表</strong>中。<br>​    刚开始数据库启动的时候，可能所有的缓存页都是空闲的，因为此时可能是一个空的数据库，一条数据都没有，<strong>所以此时所有 缓存页的描述数据块，都会被放入这个free链表中。</strong></p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514174531206.png" alt="image-20200514174531206"></p>
+<p>​    大家可以看到上面出现了一个free链表，这个free链表里面就是各个缓存页的描述数据块，只要缓存页是空闲的，那么他们对应的描述数据块就会加入到这个free链表中，每个节点都会双向链接自己的前后节点，组成一个<strong>双向链表。</strong><br>​    除此之外，这个<strong>free链表有一个基础节点</strong>，他会引用链表的头节点和尾节点，里面还存储了链表中有多少个描述数据块的节 点，也就是有多少个空闲的缓存页。</p>
+<p><strong>重要提示！！！！：</strong></p>
+<p>​    <strong>可能有的人会以为这个描述数据块，在Buffer Pool里有一份，在free链表里也有一份，好像在内存里有两个一模一样的描述数 据块，是么？</strong></p>
+<p>​    其实这么想就大错特错了。</p>
+<p>​    这里要给大家讲明白一点，这个<strong>free链表</strong>，他<strong>本身其实就是由Buffer Pool里的描述数据块组成的</strong>，你可以认为是每个描述数据 块里都有两个指针，一个是free_pre，一个是free_next，分别指向自己的上一个free链表的节点，以及下一个free链表的节 点。</p>
+<p>​    通过Buffer Pool中的描述数据块的free_pre和free_next两个指针，就可以把所有的描述数据块串成一个free链表，大家可以 自己去思考一下这个问题。<strong>上面为了画图需要，所以把描述数据块单独画了一份出来，表示他们之间的指针引用关系。</strong></p>
+<p>​    对于free链表而言，只有一个<strong>基础节点是不属于Buffer Pool的</strong>，<strong>他是40字节大小的一个节点</strong>，里面就<strong>存放了free链表的头节点 的地址，尾节点的地址，还有free链表里当前有多少个节点。</strong></p>
+<h3 id="如何将磁盘上的页读取到Buffer-Pool的缓存页中去？"><a href="#如何将磁盘上的页读取到Buffer-Pool的缓存页中去？" class="headerlink" title="如何将磁盘上的页读取到Buffer Pool的缓存页中去？"></a>如何将磁盘上的页读取到Buffer Pool的缓存页中去？</h3><p>其实有了free表这个操作就变得很简单了。</p>
+<p>​    首先，我们需要从<strong>free链表里获取一个描述数据块</strong>（因为free表中的描述快对应的就是空闲的缓存页），然后就可以对应的获取到这个描述数据块对应的空闲缓存页。</p>
+<p>​    接着我们就可以把磁盘上的数据页读取到对应的缓存页里去，同时把相关的一些描述数据写入缓存页的描述数据块里去，比如 这个数据页所属的表空间之类的信息，最后把那个描述数据块从free链表里去除就可以了，如下图所示。 </p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514175129506.png" alt="image-20200514175129506"></p>
+<h3 id="怎么判断要查询-更新的数据存在于bufferpool中？-hash"><a href="#怎么判断要查询-更新的数据存在于bufferpool中？-hash" class="headerlink" title="怎么判断要查询/更新的数据存在于bufferpool中？ hash"></a>怎么判断要查询/更新的数据存在于bufferpool中？ hash</h3><p>​    我们在执行增删改查的时候，肯定是先看看这个数据页有没有被缓存，如果没被缓存就走上面的逻辑，从free链表中找到一个 空闲的缓存页，从磁盘上读取数据页写入缓存页，写入描述数据，从free链表中移除这个描述数据块。<br>​    但是如果数据页已经被缓存了，那么就会直接使用了。</p>
+<p>​    <strong>所以其实数据库还会有一个哈希表数据结构，他会用表空间号+数据页号，作为一个key，然后缓存页的地址作为value。</strong></p>
+<p>​    当你要使用一个数据页的时候，通过“表空间号+数据页号”作为key去这个哈希表里查一下，如果没有就读取数据页，如果 已经有了，就说明数据页已经被缓存了。</p>
+<p>​    我们看下图，又引入了一个<strong>数据页缓存哈希表</strong>的结构。</p>
+<p>​    也就是说，<strong>每次</strong>你<strong>读取</strong>一个<strong>数据页到缓存</strong>之后，都<strong>会在</strong>这个<strong>哈希表中写入一个key-value对</strong>，key就是表空间号+数据页号， value就是缓存页的地址，那么下次如果你再使用这个数据页，就可以从哈希表里直接读取出来他已经被放入一个缓存页了。</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514175351651.png" alt="image-20200514175351651"></p>
+<h3 id="bufferpool中脏数据怎么刷回磁盘-flush链表"><a href="#bufferpool中脏数据怎么刷回磁盘-flush链表" class="headerlink" title="bufferpool中脏数据怎么刷回磁盘 - flush链表"></a>bufferpool中脏数据怎么刷回磁盘 - flush链表</h3><p>​    我们知道几乎所有的<strong>更新操作</strong>都是先操作内存中的bufferpool，那么很明显并不是bufferpool中所有数据都需要刷回磁盘（<strong>因为有的缓存页可能是因为查询的时候被读取到Buffer Pool里 去的，可能根本没修改过</strong>），那么我们怎么判断或者怎么拿到需要刷回磁盘的缓存页呢？</p>
+<p>​    所以数据库在这里引入了另外一个跟free链表类似的<strong>flush链表</strong>，<strong>这个flush链表本质也是通过缓存页的描述数据块中的两个指针，让被修改过的缓存页的描述数据块，组成一个双向链表</strong>。<br>​    <strong>凡是被修改过的缓存页</strong>，都会把他的<strong>描述数据块加入到flush链表中去</strong>，flush的意思就是这些都是脏页，后续都是要flush刷新 到磁盘上去的。<br>​    所以flush链表的结构如下图所示，跟free链表几乎是一样的。</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515082201508.png" alt="image-20200515082201508"></p>
+<h3 id="当Buffer-Pool中的缓存页不够的时候，如何基于LRU算法淘汰部分缓存？"><a href="#当Buffer-Pool中的缓存页不够的时候，如何基于LRU算法淘汰部分缓存？" class="headerlink" title="当Buffer Pool中的缓存页不够的时候，如何基于LRU算法淘汰部分缓存？"></a>当Buffer Pool中的缓存页不够的时候，如何基于LRU算法淘汰部分缓存？</h3><p>​    我们知道，随着不断加载数据到bufferpool，那么<strong>空闲缓存页（free链表）</strong>的个数终将会变为0，那么当下次再加载进bufferpool时，怎么办呢?<strong>此时你只有一个办法，就是淘汰掉一些缓存页。</strong></p>
+<p>​    那什么叫淘汰缓存页呢？</p>
+<p>​    顾名思义，<strong>你必须把一个缓存页里被修改过的数据，给他刷到磁盘上的数据页里去，然后这个缓存页就可以清空了， 让他重新变成一个空闲的缓存页（加入到free链表中）</strong>。</p>
+<p>接着你再把磁盘上你需要的新的数据页加载到这个腾出来的空闲缓存页中去。</p>
+<p>​    <strong>那么下一个问题来了，如果要把一个缓存页里的数据刷入磁盘，腾出来一个空闲缓存页，那么应该把哪个缓存页的数据给刷入磁盘呢？</strong></p>
+<p>​    <strong>是根据flush链表？那如果是根据flush链表的话，是吧所有flush链表对应的缓存页都刷回磁盘呢？还是只刷一部分，如果只刷一部分，那么刷那部分呢？</strong></p>
+<p>​     <strong>很明显示是最近用的最少，修改的最少那个数据页写入到磁盘，因为毕竟占着茅坑不拉屎。</strong></p>
+<p><strong>接着我们就要解决下一个问题了，就是你怎么知道哪些缓存页经常被访问，哪些缓存页很少被访问？</strong></p>
+<p><strong>很明显flush链表的作用只是记录那些缓存页被修改了，并没有记录哪个缓存页被修改的次数，而且没有提供排序的规则，什么意思呢？就是没有把修改最多的缓存页排到最前，修改最少的排到最后，flush链表并没有这样的规则</strong></p>
+<p>​    此时就要引入一个新的<strong>LRU链表</strong>了，这个所谓的LRU就是Least Recently Used，最近最少使用的意思。<br>通过这个LRU链表，我们可以知道哪些缓存页是最近最少被使用的，那么当你缓存页需要腾出来一个刷入磁盘的时 候，不就可以选择那个<strong>LRU链表</strong>中最近最少被使用的缓存页了么？</p>
+<blockquote>
+<p><strong>LRU链表工作原理</strong></p>
+</blockquote>
+<p>​    简单来说，假设我们从<strong>磁盘加载一个数据页到缓存页的时候</strong>，<strong>就把这个缓存页的描述数据块放到LRU链 表头部去</strong>，那么只要有数据的缓存页，他都会在LRU里了，而且最近被加载数据的缓存页，都会放到LRU链表的头部 去。 </p>
+<p>​    然后假设某个缓存页的描述数据块本来在LRU链表的尾部，后续你只要查询或者修改了这个缓存页的数据，也要把这 个缓存页挪动到LRU链表的头部去，<strong>也就是说最近被访问过的缓存页，一定在LRU链表的头部</strong>。</p>
+<p>​    那么这样的话，当你的缓存页没有一个空闲的时候（<strong>free链表为空，而且IO线程没有及时把flush链表中映射的缓存页刷回磁盘</strong>），你是不是要找出来那个最近最少被访问的缓存页去刷入磁盘？此 时你就直接在LRU链表的尾部找到一个缓存页，他一定是最近最少被访问的那个缓存页！</p>
+<p>​    然后你就把LRU链表尾部的那个缓存页刷入磁盘中，然后把你需要的磁盘数据页加载到腾出来的空闲缓存页中就可以 了！</p>
+<h4 id="LRU链表在Buffer-Pool实际运行中，可能导致预读问题"><a href="#LRU链表在Buffer-Pool实际运行中，可能导致预读问题" class="headerlink" title="LRU链表在Buffer Pool实际运行中，可能导致预读问题"></a>LRU链表在Buffer Pool实际运行中，可能导致预读问题</h4><p>​    会带来隐患的就是<strong>MySQL的预读机制</strong>，这个所谓预读机制，说的就是当你从磁盘上加载一个数据页的时候，他可 能会连带着把这个数据页相邻的其他数据页，也加载到缓存里去！（<strong>空间局部性原则，如果访问某个数据块，那么他的临近数据块可能也会被访问，所以临近数据块会连同被访问数据块一起加入内存中。-目的就是为了提升访问效率</strong>）</p>
+<p>​    举个例子，假设现在有两个空闲缓存页，然后在加载一个数据页的时候，连带着把他的一个相邻的数据页也加载到缓 存里去了，正好每个数据页放入一个空闲缓存页！</p>
+<p>​    但是接下来呢，实际上只有一个缓存页是被访问了，另外一个通过预读机制加载的缓存页，其实并没有人访问，此时 这两个缓存页可都在LRU链表的前面，如下图。</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515090748744.png" alt="image-20200515090748744"></p>
+<p>​    我们可以看到，这个图里很清晰的表明了，前两个缓存页都是刚加载进来的，但是此时第二个缓存页是通过预读机制 捎带着加载进来的，他也放到了链表的前面，但是他实际没人访问他。</p>
+<p>​    除了第二个缓存页之外，第一个缓存页，以及尾巴上两个缓存页，都是一直有人访问的那种缓存页，只不过上图代表 的是刚刚把头部两个缓存页加载进来的时候的一个LRU链表当时的情况。</p>
+<p>​    这个时候，假如没有空闲缓存页了，那么此时要加载新的数据页了，是不是就要从LRU链表的尾部把所谓的“最近最 少使用的一个缓存页”给拿出来，刷入磁盘，然后腾出来一个空闲缓存页了？</p>
+<p>​    这个时候，如果你把上图中LRU尾部的那个缓存页刷入磁盘然后清空，你觉得合理吗？他可是之前一直频繁被人访问 的啊！只不过在这一个瞬间，被新加载进来的两个缓存页给占据了LRU链表前面的位置，尤其是第二个缓存页，居然 还是通过预读机制加载进来的，根本就不会有人访问！</p>
+<p>​    那么这个时候，你要是把LRU链表尾部的缓存页给刷入磁盘，这是绝对不合理的，最合理的反而是把上图中LRU链表的 第二个通过预读机制加载进来的缓存页给刷入磁盘和清空，毕竟他几乎是没什么人会访问的！</p>
+<blockquote>
+<p><strong>哪些情况下会触发MySQL的预读机制？</strong></p>
+</blockquote>
+<p>（1）有一个参数是innodb_read_ahead_threshold，他的默认值是56，意思就是如果顺序的访问了一个区里的多个 数据页，访问的数据页的数量超过了这个阈值，此时就会触发预读机制，把下一个相邻区中的所有数据页都加载到缓 存里去<br>（2）如果Buffer Pool里缓存了一个区里的13个连续的数据页，而且这些数据页都是比较频繁会被访问的，此时就会 直接触发预读机制，把这个区里的其他的数据页都加载到缓存里去</p>
+<p>这个机制是通过参数innodb_random_read_ahead来控制的，他默认是OFF，也就是这个规则是关闭的</p>
+<p>​    所以默认情况下，主要是第一个规则可能会触发预读机制，一下子把很多相邻区里的数据页加载到缓存里去，这些缓 存页如果一下子都放在LRU链表的前面，而且他们其实并没什么人会访问的话，那就会如上图，导致本来就在缓存里 的一些频繁被访问的缓存页在LRU链表的尾部。</p>
+<p>​    这样的话，一旦要把一些缓存页淘汰掉，刷入磁盘，腾出来空闲缓存页，就会如上所述，把LRU链表尾部一些频繁被 访问的缓存页给刷入磁盘和清空掉了！这是完全不合理的，并不应该这样！</p>
+<blockquote>
+<p><strong>另外一种可能导致频繁被访问的缓存页被淘汰的场景</strong></p>
+</blockquote>
+<p>接着我们讲另外一种可能导致频繁被访问的缓存页被淘汰的场景，那就是<strong>全表扫描</strong></p>
+<p>​    这个所谓的全表扫描，意思就是类似如下的SQL语句：SELECT * FROM USERS<br>此时他没加任何一个where条件，会导致他直接一下子把这个表里所有的数据页，都从磁盘加载到Buffer Pool里去。<br>​    这个时候他可能会一下子就把这个表的所有数据页都一一装入各个缓存页里去！此时可能LRU链表中排在前面的一大 串缓存页，都是全表扫描加载进来的缓存页！那么如果这次全表扫描过后，后续几乎没用到这个表里的数据呢？<br>​    此时LRU链表的尾部，可能全部都是之前一直被频繁访问的那些缓存页！</p>
+<p>​    然后当你要淘汰掉一些缓存页腾出空间的时候，就会把LRU链表尾部一直被频繁访问的缓存页给淘汰掉了，而留下了 之前全表扫描加载进来的大量的不经常访问的缓存页！</p>
+<p>​    <strong>总而言之，这个版本的LRU算法，是存在问题的，虽然初衷是好的（数据局部性原理），但是可能因为预读原因导致某些还在被使用的缓存页，加载到磁盘中，那么下次再使用的时候，还得重新从磁盘中获取。</strong></p>
+<p>那么mysql是怎么解决的呢？</p>
+<p><strong>基于冷热数据分离的思想设计LRU链表</strong></p>
+<h4 id="基于冷热数据分离的思想设计LRU链表-解决预读问题"><a href="#基于冷热数据分离的思想设计LRU链表-解决预读问题" class="headerlink" title="基于冷热数据分离的思想设计LRU链表 解决预读问题"></a>基于冷热数据分离的思想设计LRU链表 解决预读问题</h4><p>​    所以为了解决我们说的简单的LRU链表的问题，真正MySQL在设计LRU链表的时候，采取的实际上是<strong>冷热数据 分离的思想。</strong></p>
+<p>​    之前一系列的问题，说白了，不都是因为所有缓存页都混在一个LRU链表里，才导致的么？</p>
+<p>​    所以真正的<strong>LRU链表</strong>，会被<strong>拆分为两个部分</strong>，一部分是<strong>热数据</strong>，一部分是<strong>冷数据</strong>，这个<strong>冷热数据的比例</strong>是由 <strong>innodb_old_blocks_pct</strong>参数控制的，他<strong>默认</strong>是37，也就是说<strong>冷数据占比37%</strong>。</p>
+<p>这个时候，LRU链表实际上看起来是下面这样子的。</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515091819132.png" alt="image-20200515091819132"></p>
+<blockquote>
+<p><strong>数据页第一次被加载到缓存的时候 - 冷数据什么时候加载到热数据中？？</strong></p>
+</blockquote>
+<p>​    首先数据页第一次被加载到缓存的时候，这个时候缓存页会被放在LRU链表的哪个位置呢？</p>
+<p>​    实际上这个时候，缓存页会被放在<strong>冷数据区域的链表头部</strong>，我们看下面的图，也就是第一次把一个数据页加载到缓存 页之后，这个缓存页实际上是被放在下图箭头的位置，也就是冷数据区域的链表头部位置。 </p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515091921628.png" alt="image-20200515091921628"></p>
+<p>​    接着我们来思考一个问题，第一次被加载了数据的缓存页，都会不停的移动到冷数据区域的链表头部，如上图所示。<br>那么你要知道，冷数据区域的缓存页肯定是会被使用的，那么<strong>冷数据区域的缓存页什么时候会放到热数据区域</strong>呢？</p>
+<p>实际上肯定很多人会想，只要对冷数据区域的缓存页进行了一次访问，就立马把这个缓存页放到热数据区域的头部行 不行呢？如下图所示。<br><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515092020503.png" alt="image-20200515092020503"></p>
+<p>​    其实这也是不合理的，如果你刚加载了一个数据页到那个缓存页，他是在冷数据区域的链表头部，然后立马（在1ms 以内）就访问了一下这个缓存页，之后就再也不访问他了呢？难道这种情况你也要把那个缓存页放到热数据区域的头 部吗？</p>
+<p>​    <strong>所以MySQL设定了一个规则，他设计了一个innodb_old_blocks_time参数，默认值1000，也就是1000毫秒</strong></p>
+<p>​    也就是说，必须是一个数据页被加载到缓存页之后，在1s之后，如果你再访问这个缓存页，他才会被挪动到热数据区域的链 表头部去。</p>
+<p>​    因为假设你加载了一个数据页到缓存去，然后过了1s之后你还访问了这个缓存页，说明你后续很可能会经常要访问 它，这个时间限制就是1s，因此只有1s后你访问了这个缓存页，他才会给你把缓存页放到热数据区域的链表头部去。</p>
+<p>​    <strong>所以是数据加载到缓存页之后过了1s，你再访问这个缓存页，他就会被放 入热数据区域的链表头部，如果是你数据刚加载到缓存页，在1s内你就访问缓存页，此时他是不会把这个缓存页放入 热数据区域的头部的。</strong></p>
+<blockquote>
+<p><strong>那么我们回到之前说过的预读和全表扫描问题，使用冷热数据分离LRU策略怎么解决这个问题呢？</strong></p>
+</blockquote>
+<p>​    首先我们思考一下，在这样的一个冷热分离LRU链表方案下，预读机制以及全表扫描加载进来的一大堆缓存页，他们会放在哪里？</p>
+<p>​    <strong>明显是放在LRU链表的冷数据区域的前面啊！</strong></p>
+<p>​    <strong>假设这个时候热数据区域已经有很多被频繁访问的缓存页了，你会发现热数据区域还是存放被频繁访问的缓存页的， 只要热数据区域有缓存页被访问，他还是会被移动到热数据区域的链表头部去。</strong></p>
+<pre><code>这样就做到了冷热数据的分离，避免误删热数据。
+</code></pre><p>​    在这样的一套<strong>缓存页分冷热数据的加载方案</strong>，以及<strong>冷数据转化为热数据的时间限制方案</strong>，还有就是<strong>淘汰缓存页的时候优先淘汰冷数据区域的方案</strong>，基于这套方案，大家会发现，之前发现的问题，完美的被解决了。</p>
+<p>​    因为那种预读机制以及全表扫描机制加载进来的数据页，大部分都会在1s之内访问一下，之后可能就再也不访问了， 所以这种缓存页基本上都会留在冷数据区域里。然后频繁访问的缓存页还是会留在热数据区域里。</p>
+<p>​    当你要<strong>淘汰缓存</strong>的时候，优先就是会<strong>选择冷数据区域的尾部的缓存页</strong>，这就是非常合理的了！他不会让刚加载进来的 缓存页占据LRU链表的头部，频繁访问的缓存页在LRU链表的尾部，淘汰的时候淘汰尾部的频繁访问的缓存页了！</p>
+<p>​    问题完美的被解决了。</p>
+<p>这就是LRU链表冷热数据分离的一套机制。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>​    接着我们来讲讲，你的Buffer Pool在运行中被使用的时候，实际上会频繁的从磁盘上加载数据页到他的缓存页里去， 然后free链表、flush链表、lru链表都会在使用的时候同时被使用。</p>
+<p>​    比如bufferpool在初始化完成后，会相应的构建free链表，表示当前bufferpool中空闲的缓存页。</p>
+<p>​    那么当数据加载到一个缓存页，<strong>free链表里会移除这个缓存页</strong>，然后<strong>LRU链表的冷数据区域的头部会放入这个缓存页</strong>。</p>
+<p>​    然后如果你要是<strong>修改了一个缓存页</strong>，那么<strong>flush链表中会记录这个脏页</strong>，LRU链表中还可能会把你从<strong>冷数据区域移动到热 数据区域的头部去</strong>。</p>
+<p>​    如果你是查询了一个缓存页，那么此时就会把这个缓存页在lru链表中移动到热数据区域去，或者在热数据区域中也有 可能会移动到头部去。</p>
+<p>​    总之，MySQL在执行CRUD的时候，首先就是大量的操作缓存页以及对应的几个链表。然后在缓存页都满的时候，必 然要想办法把一些缓存页给刷入磁盘，然后清空这几个缓存页，接着把需要的数据页加载到缓存页里去！</p>
+<p>​    我们已经知道，他是根据LRU链表去淘汰缓存页的，那么他到底是什么时候把LRU链表的冷数据区域中的缓存页刷入磁 盘的呢？实际上他有几个时机。</p>
+<p>（1）    首先第一个时机，并不是在缓存页满的时候，才会挑选LRU冷数据区域尾部的几个缓存页刷入磁盘，而是有一个后台 线程，他会运行一个定时任务，这个定时任务每隔一段时间就会把LRU链表的冷数据区域的尾部的一些缓存页，刷入 磁盘里去，清空这几个缓存页，把他们加入回free链表去！</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515094416088.png" alt="image-20200515094416088"></p>
+<p>经过上面的学习，我们知道flush链表也会有个线程同时把缓存页刷新回磁盘，同时也会删除flush链表和增加free链表空闲缓存页个数。</p>
+<blockquote>
+<p><strong>总而言之：</strong></p>
+</blockquote>
+<p>​    所以你可以理解为，你一边不停的加载数据到缓存页里去，不停的查询和修改缓存数据，然后free链表中的缓存页不停 的在减少，flush链表中的缓存页不停的在增加，lru链表中的缓存页不停的在增加和移动。</p>
+<p>​    另外一边，你的后台线程不停的在把lru链表的冷数据区域的缓存页以及flush链表的缓存页，刷入磁盘中来清空缓存 页，然后flush链表和lru链表中的缓存页在减少，free链表中的缓存页在增加。</p>
+<p>这就是一个动态运行起来的效果！</p>
+<p>​    实际上你会发现lru跟flush的作用有点类似，但是我们可以这么理解LRU是flush的应急措施（当负责将flush链表中的缓存页刷回磁盘的线程还没来得及将数据刷回磁盘时，此时free链表已经没有空闲块也就是bufferpool已经满了，那么如果再有查询请求到来，怎么让bufferpool腾出空间呢？这个时候LRU链表的好处就来了。），而且他们两者存放的数据类型不同（flush存放的是发生了更改操作时额数据描述块，LRU存放的时使用时的数据描述块（包含查询操作产生的数据描述块））</p>
+<p><strong>可以看到，mysql为了让CRUD尽可能在bufferpool中进行，做了很多工作，其中三个链表（free、flush、lru）就是提现</strong></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你感觉文章对你又些许感悟，你可以支持我！！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.png" alt="Jeremy Kinge WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.png" alt="Jeremy Kinge Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/bufferpool/" rel="tag"><i class="fa fa-tag"></i> bufferpool</a>
+          
+            <a href="/tags/lru链表/" rel="tag"><i class="fa fa-tag"></i> lru链表</a>
+          
+            <a href="/tags/flush链表/" rel="tag"><i class="fa fa-tag"></i> flush链表</a>
+          
+            <a href="/tags/free链表/" rel="tag"><i class="fa fa-tag"></i> free链表</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/06/Hessian 多系统访问/" rel="next" title="Hessian 多系统访问">
+                <i class="fa fa-chevron-left"></i> Hessian 多系统访问
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/21/三级缓存架构和热点数据解决分析/" rel="prev" title="三级缓存架构和热点数据解决分析">
+                三级缓存架构和热点数据解决分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+    
+  </div>
+
+
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDUxMS83MDY1"></div>
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Jeremy Kinge" />
+          <p class="site-author-name" itemprop="name">Jeremy Kinge</p>
+           
+              <p class="site-description motion-element" itemprop="description">To know everything, no words don't talk, listening to people is enough to cause alarm（知无不言，言无不尽 言者无罪，闻者足戒）</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">120</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JeremyKinge" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/LJBANANABLUE?s=09" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://m.weibo.cn/u/3991058874?from=1078095010&wm=20005_0002&sourceType=qq&uid=3991058874" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      Weibo
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010100689349" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                    
+                      FB Page
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="StackOverflow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                    
+                      StackOverflow
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://xiezejingzhazha.blog.163.com/" target="_blank" title="网易博客">
+                  
+                    <i class="fa fa-fw fa-spinner"></i>
+                  
+                    
+                      网易博客
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+		<div id="music163player">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=451768026&auto=0&height=66"></iframe>
+</div>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Buffer-Pool这个内存数据结构到底长个什么样子？"><span class="nav-number">1.</span> <span class="nav-text">Buffer Pool这个内存数据结构到底长个什么样子？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库启动的时候，是如何初始化Buffer-Pool的？"><span class="nav-number">1.1.</span> <span class="nav-text">数据库启动的时候，是如何初始化Buffer Pool的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql-怎么维护缓存页的空闲状态？-free链表"><span class="nav-number">1.2.</span> <span class="nav-text">mysql 怎么维护缓存页的空闲状态？ - free链表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何将磁盘上的页读取到Buffer-Pool的缓存页中去？"><span class="nav-number">1.3.</span> <span class="nav-text">如何将磁盘上的页读取到Buffer Pool的缓存页中去？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#怎么判断要查询-更新的数据存在于bufferpool中？-hash"><span class="nav-number">1.4.</span> <span class="nav-text">怎么判断要查询/更新的数据存在于bufferpool中？ hash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bufferpool中脏数据怎么刷回磁盘-flush链表"><span class="nav-number">1.5.</span> <span class="nav-text">bufferpool中脏数据怎么刷回磁盘 - flush链表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#当Buffer-Pool中的缓存页不够的时候，如何基于LRU算法淘汰部分缓存？"><span class="nav-number">1.6.</span> <span class="nav-text">当Buffer Pool中的缓存页不够的时候，如何基于LRU算法淘汰部分缓存？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#LRU链表在Buffer-Pool实际运行中，可能导致预读问题"><span class="nav-number">1.6.1.</span> <span class="nav-text">LRU链表在Buffer Pool实际运行中，可能导致预读问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基于冷热数据分离的思想设计LRU链表-解决预读问题"><span class="nav-number">1.6.2.</span> <span class="nav-text">基于冷热数据分离的思想设计LRU链表 解决预读问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+		  
+
+		  
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+	
+
+	
+  </aside>
+  
+
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2022 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jeremy Kinge</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">
+      465.5k
+    </span>
+  
+</div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv">
+  
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共465.5k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>

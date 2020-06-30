@@ -172,13 +172,178 @@
   </entry>
   
   <entry>
+    <title>BufferPoo到底什么鬼和多个链表的关系</title>
+    <link href="http://kingge.top/2020/05/17/BufferPoo%E5%88%B0%E5%BA%95%E4%BB%80%E4%B9%88%E9%AC%BC%E5%92%8C%E5%A4%9A%E4%B8%AA%E9%93%BE%E8%A1%A8%E7%9A%84%E5%85%B3%E7%B3%BB/"/>
+    <id>http://kingge.top/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/</id>
+    <published>2020-05-17T07:59:59.000Z</published>
+    <updated>2020-06-30T04:18:57.507Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Buffer-Pool这个内存数据结构到底长个什么样子？"><a href="#Buffer-Pool这个内存数据结构到底长个什么样子？" class="headerlink" title="Buffer Pool这个内存数据结构到底长个什么样子？"></a>Buffer Pool这个内存数据结构到底长个什么样子？</h2><p>​    首先我们要知道<strong>Buffer Pool默认情况下是128MB</strong>，还是有一点偏小了，我们实际生产环境下完全可以对Buffer Pool进行调整（bufferpool分配的内存，我们建议是系统机器总内存的%50-%60）。</p>
+<p>​    比如我们的数据库如果是2核4G的机器，那么你就可以给Buffer Pool分配个2GB的内存，使用下面的配置就可以了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[server] </div><div class="line">innodb_buffer_pool_size = 2147483648</div></pre></td></tr></table></figure>
+<p>首先我们要知道，磁盘中的数据到底是以什么样的形式存在的？是以一行一行存储还是？</p>
+<p><strong>按照数据页存储，一个数据页里面存在多行数据</strong></p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514172857343.png" alt="image-20200514173147742"></p>
+<p>​    所以实际上假设我们要<strong>更新一行数据</strong>（<strong>如果该行数据所在的数据页不在bufferpool中，则先从磁盘中获取数据页加载到buffer pool，如果在bufferpool则进行内存中的更新</strong>），此时数据库会找到<strong>这行数据所在的数据页</strong>，然后从磁盘文件里把这行数据所在的数据页 直接给加载到Buffer Pool里去。（为什么直接加载数据页呢？<strong>避免磁盘随机读的频率，因为磁盘随机读的效率太低</strong>）<br>​    也就是说，Buffer Pool中存放的是一个一个的数据页（缓存页）。</p>
+<p><strong>数据页包含多条数据，例如我们要更新update xxx set xxx=xxx where id=1那么此时他会把id=1这条数据所在的一页数据都加载到内存里去，这一页数据里，可能还包含了id=2，id=3等其他数据。</strong></p>
+<blockquote>
+<p><strong>磁盘上的数据页和Buffer Pool中的缓存页是如何对应起来的？</strong></p>
+</blockquote>
+<p>​    实际上默认情况下，磁盘中存放的<strong>数据页的大小是16KB</strong>，也就是说，一页数据包含了16KB的内容。<br>​    而Buffer Pool中存放的一个一个的<strong>数据页</strong>，我们通常叫做<strong>缓存页</strong>，因为毕竟Buffer Pool是一个缓冲池，里面的数据都是从磁 盘缓存到内存去的。<br>​    而Buffer Pool中默认情况下，一个<strong>缓存页的大小</strong>和磁盘上的一个数据页的大小是一一对应起来的，<strong>都是16KB</strong>。</p>
+<blockquote>
+<p><strong>缓存页对应的描述信息是什么？</strong></p>
+</blockquote>
+<p>​    接着我们要了解下一个概念，对于每个缓存页，他实际上都会有一个描述信息，这个描述信息大体可以认为是用来描述这个缓 存页的<br>​    比如包含如下的一些东西：<strong>这个数据页所属的表空间、数据页的编号、这个缓存页在Buffer Pool中的地址以及别的一些杂七杂 八的东西。</strong><br>​    每个缓存页都会对应一个描述信息，这个描述信息本身也是一块数据，在Buffer Pool中，每个缓存页的描述数据放在最前面， 然后各个缓存页放在后面<br>​    所以此时我们看下面的图，Buffer Pool实际看起来大概长这个样子。</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514173718695.png" alt="image-20200514173718695"></p>
+<p>​    而且这里我们要注意一点，Buffer Pool中的描述数据大概相当于缓存页大小的5%左右，也就是每个描述数据大概是800个字 节左右的大小，然后假设你设置的buffer pool大小是128MB，实际上Buffer Pool真正的最终大小会超出一些，可能有个130 多MB的样子，因为他里面还要存放每个缓存页的描述数据</p>
+<h3 id="数据库启动的时候，是如何初始化Buffer-Pool的？"><a href="#数据库启动的时候，是如何初始化Buffer-Pool的？" class="headerlink" title="数据库启动的时候，是如何初始化Buffer Pool的？"></a>数据库启动的时候，是如何初始化Buffer Pool的？</h3><p>首先我们知道，buffer pool<strong>包含了缓存页，和么一个缓存页对应的缓存元数据信息（描述数据）。</strong></p>
+<p>那么在数据库启动的时候，他是如何初始化Buffer Pool的呢？</p>
+<p>​    其实这个也很简单，数据库只要一启动，就会按照你设置的Buffer Pool大小，稍微再加大一点，去找操作系统申请一块内存区 域，作为Buffer Pool的内存区域。</p>
+<p>​    然后当内存区域申请完毕之后，数据库就会按照默认的缓存页的16KB的大小以及对应的800个字节左右的描述数据的大小，在 Buffer Pool中划分出来一个一个的缓存页和一个一个的他们对应的描述数据。</p>
+<p>​    然后当数据库把Buffer Pool划分完毕之后，看起来就是之前我们看到的那张图了，如下图所示。</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514174143081.png" alt="image-20200514174143081"></p>
+<p>​    只不过这个时候，Buffer Pool中的一个一个的<strong>缓存页都是空的</strong>，里面什么都没有，要等数据库运行起来之后，当我们要对数据 执行增删改查的操作的时候，才会把数据对应的页从磁盘文件里读取出来，放入Buffer Pool中的缓存页中。</p>
+<h3 id="mysql-怎么维护缓存页的空闲状态？-free链表"><a href="#mysql-怎么维护缓存页的空闲状态？-free链表" class="headerlink" title="mysql 怎么维护缓存页的空闲状态？ - free链表"></a>mysql 怎么维护缓存页的空闲状态？ - free链表</h3><p>​    数据库会为<strong>Buffer Pool设计一个free链表</strong>，他是一个<strong>双向链表数据结构</strong>，这个free链表里，<strong>每个节点</strong>就是一个空闲的缓存页的<strong>描述数据块的地址</strong>，也就是说，只要你一个<strong>缓存页是空闲</strong>的，那么他的<strong>描述数据块</strong>就会被<strong>放入</strong>这个<strong>free链表</strong>中。<br>​    刚开始数据库启动的时候，可能所有的缓存页都是空闲的，因为此时可能是一个空的数据库，一条数据都没有，<strong>所以此时所有 缓存页的描述数据块，都会被放入这个free链表中。</strong></p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514174531206.png" alt="image-20200514174531206"></p>
+<p>​    大家可以看到上面出现了一个free链表，这个free链表里面就是各个缓存页的描述数据块，只要缓存页是空闲的，那么他们对应的描述数据块就会加入到这个free链表中，每个节点都会双向链接自己的前后节点，组成一个<strong>双向链表。</strong><br>​    除此之外，这个<strong>free链表有一个基础节点</strong>，他会引用链表的头节点和尾节点，里面还存储了链表中有多少个描述数据块的节 点，也就是有多少个空闲的缓存页。</p>
+<p><strong>重要提示！！！！：</strong></p>
+<p>​    <strong>可能有的人会以为这个描述数据块，在Buffer Pool里有一份，在free链表里也有一份，好像在内存里有两个一模一样的描述数 据块，是么？</strong></p>
+<p>​    其实这么想就大错特错了。</p>
+<p>​    这里要给大家讲明白一点，这个<strong>free链表</strong>，他<strong>本身其实就是由Buffer Pool里的描述数据块组成的</strong>，你可以认为是每个描述数据 块里都有两个指针，一个是free_pre，一个是free_next，分别指向自己的上一个free链表的节点，以及下一个free链表的节 点。</p>
+<p>​    通过Buffer Pool中的描述数据块的free_pre和free_next两个指针，就可以把所有的描述数据块串成一个free链表，大家可以 自己去思考一下这个问题。<strong>上面为了画图需要，所以把描述数据块单独画了一份出来，表示他们之间的指针引用关系。</strong></p>
+<p>​    对于free链表而言，只有一个<strong>基础节点是不属于Buffer Pool的</strong>，<strong>他是40字节大小的一个节点</strong>，里面就<strong>存放了free链表的头节点 的地址，尾节点的地址，还有free链表里当前有多少个节点。</strong></p>
+<h3 id="如何将磁盘上的页读取到Buffer-Pool的缓存页中去？"><a href="#如何将磁盘上的页读取到Buffer-Pool的缓存页中去？" class="headerlink" title="如何将磁盘上的页读取到Buffer Pool的缓存页中去？"></a>如何将磁盘上的页读取到Buffer Pool的缓存页中去？</h3><p>其实有了free表这个操作就变得很简单了。</p>
+<p>​    首先，我们需要从<strong>free链表里获取一个描述数据块</strong>（因为free表中的描述快对应的就是空闲的缓存页），然后就可以对应的获取到这个描述数据块对应的空闲缓存页。</p>
+<p>​    接着我们就可以把磁盘上的数据页读取到对应的缓存页里去，同时把相关的一些描述数据写入缓存页的描述数据块里去，比如 这个数据页所属的表空间之类的信息，最后把那个描述数据块从free链表里去除就可以了，如下图所示。 </p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514175129506.png" alt="image-20200514175129506"></p>
+<h3 id="怎么判断要查询-更新的数据存在于bufferpool中？-hash"><a href="#怎么判断要查询-更新的数据存在于bufferpool中？-hash" class="headerlink" title="怎么判断要查询/更新的数据存在于bufferpool中？ hash"></a>怎么判断要查询/更新的数据存在于bufferpool中？ hash</h3><p>​    我们在执行增删改查的时候，肯定是先看看这个数据页有没有被缓存，如果没被缓存就走上面的逻辑，从free链表中找到一个 空闲的缓存页，从磁盘上读取数据页写入缓存页，写入描述数据，从free链表中移除这个描述数据块。<br>​    但是如果数据页已经被缓存了，那么就会直接使用了。</p>
+<p>​    <strong>所以其实数据库还会有一个哈希表数据结构，他会用表空间号+数据页号，作为一个key，然后缓存页的地址作为value。</strong></p>
+<p>​    当你要使用一个数据页的时候，通过“表空间号+数据页号”作为key去这个哈希表里查一下，如果没有就读取数据页，如果 已经有了，就说明数据页已经被缓存了。</p>
+<p>​    我们看下图，又引入了一个<strong>数据页缓存哈希表</strong>的结构。</p>
+<p>​    也就是说，<strong>每次</strong>你<strong>读取</strong>一个<strong>数据页到缓存</strong>之后，都<strong>会在</strong>这个<strong>哈希表中写入一个key-value对</strong>，key就是表空间号+数据页号， value就是缓存页的地址，那么下次如果你再使用这个数据页，就可以从哈希表里直接读取出来他已经被放入一个缓存页了。</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200514175351651.png" alt="image-20200514175351651"></p>
+<h3 id="bufferpool中脏数据怎么刷回磁盘-flush链表"><a href="#bufferpool中脏数据怎么刷回磁盘-flush链表" class="headerlink" title="bufferpool中脏数据怎么刷回磁盘 - flush链表"></a>bufferpool中脏数据怎么刷回磁盘 - flush链表</h3><p>​    我们知道几乎所有的<strong>更新操作</strong>都是先操作内存中的bufferpool，那么很明显并不是bufferpool中所有数据都需要刷回磁盘（<strong>因为有的缓存页可能是因为查询的时候被读取到Buffer Pool里 去的，可能根本没修改过</strong>），那么我们怎么判断或者怎么拿到需要刷回磁盘的缓存页呢？</p>
+<p>​    所以数据库在这里引入了另外一个跟free链表类似的<strong>flush链表</strong>，<strong>这个flush链表本质也是通过缓存页的描述数据块中的两个指针，让被修改过的缓存页的描述数据块，组成一个双向链表</strong>。<br>​    <strong>凡是被修改过的缓存页</strong>，都会把他的<strong>描述数据块加入到flush链表中去</strong>，flush的意思就是这些都是脏页，后续都是要flush刷新 到磁盘上去的。<br>​    所以flush链表的结构如下图所示，跟free链表几乎是一样的。</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515082201508.png" alt="image-20200515082201508"></p>
+<h3 id="当Buffer-Pool中的缓存页不够的时候，如何基于LRU算法淘汰部分缓存？"><a href="#当Buffer-Pool中的缓存页不够的时候，如何基于LRU算法淘汰部分缓存？" class="headerlink" title="当Buffer Pool中的缓存页不够的时候，如何基于LRU算法淘汰部分缓存？"></a>当Buffer Pool中的缓存页不够的时候，如何基于LRU算法淘汰部分缓存？</h3><p>​    我们知道，随着不断加载数据到bufferpool，那么<strong>空闲缓存页（free链表）</strong>的个数终将会变为0，那么当下次再加载进bufferpool时，怎么办呢?<strong>此时你只有一个办法，就是淘汰掉一些缓存页。</strong></p>
+<p>​    那什么叫淘汰缓存页呢？</p>
+<p>​    顾名思义，<strong>你必须把一个缓存页里被修改过的数据，给他刷到磁盘上的数据页里去，然后这个缓存页就可以清空了， 让他重新变成一个空闲的缓存页（加入到free链表中）</strong>。</p>
+<p>接着你再把磁盘上你需要的新的数据页加载到这个腾出来的空闲缓存页中去。</p>
+<p>​    <strong>那么下一个问题来了，如果要把一个缓存页里的数据刷入磁盘，腾出来一个空闲缓存页，那么应该把哪个缓存页的数据给刷入磁盘呢？</strong></p>
+<p>​    <strong>是根据flush链表？那如果是根据flush链表的话，是吧所有flush链表对应的缓存页都刷回磁盘呢？还是只刷一部分，如果只刷一部分，那么刷那部分呢？</strong></p>
+<p>​     <strong>很明显示是最近用的最少，修改的最少那个数据页写入到磁盘，因为毕竟占着茅坑不拉屎。</strong></p>
+<p><strong>接着我们就要解决下一个问题了，就是你怎么知道哪些缓存页经常被访问，哪些缓存页很少被访问？</strong></p>
+<p><strong>很明显flush链表的作用只是记录那些缓存页被修改了，并没有记录哪个缓存页被修改的次数，而且没有提供排序的规则，什么意思呢？就是没有把修改最多的缓存页排到最前，修改最少的排到最后，flush链表并没有这样的规则</strong></p>
+<p>​    此时就要引入一个新的<strong>LRU链表</strong>了，这个所谓的LRU就是Least Recently Used，最近最少使用的意思。<br>通过这个LRU链表，我们可以知道哪些缓存页是最近最少被使用的，那么当你缓存页需要腾出来一个刷入磁盘的时 候，不就可以选择那个<strong>LRU链表</strong>中最近最少被使用的缓存页了么？</p>
+<blockquote>
+<p><strong>LRU链表工作原理</strong></p>
+</blockquote>
+<p>​    简单来说，假设我们从<strong>磁盘加载一个数据页到缓存页的时候</strong>，<strong>就把这个缓存页的描述数据块放到LRU链 表头部去</strong>，那么只要有数据的缓存页，他都会在LRU里了，而且最近被加载数据的缓存页，都会放到LRU链表的头部 去。 </p>
+<p>​    然后假设某个缓存页的描述数据块本来在LRU链表的尾部，后续你只要查询或者修改了这个缓存页的数据，也要把这 个缓存页挪动到LRU链表的头部去，<strong>也就是说最近被访问过的缓存页，一定在LRU链表的头部</strong>。</p>
+<p>​    那么这样的话，当你的缓存页没有一个空闲的时候（<strong>free链表为空，而且IO线程没有及时把flush链表中映射的缓存页刷回磁盘</strong>），你是不是要找出来那个最近最少被访问的缓存页去刷入磁盘？此 时你就直接在LRU链表的尾部找到一个缓存页，他一定是最近最少被访问的那个缓存页！</p>
+<p>​    然后你就把LRU链表尾部的那个缓存页刷入磁盘中，然后把你需要的磁盘数据页加载到腾出来的空闲缓存页中就可以 了！</p>
+<h4 id="LRU链表在Buffer-Pool实际运行中，可能导致预读问题"><a href="#LRU链表在Buffer-Pool实际运行中，可能导致预读问题" class="headerlink" title="LRU链表在Buffer Pool实际运行中，可能导致预读问题"></a>LRU链表在Buffer Pool实际运行中，可能导致预读问题</h4><p>​    会带来隐患的就是<strong>MySQL的预读机制</strong>，这个所谓预读机制，说的就是当你从磁盘上加载一个数据页的时候，他可 能会连带着把这个数据页相邻的其他数据页，也加载到缓存里去！（<strong>空间局部性原则，如果访问某个数据块，那么他的临近数据块可能也会被访问，所以临近数据块会连同被访问数据块一起加入内存中。-目的就是为了提升访问效率</strong>）</p>
+<p>​    举个例子，假设现在有两个空闲缓存页，然后在加载一个数据页的时候，连带着把他的一个相邻的数据页也加载到缓 存里去了，正好每个数据页放入一个空闲缓存页！</p>
+<p>​    但是接下来呢，实际上只有一个缓存页是被访问了，另外一个通过预读机制加载的缓存页，其实并没有人访问，此时 这两个缓存页可都在LRU链表的前面，如下图。</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515090748744.png" alt="image-20200515090748744"></p>
+<p>​    我们可以看到，这个图里很清晰的表明了，前两个缓存页都是刚加载进来的，但是此时第二个缓存页是通过预读机制 捎带着加载进来的，他也放到了链表的前面，但是他实际没人访问他。</p>
+<p>​    除了第二个缓存页之外，第一个缓存页，以及尾巴上两个缓存页，都是一直有人访问的那种缓存页，只不过上图代表 的是刚刚把头部两个缓存页加载进来的时候的一个LRU链表当时的情况。</p>
+<p>​    这个时候，假如没有空闲缓存页了，那么此时要加载新的数据页了，是不是就要从LRU链表的尾部把所谓的“最近最 少使用的一个缓存页”给拿出来，刷入磁盘，然后腾出来一个空闲缓存页了？</p>
+<p>​    这个时候，如果你把上图中LRU尾部的那个缓存页刷入磁盘然后清空，你觉得合理吗？他可是之前一直频繁被人访问 的啊！只不过在这一个瞬间，被新加载进来的两个缓存页给占据了LRU链表前面的位置，尤其是第二个缓存页，居然 还是通过预读机制加载进来的，根本就不会有人访问！</p>
+<p>​    那么这个时候，你要是把LRU链表尾部的缓存页给刷入磁盘，这是绝对不合理的，最合理的反而是把上图中LRU链表的 第二个通过预读机制加载进来的缓存页给刷入磁盘和清空，毕竟他几乎是没什么人会访问的！</p>
+<blockquote>
+<p><strong>哪些情况下会触发MySQL的预读机制？</strong></p>
+</blockquote>
+<p>（1）有一个参数是innodb_read_ahead_threshold，他的默认值是56，意思就是如果顺序的访问了一个区里的多个 数据页，访问的数据页的数量超过了这个阈值，此时就会触发预读机制，把下一个相邻区中的所有数据页都加载到缓 存里去<br>（2）如果Buffer Pool里缓存了一个区里的13个连续的数据页，而且这些数据页都是比较频繁会被访问的，此时就会 直接触发预读机制，把这个区里的其他的数据页都加载到缓存里去</p>
+<p>这个机制是通过参数innodb_random_read_ahead来控制的，他默认是OFF，也就是这个规则是关闭的</p>
+<p>​    所以默认情况下，主要是第一个规则可能会触发预读机制，一下子把很多相邻区里的数据页加载到缓存里去，这些缓 存页如果一下子都放在LRU链表的前面，而且他们其实并没什么人会访问的话，那就会如上图，导致本来就在缓存里 的一些频繁被访问的缓存页在LRU链表的尾部。</p>
+<p>​    这样的话，一旦要把一些缓存页淘汰掉，刷入磁盘，腾出来空闲缓存页，就会如上所述，把LRU链表尾部一些频繁被 访问的缓存页给刷入磁盘和清空掉了！这是完全不合理的，并不应该这样！</p>
+<blockquote>
+<p><strong>另外一种可能导致频繁被访问的缓存页被淘汰的场景</strong></p>
+</blockquote>
+<p>接着我们讲另外一种可能导致频繁被访问的缓存页被淘汰的场景，那就是<strong>全表扫描</strong></p>
+<p>​    这个所谓的全表扫描，意思就是类似如下的SQL语句：SELECT * FROM USERS<br>此时他没加任何一个where条件，会导致他直接一下子把这个表里所有的数据页，都从磁盘加载到Buffer Pool里去。<br>​    这个时候他可能会一下子就把这个表的所有数据页都一一装入各个缓存页里去！此时可能LRU链表中排在前面的一大 串缓存页，都是全表扫描加载进来的缓存页！那么如果这次全表扫描过后，后续几乎没用到这个表里的数据呢？<br>​    此时LRU链表的尾部，可能全部都是之前一直被频繁访问的那些缓存页！</p>
+<p>​    然后当你要淘汰掉一些缓存页腾出空间的时候，就会把LRU链表尾部一直被频繁访问的缓存页给淘汰掉了，而留下了 之前全表扫描加载进来的大量的不经常访问的缓存页！</p>
+<p>​    <strong>总而言之，这个版本的LRU算法，是存在问题的，虽然初衷是好的（数据局部性原理），但是可能因为预读原因导致某些还在被使用的缓存页，加载到磁盘中，那么下次再使用的时候，还得重新从磁盘中获取。</strong></p>
+<p>那么mysql是怎么解决的呢？</p>
+<p><strong>基于冷热数据分离的思想设计LRU链表</strong></p>
+<h4 id="基于冷热数据分离的思想设计LRU链表-解决预读问题"><a href="#基于冷热数据分离的思想设计LRU链表-解决预读问题" class="headerlink" title="基于冷热数据分离的思想设计LRU链表 解决预读问题"></a>基于冷热数据分离的思想设计LRU链表 解决预读问题</h4><p>​    所以为了解决我们说的简单的LRU链表的问题，真正MySQL在设计LRU链表的时候，采取的实际上是<strong>冷热数据 分离的思想。</strong></p>
+<p>​    之前一系列的问题，说白了，不都是因为所有缓存页都混在一个LRU链表里，才导致的么？</p>
+<p>​    所以真正的<strong>LRU链表</strong>，会被<strong>拆分为两个部分</strong>，一部分是<strong>热数据</strong>，一部分是<strong>冷数据</strong>，这个<strong>冷热数据的比例</strong>是由 <strong>innodb_old_blocks_pct</strong>参数控制的，他<strong>默认</strong>是37，也就是说<strong>冷数据占比37%</strong>。</p>
+<p>这个时候，LRU链表实际上看起来是下面这样子的。</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515091819132.png" alt="image-20200515091819132"></p>
+<blockquote>
+<p><strong>数据页第一次被加载到缓存的时候 - 冷数据什么时候加载到热数据中？？</strong></p>
+</blockquote>
+<p>​    首先数据页第一次被加载到缓存的时候，这个时候缓存页会被放在LRU链表的哪个位置呢？</p>
+<p>​    实际上这个时候，缓存页会被放在<strong>冷数据区域的链表头部</strong>，我们看下面的图，也就是第一次把一个数据页加载到缓存 页之后，这个缓存页实际上是被放在下图箭头的位置，也就是冷数据区域的链表头部位置。 </p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515091921628.png" alt="image-20200515091921628"></p>
+<p>​    接着我们来思考一个问题，第一次被加载了数据的缓存页，都会不停的移动到冷数据区域的链表头部，如上图所示。<br>那么你要知道，冷数据区域的缓存页肯定是会被使用的，那么<strong>冷数据区域的缓存页什么时候会放到热数据区域</strong>呢？</p>
+<p>实际上肯定很多人会想，只要对冷数据区域的缓存页进行了一次访问，就立马把这个缓存页放到热数据区域的头部行 不行呢？如下图所示。<br><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515092020503.png" alt="image-20200515092020503"></p>
+<p>​    其实这也是不合理的，如果你刚加载了一个数据页到那个缓存页，他是在冷数据区域的链表头部，然后立马（在1ms 以内）就访问了一下这个缓存页，之后就再也不访问他了呢？难道这种情况你也要把那个缓存页放到热数据区域的头 部吗？</p>
+<p>​    <strong>所以MySQL设定了一个规则，他设计了一个innodb_old_blocks_time参数，默认值1000，也就是1000毫秒</strong></p>
+<p>​    也就是说，必须是一个数据页被加载到缓存页之后，在1s之后，如果你再访问这个缓存页，他才会被挪动到热数据区域的链 表头部去。</p>
+<p>​    因为假设你加载了一个数据页到缓存去，然后过了1s之后你还访问了这个缓存页，说明你后续很可能会经常要访问 它，这个时间限制就是1s，因此只有1s后你访问了这个缓存页，他才会给你把缓存页放到热数据区域的链表头部去。</p>
+<p>​    <strong>所以是数据加载到缓存页之后过了1s，你再访问这个缓存页，他就会被放 入热数据区域的链表头部，如果是你数据刚加载到缓存页，在1s内你就访问缓存页，此时他是不会把这个缓存页放入 热数据区域的头部的。</strong></p>
+<blockquote>
+<p><strong>那么我们回到之前说过的预读和全表扫描问题，使用冷热数据分离LRU策略怎么解决这个问题呢？</strong></p>
+</blockquote>
+<p>​    首先我们思考一下，在这样的一个冷热分离LRU链表方案下，预读机制以及全表扫描加载进来的一大堆缓存页，他们会放在哪里？</p>
+<p>​    <strong>明显是放在LRU链表的冷数据区域的前面啊！</strong></p>
+<p>​    <strong>假设这个时候热数据区域已经有很多被频繁访问的缓存页了，你会发现热数据区域还是存放被频繁访问的缓存页的， 只要热数据区域有缓存页被访问，他还是会被移动到热数据区域的链表头部去。</strong></p>
+<pre><code>这样就做到了冷热数据的分离，避免误删热数据。
+</code></pre><p>​    在这样的一套<strong>缓存页分冷热数据的加载方案</strong>，以及<strong>冷数据转化为热数据的时间限制方案</strong>，还有就是<strong>淘汰缓存页的时候优先淘汰冷数据区域的方案</strong>，基于这套方案，大家会发现，之前发现的问题，完美的被解决了。</p>
+<p>​    因为那种预读机制以及全表扫描机制加载进来的数据页，大部分都会在1s之内访问一下，之后可能就再也不访问了， 所以这种缓存页基本上都会留在冷数据区域里。然后频繁访问的缓存页还是会留在热数据区域里。</p>
+<p>​    当你要<strong>淘汰缓存</strong>的时候，优先就是会<strong>选择冷数据区域的尾部的缓存页</strong>，这就是非常合理的了！他不会让刚加载进来的 缓存页占据LRU链表的头部，频繁访问的缓存页在LRU链表的尾部，淘汰的时候淘汰尾部的频繁访问的缓存页了！</p>
+<p>​    问题完美的被解决了。</p>
+<p>这就是LRU链表冷热数据分离的一套机制。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>​    接着我们来讲讲，你的Buffer Pool在运行中被使用的时候，实际上会频繁的从磁盘上加载数据页到他的缓存页里去， 然后free链表、flush链表、lru链表都会在使用的时候同时被使用。</p>
+<p>​    比如bufferpool在初始化完成后，会相应的构建free链表，表示当前bufferpool中空闲的缓存页。</p>
+<p>​    那么当数据加载到一个缓存页，<strong>free链表里会移除这个缓存页</strong>，然后<strong>LRU链表的冷数据区域的头部会放入这个缓存页</strong>。</p>
+<p>​    然后如果你要是<strong>修改了一个缓存页</strong>，那么<strong>flush链表中会记录这个脏页</strong>，LRU链表中还可能会把你从<strong>冷数据区域移动到热 数据区域的头部去</strong>。</p>
+<p>​    如果你是查询了一个缓存页，那么此时就会把这个缓存页在lru链表中移动到热数据区域去，或者在热数据区域中也有 可能会移动到头部去。</p>
+<p>​    总之，MySQL在执行CRUD的时候，首先就是大量的操作缓存页以及对应的几个链表。然后在缓存页都满的时候，必 然要想办法把一些缓存页给刷入磁盘，然后清空这几个缓存页，接着把需要的数据页加载到缓存页里去！</p>
+<p>​    我们已经知道，他是根据LRU链表去淘汰缓存页的，那么他到底是什么时候把LRU链表的冷数据区域中的缓存页刷入磁 盘的呢？实际上他有几个时机。</p>
+<p>（1）    首先第一个时机，并不是在缓存页满的时候，才会挑选LRU冷数据区域尾部的几个缓存页刷入磁盘，而是有一个后台 线程，他会运行一个定时任务，这个定时任务每隔一段时间就会把LRU链表的冷数据区域的尾部的一些缓存页，刷入 磁盘里去，清空这几个缓存页，把他们加入回free链表去！</p>
+<p><img src="/2020/05/17/BufferPoo到底什么鬼和多个链表的关系/image-20200515094416088.png" alt="image-20200515094416088"></p>
+<p>经过上面的学习，我们知道flush链表也会有个线程同时把缓存页刷新回磁盘，同时也会删除flush链表和增加free链表空闲缓存页个数。</p>
+<blockquote>
+<p><strong>总而言之：</strong></p>
+</blockquote>
+<p>​    所以你可以理解为，你一边不停的加载数据到缓存页里去，不停的查询和修改缓存数据，然后free链表中的缓存页不停 的在减少，flush链表中的缓存页不停的在增加，lru链表中的缓存页不停的在增加和移动。</p>
+<p>​    另外一边，你的后台线程不停的在把lru链表的冷数据区域的缓存页以及flush链表的缓存页，刷入磁盘中来清空缓存 页，然后flush链表和lru链表中的缓存页在减少，free链表中的缓存页在增加。</p>
+<p>这就是一个动态运行起来的效果！</p>
+<p>​    实际上你会发现lru跟flush的作用有点类似，但是我们可以这么理解LRU是flush的应急措施（当负责将flush链表中的缓存页刷回磁盘的线程还没来得及将数据刷回磁盘时，此时free链表已经没有空闲块也就是bufferpool已经满了，那么如果再有查询请求到来，怎么让bufferpool腾出空间呢？这个时候LRU链表的好处就来了。），而且他们两者存放的数据类型不同（flush存放的是发生了更改操作时额数据描述块，LRU存放的时使用时的数据描述块（包含查询操作产生的数据描述块））</p>
+<p><strong>可以看到，mysql为了让CRUD尽可能在bufferpool中进行，做了很多工作，其中三个链表（free、flush、lru）就是提现</strong></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Buffer-Pool这个内存数据结构到底长个什么样子？&quot;&gt;&lt;a href=&quot;#Buffer-Pool这个内存数据结构到底长个什么样子？&quot; class=&quot;headerlink&quot; title=&quot;Buffer Pool这个内存数据结构到底长个什么样子？&quot;&gt;&lt;/a&gt;Bu
+    
+    </summary>
+    
+      <category term="Mysql" scheme="http://kingge.top/categories/Mysql/"/>
+    
+    
+      <category term="bufferpool" scheme="http://kingge.top/tags/bufferpool/"/>
+    
+      <category term="lru链表" scheme="http://kingge.top/tags/lru%E9%93%BE%E8%A1%A8/"/>
+    
+      <category term="flush链表" scheme="http://kingge.top/tags/flush%E9%93%BE%E8%A1%A8/"/>
+    
+      <category term="free链表" scheme="http://kingge.top/tags/free%E9%93%BE%E8%A1%A8/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Hessian 多系统访问</title>
     <link href="http://kingge.top/2020/05/06/Hessian%20%E5%A4%9A%E7%B3%BB%E7%BB%9F%E8%AE%BF%E9%97%AE/"/>
     <id>http://kingge.top/2020/05/06/Hessian 多系统访问/</id>
     <published>2020-05-06T13:26:31.834Z</published>
-    <updated>2017-08-31T09:44:24.038Z</updated>
+    <updated>2020-06-30T04:00:16.647Z</updated>
     
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">hessian</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using hessian, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
 <h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
@@ -191,7 +356,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;hessian&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://he
     
     </summary>
     
@@ -7748,595 +7913,6 @@ Eureka仍然能够接受新服务的注册和查询请求，但是不会被同�
       <category term="分布式" scheme="http://kingge.top/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
     
       <category term="rpc" scheme="http://kingge.top/tags/rpc/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>spring注解-辅助学习springboot和springcloud</title>
-    <link href="http://kingge.top/2019/03/14/spring%E6%B3%A8%E8%A7%A3-%E8%BE%85%E5%8A%A9%E5%AD%A6%E4%B9%A0springboot%E5%92%8Cspringcloud/"/>
-    <id>http://kingge.top/2019/03/14/spring注解-辅助学习springboot和springcloud/</id>
-    <published>2019-03-14T14:59:59.000Z</published>
-    <updated>2019-09-03T12:48:30.441Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h1><p> 因为后面要学习sb（springboot）和sc（springcloud），所以需要学习一些相关的注解和了解他们底层代码实现，例如@import注解，Aware接口，生命周期。</p>
-<p>​    通过前面几个章节的学习，你会发现无论springboot还是springcloud的很多知识都是来源于spring相关的知识，章节还有一些内容没有补充完整，后续如果有时间会逐步更新完成！！！</p>
-<h1 id="2-组件注册"><a href="#2-组件注册" class="headerlink" title="2.组件注册"></a>2.组件注册</h1><p>我们知道spring得IOC容器中存储了很多类的实例化对象，那么下面介绍几种往IOC容器中注册实体类的方式</p>
-<h2 id="2-1-xml配置文件实例化实体类（方式一）"><a href="#2-1-xml配置文件实例化实体类（方式一）" class="headerlink" title="2.1 xml配置文件实例化实体类（方式一）"></a>2.1 xml配置文件实例化实体类（方式一）</h2><ol>
-<li><p>首先新建spring.xml 文件，通过bean 标签实例化实体类</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414688035.png" alt="1567414688035"></p>
-</li>
-</ol>
-<p>2.通过ClassPathXmlApplicationContext获取实体类</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414725611.png" alt="1567414725611"></p>
-<p>缺点：大型项目的实体类会非常多，那么配置文件会变得非常的臃肿，而且也不易于维护。</p>
-<h2 id="2-2-使用-Configuration和-bean（方式二）"><a href="#2-2-使用-Configuration和-bean（方式二）" class="headerlink" title="2.2 使用@ Configuration和@bean（方式二）"></a>2.2 使用@ Configuration和@bean（方式二）</h2><p>Spring提供了配置实体类的第二种方式，就是不用通过书写xml文件，通过两个注解就可以达到2.1 的功能。</p>
-<ol>
-<li>编写配置类，配置bean</li>
-</ol>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414770812.png" alt="1567414770812"></p>
-<ol>
-<li><p>通过AnnotationConfigApplicationContext获取实体类</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414786811.png" alt="1567414786811"></p>
-</li>
-</ol>
-<p>这里是new了一个AnnotationConfigApplicationContext对象，以前new的ClassPathXmlApplicationContext对象，的构造函数里面传的是配置文件的位置，而现在AnnotationConfigApplicationContext对象的构造函数里面传的是配置类的类型</p>
-<h2 id="2-3-ComponentScan-自动扫描组件-amp-指定扫描规则（方式三）"><a href="#2-3-ComponentScan-自动扫描组件-amp-指定扫描规则（方式三）" class="headerlink" title="2.3 @ComponentScan-自动扫描组件&amp;指定扫描规则（方式三）"></a>2.3 @ComponentScan-自动扫描组件&amp;指定扫描规则（方式三）</h2><pre><code>**实际上这个注解跟前面两种方式是配合使用的，避免书写ClassPathXmlApplicationContext或者AnnotationConfigApplicationContext** **获取IOC容器。**
-</code></pre><p>我们知道，在实际开发中我们是不会通过ClassPathXmlApplicationContext这样的代码方式获取对象，而是通过包扫描的方式进行实例化对象并注入IOC容器中</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414821714.png" alt="1567414821714"></p>
-<p>他的扫描规则是：以下这几个注解都是继承自@Component</p>
-<p>@controller(给web层的注解)</p>
-<p>@service(给serivce层加的注解)</p>
-<p>@repository(给dao层加的注解) </p>
-<p>@component(给java类加注解,老版本spring只有这一个注解)</p>
-<p>只要书写了上面四个注解的类，那么会自动装配到ioc容器中。<strong>Id默认是类名首字母小写</strong></p>
-<h3 id="1-ComponentScan注解的结构"><a href="#1-ComponentScan注解的结构" class="headerlink" title="1. @ComponentScan注解的结构"></a>1. @ComponentScan注解的结构</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414886849.png" alt="1567414886849"></p>
-<p>1.这个注解上，也是可以指定要排除哪些包或者是只包含哪些包来进行管理：里面传是一个Filter[]数组。</p>
-<p>2.Value ：就相当于spring的xml配置文件-</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414894134.png" alt="1567414894134"></p>
-<h3 id="2-用例"><a href="#2-用例" class="headerlink" title="2.用例"></a>2.用例</h3><p>–那么我们使用配置类的方式实现component-sacn同样的功能</p>
-<p>1.首先在配置文件类，添加扫描的范围</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414906119.png" alt="1567414906119"></p>
-<p>2.添加几个注解类-</p>
-<p>@controller（UserController）</p>
-<p>@service（UserService）</p>
-<p>@repository （UserDao）</p>
-<p>@component（ComponentTest）</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414919145.png" alt="1567414919145"></p>
-<p>3.书写IOC</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414938745.png" alt="1567414938745"></p>
-<p>输出：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414956045.png" alt="1567414956045"></p>
-<p><strong>发现-扫描进入IOC容器的bean的id默认是：类名首字母小写</strong></p>
-<p>4.使用Filter去除某些注解类</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414983170.png" alt="1567414983170"></p>
-<p>根据注解的方式排除，排除使用@Controller注解注解的类</p>
-<p>–注意在使用includeFilters 扫描只包含那些组件的时候，要禁用spring默认全局扫描（跟配置文件一样，也是需要禁用的）</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567414996062.png" alt="1567414996062"></p>
-<p>例子4</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415050284.png" alt="1567415050284"></p>
-<h3 id="3-扩展"><a href="#3-扩展" class="headerlink" title="3.    扩展"></a>3.    扩展</h3><p>我们打开Component注解的源码，发现他是：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415143194.png" alt="1567415143194"></p>
-<p>多了Repeatable注解，也就是说明，这个Component注解是可以多次重复用的</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415194264.png" alt="1567415194264"></p>
-<p>那么你可能会问，如果不是jdk1.8,那么怎么书写多个扫描策略呢？</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415212225.png" alt="1567415212225"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415217769.png" alt="1567415217769"></p>
-<p>也就是说，我们可以在配置类，使用ComponentScans注解，配置多个扫描策略</p>
-<p>例子：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415246906.png" alt="1567415246906"></p>
-<p>跟 { 例子4 } 效果一样</p>
-<h4 id="4-1-FilterType-过滤规则"><a href="#4-1-FilterType-过滤规则" class="headerlink" title="4.1 FilterType 过滤规则"></a>4.1 FilterType 过滤规则</h4><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415321043.png" alt="1567415321043"></p>
-<p>下面我们注重讲解一下，CUSTOM 自定义实现类</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415342468.png" alt="1567415342468"></p>
-<p>需要先实现 TypeFilter</p>
-<p>1.首先定义一个扫描规则类</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415368545.png" alt="1567415368545"></p>
-<ol>
-<li>配置类，实现自定义过滤规则</li>
-</ol>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415379844.png" alt="1567415379844"></p>
-<p> 表示 – 扫描的类中如果包含er那么就会被过滤掉（注意：他是会取扫描com.kingge下面的所有类-<strong>包括哪些没有被注解，注解的类也会被扫描</strong>）</p>
-<h2 id="2-4-Import注解"><a href="#2-4-Import注解" class="headerlink" title="2.4      @Import注解"></a>2.4      @Import注解</h2><p><strong>有三种使用方式</strong></p>
-<p><strong>第一种写法</strong>：直接在import注解中配置需要导入的类</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415399146.png" alt="1567415399146"></p>
-<p>他在IOC容器中的id是：（全类名）</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415407178.png" alt="1567415407178"></p>
-<p>缺点：如果有多个类需要注入IOC，那么代码量就很长</p>
-<p><strong>第二种实现方式</strong>：自定义导入逻辑，批量导入，只需要返回需要导入的全类名数组</p>
-<p>  实现ImportSelector 类</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415418134.png" alt="1567415418134"></p>
-<p>配置类上使用</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415430330.png" alt="1567415430330"></p>
-<p>这样 pp就注入到了IOC 容器中</p>
-<p><strong>第三种方式</strong>：ImportBeanDefinitionRegistrar 实现这个类。</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415449102.png" alt="1567415449102"></p>
-<p>例子：</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415496868.png" alt="1567415496868"></p>
-<p>配置类引用</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415510372.png" alt="1567415510372"></p>
-<p>调用：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415521934.png" alt="1567415521934"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415535174.png" alt="1567415535174"></p>
-<h3 id="2-4-1-总结"><a href="#2-4-1-总结" class="headerlink" title="2.4.1 总结"></a>2.4.1 总结</h3><p>@Import[快速的给容器中导入一个组件]</p>
-<p>（1）、 @Import(要导入容器中的组件);容器中就会自动的注册这个组件，id默认是全类名</p>
-<p>（2）、 ImportSelector ：返回需要的组件的全类名的数组；</p>
-<p>（3）、 ImportBeanDefinitionRegistrar : 手动注册bean到容器中</p>
-<p> <strong>前面学习的springboot中，用到了该注解的次数很多。</strong></p>
-<h2 id="2-5-Factorybean-工厂bean"><a href="#2-5-Factorybean-工厂bean" class="headerlink" title="2.5 Factorybean 工厂bean"></a>2.5 Factorybean 工厂bean</h2><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415551953.png" alt="1567415551953"></p>
-<p>例子：</p>
-<p>1.实现这个工厂bean</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415565829.png" alt="1567415565829"></p>
-<p>getObject 方法：当调用bean时候，调用这个方法获取bean实例。</p>
-<p>getObjectType：返回对象类型</p>
-<p>isSIngleton: 是否是单例。False-表示是多例。True-表示是单例。（如果配置类中配置<strong>@Scope注解，企图改变UserDao的单实例，无效，以isDingleto方法设置为准</strong>）</p>
-<p>2.配置类配置</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415579392.png" alt="1567415579392"></p>
-<p>输出：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415589497.png" alt="1567415589497"></p>
-<blockquote>
-<p>输出：</p>
-<p>class com.kingge.dao.UserDao</p>
-<p>false</p>
-</blockquote>
-<p>、</p>
-<p>第二个输出肯定是false</p>
-<p>不过为什么第一个输出的是 Userdao的全类名而不是UserDaoFactoryBean的全类名呢？因为在构造的时候spring默认返回的就是getObjectType的值。</p>
-<p>那么怎么获取这个工厂bean呢？spring提供了一个方式：加上&amp;</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415621835.png" alt="1567415621835"></p>
-<p>输出：class com.kingge.utils.UserDaoFactoryBean</p>
-<h2 id="2-6-总结-组件注册"><a href="#2-6-总结-组件注册" class="headerlink" title="2.6 总结-组件注册"></a>2.6 总结-组件注册</h2><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415637061.png" alt="1567415637061"></p>
-<pre><code>/**
-
- \* 给容器中注册组件：
-
- \* 1）、扫描+组件标注注解（@Controller/@Service/@Repository/@Component）
-
- \* 【局限于要求是自己写的类，如果导入的第三方没有添加这些注解，那么就注册不上了】
-
- *
-
- \* 2）、@Bean[导入的第三方包里面的组件]
-
- \* 3）、@Import[快速的给容器中导入一个组件]
-
- \*      （1）、 @Import(要导入容器中的组件);容器中就会自动的注册这个组件，id默认是全类名
-
- \*      （2）、 ImportSelector ：返回需要的组件的全类名的数组；
-
- \*      （3）、 ImportBeanDefinitionRegistrar : 手动注册bean到容器中
-
- *
-
- \* 4）、使用Spring提供的FactoryBean（工厂bean）
-
- \*      （1）、默认获取到的是工厂bean调用getObject创建的对象
-
- \*      （2）、要获取工厂bean本身，我们需要给id前面加上一个“&amp;”符号：&amp;userDaoFactoryBean
-</code></pre><p>第一种方式：一般用于自己定义的类，但是如果我们是通过导入第三方jar的方式导入了很多组件（类），但是我想把这些类注册到IOC容器中怎么办呢？这个时候就需要使用bean注解的方式注册组件。</p>
-<p>第二种方式：可以实现自定义类或者第三方类的注入到IOC容器。缺点，那就是每实例化一个bean就得写个方法。这样代码量太多。</p>
-<p>第三种方式：import标签（作用在配置类）</p>
-<h1 id="3-修饰Bean的相关注解"><a href="#3-修饰Bean的相关注解" class="headerlink" title="3.修饰Bean的相关注解"></a>3.修饰Bean的相关注解</h1><h2 id="3-1-Scope注解"><a href="#3-1-Scope注解" class="headerlink" title="3.1 @Scope注解"></a>3.1 @Scope注解</h2><p>他一般是<strong>和@Bean注解配套使用</strong>，标识实体类的作用范围。我们知道IOC容器中的实体类，默认是单实例的。</p>
-<p>证明：</p>
-<ol>
-<li>自定义IOC容器-实现配置类</li>
-</ol>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415657803.png" alt="1567415657803"></p>
-<p>2.获取 Person实体类</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415670181.png" alt="1567415670181"></p>
-<p>我们不难发现-这里输出的是true，所以spring扫描bean策略默认是单实例。</p>
-<p>那么怎么修改这种作用域呢？</p>
-<p>查看Scope注解源码，发现可以指定这四种类型的作用范围</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415683803.png" alt="1567415683803"></p>
-<p>第一个是多实例，第二个是：单实例（<strong>默认值</strong>）</p>
-<p>第三个是：web环境下，用一个请求创建一次实例</p>
-<p>第四个是：web环境下，同一个session创建一次实例</p>
-<p>那么上诉代码只需要修改为</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415696308.png" alt="1567415696308"></p>
-<p>这样就是多实例。</p>
-<p><strong>总结：</strong></p>
-<p>   单实例：在IOC容器启动的时候就已经实例化好Person（调用getPerson实例化），那么每次获取的时候直接从IOC容器中拿。</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415714441.png" alt="1567415714441"></p>
-<p>这段代码运行时候会去调用getPerson方法完成实例</p>
-<p>多实例：IOC容器启动时，不会去实例化Person，而是每次获取的时候才会去调用getPerson获取对象。</p>
-<h2 id="3-2-Lazy注解"><a href="#3-2-Lazy注解" class="headerlink" title="3.2 @Lazy注解"></a>3.2 @Lazy注解</h2><p><strong>和@Bean注解配套使用，解决单实例bean在IOC容器启动就马上创建实例的问题。</strong></p>
-<p><strong>懒加载bean，这个只对于单实例的情况下才有用</strong></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415726984.png" alt="1567415726984"></p>
-<p>也就是IOC容器初始化的时候，不会去调用getPerson，实例化Person。<strong>第一次获取的时候才会去创建，以后再使用该实例化，会使用以前获取的</strong></p>
-<h2 id="3-3-Conditional"><a href="#3-3-Conditional" class="headerlink" title="3.3 @Conditional"></a>3.3 @Conditional</h2><p>根据满足某个特定的条件创建一个特定的Bean。</p>
-<p>因为我们可能存在一个需求那就是，根据不同的业务场景我们会有选择性的实例化某些bean，那么就可以使用这个注解。</p>
-<h3 id="1-例子"><a href="#1-例子" class="headerlink" title="1.例子"></a>1.例子</h3><p> 需求：根据不同的系统实例化不同的bean。</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415756903.png" alt="1567415756903"></p>
-<p>输出：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415769824.png" alt="1567415769824"></p>
-<p>l  <strong>增加需求</strong> <strong>–</strong> <strong>当使用windows系统时，在IOC容器中创建windows实体类，反之创建linux</strong> <strong>实体类</strong></p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415788706.png" alt="1567415788706"></p>
-<p>\1.      实现两个 条件类</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415816993.png" alt="1567415816993"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415830634.png" alt="1567415830634"></p>
-<p>2.配置类</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415842983.png" alt="1567415842983"></p>
-<p>\2.      实例化IOC 容器</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415854254.png" alt="1567415854254"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415865773.png" alt="1567415865773"></p>
-<p>你会发现仅仅只是实例化了windows，linux实体类已经不见了，那么说明是条件生效了。</p>
-<p>备注：</p>
-<p>   @Conditional注解是可以作用在配置类上面的，那么他的作用就是全局的条件，只有满足了这个条件，配置类里面的bean才能够实例化。（局部方法配置Conditional注解会失效）</p>
-<h1 id="4-生命周期"><a href="#4-生命周期" class="headerlink" title="4.生命周期"></a>4.生命周期</h1><pre><code>我们知道，Bean的生命周期是由IOC容器来管理的，那么我们也是可以自定义初始化方法和销毁方法。
-</code></pre><p>Bean生命周期：<strong>bean创建-初始化-销毁</strong>，那么下面我们将来介绍，能够控制Bean生命周期的几种方式。</p>
-<h2 id="4-1-init-method、destory-method-管理bean生命周期"><a href="#4-1-init-method、destory-method-管理bean生命周期" class="headerlink" title="4.1. init-method、destory-method 管理bean生命周期"></a>4.1. init-method、destory-method 管理bean生命周期</h2><p>需要注意的是，单实例和多实例的情况下，bean生命周期是不一样的。<strong>单实例bean的生命周期全部托管给IOC容器，多实例部分托管</strong>。</p>
-<h3 id="1-在配置文件XML中："><a href="#1-在配置文件XML中：" class="headerlink" title="1.在配置文件XML中："></a>1.在配置文件XML中：</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415958501.png" alt="1567415958501"></p>
-<p>这两个方法是来控制初始化和销毁的</p>
-<h3 id="2-代码控制初始化和销毁"><a href="#2-代码控制初始化和销毁" class="headerlink" title="2.代码控制初始化和销毁"></a>2.代码控制初始化和销毁</h3><h4 id="单实例情况下"><a href="#单实例情况下" class="headerlink" title="单实例情况下"></a>单实例情况下</h4><p>其实也就是在Bean注解，上填充init-method和destory-method方法</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415979268.png" alt="1567415979268"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415990937.png" alt="1567415990937"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567415998217.png" alt="1567415998217"></p>
-<p>输出：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416012675.png" alt="1567416012675"></p>
-<p><strong>因为是单实例的原因</strong>-所以容器启动的时候就开始调用了无参构造器创建对象，然后调用init初始化方法，容器关闭时，调用销毁方法.</p>
-<h4 id="多实例情况下"><a href="#多实例情况下" class="headerlink" title="多实例情况下"></a>多实例情况下</h4><p>我们把配置类获取Car对象的方法改为多实例的形式，观察输出。</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416024604.png" alt="1567416024604"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416034091.png" alt="1567416034091"></p>
-<p>输出</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416054016.png" alt="1567416054016"></p>
-<p>我们发现我们在关闭容器的时候，<strong>他并没有调用destory销毁实例</strong>，因为多实例的bean他是不归于容器管辖，需要我们自己手动销毁</p>
-<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h3><p>总的来说，bean在IOC容器的生命周期如下：</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416082833.png" alt="1567416082833"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">* 我们可以自定义初始化和销毁方法；容器在bean进行到当前生命周期的时候来调用我们自定义的初始化和销毁方法</div><div class="line">* </div><div class="line">* 构造（对象创建）</div><div class="line">* 		单实例：在容器启动的时候创建对象</div><div class="line">* 		多实例：在每次获取的时候创建对象</div><div class="line">* </div><div class="line">* BeanPostProcessor.postProcessBeforeInitialization</div><div class="line">* 初始化：</div><div class="line">* 		对象创建完成，并赋值好，调用初始化方法。。。</div><div class="line">* BeanPostProcessor.postProcessAfterInitialization</div><div class="line">* 销毁：</div><div class="line">* 		单实例：容器关闭的时候</div><div class="line">* 		多实例：容器不会管理这个bean；容器不会调用销毁方法；</div></pre></td></tr></table></figure>
-<h2 id="4-2-InitializingBean和DisposableBean-控制bean生命周期"><a href="#4-2-InitializingBean和DisposableBean-控制bean生命周期" class="headerlink" title="4.2 InitializingBean和DisposableBean 控制bean生命周期"></a>4.2 InitializingBean和DisposableBean 控制bean生命周期</h2><h3 id="1单实例情况下"><a href="#1单实例情况下" class="headerlink" title="1单实例情况下"></a>1单实例情况下</h3><p>1.新建Food类实现这两个接口</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416100346.png" alt="1567416100346"></p>
-<p>配置类扫描</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416118482.png" alt="1567416118482"></p>
-<p>测试</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416129315.png" alt="1567416129315"></p>
-<p>输出：</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416137640.png" alt="1567416137640"></p>
-<p>很明显单实例情况下，bean的生命周期是全部托管到IOC容器中。</p>
-<h3 id="2-多实例情况下"><a href="#2-多实例情况下" class="headerlink" title="2.多实例情况下"></a>2.多实例情况下</h3><p>如果Food注入IOC容器时，选择多实例的方式的话，那么上面的案例在启动IOC容器时，不会有任何输出，因为多实例的情况下只有获取对象才会去做相关的初始化工作。</p>
-<p>验证1：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416163330.png" alt="1567416163330"></p>
-<p>没有任何输出。</p>
-<p>验证2：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416175448.png" alt="1567416175448"></p>
-<p>输出：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416191108.png" alt="1567416191108"></p>
-<h3 id="3-总结-1"><a href="#3-总结-1" class="headerlink" title="3.总结"></a>3.总结</h3><blockquote>
-<p><strong>很明显没有调用DisposableBean接口的destory方法和自定义的destory方法。</strong></p>
-<p><strong>也就是说在多实例的情况下IOC容器只帮我们做创建和初始化bean的工作，但是销毁bean的工作他没有帮我们做，需要自己去实现。</strong></p>
-</blockquote>
-<h2 id="4-3-PostConstruct和-PreDestroy注解"><a href="#4-3-PostConstruct和-PreDestroy注解" class="headerlink" title="4.3 @PostConstruct和@PreDestroy注解"></a>4.3 @PostConstruct和@PreDestroy注解</h2><p>这两个注解是作用在方法上面的。</p>
-<p>可以使用JSR250规范里面定义的两个注解：</p>
-<p>@PostConstruct :在bean创建完成并且属性赋值完成，来执行初始化方法</p>
-<p>@PreDestroy ：在容器销毁bean之前通知我们来进行清理工作</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416209944.png" alt="1567416209944"></p>
-<p>初始化容器</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416222017.png" alt="1567416222017"></p>
-<p>输出：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416237939.png" alt="1567416237939"></p>
-<p>很明显-这两个注解的作用比4.2章节的两个接口的重载方法的调用更早，注意看官方的 注释说明</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416255764.png" alt="1567416255764"></p>
-<p><strong>注意：这两个注解注解的方法，无返回值（void）</strong></p>
-<h2 id="4-4-BeanPostProcessor-后置处理接口（重要）"><a href="#4-4-BeanPostProcessor-后置处理接口（重要）" class="headerlink" title="4.4 BeanPostProcessor 后置处理接口（重要）"></a>4.4 BeanPostProcessor 后置处理接口（重要）</h2><p>我们发现上面三种管理bean生命周期的方式，他们的方法是没有入参和出参的。，下面这种方式提供了</p>
-<p>BeanPostProcessor接口：bean的后置处理器，在bean初始化前后做一些处理工作，这个接口有两个方法：</p>
-<p>postProcessBeforeInitialization：在初始化之前工作</p>
-<p>postProcessAfterInitialization：在初始化之后工作</p>
-<p>（1）. 实现Food实体类</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416280606.png" alt="1567416280606"></p>
-<p>（2）.配置类</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416311128.png" alt="1567416311128"></p>
-<p>（3）.  启动容器查看输出</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416341585.png" alt="1567416341585"></p>
-<p>（4）输出</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416364626.png" alt="1567416364626"></p>
-<p><strong>他没有销毁方法。</strong></p>
-<h2 id="4-1-4-4总结"><a href="#4-1-4-4总结" class="headerlink" title="4.1-4.4总结"></a>4.1-4.4总结</h2><p>上面这四种方式调用顺序</p>
-<p>对象构造器 –&gt;&gt; PostConstruct -&gt;&gt; afterPropertiesSet -&gt;&gt; init-method -&gt;&gt; <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416382230.png" alt="1567416382230"> -&gt;&gt;   <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416398530.png" alt="1567416398530">-&gt;&gt;PreDestroy注解 自定义实现的destory方法-&gt;&gt; DisposableBean的destroy方法 -&gt;&gt;Food 自定义实现的destoryMethod方法</p>
-<p>销毁：</p>
-<p>  @PreDestroy注解的 PreDestroy —》DisposableBean接口的destory —》 destroy-method</p>
-<h2 id="4-5BeanPostProcessor-原理"><a href="#4-5BeanPostProcessor-原理" class="headerlink" title="4.5BeanPostProcessor 原理"></a>4.5BeanPostProcessor 原理</h2><h3 id="1-两个方法打上断点"><a href="#1-两个方法打上断点" class="headerlink" title="1.两个方法打上断点"></a>1.两个方法打上断点</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416431574.png" alt="1567416431574"></p>
-<p>Dubug方式启动IOC容器</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416442452.png" alt="1567416442452"></p>
-<p>2.查看方法栈调用</p>
-<p>创建容器构造器</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416469689.png" alt="1567416469689"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416483129.png" alt="1567416483129"></p>
-<pre><code>前置处理器调用的方法：调用getBeanPostProcessors()方法找到容器里面的所有的BeanPostProcessor，挨个遍历，调用BeanPostProcessor的postProcessBeforeInitialization方法，一旦调用postProcessBeforeInitialization方法的返回值为null的时候，就直接跳出遍历 ，后面的BeanPostProcessor 的postProcessBeforeInitialization也就不会执行了：
-</code></pre><p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416501945.png" alt="1567416501945"></p>
-<p>后置处理器调用的方法：调用getBeanPostProcessors()方法找到容器里面的所有的BeanPostProcessor，挨个遍历，调用BeanPostProcessor的postProcessAfterInitialization方法，一旦调用postProcessAfterInitialization方法的返回值为null的时候，就直接跳出遍历 ，后面的BeanPostProcessor 的postProcessAfterInitialization也就不会执行了：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416524867.png" alt="1567416524867"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416538029.png" alt="1567416538029"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416547870.png" alt="1567416547870"></p>
-<h3 id="2-BeanPostProcessor在springboot中的使用"><a href="#2-BeanPostProcessor在springboot中的使用" class="headerlink" title="2.BeanPostProcessor在springboot中的使用"></a>2.BeanPostProcessor在springboot中的使用</h3><p>查看该接口的实现类</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416562220.png" alt="1567416562220"></p>
-<p>这个接口，其实在spring的IOC容器中使用的频率是很多的，而且spring提供了很多实现类，例如如果我们想在bean中使用IOC容器的话，那么就可以使用</p>
-<h3 id="1-ApplicationContextAwareProcessor"><a href="#1-ApplicationContextAwareProcessor" class="headerlink" title="1.ApplicationContextAwareProcessor"></a>1.ApplicationContextAwareProcessor</h3><p>给实体类，注入IOC容器。</p>
-<p>ApplicationContextAware 接口，注入IOC容器</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416620035.png" alt="1567416620035"></p>
-<p>例如：Dog实体类需要使用到IOC容器，那么就可以实现这个接口</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416633367.png" alt="1567416633367"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416638886.png" alt="1567416638886"></p>
-<p>然后 他实际上是去 调用这个ApplicationContextAwareProcessor，方法，在创建Dog 对象他会去调用 postProcessBeforeInitialization 方法，判断实例化</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416668422.png" alt="1567416668422"></p>
-<p>然后判断当前Dog实体类是否实现了ApplicationContextAware，如果是，那么调用invokeAwareInterface注入，IOC容器。</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416682517.png" alt="1567416682517"></p>
-<p>最终去调用 Dog的 setApplicationContext 方法，赋值。</p>
-<h3 id="1-BeanValidationPostProcessor"><a href="#1-BeanValidationPostProcessor" class="headerlink" title="1.    BeanValidationPostProcessor"></a>1.    BeanValidationPostProcessor</h3><p>实体类校验，后置处理器</p>
-<h3 id="2-InitDestroyAnnotationBeanPostProcessor"><a href="#2-InitDestroyAnnotationBeanPostProcessor" class="headerlink" title="2.InitDestroyAnnotationBeanPostProcessor"></a>2.InitDestroyAnnotationBeanPostProcessor</h3><p>这个处理类，就是处理，我们3.3章节的两个注解。</p>
-<h3 id="3-AutowiredAnnotationBeanPostProcessor"><a href="#3-AutowiredAnnotationBeanPostProcessor" class="headerlink" title="3.AutowiredAnnotationBeanPostProcessor"></a>3.AutowiredAnnotationBeanPostProcessor</h3><p>这个类就是处理我们的Autoware注解的</p>
-<h3 id="4-BeanFactoryPostProcessor"><a href="#4-BeanFactoryPostProcessor" class="headerlink" title="4. BeanFactoryPostProcessor"></a>4. BeanFactoryPostProcessor</h3><p>BeanFactory的后置处理器，在BeanFactory的标准初始化之后调用</p>
-<p>所有bean的定义已经保存加载到BeanFactory，但是bean的实例还未创建</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416709158.png" alt="1567416709158"></p>
-<p>运行IOC容器</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416721160.png" alt="1567416721160"></p>
-<p>查看输出：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416731721.png" alt="1567416731721"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416742609.png" alt="1567416742609"></p>
-<p><strong>很明显他是在bean实例创建之前执行的。</strong></p>
-<p>  BeanFactoryPostProcessor原理:</p>
-<p>  1)、ioc容器创建对象</p>
-<p>  2)、invokeBeanFactoryPostProcessors(beanFactory);</p>
-<pre><code>如何找到所有的BeanFactoryPostProcessor并执行他们的方法；
-
-          1）、直接在BeanFactory中找到所有类型是BeanFactoryPostProcessor的组件，并执行他们的方法
-
-          2）、在初始化创建其他组件前面执行
-</code></pre><h3 id="5-BeanDefinitionRegistryPostProcessor"><a href="#5-BeanDefinitionRegistryPostProcessor" class="headerlink" title="5.BeanDefinitionRegistryPostProcessor"></a>5.BeanDefinitionRegistryPostProcessor</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416769528.png" alt="1567416769528"></p>
-<p>启动ioc容器查看输出</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416783886.png" alt="1567416783886"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416793969.png" alt="1567416793969"></p>
-<h3 id="6-ApplicationListener"><a href="#6-ApplicationListener" class="headerlink" title="6. ApplicationListener"></a>6. ApplicationListener</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416807398.png" alt="1567416807398"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416820306.png" alt="1567416820306"></p>
-<h1 id="5-属性赋值"><a href="#5-属性赋值" class="headerlink" title="5.属性赋值"></a>5.属性赋值</h1><h2 id="5-1-Value注解"><a href="#5-1-Value注解" class="headerlink" title="5.1 @Value注解"></a>5.1 @Value注解</h2><p>这个注解一般是作用在类的属性上面，他的作用等同于</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417097750.png" alt="1567417097750"></p>
-<p>那么他可以书写那些值呢？</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416934645.png" alt="1567416934645"></p>
-<p>第三种是取配置文件的数据</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416950884.png" alt="1567416950884"></p>
-<p>那么怎么使用 第三种方式赋值呢？下面讲解</p>
-<h2 id="5-2-PropertySource-注解"><a href="#5-2-PropertySource-注解" class="headerlink" title="5.2 @ PropertySource 注解"></a>5.2 @ PropertySource 注解</h2><p>他的作用相当于XML的：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567416959675.png" alt="1567416959675"></p>
-<p>1.配置类添加配置注解</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417123219.png" alt="1567417123219"></p>
-<p>2.Person实体类</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417130983.png" alt="1567417130983"></p>
-<p>输出：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417138775.png" alt="1567417138775"></p>
-<p>我们也可以通过IOC容器手动的去获取配置的信息</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417160484.png" alt="1567417160484"></p>
-<h2 id="3-3-通过实现-EmbeddedValueResolverAware-获取属性值"><a href="#3-3-通过实现-EmbeddedValueResolverAware-获取属性值" class="headerlink" title="3.3   通过实现 EmbeddedValueResolverAware 获取属性值"></a>3.3   通过实现 EmbeddedValueResolverAware 获取属性值</h2><p>l  <strong>见6.5</strong> <strong>章节</strong></p>
-<h1 id="6-自动装配"><a href="#6-自动装配" class="headerlink" title="6.自动装配"></a>6.自动装配</h1><h2 id="6-1-Autowire、-Qualifier、-Primary（spring规范的注解）"><a href="#6-1-Autowire、-Qualifier、-Primary（spring规范的注解）" class="headerlink" title="6.1 @Autowire、@Qualifier、@Primary（spring规范的注解）"></a>6.1 @Autowire、@Qualifier、@Primary（spring规范的注解）</h2><p>在spring的项目中我们是经常这个Autowire来进行实体类之间的依赖注入，他的注入规则是：</p>
-<p>\1.      默认按照类型去IOC容器中查找需要的实体类（例如UserDao.class）</p>
-<p>\2.      如果找到多个同类型的实体类，那么他会根据属性名作为组件ID去进一步匹配。</p>
-<p>例如：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417175481.png" alt="1567417175481"></p>
-<p>然后IOC容器中有两个UserDao实例，一个是ID为userDao，一个ID为userDao1.</p>
-<p>那么上面service注入的是哪一个呢？</p>
-<p>  答案：注入的是ID为userDao的实体类。如果想要注入userDao1，那么应该把属性名改为userDao1</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417185951.png" alt="1567417185951"></p>
-<p>@Qualifier，指定需要装配的ID，取消默认根据属性名去匹配。</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417197152.png" alt="1567417197152"> 默认是必须找到需要的依赖实体类，然后注入Service，否则就会报错，我们可以使用required属性来控制</p>
-<p>@Primary ： <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417205766.png" alt="1567417205766"></p>
-<p>这个注解是作用在被依赖的实体类（UserDao）上面，明确指定，当某个类（UserService）依赖这个实体类的时候，假设IOC容器中存在多个相同类型的被依赖类（UserDao）那么首选呗Primary注解的被依赖类。（</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417215346.png" alt="1567417215346"></p>
-<p>如果UserService同时使用了@Qualifier<strong>注解</strong> ，那么@Primary的效果将会失效，以Qualifier注解需要的ID为主</p>
-<h3 id="Autowire注解扩展"><a href="#Autowire注解扩展" class="headerlink" title="@Autowire注解扩展"></a>@Autowire注解扩展</h3><p>他可以标在构造器上，方法上</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417225715.png" alt="1567417225715"></p>
-<h2 id="6-2-Resource、-Inject（java规范的注解）"><a href="#6-2-Resource、-Inject（java规范的注解）" class="headerlink" title="6.2 @Resource、@Inject（java规范的注解）"></a>6.2 @Resource、@Inject（java规范的注解）</h2><pre><code>![1567417242591](spring注解-辅助学习springboot和springcloud\1567417242591.png)
-</code></pre><p><strong>@Resource注解</strong></p>
-<p>他的作用跟@Autowire注解的作用是一样的，默认根据属性名进行装配。Name属性可以更改装配的id</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417260280.png" alt="1567417260280"></p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417265681.png" alt="1567417265681"></p>
-<p><strong>@Inject</strong> <strong>的使用，需要添加依赖</strong></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417277299.png" alt="1567417277299"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417283634.png" alt="1567417283634"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417290770.png" alt="1567417290770"></p>
-<p>支持@Primary功能，但是他没有属性</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417301282.png" alt="1567417301282"></p>
-<h2 id="6-3-Aware接口-（重要）"><a href="#6-3-Aware接口-（重要）" class="headerlink" title="6.3 Aware接口 （重要）"></a>6.3 Aware接口 （重要）</h2><p>自定义组件想要使用Spring容器底层的一些组件（ApplicationContext、BeanFactory…）</p>
-<p>自定义组件实现xxxAware接口就可以实现，在创建对象的时候，会调用接口规定的方法注入相关的组件，把Spring底层的一些组件注入到自定义的bean中。 xxxAware等这些都是</p>
-<p>利用<strong>后置处理器的机制</strong>，比如ApplicationContextAware 是通过ApplicationContextAwareProcessor来进行处理的。</p>
-<p>如果我们想在自定义实体类中，使用IOC容器的context怎么办呢？</p>
-<p>例子：我有在第四章节中 BeanPostProcessor中讲过。</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417315217.png" alt="1567417315217"></p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417323109.png" alt="1567417323109"></p>
-<p>例子：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417358798.png" alt="1567417358798"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417366098.png" alt="1567417366098"></p>
-<h3 id="1-下面我们就是用一个例子来详细讲解一下Aware接口的工作流程。"><a href="#1-下面我们就是用一个例子来详细讲解一下Aware接口的工作流程。" class="headerlink" title="1.下面我们就是用一个例子来详细讲解一下Aware接口的工作流程。"></a>1.下面我们就是用一个例子来详细讲解一下Aware接口的工作流程。</h3><p>（1）.实现一个entity，实现<strong>ApplicationContextAware</strong> 接口</p>
-<p>实现该接口的setApplicationContext方法。</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417382674.png" alt="1567417382674"></p>
-<p>（2）. 配置类，配置Blue实体类，实例化到IOC容器中</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417392347.png" alt="1567417392347"></p>
-<p>（3）.获取IOC容器</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417433281.png" alt="1567417433281"></p>
-<p>（4）输出</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417443301.png" alt="1567417443301"></p>
-<h3 id="2-源码分析"><a href="#2-源码分析" class="headerlink" title="2.源码分析"></a>2.源码分析</h3><p>在setApplicationContext 打个断点。</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417460772.png" alt="1567417460772"></p>
-<p>发现他是去调用 ApplicationContextAwareProcessor 实体类，这个实体类实现了BeanPostProcessor 后置处理器。</p>
-<p>2.执行postProcessBeforeInitialization 前置方法，判断当前的实体类是否继承了某些接口。做一些权限判断</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417474653.png" alt="1567417474653"></p>
-<p>3.然后调用 invokeAwareInterfaces ，紧接着调用实体类实现的 <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417484555.png" alt="1567417484555"> 方法，注入IOC容器</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417501646.png" alt="1567417501646"></p>
-<h2 id="6-4-Profile注解"><a href="#6-4-Profile注解" class="headerlink" title="6.4 @Profile注解"></a>6.4 @Profile注解</h2><pre><code>和Springboot的profile是一致的。
-</code></pre><p>@profile注解是spring提供的一个用来标明当前运行环境的注解。我们正常开发的过程中经常遇到的问题是，开发环境是一套环境，qa测试是一套环境，线上部署又是一套环境。这样从开发到测试再到部署，会对程序中的配置修改多次，尤其是从qa到上线这个环节，让qa的也不敢保证改了哪个配置之后能不能在线上运行。</p>
-<p>为了解决上面的问题，我们一般会使用一种方法，就是配置文件，然后通过不同的环境读取不同的配置文件，从而在不同的场景中跑我们的程序。</p>
-<p>那么，spring中的@profile注解的作用就体现在这里。在spring使用DI来依赖注入的时候，能够根据当前制定的运行环境来注入相应的bean。最常见的就是使用不同的DataSource了。</p>
-<p><strong>下面-结合</strong> <strong>properties配置文件的三种注入方式来讲解一下@Profile注解的用法</strong></p>
-<p>—-以作用在方法上，表示只要在当前设置的环境下才会往IOC容器中注册当前bean。</p>
-<p>—-作用在类上面 </p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417520813.png" alt="1567417520813"></p>
-<p>类里面的所有bean，能够被注册到IOC容器中的条件是：只要开发环境满足了当前配置类上面的Prifile注解标识的环境。 </p>
-<p>例如：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417527878.png" alt="1567417527878"></p>
-<p>主要开发环境是test 里面的bean才能够被注册。</p>
-<p>-</p>
-<h2 id="6-5-profile的使用"><a href="#6-5-profile的使用" class="headerlink" title="6.5 @profile的使用"></a>6.5 @profile的使用</h2><p>我们知道，如果在组件上标识了这个注解，那么如果没有激活，那么就不会被注册到IOC容器中。通过这个特性来过滤一些组件的注册。</p>
-<p>@Profile(“default”) 是默认注册某个bean</p>
-<p>1.配置类</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417566591.png" alt="1567417566591"></p>
-<p>2.测试</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417580291.png" alt="1567417580291"></p>
-<p>输出：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417588458.png" alt="1567417588458"></p>
-<p>很明显，三个配置都没有被注册在IOC容器中，因为没有指定运行环境。</p>
-<p>\3.      制定运行环境（第一种方式：虚拟机参数位置添加-Dspring.profiles.active=test）</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417616396.png" alt="1567417616396"></p>
-<p>这样</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417625690.png" alt="1567417625690"> 就会输出了。</p>
-<p>\4.      制定运行环境（第二种方式-代码方式）</p>
-<p> <img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417638837.png" alt="1567417638837"></p>
-<p>可以指定多个配置环境</p>
-<p>输出：</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417653302.png" alt="1567417653302"></p>
-<h1 id="7-AOP"><a href="#7-AOP" class="headerlink" title="7.AOP"></a>7.AOP</h1><blockquote>
-<p> 什么叫AOP和他的作用</p>
-</blockquote>
-<p>在程序运行期间，动态的将某段代码切入到指定方法运行时的指定时机运行，其实就是动态代理。</p>
-<blockquote>
-<p>作用场景</p>
-</blockquote>
-<pre><code>可以在某个业务实现的过程前后，或者出现异常，进行一些额外业务的操作。例如当你调用add()方法进行加法运算的时候，我们可以在调用方法前，得到结果后，或者出现异常时，记录一些日志。以前我们传统的做法是，在方法里面打印日志（System.out.println）,但是这样会造成耦合，而且我们也想把打印日志抽离成一个统一的模块。
-</code></pre><h2 id="1-例子-1"><a href="#1-例子-1" class="headerlink" title="1.  例子"></a>1.  例子</h2><p> Maven依赖：spring提供了对AOP的支持</p>
-<h3 id="（1）导入aop依赖"><a href="#（1）导入aop依赖" class="headerlink" title="（1）导入aop依赖"></a>（1）导入aop依赖</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects --&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spring-aspects&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;4.3.14.RELEASE&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
-<h3 id="（2）MathCalculator-java"><a href="#（2）MathCalculator-java" class="headerlink" title="（2）MathCalculator.java"></a>（2）MathCalculator.java</h3><pre><code>业务逻辑类：要求在业务方法运行时打印日志
-</code></pre><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417713757.png" alt="1567417713757"></p>
-<h3 id="（3）：日志切面类：LogAspects-java"><a href="#（3）：日志切面类：LogAspects-java" class="headerlink" title="（3）：日志切面类：LogAspects.java"></a>（3）：日志切面类：LogAspects.java</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">package com.kingge.aop;</div><div class="line"></div><div class="line">import java.util.Arrays;</div><div class="line"></div><div class="line">import org.aspectj.lang.JoinPoint;</div><div class="line">import org.aspectj.lang.annotation.After;</div><div class="line">import org.aspectj.lang.annotation.AfterReturning;</div><div class="line">import org.aspectj.lang.annotation.AfterThrowing;</div><div class="line">import org.aspectj.lang.annotation.Aspect;</div><div class="line">import org.aspectj.lang.annotation.Before;</div><div class="line">import org.aspectj.lang.annotation.Pointcut;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 切面类</div><div class="line"> * @Aspect： 告诉Spring当前类是一个切面类</div><div class="line"> *</div><div class="line"> */</div><div class="line">@Aspect</div><div class="line">public class LogAspects &#123;</div><div class="line"></div><div class="line">	//抽取公共的切入点表达式</div><div class="line">	//1、本类引用</div><div class="line">	//2、其他的切面引用</div><div class="line">	@Pointcut(&quot;execution(public int com.kingge.aop.MathCalculator.*(..))&quot;)</div><div class="line">	public void pointCut()&#123;&#125;;</div><div class="line"></div><div class="line">	//@Before在目标方法之前切入；切入点表达式（指定在哪个方法切入）</div><div class="line">	@Before(&quot;pointCut()&quot;)</div><div class="line">	public void logStart(JoinPoint joinPoint)&#123;</div><div class="line">		Object[] args = joinPoint.getArgs();</div><div class="line">		System.out.println(&quot;&quot;+joinPoint.getSignature().getName()+&quot;运行。。。@Before:参数列表是：&#123;&quot;+Arrays.asList(args)+&quot;&#125;&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@After(&quot;com.kingge.aop.LogAspects.pointCut()&quot;)</div><div class="line">	public void logEnd(JoinPoint joinPoint)&#123;</div><div class="line">		System.out.println(&quot;&quot;+joinPoint.getSignature().getName()+&quot;结束。。。@After&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	//JoinPoint一定要出现在参数表的第一位</div><div class="line">	@AfterReturning(value=&quot;pointCut()&quot;,returning=&quot;result&quot;)</div><div class="line">	public void logReturn(JoinPoint joinPoint,Object result)&#123;</div><div class="line">		System.out.println(&quot;&quot;+joinPoint.getSignature().getName()+&quot;正常返回。。。@AfterReturning:运行结果：&#123;&quot;+result+&quot;&#125;&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@AfterThrowing(value=&quot;pointCut()&quot;,throwing=&quot;exception&quot;)</div><div class="line">	public void logException(JoinPoint joinPoint,Exception exception)&#123;</div><div class="line">		System.out.println(&quot;&quot;+joinPoint.getSignature().getName()+&quot;异常。。。异常信息：&#123;&quot;+exception+&quot;&#125;&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<pre><code>这四个方法，都是作用在MathCalculator的add方法，那么他们的切入点表达式都是一样的，为了避免重复书写，我们一般采用抽取公共切入点的方式，抽取出来，复用。---- 使用@PoinCut注解
-</code></pre><blockquote>
-<p> 切面类中的方法也称为通知方法：</p>
-<p>  前置通知(@Before)：在目标方法运行之前运行</p>
-<p>  后置通知(@After)：在目标方法运行之后运行，即使出现异常也会运行</p>
-<p>  返回通知(@AfterReturning)：在目标方法正常返回之后运行</p>
-<p>  异常通知(@AfterThrowing)：在目标方法运行出现异常之后运行</p>
-<p>  环绕通知(@Around)：动态代理，手动推进目标方法的运行</p>
-</blockquote>
-<h3 id="（4）开启spring切面自动代理"><a href="#（4）开启spring切面自动代理" class="headerlink" title="（4）开启spring切面自动代理"></a>（4）开启spring切面自动代理</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417746703.png" alt="1567417746703"></p>
-<pre><code>**使用Spring的切面需要开启Spring的切面自动代理，只需要在配置类中加注解@EnableAspectJAutoProxy，Spring中有很多@EnableXxx（关于这点我们在springcloud中使用的最多，自动配置）注解，用来开启一些功能**
-</code></pre><blockquote>
-<pre><code>配置bean怎么区分哪个bean是切面类呢，它会看哪个类上有@Aspect注解，另外切面方法的执行仅对Spring容器中的bean起作用，对于我们自己new出来的对象是不起作用的，原因也很简单，我们自己创建的bean并没有被spring管理，也就没有为其设置切面方法等。
-
-    通过JoinPoint对象获取调用目标方法时的信息，比如方法名、参数等，使用returning指定用通知方法的哪个入参接收返回值，使用throwing指定用哪个入参接收异常，另外如果使用JoinPoint，则必须将其放在切面方法入参的第一个位置，否则会报错
-</code></pre></blockquote>
-<h3 id="（5）测试"><a href="#（5）测试" class="headerlink" title="（5）测试"></a>（5）测试</h3><blockquote>
-<p> 正常计算</p>
-</blockquote>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417764521.png" alt="1567417764521"></p>
-<blockquote>
-<p>错误计算</p>
-</blockquote>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567472449448.png" alt="1567472449448"></p>
-<p>给一个出现异常的 1 /0 运算处理，查看日志。</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417773670.png" alt="1567417773670"></p>
-<p>你会发现，无论是否出现异常 logStart 和 logEnd 都会正常输出，如果正常返回那么<code>@AfterReturning标识的方法</code>会被调用，如果运算发生异常那么<code>@AfterReturning标识的方法</code>不会被调用，而<code>@AfterThrowing标识的异常处理方法会被调用</code></p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417705277.png" alt="1567417705277"></p>
-<h2 id="2-AOP原理"><a href="#2-AOP原理" class="headerlink" title="2.  AOP原理"></a>2.  AOP原理</h2><p>通过上面的例子我们知道，实现AOP的关键点在于我么能使用@EnableAspectJAutoProxy注解，那么接下来我们查看一下这个注解到底做了什么工作</p>
-<h3 id="1-查看-EnableAspectJAutoProxy注解"><a href="#1-查看-EnableAspectJAutoProxy注解" class="headerlink" title="1.查看@EnableAspectJAutoProxy注解"></a>1.查看@EnableAspectJAutoProxy注解</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417786810.png" alt="1567417786810"></p>
-<p>两个属性的含义：</p>
-<blockquote>
-<pre><code>英文注解已经很详细了,这里简单介绍一下两个参数,一个是控制aop的具体实现方式,为true 的话使用cglib,为false的话使用java的Proxy,默认为false,第二个参数控制代理的暴露方式,解决内部调用不能使用代理的场景，默认为false
-</code></pre></blockquote>
-<h3 id="2-查看一下-AspectJAutoProxyRegistrar-java-到底导入了哪些类"><a href="#2-查看一下-AspectJAutoProxyRegistrar-java-到底导入了哪些类" class="headerlink" title="2.查看一下 AspectJAutoProxyRegistrar.java 到底导入了哪些类"></a>2.查看一下 AspectJAutoProxyRegistrar.java 到底导入了哪些类</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417799676.png" alt="1567417799676"></p>
-<p>很明显这个类是采用了ImportBeanDefinitionRegistrar的方式注册了某些类大oIOC容器中，那么我们看一下他到底注入了什么类。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">核心是这里： AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry);</div></pre></td></tr></table></figure>
-<pre><code>一个AOP的工具类,这个工具类的主要作用是把AnnotationAwareAspectJAutoProxyCreator这个类定义为BeanDefinition放到spring容器中,这是通过实现ImportBeanDefinitionRegistrar接口来装载的,具体装载过程不是本篇的重点,这里就不赘述,我们重点看AnnotationAwareAspectJAutoProxyCreator这个类.
-</code></pre><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567438805334.png" alt="1567438805334"></p>
-<pre><code>从类图是可以大致了解AnnotationAwareAspectJAutoProxyCreator这个类的功能.它实现了一系列Aware的接口,在Bean装载的时候获取BeanFactory(Bean容器),Bean的ClassLoader,还实现了order接口,继承了PorxyConfig,ProxyConfig中主要封装了代理的通用处理逻辑,比如设置目标类,设置使用cglib还是java proxy等一些基础配置.
-
-而能够让这个类参与到bean初始化功能,并为bean添加代理功能的还是因为它实现了BeanPostProcessor这个接口.这个接口的postProcessAfterInitialization方法会在bean初始化结束后(赋值完成)被调用。
-</code></pre><h3 id="3-最顶部的抽象类-AbstractAutoProxyCreator"><a href="#3-最顶部的抽象类-AbstractAutoProxyCreator" class="headerlink" title="3.最顶部的抽象类:AbstractAutoProxyCreator"></a>3.最顶部的抽象类:AbstractAutoProxyCreator</h3><p>注意看bean初始化的方法</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439298675.png" alt="1567439298675"></p>
-<pre><code>当我们开启了EbableAspectJAutoProxy后,每次Bean的装配时,都会执行这段逻辑.前面主要是校验是否需要对bean进行代理(特殊的类,和已经被代理),核心逻辑在后面几行.getAdvicesAndAdvisorsForBean方法来获取所有符合条件的切面,具体的实现在子类,这里是抽象方法,获取切面后就是创建代理:
-</code></pre><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439441240.png" alt="1567439441240"></p>
-<p>TargetSource中存放被代理的对象,这段代码主要是为了构建ProxyFactory,将配置信息(是否使用java proxy,是否threadlocal等),目标类,切面,传入ProxyFactory中,而在ProxyFactory中,会通过createAopProxy()方法创建代理工厂DefaultAopProxyFactory,由代理厂生成具体的代理对目标类进行代理:</p>
-<p>进入<code>proxyFactory.getProxy(getProxyClassLoader());</code> 的<code>getProxy()</code>方法 </p>
-<p>跳到</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439674687.png" alt="1567439674687"></p>
-<p>进入<code>createAopProxy()</code>，跳转到</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439733523.png" alt="1567439733523"></p>
-<p>我们可以查看AopProxy的都有哪些 ，在AOpProxy上按键：ctrl t，</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439796941.png" alt="1567439796941"></p>
-<p>很明显有我们熟悉的cglib和jdk、默认的实现</p>
-<p>紧接着进入<code>createAopProxy(this)</code></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567439888919.png" alt="1567439888919"></p>
-<p>是个接口，查看他的默认实现类。</p>
-<h3 id="4-DefaultAopProxyFactory-aop代理获取类"><a href="#4-DefaultAopProxyFactory-aop代理获取类" class="headerlink" title="4. DefaultAopProxyFactory aop代理获取类"></a>4. DefaultAopProxyFactory aop代理获取类</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/C1567439971239.png" alt="1567439971239"></p>
-<p>可以看到,在这里有我们在注解中设置的参数的判断逻辑,是创建java代理,还是cglib代理，有关cglib的讲解请看<a href="http://www.cnblogs.com/foreveravalon/p/8489907.html" target="_blank" rel="external">cglib的使用</a>.</p>
-<p>我们主要看一下JdkDynamicAopProxy的实现，因为我们没有设置<code>@EnableAspectJAutoProxy(proxyTargetClass=true)</code> 所以我们默认使用jdk自带实现。cglib其实差不多。</p>
-<h3 id="5-JdkDynamicAopProxy-默认切面代理类"><a href="#5-JdkDynamicAopProxy-默认切面代理类" class="headerlink" title="5. JdkDynamicAopProxy 默认切面代理类"></a>5. JdkDynamicAopProxy 默认切面代理类</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">    public Object getProxy() &#123;</div><div class="line">        return getProxy(ClassUtils.getDefaultClassLoader());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public Object getProxy(@Nullable ClassLoader classLoader) &#123;</div><div class="line">        if (logger.isDebugEnabled()) &#123;</div><div class="line">            logger.debug(&quot;Creating JDK dynamic proxy: target source is &quot; + this.advised.getTargetSource());</div><div class="line">        &#125;</div><div class="line">        Class&lt;?&gt;[] proxiedInterfaces = AopProxyUtils.completeProxiedInterfaces(this.advised, true);</div><div class="line">        findDefinedEqualsAndHashCodeMethods(proxiedInterfaces);</div><div class="line">        return Proxy.newProxyInstance(classLoader, proxiedInterfaces, this);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>findDefinedEqualsAndHashCodeMethods方法是为了查询被代理的接口是否包括equals和hashcode方法，这会影响到下面的调用。</p>
-<p>可以看到InvocationHandler的实现就是this。我们看一下invoke方法的实现：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">  @Nullable</div><div class="line">  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;</div></pre></td></tr></table></figure>
-<p>关键代码</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// Get the interception chain for this method.</div><div class="line">            List&lt;Object&gt; chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);</div></pre></td></tr></table></figure>
-<p>构建代理链，因为一个方法可能有多个切点匹配上，这个时候就需要构建一个链式的执行结构。</p>
-<p>进入<code>getInterceptorsAndDynamicInterceptionAdvice（）</code>方法</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/C1567440444983.png" alt="1567440444983"></p>
-<p>这里做了一个缓存，虽然new了一个对象作为key，但是对象的equals和hashcode方法都被重写了，所以没有问题，我们主要来看一下它是如何组装这个链式处理结构的：</p>
-<p>进入<code>getInterceptorsAndDynamicInterceptionAdvice（）</code>方法，紧接着发现是一个接口，那么查看他的实现类</p>
-<h3 id="6-DefaultAdvisorChainFactory-处理链式切点"><a href="#6-DefaultAdvisorChainFactory-处理链式切点" class="headerlink" title="6.DefaultAdvisorChainFactory 处理链式切点"></a>6.DefaultAdvisorChainFactory 处理链式切点</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/5C1567440624426.png" alt="1567440624426"></p>
-<p>可以看到，它会遍历自己的所有切点，那这些advisor是从哪里来的呢：</p>
-<p> 还记得最开始,我们说过,AbstractAutoProxyCreator中通过getAdvicesAndAdvisorsForBean方法来装载切面,而这个是一个抽象方法,现在来看它的实现,在AbstractAdvisorAutoProxyCreator中:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">    @Nullable</div><div class="line">    protected Object[] getAdvicesAndAdvisorsForBean(Class&lt;?&gt; beanClass, String beanName, @Nullable TargetSource targetSource) &#123;</div><div class="line">        List&lt;Advisor&gt; advisors = findEligibleAdvisors(beanClass, beanName);</div><div class="line">        if (advisors.isEmpty()) &#123;</div><div class="line">            return DO_NOT_PROXY;</div><div class="line">        &#125;</div><div class="line">        return advisors.toArray();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">protected List&lt;Advisor&gt; findEligibleAdvisors(Class&lt;?&gt; beanClass, String beanName) &#123;</div><div class="line">        List&lt;Advisor&gt; candidateAdvisors = findCandidateAdvisors();</div><div class="line">        List&lt;Advisor&gt; eligibleAdvisors = findAdvisorsThatCanApply(candidateAdvisors, beanClass, beanName);</div><div class="line">        extendAdvisors(eligibleAdvisors);</div><div class="line">        if (!eligibleAdvisors.isEmpty()) &#123;</div><div class="line">            eligibleAdvisors = sortAdvisors(eligibleAdvisors);</div><div class="line">        &#125;</div><div class="line">        return eligibleAdvisors;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">findCandidateAdvisors又是一个抽象方法,主要功能就是找到候选的切面,为什么是候选的,因为它是加载了所有的切面,有些切面并不需要,在最底层AnnotationAwareAspectJAutoProxyCreator的实现类中也有:</div><div class="line"></div><div class="line">protected List&lt;Advisor&gt; findCandidateAdvisors() &#123;</div><div class="line">        // Add all the Spring advisors found according to superclass rules.</div><div class="line">        List&lt;Advisor&gt; advisors = super.findCandidateAdvisors();</div><div class="line">        // Build Advisors for all AspectJ aspects in the bean factory.</div><div class="line">        if (this.aspectJAdvisorsBuilder != null) &#123;</div><div class="line">            advisors.addAll(this.aspectJAdvisorsBuilder.buildAspectJAdvisors());</div><div class="line">        &#125;</div><div class="line">        return advisors;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>可以看到,通过aspectJAdvisorsBuilder来将该类关心的所有的切面装载进来,并添加到父类的集合里面.aspectJAdvisorsBuilder里缓存了advisor的信息,拿到切面后,通过findAdvisorsThatCanApply方法来筛选合适的切面,之后对切面进行排序(如果实现了Order接口),然后返回切面的链表.</p>
-<h1 id="8-声明式事务-Transactional注解"><a href="#8-声明式事务-Transactional注解" class="headerlink" title="8.声明式事务@Transactional注解"></a>8.声明式事务@Transactional注解</h1><h2 id="1-前言-1"><a href="#1-前言-1" class="headerlink" title="1.前言"></a>1.前言</h2><pre><code>我们知道spring的事务管理分为两大部分：声明式和编程式，两种方式均为我们提供便捷的事务管理方法，各自优劣。
-</code></pre><blockquote>
-<p>声明式事务</p>
-</blockquote>
-<pre><code>声明式的事务管理对业务代码基本0入侵，能够很好的把事务管理和业务代码剥离开来，提高代码扩展性和可读性但是控制的粒度只能是方法级别而且必须是public，同时还不能在一个类中调用等。
-</code></pre><blockquote>
-<p>编程式事务</p>
-</blockquote>
-<pre><code>编程式事务则需要通过编写具体的事务代码来获得事务的管理能力，TransactionTemplate，或者直接使用PlatformTransactionManager，好处是控制粒度小，没有太多限制，坏处就是对业务代码有入侵，如果事务需要嵌套或者事务本身很繁琐，使用编程式则会十分麻烦。
-</code></pre><p>这里讲述的是声明式事务，因为他比较常用。而且两种方式的源码其实是一样的。</p>
-<h2 id="2-环境搭建"><a href="#2-环境搭建" class="headerlink" title="2. 环境搭建"></a>2. 环境搭建</h2><h3 id="1-1导入相关依赖：数据源、数据库驱动、Spring-jdbc模块"><a href="#1-1导入相关依赖：数据源、数据库驱动、Spring-jdbc模块" class="headerlink" title="1.1导入相关依赖：数据源、数据库驱动、Spring-jdbc模块"></a>1.1导入相关依赖：数据源、数据库驱动、Spring-jdbc模块</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417823342.png" alt="1567417823342"></p>
-<h3 id="1-2配置数据源、JdbcTemplate（Spring提供简化数据库操作的工具）操作数据"><a href="#1-2配置数据源、JdbcTemplate（Spring提供简化数据库操作的工具）操作数据" class="headerlink" title="1.2配置数据源、JdbcTemplate（Spring提供简化数据库操作的工具）操作数据"></a>1.2配置数据源、JdbcTemplate（Spring提供简化数据库操作的工具）操作数据</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417832614.png" alt="1567417832614"></p>
-<h3 id="1-3新建PersonDao、PersonService"><a href="#1-3新建PersonDao、PersonService" class="headerlink" title="1.3新建PersonDao、PersonService"></a>1.3新建PersonDao、PersonService</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417847101.png" alt="1567417847101"></p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417852548.png" alt="1567417852548"></p>
-<h3 id="1-4-测试"><a href="#1-4-测试" class="headerlink" title="1.4 测试"></a>1.4 测试</h3><p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417897324.png" alt="1567417897324"></p>
-<p>插入成功</p>
-<h3 id="1-5-测试事务"><a href="#1-5-测试事务" class="headerlink" title="1.5 测试事务"></a>1.5 测试事务</h3><p>修改Service方法，故意暴露一个异常</p>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417910208.png" alt="1567417910208"></p>
-<p>我们运行测试，发现还是插入成功，那么怎么阻止这种行为呢？添加事务</p>
-<h3 id="1-6-添加事务"><a href="#1-6-添加事务" class="headerlink" title="1.6 添加事务"></a>1.6 添加事务</h3><ol>
-<li>给insertUser方法添加注解- @Transactional</li>
-</ol>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417923873.png" alt="1567417923873"></p>
-<ol>
-<li><p>@EnableTransactionManagement 开启基于注解的事务管理功能</p>
-</li>
-<li><p>配置事务管理器来控制事务</p>
-</li>
-</ol>
-<p><img src="/2019/03/14/spring注解-辅助学习springboot和springcloud/1567417943208.png" alt="1567417943208"></p>
-<p>事务添加成功</p>
-<h3 id="1-8-再次运行测试"><a href="#1-8-再次运行测试" class="headerlink" title="1.8 再次运行测试"></a>1.8 再次运行测试</h3><p>发现插入失败，满足事务的原子性。</p>
-<h3 id="1-7-源码分析"><a href="#1-7-源码分析" class="headerlink" title="1.7 源码分析"></a>1.7 源码分析</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">声明式事务：</div><div class="line"> </div><div class="line">环境搭建：</div><div class="line">1、导入相关依赖</div><div class="line">		数据源、数据库驱动、Spring-jdbc模块</div><div class="line">2、配置数据源、JdbcTemplate（Spring提供的简化数据库操作的工具）操作数据</div><div class="line">3、给方法上标注 @Transactional 表示当前方法是一个事务方法；</div><div class="line">4、 @EnableTransactionManagement 开启基于注解的事务管理功能；</div><div class="line">		@EnableXXX</div><div class="line">5、配置事务管理器来控制事务;</div><div class="line">		@Bean</div><div class="line">		public PlatformTransactionManager transactionManager()</div><div class="line"> </div><div class="line"> </div><div class="line">原理：</div><div class="line">1）、@EnableTransactionManagement</div><div class="line">			利用TransactionManagementConfigurationSelector给容器中会导入组件</div><div class="line">			导入两个组件</div><div class="line">			AutoProxyRegistrar</div><div class="line">			ProxyTransactionManagementConfiguration</div><div class="line">2）、AutoProxyRegistrar：</div><div class="line">			给容器中注册一个 InfrastructureAdvisorAutoProxyCreator 组件；</div><div class="line">			InfrastructureAdvisorAutoProxyCreator：？</div><div class="line">			利用后置处理器机制在对象创建以后，包装对象，返回一个代理对象（增强器），代理对象执行方法利用拦截器链进行调用；</div><div class="line"> </div><div class="line">3）、ProxyTransactionManagementConfiguration 做了什么？</div><div class="line">			1、给容器中注册事务增强器；</div><div class="line">				1）、事务增强器要用事务注解的信息，AnnotationTransactionAttributeSource解析事务注解</div><div class="line">				2）、事务拦截器：</div><div class="line">					TransactionInterceptor；保存了事务属性信息，事务管理器；</div><div class="line">					他是一个 MethodInterceptor；</div><div class="line">					在目标方法执行的时候；</div><div class="line">						执行拦截器链；</div><div class="line">						事务拦截器：</div><div class="line">							1）、先获取事务相关的属性</div><div class="line">							2）、再获取PlatformTransactionManager，如果事先没有添加指定任何transactionmanger</div><div class="line">								最终会从容器中按照类型获取一个PlatformTransactionManager；</div><div class="line">							3）、执行目标方法</div><div class="line">								如果异常，获取到事务管理器，利用事务管理回滚操作；</div><div class="line">								如果正常，利用事务管理器，提交事务</div></pre></td></tr></table></figure>
-<h2 id="3-源码深入分析"><a href="#3-源码深入分析" class="headerlink" title="3.源码深入分析"></a>3.源码深入分析</h2><p>未完待续</p>
-<h1 id="9-总结"><a href="#9-总结" class="headerlink" title="9 总结"></a>9 总结</h1><p>通过使用AOP和声明式事务，我们知道了一个套路，如果我们想使用某项功能，例如上面的aop和声明式事务、或者以后的springcloud的eureka、zull、feign等等功能，都遵循一下三点：</p>
-<blockquote>
-<p>1.导入功能组件相关的依赖</p>
-<p>2.在配置类开启组件（@EnableXXXX）</p>
-<p>3.在关键位置标示使用的地方（例如@Aspect、@Transactional）</p>
-</blockquote>
-<p>所以以后需要在spring中使用某个组件，一般都是遵循这样的思路</p>
-<p># </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;1-前言&quot;&gt;&lt;a href=&quot;#1-前言&quot; class=&quot;headerlink&quot; title=&quot;1. 前言&quot;&gt;&lt;/a&gt;1. 前言&lt;/h1&gt;&lt;p&gt; 因为后面要学习sb（springboot）和sc（springcloud），所以需要学习一些相关的注解和了解他们底层代
-    
-    </summary>
-    
-      <category term="spring注解和生命周期" scheme="http://kingge.top/categories/spring%E6%B3%A8%E8%A7%A3%E5%92%8C%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/"/>
-    
-    
-      <category term="spring注解" scheme="http://kingge.top/tags/spring%E6%B3%A8%E8%A7%A3/"/>
-    
-      <category term="aop" scheme="http://kingge.top/tags/aop/"/>
-    
-      <category term="spring生命周期" scheme="http://kingge.top/tags/spring%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/"/>
     
   </entry>
   
